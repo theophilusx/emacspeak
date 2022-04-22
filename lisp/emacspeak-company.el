@@ -135,7 +135,7 @@
    #'(lambda (&rest _ignore) (emacspeak-play-auditory-icon 'close-object))))
 
 ;;}}}
-(eval-after-load "company" #'emacspeak-company-setup)
+;; (eval-after-load "company" #'emacspeak-company-setup)
 (provide 'emacspeak-company)
 ;;{{{ end of file
 
