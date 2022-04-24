@@ -1,5 +1,5 @@
 ;;; emacspeak-wizards.el --- Magic For Power Users   -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Contains convenience wizards
 ;; Keywords: Emacspeak,  Audio Desktop Wizards
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008-08-15 10:08:11 -0700 (Fri, 15 Aug 2008) $ |
+;; 
 ;;  $Revision: 4638 $ |
 ;; Location undetermined
 ;; 

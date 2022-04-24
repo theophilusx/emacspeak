@@ -1,5 +1,5 @@
 ;;; emacspeak-arc.el --- Speech enable archive-mode -- a  Emacs interface to zip and friends  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $ 
 ;; Description: Auditory interface to archive mode
 ;; Keywords: Emacspeak, Speak, Spoken Output, archive
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com 
 ;; A speech interface to Emacs |
-;; $Date: 2008-06-21 10:50:41 -0700 (Sat, 21 Jun 2008) $ |
+;; 
 ;;  $Revision: 4532 $ | 
 ;; Location undetermined
 ;; 

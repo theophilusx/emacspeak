@@ -1,5 +1,5 @@
 ;;; emacspeak-browse-kill-ring.el --- browse-kill-ring  for emacspeak desktop  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak front-end for BROWSE-KILL-RING
 ;; Keywords: Emacspeak, browse-kill-ring
@@ -7,7 +7,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2007-08-25 18:28:19 -0700 (Sat, 25 Aug 2007) $ |
+;; 
 ;;  $Revision: 4074 $ |
 ;; Location undetermined
 ;; 

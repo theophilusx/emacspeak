@@ -1,5 +1,5 @@
 ;;; emacspeak-jabber.el --- Speech-Enable jabber  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description: speech-enable jabber
 ;; Keywords: Emacspeak, jabber
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008-04-15 06:25:36 -0700 (Tue, 15 Apr 2008) $ |
+;; 
 ;;  $Revision: 4532 $ |
 ;; Location undetermined
 ;; 

@@ -1,5 +1,5 @@
 ;;; emacspeak-ecb.el --- speech-enable Emacs Class Browser  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak module for speech-enabling Emacs
 ;; Class Browser
@@ -9,7 +9,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;; 
 ;;  $Revision: 4074 $ |
 ;; Location undetermined
 ;; 

@@ -1,5 +1,5 @@
 ;;; outloud-voices.el --- Define  OutLoud tags  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Module to set up Eloquent voices and personalities
 ;; Keywords: Voice, Personality, IBM ViaVoice Outloud
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008-07-06 10:18:30 -0700 (Sun, 06 Jul 2008) $ |
+;; 
 ;;  $Revision: 4532 $ |
 ;; Location undetermined
 ;; 

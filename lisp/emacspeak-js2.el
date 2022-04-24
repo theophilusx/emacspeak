@@ -1,5 +1,5 @@
 ;;; emacspeak-js2.el --- Speech-enable JS2  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: raman $
 ;; Description:  Speech-enable JS2 An Emacs Interface to js2
 ;; Keywords: Emacspeak,  Audio Desktop js2
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008/04/03 15:05:55 $ |
+;; 
 ;;  $Revision: 1.1 $ |
 ;; Location undetermined
 ;; 

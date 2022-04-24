@@ -1,5 +1,5 @@
 ;;; emacspeak-eshell.el --- Speech-enable EShell - Emacs Shell  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:   Speech-enable EShell
 ;; Keywords: Emacspeak, Audio Desktop
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;; 
 ;;  $Revision: 4532 $ |
 ;; Location undetermined
 ;; 

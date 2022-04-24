@@ -1,5 +1,5 @@
 ;;; dtk-speak.el --- Interface to speech server -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacs interface to TTS
 ;; Keywords: TTS  Emacs Elisp
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008-07-06 10:18:30 -0700 (Sun, 06 Jul 2008) $ |
+;; 
 ;;  $Revision: 4670 $ |
 ;; Location undetermined
 ;; 
@@ -191,11 +191,6 @@ mac for MAC TTS (default on Mac)")
   (process-send-string dtk-speaker-process
                        (format "set_preferred_lang %s %s \n"
                                alias language)))
-
-(defsubst dtk-interp-list-language ()
-  (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "list_lang\n")))
 
 ;;}}}
 ;;{{{  Version, rate
@@ -487,12 +482,7 @@ Uses a 5ms fade-in and fade-out. "
   (when dtk-speak-server-initialized
     (dtk-interp-preferred-language alias lang)))
 
-(defun dtk-list-languages ()
-  "List  available languages."
-  (interactive)
-  (cl-declare (special dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
-    (dtk-interp-list-language)))
+
 
 ;; helper function:
 ;; Quote the string in current buffer so tcl does not barf.

@@ -5,6 +5,7 @@ bash-utils
 blog-archive
 contrib
 etc
+etc/tweets
 git-hooks
 html
 nyxtalk
@@ -13,8 +14,12 @@ runq
 scapes 
 servers/android
 servers/chrome_tts_server
+sounds/3d
+nyxtalk
 sounds/chimes
+sounds/classic
 sounds/classic 
+sounds/system
 stumpwm
 tvr
 utils

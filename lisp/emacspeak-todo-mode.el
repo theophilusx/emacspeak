@@ -1,5 +1,5 @@
 ;;; emacspeak-todo-mode.el --- speech-enable todo-mode  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description: todo-mode  for maintaining todo lists 
 ;; Keywords: Emacspeak, todo-mode 
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com 
 ;; A speech interface to Emacs |
-;; $Date: 2007-09-01 15:30:13 -0700 (Sat, 01 Sep 2007) $ |
+;; 
 ;;  $Revision: 4532 $ | 
 ;; Location undetermined
 ;; 

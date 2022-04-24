@@ -1,5 +1,5 @@
 ;;; emacspeak-gomoku.el --- Speech enable the game of Gomoku  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $ 
 ;; Description: Auditory interface to gomoku
 ;; Keywords: Emacspeak, Speak, Spoken Output, gomoku
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com 
 ;; A speech interface to Emacs |
-;; $Date: 2008-06-21 14:58:40 -0700 (Sat, 21 Jun 2008) $ |
+;; 
 ;;  $Revision: 4532 $ | 
 ;; Location undetermined
 ;; 

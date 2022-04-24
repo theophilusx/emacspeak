@@ -1,5 +1,5 @@
 ;;; emacspeak-emms.el --- Speech-enable EMMS Multimedia UI  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to speech-enable EMMS
 ;; Keywords: Emacspeak, Multimedia
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2007-08-27 17:54:54 -0700 (Mon, 27 Aug 2007) $ |
+;; 
 ;;  $Revision: 4150 $ |
 ;; Location undetermined
 ;; 

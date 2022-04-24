@@ -1,5 +1,5 @@
 ;;; emacspeak.el --- The Complete Audio Desktop  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak: A speech interface to Emacs
 ;; Keywords: Emacspeak, Speech, Dectalk,
@@ -9,7 +9,7 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; $Date: 2008-07-06 16:33:47 -0700 (Sun, 06 Jul 2008) $ |
+;; 
 ;;  $Revision: 4642 $ |
 ;; Location undetermined
 ;; 

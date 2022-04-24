@@ -1,5 +1,5 @@
 ;;; g-utils.el --- Google Client Utilities  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: raman $
 ;; Description:  Google Client utilities
 ;; Keywords: Google   Atom API, Google Services
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; g-client| T. V. Raman |tv.raman.tv@gmail.com
 ;; An emacs interface to Google Services|
-;; $Date: 2006/10/13 01:38:19 $ |
+;; 
 ;;  $Revision: 1.14 $ |
 ;; Location undetermined
 ;; License: GPL

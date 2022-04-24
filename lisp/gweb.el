@@ -1,5 +1,5 @@
 ;;; gweb.el --- Google Search  -*- lexical-binding: t; -*-
-;; $Id$
+;;
 ;; $Author: raman $
 ;; Description:  AJAX Search -> Lisp
 ;; Keywords: Google   AJAX API
@@ -8,7 +8,7 @@
 ;; LCD Archive Entry:
 ;; gcal| T. V. Raman |tv.raman.tv@gmail.com
 ;; An emacs interface to Reader|
-;; $Date: 2006/09/28 17:47:44 $ |
+;; 
 ;;  $Revision: 1.30 $ |
 ;; Location undetermined
 ;; License: GPL
