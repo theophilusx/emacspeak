@@ -7,29 +7,29 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; 
+;;
 ;;  $Revision: 4532 $ |
 ;; Location undetermined
-;; 
+;;
 
 ;;}}}
 ;;{{{  Copyright:
 ;; Copyright (C) 1995 -- 2007, 2011, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
-;; 
+;;
 ;; This file is not part of GNU Emacs, but the same permissions apply.
-;; 
+;;
 ;; GNU Emacs is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNEVIL FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
@@ -150,15 +150,21 @@
 ;;}}}
 ;;{{{ Char Motion :
 
-(defadvice evil-backward-char (before emacspeak pre act comp)
+(defadvice evil-backward-char (after emacspeak pre act comp)
   "Speak char."
-  (when (ems-interactive-p)
-    (emacspeak-speak-this-char (char-after (1- (point))))))
-
-(defadvice evil-forward-char (before emacspeak pre act comp)
-  "Speak char."
-  (when (ems-interactive-p)
+  (when (and (ems-interactive-p)
+             (ad-get-arg 0)
+             (ad-get-arg 1)
+             (ad-get-arg 2))
     (emacspeak-speak-this-char (char-after (1+ (point))))))
+
+(defadvice evil-forward-char (after emacspeak pre act comp)
+  "Speak char."
+  (when (and (ems-interactive-p)
+             (ad-get-arg 0)
+             (ad-get-arg 1)
+             (ad-get-arg 2))
+    (emacspeak-speak-this-char (char-after (1- (point))))))
 
 ;;}}}
 ;;{{{ Deletion:
