@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -99,7 +99,7 @@ fly spell checking."
      (when (sit-for 1) (emacspeak-speak-message-again))
      (emacspeak-auditory-icon 'select-object))) (t ad-do-it)) ad-return-value)
 
-(defadvice flyspell-unhighlight-at (before debug pre act comp)
+(defadvice flyspell-unhighlight-at (before emacspeak pre act comp)
   "handle highlight/unhighlight."
   (let ((overlay-list (overlays-at (ad-get-arg 0)))
         (o nil))

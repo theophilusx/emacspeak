@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -48,7 +48,6 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-
 
 ;;}}}
 ;;{{{ Advice interactive commands.

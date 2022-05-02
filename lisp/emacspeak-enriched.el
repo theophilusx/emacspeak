@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1995 by T. V. Raman  
 ;; All Rights Reserved. 
 ;; 
@@ -126,9 +126,9 @@ Useful in voiceifying rich text."
 ;;}}}
 ;;{{{ hooks
 (add-hook 'enriched-mode-hook
-           #'(lambda ()
-             (or emacspeak-audio-indentation
-                 (emacspeak-toggle-audio-indentation))))
+          #'(lambda ()
+              (or emacspeak-audio-indentation
+                  (emacspeak-toggle-audio-indentation))))
 ;;}}}
 (provide  'emacspeak-enriched)
 ;;{{{  emacs local variables 

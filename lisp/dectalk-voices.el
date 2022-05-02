@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -203,8 +203,6 @@ and TABLE gives the values along that dimension."
 
 ;;}}}
 
-
-
 ;;}}}
 
 (defun dectalk-get-average-pitch-code (value family)
@@ -384,8 +382,6 @@ and TABLE gives the values along that dimension."
                 dtk-speech-rate-base 150))
 
 ;;}}}
-
- 
 
 (provide 'dectalk-voices)
 ;;{{{  emacs local variables

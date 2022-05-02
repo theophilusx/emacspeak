@@ -55,7 +55,6 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-
 ;;}}}
 ;;{{{ Forward Decls:
 (declare-function sage-shell:delete-output "sage-shell-mode" nil)
@@ -82,13 +81,13 @@
    t "Not in a Sage buffer")
   (cl-flet
       ((say-it ()
-               (dtk-speak
-                (apply #'buffer-substring (sage-shell:last-output-beg-end)))))
+         (dtk-speak
+          (apply #'buffer-substring (sage-shell:last-output-beg-end)))))
     (cond
      ((eq major-mode 'sage-shell-mode) (say-it))
      ((eq major-mode 'sage-shell:sage-mode)
       (cl-assert   (sage-shell-edit:process-alist) t "No running Sage.")
-;; Take the first one for now:
+      ;; Take the first one for now:
       (with-current-buffer
           (process-buffer (car (cl-first  (sage-shell-edit:process-alist))))
         (say-it))))))
@@ -224,8 +223,7 @@
        (emacspeak-auditory-icon 'task-done)
        (emacspeak-speak-mode-line)))))
 
-(defadvice sage-shell:copy-previous-output-to-kill-ring
-    (after emacspeak pre act comp)
+(defadvice sage-shell:copy-previous-output-to-kill-ring (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'yank-object)
@@ -272,7 +270,7 @@
      (format "%s" (symbol-at-point)))))
   (cl-assert (eq  major-mode  'sage-shell:sage-mode) t "Not in a Sage buffer")
   (cl-assert   (sage-shell-edit:process-alist) t "No running Sage.")
-;; Take the first one for now:
+  ;; Take the first one for now:
   (with-current-buffer
       (process-buffer (car (cl-first  (sage-shell-edit:process-alist))))
     (sage-shell-help:describe-symbol s)))

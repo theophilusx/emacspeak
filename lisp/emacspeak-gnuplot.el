@@ -17,7 +17,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman<tv.raman.tv@gmail.com>
+;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -60,40 +60,30 @@
 
 ;;{{{ advice interactive commands
 
-(defadvice gnuplot-send-region-to-gnuplot (after emacspeak
-                                                 pre act
-                                                 comp)
+(defadvice gnuplot-send-region-to-gnuplot (after emacspeak pre act comp)
   "Speak status."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
 
-(defadvice gnuplot-send-line-to-gnuplot (after emacspeak
-                                               pre act
-                                               comp)
+(defadvice gnuplot-send-line-to-gnuplot (after emacspeak pre act comp)
   "Speak status."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
 
-(defadvice gnuplot-send-line-and-forward (after emacspeak
-                                                pre act
-                                                comp)
+(defadvice gnuplot-send-line-and-forward (after emacspeak pre act comp)
   "Speak status."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
 
-(defadvice gnuplot-send-buffer-to-gnuplot (after emacspeak
-                                                 pre act
-                                                 comp)
+(defadvice gnuplot-send-buffer-to-gnuplot (after emacspeak pre act comp)
   "Speak status."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-other-window 1)))
-(defadvice gnuplot-send-file-to-gnuplot (after emacspeak
-                                               pre act
-                                               comp)
+(defadvice gnuplot-send-file-to-gnuplot (after emacspeak pre act comp)
   "Speak status."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)
@@ -151,8 +141,8 @@
     (emacspeak-speak-line)))
 
 (add-hook 'gnuplot-mode-hook
-           #'(lambda nil
-             (dtk-set-punctuations 'all)))
+          #'(lambda nil
+              (dtk-set-punctuations 'all)))
 
 ;;}}}
 (provide 'emacspeak-gnuplot)

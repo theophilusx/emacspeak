@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -353,7 +353,6 @@ buffer to be hidden or exposed."
 
 ;;}}}
 ;;{{{  speaking blocks sans prefix
-
 
 (defun emacspeak-hide-speak-block-sans-prefix ()
   "Speaks current block after stripping its prefix. "

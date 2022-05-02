@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -51,7 +51,6 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-
 
 ;;}}}
 ;;{{{ Map voices to faces:
@@ -207,12 +206,12 @@
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
-       (emacspeak-speak-line)
-       (emacspeak-auditory-icon 'open-object))))
+     (emacspeak-speak-line)
+     (emacspeak-auditory-icon 'open-object))))
 
 (defadvice magit-section-hide (after emacspeak pre act comp)
   "Icon."
-    (emacspeak-auditory-icon 'close-object))
+  (emacspeak-auditory-icon 'close-object))
 
 (defadvice magit-section-cycle-global (after emacspeak pre act comp)
   "speak."
@@ -257,8 +256,6 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'large-movement)))))
 
-
-
 ;;}}}
 
 ;;{{{ Additional commands to advice:
@@ -298,7 +295,6 @@
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
-
 
 ;;}}}
 ;;{{{ Advise process-sentinel:

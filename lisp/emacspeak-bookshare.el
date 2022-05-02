@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -593,7 +593,7 @@ b Browse
  (progn
    (emacspeak-bookshare-action-set (cl-first a) (cl-second a))
    (define-key emacspeak-bookshare-mode-map (ems-kbd (cl-first a))
-     'emacspeak-bookshare-action)))
+               'emacspeak-bookshare-action)))
 
 ;;}}}
 ;;{{{ Bookshare XML  handlers:
@@ -1299,7 +1299,6 @@ Useful for fulltext search in a book."
     (emacspeak-speak-mode-line)))
 (defvar-local emacspeak-bookshare-this-book nil
   "Record current book in buffer where it is rendered.")
-
 
 (defun emacspeak-bookshare-eww (directory)
   "Render  book using EWW"

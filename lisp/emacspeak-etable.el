@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved. 
 ;; 
@@ -47,7 +47,7 @@
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-  
+
 (require 'table )
 ;;}}}
 ;;{{{ Update command remap list.

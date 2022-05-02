@@ -17,7 +17,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -145,15 +145,14 @@ available."
                                  tree-buffer-key-map
                                  global-map))
     (define-key tree-buffer-key-map "\d"
-      'emacspeak-ecb-tree-backspace)
+                'emacspeak-ecb-tree-backspace)
     (define-key tree-buffer-key-map '[delete]
-      'emacspeak-ecb-tree-backspace)
+                'emacspeak-ecb-tree-backspace)
     (define-key tree-buffer-key-map '[home]
-      'emacspeak-ecb-tree-clear)
+                'emacspeak-ecb-tree-clear)
     ))
 
-(defadvice tree-buffer-incremental-node-search 
-    (around emacspeak pre act comp)
+(defadvice tree-buffer-incremental-node-search (around emacspeak pre act comp)
   "Track search and provide appropriate auditory feedback."
   
   (cond

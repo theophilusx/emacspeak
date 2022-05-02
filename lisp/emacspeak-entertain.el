@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (c) 1995 -- 2021, T. V. Raman
+;; Copyright (c) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -105,7 +105,7 @@
             (not emacspeak-pronounce-pronunciation-table))
     (emacspeak-pronounce-toggle-use-of-dictionaries)))
 
-(defadvice hm-self-guess-char (after eemacspeak pre act comp)
+(defadvice hm-self-guess-char (after emacspeak pre act comp)
   "Speak the char."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'select-object)))
@@ -125,7 +125,7 @@
               (length string)
               (downcase string))))
 
-(defadvice hangman (after emacseak pre act comp)
+(defadvice hangman (after emacspeak pre act comp)
   "Speech enable hangman."
   (when (ems-interactive-p)
     (emacspeak-hangman-setup-pronunciations)

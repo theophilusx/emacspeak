@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -63,8 +63,6 @@
   (ems--fastload "voice-defs")
   (dtk-select-server "mac")
   (dtk-initialize))
-
-
 
 ;;}}}
 ;;{{{ Customizations:
@@ -188,8 +186,6 @@ and TABLE gives the values along that dimension."
   (mac-css-set-code-table 'paul 'average-pitch table))
 
 ;;}}}
-
-
 
 (defun mac-get-average-pitch-code (value family)
   "Get  AVERAGE-PITCH for specified VALUE and  FAMILY."
@@ -324,9 +320,6 @@ and TABLE gives the values along that dimension."
 
 ;;}}}
 ;;{{{ tts-env for Mac:
-
- 
-
 
 (provide 'mac-voices)
 ;;{{{  emacs local variables

@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (c) 1995 -- 2021, T. V. Raman
+;; Copyright (c) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved. 
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -227,7 +227,7 @@ An automatically updating speedbar consumes resources.")
   (dtk-set-punctuations 'all)
   (setq speedbar-hide-button-brackets-flag t)
   (define-key speedbar-mode-map "f"
-    'emacspeak-speedbar-click)
+              'emacspeak-speedbar-click)
                                         ;(define-key speedbar-mode-map "\M-n"
                                         ;'emacspeak-speedbar-forward)
                                         ;(define-key speedbar-mode-map "\M-p"

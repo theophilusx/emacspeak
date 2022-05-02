@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -313,24 +313,6 @@ Optional interactive prefix arg prompts for a filename."
   (emacspeak-2048-speak-board))
 (cl-declaim (special-display-p 2048-mode-hook))
 (add-hook '2048-mode-hook 'emacspeak-2048-setup)
-;;}}}
-;;{{{ Counting moves:
-
-(defvar emacspeak-2048-move-count 0
-  "Number of moves in this game.")
-(cl-loop
- for f in
- '(2048-up 2048-down 2048-left 2048-right)
- do
- (eval
-  `(defadvice ,f (after  count-moves pre act comp)
-     "Count this move."
-     (cl-incf emacspeak-2048-move-count))))
-(defadvice 2048-game (before count-moves pre act comp)
-  "Reset move count and board size."
-  (setq emacspeak-2048-move-count 0)
-  (emacspeak-2048-board-reset))
-
 ;;}}}
 ;;{{{ Randomize game
 

@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved. 
 ;; 
@@ -102,9 +102,7 @@ Otherwise cue user to the line just created. "
     (emacspeak-auditory-icon 'help)
     (message "Displayed info in other window")))
 
-(defadvice cperl-info-on-command (after emacspeak
-                                        pre act
-                                        comp)
+(defadvice cperl-info-on-command (after emacspeak pre act comp)
   "Speak the displayed info"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'help)

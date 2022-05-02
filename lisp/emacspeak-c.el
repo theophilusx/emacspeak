@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -175,7 +175,7 @@
   (emacspeak-auditory-icon 'item)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax)))
-;; skip across a comment
+    ;; skip across a comment
     (cond
      ((or (assq 'c semantics)
           (assq 'comment-intro semantics))
@@ -205,7 +205,7 @@ this level")
   (emacspeak-auditory-icon 'item)
   (let  ((opoint (point))
          (semantics (c-guess-basic-syntax)))
-;; skip across a comment
+    ;; skip across a comment
     (cond
      ((or (assq 'c semantics)
           (assq 'comment-intro semantics))

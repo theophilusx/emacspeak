@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -124,7 +124,7 @@ server."
 (provide 'emacspeak-erc)
 ;;{{{ monitoring chatrooms 
 (defvar emacspeak-erc-room-monitor nil
-"Local to each chat room. If turned on,
+  "Local to each chat room. If turned on,
 user is notified about activity in the room.")
 (make-variable-buffer-local 'emacspeak-erc-room-monitor)
 
@@ -187,8 +187,8 @@ Optional interactive prefix  arg defines a pronunciation that
     (error "Not in an ERC buffer."))
   (setq emacspeak-erc-people-to-monitor
         (cl-remove-if
-          #'(lambda (x)
-            (string-equal x name))
+         #'(lambda (x)
+             (string-equal x name))
          emacspeak-erc-people-to-monitor))
   (emacspeak-auditory-icon 'delete-object)
   (message "monitoring %s"
@@ -296,26 +296,17 @@ set the current local value to the result.")
     ad-do-it
     ad-return-value))
 
-(defadvice erc-make-notice (around emacspeak  pre act comp)
-  "Ignore notices from server is emacspeak-erc-ignore-notices it set."
-  ad-do-it
-  ;; FIXME: AFAICT this does nothing (`defadvice' ignores this return value
-  ;; and returns the value of `ad-return-value' instead!).
-  (cond
-   ((not emacspeak-erc-ignore-notices) ad-return-value)
-   (t " ")))
-
 ;;}}}
 ;;{{{ define emacspeak keys
 (cl-declaim (special erc-mode-map))
 (define-key erc-mode-map "\C-c "
-  'emacspeak-erc-toggle-speak-all-participants)
+            'emacspeak-erc-toggle-speak-all-participants)
 (define-key erc-mode-map "\C-cm"
-  'emacspeak-erc-toggle-my-monitor)
+            'emacspeak-erc-toggle-my-monitor)
 (define-key erc-mode-map "\C-c\C-m"
-  'emacspeak-erc-toggle-room-monitor)
+            'emacspeak-erc-toggle-room-monitor)
 (define-key erc-mode-map "\C-c\C-a"
-  'emacspeak-erc-add-name-to-monitor)
+            'emacspeak-erc-add-name-to-monitor)
 (define-key erc-mode-map "\C-c\C-d" 'emacspeak-erc-delete-name-from-monitor)
 ;;}}}
 

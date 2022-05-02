@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1995 by T. V. Raman 
 ;; All Rights Reserved. 
 ;; 
@@ -171,7 +171,7 @@ Also provide an auditory icon"
 
 (cl-declaim (special  Man-mode-map))
 (define-key Man-mode-map ";"
-  'emacspeak-speak-current-window)
+            'emacspeak-speak-current-window)
 (define-key Man-mode-map "\M-j" 'imenu)
 (define-key Man-mode-map "\M- " 'emacspeak-man-speak-this-section)
 (define-key Man-mode-map "." 'emacspeak-man-browse-man-page)

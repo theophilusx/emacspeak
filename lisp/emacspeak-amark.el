@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1996 by T. V. Raman
 ;; All Rights Reserved.
 ;; 
@@ -69,8 +69,6 @@
 
 (defvar-local emacspeak-amark-list nil
   "List of buffer-local AMarks. ")
-
-
 
 ;;}}}
 ;;{{{ AMark Functions:

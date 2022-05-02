@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (c) 1995 -- 2021, T. V. Raman
+;; Copyright (c) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved. 
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -104,7 +104,7 @@
     (emacspeak-auditory-icon 'save-object)
     (message "Saved customizations.")))
 
-(defadvice customize-save-customized (around quiet pre act comp)
+(defadvice customize-save-customized (around emacspeak pre act comp)
   "Silence speech."
   (let ((dtk-quiet t)) ad-do-it))
 
@@ -216,7 +216,6 @@
   "^/-"
   "Pattern identifying start of custom group.")
 
-
 (defun emacspeak-custom-goto-group ()
   "Jump to custom group when in a customization buffer."
   (interactive)
@@ -257,7 +256,7 @@
 (define-key custom-mode-map "." 'forward-paragraph)
 (define-key custom-mode-map  "\M-t" 'emacspeak-custom-goto-toolbar)
 (define-key custom-mode-map  "\M-g"
-  'emacspeak-custom-goto-group)
+            'emacspeak-custom-goto-group)
 
 ;;}}}
 ;;{{{ augment custom widgets

@@ -1,4 +1,4 @@
-;;; emacspeak-forms.el --- Speech enable Emacs' forms mode  -- provides  a convenient database interface  -*- lexical-binding: t; -*-
+;;; emacspeak-forms.el --- Speech enable Emacs' forms mode -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $ 
 ;; DescriptionEmacspeak extensions for forms-mode 
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1996 by T. V. Raman 
 ;; All Rights Reserved. 
 ;; 
@@ -114,9 +114,6 @@ Assumes that point is at the front of a field value."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'search-hit)
        (emacspeak-speak-line)))))
-
-
-
 
 (defadvice forms-next-record (after emacspeak pre act comp)
   "speak."
@@ -261,11 +258,11 @@ Assumes that point is at the front of a field value."
                #'(lambda (map)
                    (define-key map "\C-m" 'emacspeak-forms-rerun-filter)
                    (define-key map "."
-                     'emacspeak-forms-summarize-current-position)
+                               'emacspeak-forms-summarize-current-position)
                    (define-key map "," 'emacspeak-forms-summarize-current-record))
                (list forms-mode-ro-map 
                      forms-mode-map))
-;; move to first field
+              ;; move to first field
               (forms-next-field 1)))
 
 ;;}}}

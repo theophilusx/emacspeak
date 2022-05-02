@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved. 
 ;; 
@@ -146,8 +146,6 @@ Fields are assumed to be delimited by whitespace. "
 ;; Invariants: (= (- tl tr) (- bl br))
 ;; tl = start for first column
 ;; br = end for last column
-
-
 
 ;;}}}
 ;;{{{ Parse a region of tabular data

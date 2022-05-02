@@ -14,7 +14,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -102,7 +102,7 @@
 ;;{{{ advice
 
 (defcustom  emacspeak-info-select-node-speak-chunk 'node
-"Specifies how much of the selected node gets spoken.
+  "Specifies how much of the selected node gets spoken.
 Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node."

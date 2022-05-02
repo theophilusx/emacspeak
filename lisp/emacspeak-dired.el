@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -465,7 +465,6 @@ current file in DirEd."
 (declare-function emacspeak-wizards-pdf-open
                   "emacspeak-wizards" (filename &optional ask-pwd))
 
-
 (defun emacspeak-dired-pdf-open ()
   "Open PDF file on current dired line."
   (interactive)
@@ -490,7 +489,6 @@ current file in DirEd."
 
 ;;}}}
 ;;{{{ Locate results as a play-list:
-
 
 (defun emacspeak-locate-play-results-as-playlist (&optional shuffle)
   "Treat locate results as a play-list.

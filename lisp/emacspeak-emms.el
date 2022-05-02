@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -121,7 +121,7 @@
 (defadvice emms-stream-mode (after emacspeak pre act comp)
   "Update keymaps."
   (define-key emms-stream-mode-map "\C-e"
-    'emacspeak-prefix-command))
+              'emacspeak-prefix-command))
 
 (defadvice emms-stream-delete-bookmark (after emacspeak pre act
                                               comp)
@@ -165,16 +165,13 @@
 ;;}}}
 ;;{{{ silence chatter from info
 
-(defadvice emms-info-really-initialize-track (around emacspeak
-                                                     pre act
-                                                     comp)
+(defadvice emms-info-really-initialize-track (around emacspeak pre act comp)
   "Silence messages."
   (ems-with-messages-silenced
    ad-do-it))
 
 ;;}}}
 ;;{{{ pause/resume if needed
-
 
 (defun emacspeak-emms-pause-or-resume ()
   "Pause/resume if emms is running. For use  in

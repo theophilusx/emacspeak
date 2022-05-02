@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (c) 1995 -- 2021, T. V. Raman
+;; Copyright (c) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved. 
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -137,7 +137,7 @@ and set up additional Emacspeak bindings."
     (forward-line 2)
     (define-key Buffer-menu-mode-map "," 'emacspeak-list-buffers-speak-buffer-name)
     (define-key Buffer-menu-mode-map "."
-      'emacspeak-list-buffers-speak-buffer-line)
+                'emacspeak-list-buffers-speak-buffer-line)
     (define-key Buffer-menu-mode-map "n" 'emacspeak-list-buffers-next-line)
     (define-key Buffer-menu-mode-map "p" 'emacspeak-list-buffers-previous-line)
     (emacspeak-list-buffers-speak-buffer-line)

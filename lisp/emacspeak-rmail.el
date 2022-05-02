@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman 
+;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1995 by T. V. Raman  
 ;; All Rights Reserved. 
 ;; 
@@ -241,7 +241,6 @@
   (define-key rmail-mode-map "\C-m" 'emacspeak-rmail-summarize-current-message)
   (define-key rmail-mode-map "L"
               'emacspeak-rmail-speak-current-message-labels))
-
 
 ;;}}}
 (provide  'emacspeak-rmail)

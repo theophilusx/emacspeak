@@ -15,7 +15,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -118,8 +118,8 @@
           (when (>= (length fields) 3)
             (split-string (cl-third fields) " " 'omit)))
          (default
-           (when (>= (length fields) 4)
-             (split-string (cl-fourth fields) " " 'omit)))
+          (when (>= (length fields) 4)
+            (split-string (cl-fourth fields) " " 'omit)))
          (result (make-ladspa-control)))
     (when (string-match "^Ports:" desc)
       (setq desc (string-trim (substring desc  7))))

@@ -45,7 +45,6 @@
 ;; Advice comint and friends to speak.
 ;; 
 
-
 ;;; Code:
 
 ;;}}}
@@ -136,7 +135,7 @@ Interactive PREFIX arg means toggle the global default value. ")
   "Speech setup."
   (cl-declare (special comint-mode-map
                        header-line-format emacspeak-use-header-line))
-;; Experimental: discard undo info in comint:
+  ;; Experimental: discard undo info in comint:
   (setq buffer-undo-list t)
   (when emacspeak-use-header-line
     (setq
@@ -291,8 +290,7 @@ Interactive PREFIX arg means toggle the global default value. ")
    comint-previous-matching-input-from-input)
  do
  (eval
-  `(defadvice ,f (after
-                  emacspeak pre act comp)
+  `(defadvice ,f (after emacspeak pre act comp)
      "Speak matched input."
      (when (ems-interactive-p)
        (save-excursion
@@ -524,8 +522,7 @@ instead, always play an auditory icon when the shell prompt is displayed."
         (emacspeak-auditory-icon 'delete-object)
         (emacspeak-speak-region pmark (point))))))
 
-(defadvice comint-dynamic-list-filename-completions
-    (after emacspeak pre act comp)
+(defadvice comint-dynamic-list-filename-completions (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (emacspeak-speak-completions-if-available)))
@@ -549,7 +546,6 @@ instead, always play an auditory icon when the shell prompt is displayed."
             (format "/proc/%s/cwd"
                     (process-id (get-buffer-process (current-buffer))))))
         (error)))))
-
 
 (define-minor-mode dirtrack-procfs-mode
   "Toggle procfs-based directory tracking (Dirtrack-Procfs mode).

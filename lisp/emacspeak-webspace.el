@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{ Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -169,7 +169,7 @@ Generates auditory and visual display."
              (expand-file-name "feed-titles.xsl" emacspeak-xslt-directory))
      (current-buffer))
     (goto-char (point-min))
-;; newline -> spc
+    ;; newline -> spc
     (while (re-search-forward "\n" nil t) (replace-match " "))
     (goto-char (point-min))
     (read (current-buffer))))

@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -113,7 +113,7 @@ end   as specified by grid."
                  (cl-loop for j from 0 to (1- (length grid))
                           do
                           (when (< (1- (nth j grid)) this-length)
-;; within bounds 
+                            ;; within bounds 
                             (aset  this-row j
                                    (substring
                                     this-line
@@ -216,7 +216,7 @@ end   as specified by grid."
 (define-prefix-command  'emacspeak-gridtext 'emacspeak-gridtext-keymap)
 (define-key emacspeak-gridtext-keymap "a" 'emacspeak-gridtext-apply)
 (define-key emacspeak-gridtext-keymap "l"
-  'emacspeak-gridtext-load)
+            'emacspeak-gridtext-load)
 (define-key emacspeak-gridtext-keymap "s" 'emacspeak-gridtext-save)
 ;;}}}
 (provide 'emacspeak-gridtext)

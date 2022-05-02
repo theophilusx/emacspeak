@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman<tv.raman.tv@gmail.com>
+;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -43,7 +43,6 @@
 (require 'emacspeak-preamble)
 (declare-function widget-at "wid-edit" (&optional pos))
 (declare-function widget-type "wid-edit" (widget))
-
 
 ;;}}}
 ;;{{{  Introduction:
@@ -148,8 +147,6 @@ Summarize the form to welcome the user. "
   )
 ;;}}}
 ;;{{{ voiceify values in results 
-
-
 
 (defvar emacspeak-eudc-attribute-value-personality
   voice-animate

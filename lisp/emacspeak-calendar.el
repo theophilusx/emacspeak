@@ -1,4 +1,4 @@
-;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -- maintain a diary and appointments  -*- lexical-binding: t; -*-
+;;; emacspeak-calendar.el --- Speech enable Emacs Calendar -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extensions to speech enable the calendar.
@@ -15,7 +15,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -78,34 +78,32 @@
 (defun emacspeak-calendar-entry-marked-p()
   "Check if diary entry is marked. "
   (memq 'diary
-          (delq nil
-                (mapcar
-                 #'(lambda (overlay)
-                     (overlay-get overlay 'face))
-                 (overlays-at (point))))))
+        (delq nil
+              (mapcar
+               #'(lambda (overlay)
+                   (overlay-get overlay 'face))
+               (overlays-at (point))))))
 
 (defun emacspeak-calendar-speak-date()
   "Speak the date under point when called in Calendar Mode. "
   (interactive)
   (let ((date (calendar-date-string (calendar-cursor-to-date t))))
-    (tts-with-punctuations 'some
-                           (cond
-                            ((emacspeak-calendar-entry-marked-p)
-                             (dtk-speak-using-voice emacspeak-calendar-mark-personality date))
-                            (t (dtk-speak date))))))
+    (tts-with-punctuations
+     'some
+     (cond
+      ((emacspeak-calendar-entry-marked-p)
+       (dtk-speak-using-voice emacspeak-calendar-mark-personality date))
+      (t (dtk-speak date))))))
 
 ;;}}}
 ;;{{{  Advice:
-(defadvice calendar-exchange-point-and-mark (after emacspeak
-                                                   pre act comp)
+(defadvice calendar-exchange-point-and-mark (after emacspeak pre act comp)
   "Speak date under point"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'large-movement)
     (emacspeak-calendar-speak-date)))
 
-(defadvice calendar-set-mark (after emacspeak
-                                    pre act
-                                    comp)
+(defadvice calendar-set-mark (after emacspeak pre act comp)
   "Speak date under point"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'mark-object)
@@ -365,7 +363,6 @@
 ;;}}}
 ;;{{{ Global sunrise/sunset wizard:
 
-
 (defun emacspeak-calendar-sunrise-sunset (address &optional arg)
   "Display sunrise/sunset for specified address."
   (interactive
@@ -390,12 +387,8 @@
          (time-string (solar-sunrise-sunset-string date)))
     (message "%s: %s at %s" date-string time-string address)))
 
-
-
 ;;}}}
 ;;{{{  keymap
-
-
 
 (defun emacspeak-calendar-setup()
   "Set up appropriate bindings for calendar"
@@ -407,9 +400,7 @@
     (define-key calendar-mode-map "\M-s" 'emacspeak-calendar-sunrise-sunset)
     (define-key calendar-mode-map  "\C-e." 'emacspeak-calendar-speak-date)
     (define-key calendar-mode-map  "\C-ee"
-      'calendar-end-of-week)))
-
-                                        ;(add-hook 'calendar-initial-window-hook 'emacspeak-calendar-setup t)
+                'calendar-end-of-week)))
 
 ;;}}}
 ;;{{{  Appointments:

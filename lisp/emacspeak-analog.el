@@ -16,7 +16,7 @@
 ;;}}}
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -233,12 +233,10 @@ Speak field or char moved to."
 (when (boundp 'analog-mode-map)
   (cl-declaim (special analog-mode-map))
   (define-key analog-mode-map '[left]
-    'emacspeak-analog-backward-field-or-char)
+              'emacspeak-analog-backward-field-or-char)
   (define-key analog-mode-map '[right] 'emacspeak-analog-forward-field-or-char)
   (define-key analog-mode-map '[up] 'emacspeak-analog-previous-line)
   (define-key analog-mode-map '[down] 'emacspeak-analog-next-line))
-
-
 
 ;;}}}
 (provide 'emacspeak-analog)

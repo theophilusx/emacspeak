@@ -3,7 +3,7 @@
 ;; Emacs front-end to AMixer
 ;;{{{  Copyright:
 
-;; Copyright (C) 1995 -- 2021, T. V. Raman<tv.raman.tv@gmail.com>
+;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -151,7 +151,7 @@
                 (line-beginning-position)
                 (line-end-position))
                ","))
-;; only need 3 fields:
+        ;; only need 3 fields:
         (setq fields
               (list
                (nth 0 fields)

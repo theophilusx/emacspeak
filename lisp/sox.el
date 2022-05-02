@@ -14,7 +14,7 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;; Copyright (C) 1995 -- 2021, T. V. Raman
+;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -421,16 +421,16 @@ and return a suitable effect structure."
         (getter (intern (format "sox-get-%s-effect" name))))
     ;;; Register effect
     (sox-register-effect name)
-;; Parameter template used for prompting:
+    ;; Parameter template used for prompting:
     (eval
      `(defconst ,p-sym ',params
         ,(format "Parameters for effect %s" name)))
 
-;; Set up  repeat
+    ;; Set up  repeat
     (when repeat
       (eval `(put ',p-sym 'repeat t)))
 
-;; Function  for generating effect structure:
+    ;; Function  for generating effect structure:
     (eval
      `(defun ,getter ()
         ,(format "Read needed params for effect %s

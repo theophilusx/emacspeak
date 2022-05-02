@@ -136,9 +136,6 @@
 (cl-loop
  for f in
  '(
-   evil-backward-WORD-begin evil-backward-WORD-end
-   evil-forward-WORD-begin evil-forward-WORD-end
-   ;; eliminating these duplicates causes those commands to fall silent
    evil-backward-word-begin evil-backward-word-end
    evil-forward-word-begin evil-forward-word-end)
  do
@@ -153,19 +150,13 @@
 
 (defadvice evil-backward-char (after emacspeak pre act comp)
   "Speak char."
-  (when (and (ems-interactive-p)
-             (ad-get-arg 0)
-             (ad-get-arg 1)
-             (ad-get-arg 2))
-    (emacspeak-speak-this-char (char-after (1+ (point))))))
+  (when (ems-interactive-p)
+    (emacspeak-speak-this-char (following-char))))
 
 (defadvice evil-forward-char (after emacspeak pre act comp)
   "Speak char."
-  (when (and (ems-interactive-p)
-             (ad-get-arg 0)
-             (ad-get-arg 1)
-             (ad-get-arg 2))
-    (emacspeak-speak-this-char (char-after (1- (point))))))
+  (when (ems-interactive-p)
+    (emacspeak-speak-this-char (preceding-char))))
 
 ;;}}}
 ;;{{{ Deletion:
