@@ -1564,11 +1564,15 @@ Set to nil to disable a separate Notification stream."
     (set-process-coding-system process 'utf-8 'utf-8)
     process))
 
+(declare-function voice-setup "voice-setup" ())
+
 (defun dtk-initialize ()
   "Initialize speech system."
+  (cl-declare (special dtk-speaker-process
+                       dtk-speak-server-initialized
+                       dtk-program))
   ;; `voice-setup' requires us, so we can't require it at top-level.
   (require 'voice-setup)
-  (declare-function voice-setup "voice-setup" ())
   (voice-setup)
   (let* ((new-process (dtk-make-process "Speaker"))
          (state (process-status new-process)))
