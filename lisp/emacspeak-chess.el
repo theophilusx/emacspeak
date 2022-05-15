@@ -26,7 +26,7 @@
 ;; 
 ;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNCHESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 ;; 
 ;; You should have received a copy of the GNU General Public License
@@ -45,9 +45,9 @@
 ;; That package comes with a light-weight module that announces
 ;; moves.
 ;; 
-;; This module aims do do much more, including:
+;; This module aims to do much more, including:
 ;; @itemize @bullet
-;; @item Navigate the board along various axies with audio-formatted  output.
+;; @item Navigate the board along various axes with audio-formatted  output.
 ;;  @item Browse games via  rich audio-formatted   output.
 ;; @item Speech-enable all interactive commands  provided by the Chess
 ;; package.

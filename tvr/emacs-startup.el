@@ -115,6 +115,7 @@ Produce timing information as the last step."
   (cl-loop
    for b in
    '(
+     ("C-c r" comint-redirect-send-command )
      ("SPC" comint-magic-space)
      ("C-c k" comint-clear-buffer))
    do
@@ -201,7 +202,7 @@ Use Custom to customize where possible. "
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
 ;; load  library-specific settings, customize, then start things.
-  (cl-declare (special  tvr-libs))
+  (cl-declare (special  tvr-libs emacspeak-soundscapes))
    ;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
   (tvr-customize) ;;; customizations
