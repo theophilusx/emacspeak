@@ -1910,6 +1910,7 @@ Notification is logged in the notifications buffer unless `dont-log' is T. "
 
 (defun dtk-notify-using-voice (voice text &optional dont-log)
   "Use voice VOICE to speak text TEXT on notification stream."
+  (cl-declare (emacspeak-last-message))
   (unless dont-log (emacspeak-log-notification text))
   (setq emacspeak-last-message text)
   (let ((dtk-speaker-process (dtk-notify-process)))
