@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on May 20, 2022.
+last updated on May 21, 2022.
 
 
 File: emacspeak.info,  Node: emacspeak-google,  Next: emacspeak-gridtext,  Prev: emacspeak-gomoku,  Up: Emacspeak Commands And Options
@@ -4274,8 +4274,8 @@ of emacspeak from becoming dependent on the speech server modules
      with auditory icon ellipses. Presence of additional
      presentational overlays (created via property display,
      before-string, or after-string) is indicated with auditory icon
-     ‘more’.  These can then be spoken using command
-     C-e C-M-l.
+     ‘left’, ‘right’, or ‘more’ as appropriate.  These can then be
+     spoken using command C-e M-l.
 
      (fn &optional ARG)
 
@@ -4418,8 +4418,8 @@ of emacspeak from becoming dependent on the speech server modules
 ..............................................
 
  -- Command: emacspeak-speak-overlay-properties
-     ‘C-e C-M-l’
-     ‘<fn> C-M-l’
+     ‘C-e M-l’
+     ‘<fn> M-l’
 
      Speak display, before-string or after-string property if any.
 
@@ -7309,8 +7309,6 @@ Contains various wizards for the Emacspeak desktop.
 ......................................
 
  -- Command: emacspeak-link-current-file
-     ‘C-e M-l’
-     ‘<fn> M-l’
 
      Link (hard link) file visited in current buffer to new location.
      Prompts for the new location and preserves modification time
