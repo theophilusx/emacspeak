@@ -942,15 +942,18 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
   (interactive)
   (let ((before (get-char-property (point) 'before-string))
         (after (get-char-property (point) 'after-string))
+        (display (get-char-property (point) 'display))
         (result (ems--display-props-get)))
     (cond
      ((or (null result) (= 0 (length result)))
+      (emacspeak-auditory-icon 'warn-user)
       (message "No speakable overlay properties here."))
      (t
       (emacspeak-auditory-icon
        (cond
         (before 'left)
         (after 'right)
+        (display 'center)
         (t 'more)))
       (dtk-speak result)))))
 
@@ -2104,7 +2107,7 @@ was spoken.  Any other key continues to speak the buffer."
 The message is also placed in the kill ring for convenient yanking "
   (interactive "P")
   (cl-declare (special emacspeak-last-message))
-  (when  (called-interactively-p 'interactive)
+  (when  (and emacspeak-last-message (called-interactively-p 'interactive))
     (kill-new emacspeak-last-message))
   (cond
    (from-message-cache (dtk-speak emacspeak-last-message))
