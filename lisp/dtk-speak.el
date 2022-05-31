@@ -648,7 +648,7 @@ specifies the current pronunciation mode --- See
     (goto-char (point-min))))
 
 (defun dtk-handle-repeating-patterns (mode)
-  "Handle repeating patterns by replacing them with 'aw <length> char-names'"
+  "Handle repeating patterns by replacing them with  `aw <length> char-names'"
   (cl-declare (special dtk-cleanup-repeats))
   (goto-char (point-min))
   (mapc
@@ -1477,7 +1477,7 @@ Set by \\[dtk-set-punctuations].")
   "Checks if this tts-engine can support multiple streams."
   (cl-declare (special tts-notification-device))
   (and
-   (member tts-engine '("outloud"  "cloud-outloud"))
+   (member tts-engine '("outloud"  "cloud-outloud" "espeak"  "cloud-espeak"))
    (not (string= tts-notification-device "default"))))
 
 (defun dtk-cloud ()
@@ -1537,13 +1537,24 @@ program. Port defaults to dtk-local-server-port"
 ;;}}}
 ;;{{{  initialize the speech process
 
-(defcustom tts-notification-device
-  (eval-when-compile
-    (or (getenv "ALSA_NOTIFY")
+(defsubst tts-notification-from-env ()
+  "Compute tts-notification device from env."
+  (or
         (cl-first
          (split-string
-          (shell-command-to-string  "aplay -L 2>/dev/null | grep mono")))))
-  "Virtual ALSA device to use for notifications stream.
+          (shell-command-to-string
+           "aplay -L 2>/dev/null | grep mono")))
+        (substring
+ (cl-first
+  (split-string
+   (shell-command-to-string
+    "pacmd list-sinks | grep tts | cut -f 2 -d ':'")))
+ 1 -1))
+  )
+
+(defcustom tts-notification-device
+  (eval-when-compile (tts-notification-from-env))
+  "Virtual sound device to use for notifications stream.
 Set to nil to disable a separate Notification stream."
   :type '(choice
           (const :tag "None" nil)
@@ -1882,30 +1893,36 @@ Notification is logged in the notifications buffer unless `dont-log' is T. "
    ((dtk-notify-process)                ; we have a live notifier
     (dtk-notify-apply #'emacspeak-auditory-icon icon))))
 
-(defsubst dtk-get-notify-alsa-device ()
-  "Returns name of Alsa device for use as the notification stream."
+(defsubst dtk-get-notify-device ()
+  "Returns name of sound device for use as the notification stream.
+Designed to work with ALSA and Pulseaudio."
   (cl-declare (special tts-notification-device))
-  (or tts-notification-device (getenv "ALSA_DEFAULT")))
+  (or
+   tts-notification-device
+   (tts-notification-from-env)))
 
 (defun dtk-notify-initialize ()
   "Initialize notification TTS stream."
   (interactive)
   (cl-declare (special dtk-notify-process))
-  (let ((save-device (getenv "ALSA_DEFAULT"))
-        (device (dtk-get-notify-alsa-device))
+  (let ((process-environment (copy-sequence process-environment))
+        (device (dtk-get-notify-device))
         (dtk-program
          (if
              (string-match "cloud" dtk-program)
              "cloud-notify"
            dtk-program))
         (new-process nil))
-    (setenv "ALSA_DEFAULT" device)
+    (setq process-environment
+          (cond
+           ((> (length (shell-command-to-string "pidof pulseaudio")) 0)
+            (setenv-internal process-environment"PULSE_SINK" device t))
+           (t (setenv-internal process-environment"ALSA_DEFAULT" device t))))
     (setq new-process (dtk-make-process "Notify"))
     (when
         (memq (process-status new-process) '(run open))
       (when (and dtk-notify-process (process-live-p dtk-notify-process))
         (delete-process dtk-notify-process))
-      (setenv "ALSA_DEFAULT" save-device)
       (setq dtk-notify-process new-process))))
 
 (defun dtk-notify-using-voice (voice text &optional dont-log)
