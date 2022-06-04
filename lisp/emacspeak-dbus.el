@@ -163,7 +163,7 @@ Stop apps that use the network."
 (defun emacspeak-dbus-resume-signal-handler()
   "Resume handler"
   (run-hooks 'emacspeak-dbus-resume-hook))
-
+;;;###autoload
 (defun emacspeak-dbus-screensaver-check ()
   "Check  and fix Emacs DBus Binding to gnome-screensaver"
   (when (file-exists-p "/usr/bin/gnome-screensaver")
@@ -245,8 +245,8 @@ already disabled."
          "org.gnome.ScreenSaver" "/org/gnome/ScreenSaver"
          "org.gnome.ScreenSaver" "GetActive")
       (emacspeak-prompt "pwd")
-      (emacspeak-auditory-icon 'help))
-    (when (featurep 'light) (light-black))))
+      (emacspeak-auditory-icon 'help)
+      (when (featurep 'light) (light-black)))))
 
 (add-hook 'emacspeak-dbus-resume-hook #'emacspeak-dbus-resume)
 

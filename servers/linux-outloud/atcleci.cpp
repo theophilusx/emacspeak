@@ -74,7 +74,8 @@
 #define PACKAGENAME "tts"
 #define PACKAGEVERSION "1.0"
 #define ECILIBRARYNAME "libibmeci.so"
-
+// alsa buffer_size   for 512 16 bit samples, 0.046440 seconds of audio.
+#define ATCL_BUFFER_SIZE 262144
 //>
 //< alsa: globals and defines
 
@@ -209,6 +210,13 @@ static size_t alsa_configure(void) {
   err = snd_pcm_hw_params_set_rate(AHandle, params, rate, 0);
   assert(err >= 0);
 
+  //>
+  //<buffer_size:
+
+  err = snd_pcm_hw_params_set_buffer_size(AHandle, params, ATCL_BUFFER_SIZE);
+  if (err < 0) {
+    fprintf(stderr, "Will use ALSA/Pulse defaults, \n");
+  }
   //>
   //<Access Mode:
   err = snd_pcm_hw_params_set_access(AHandle, params,
