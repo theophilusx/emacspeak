@@ -772,7 +772,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
             m                           ; our message
             emacspeak-speak-messages    ; speaking messages
             (not (string-match ems--message-filter-pattern m))
-            (< 0.1
+            (< 1.0
                (float-time
                 (time-subtract (current-time) emacspeak-lazy-message-time))))
          (setq emacspeak-lazy-message-time (current-time)
@@ -1061,6 +1061,10 @@ When on a close delimiter, speak matching delimiter after a small delay. "
       (message message)))
    (t ad-do-it))
   ad-return-value)
+
+(defadvice vc-refresh-state (around emacspeak pre act comp)
+  "Silence messages"
+  (ems-with-messages-silenced ad-do-it))
 
 (defadvice vc-next-action (around emacspeak pre act comp)
   "speak."

@@ -72,6 +72,7 @@
 (cl-loop
  for f in
  '(
+   epa-progress-callback-function
    epa-mail-verify epa-mail-import-keys
    epa-file-select-keys epa-insert-keys
    epa-verify-region epa-verify-file epa-verify-cleartext-in-region
@@ -90,8 +91,7 @@
      "speak. "
      (ems-with-messages-silenced
       ad-do-it
-      (when (ems-interactive-p)
-        (emacspeak-auditory-icon 'task-done))))))
+      (when (ems-interactive-p) (emacspeak-auditory-icon 'task-done))))))
 
 (add-hook
  'epa-key-list-mode-hook

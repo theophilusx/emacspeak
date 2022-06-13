@@ -80,7 +80,7 @@ mac for MAC TTS (default on Mac)")
 ;; Importing dtk-interp by inclusion:
 
 ;;{{{ macros
-
+;;;###autoload
 (defmacro tts-with-punctuations (setting &rest body)
   "Set punctuation  and exec   body."
   (declare (indent 1) (debug t))
@@ -1738,6 +1738,7 @@ unless   `dtk-quiet' is set to t. "
           (unless (eobp) (dtk-audio-format (point) (point-max))))))
     (dtk-force)))
 
+;;;###autoload
 (defmacro ems-with-messages-silenced (&rest body)
   "Evaluate body  after temporarily silencing messages."
   (declare (indent 0) (debug t))
@@ -1746,12 +1747,23 @@ unless   `dtk-quiet' is set to t. "
      (let ((emacspeak-speak-messages nil)
            (inhibit-message t))
        ,@body)))
+;;;###autoload
+(defmacro ems-with-environment (env-alist &rest body)
+  "Evaluate body  an updated `ENV'.
+Argument ` env-alist' is an alist of shell env-var/env-value pairs."
+  (declare (indent 0) (debug t))
+  `(let ((process-environment (copy-sequence process-environment)))
+        (cl-loop
+         for b in ,env-alist do
+         (setq process-environment
+               (setenv-internal process-environment (car b) (cdr b) t)))
+        ,@body))
 
 (defun dtk-speak-and-echo (message)
   "Speak message and echo it."
   (ems-with-messages-silenced
-   (dtk-speak message)
-   (message "%s" message)))
+    (dtk-speak message)
+    (message "%s" message)))
 
 (defun dtk-speak-list (text &optional group)
   "Speak a  list of strings.
