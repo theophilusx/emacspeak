@@ -299,7 +299,8 @@ dont-url-encode if true then url arguments are not url-encoded "
      (forward-line 1)
      (emacspeak-auditory-icon 'open-object)
      (emacspeak-speak-rest-of-buffer))
- "Light-weight Google search.")
+ "Light-weight Google weather.")
+
 ;;}}}
 ;;{{{ Calendar Mobile:
 

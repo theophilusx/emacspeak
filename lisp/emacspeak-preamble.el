@@ -1,7 +1,7 @@
 ;;; emacspeak-preamble.el --- standard  include for Emacspeak modules  -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
-;; DescriptionEmacspeak extensions for auctex-mode
+;; DescriptionEmacspeak Preamble
 ;; Keywords:emacspeak, audio interface to emacs 
 ;;{{{  LCD Archive entry:
 
@@ -194,11 +194,11 @@ FN-NAME to our stored value of ems--interactive-fn-name."
    (format "From %s: Unexpected call!" ems--interactive-fn-name)))
 
 ;;}}}
-;;{{{defsubst: ems--fastload:
+;;{{{defun: ems--fastload:
 
 ;; Internal function  used to efficiently load files.
 
-(defsubst ems--fastload (file)
+(defun ems--fastload (file)
   "Load file efficiently."
   (let ((file-name-handler-alist nil)
         (load-source-file-function nil))

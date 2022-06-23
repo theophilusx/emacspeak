@@ -191,6 +191,7 @@ the Emacspeak desktop.")
     ("ivy" emacspeak-ivy)
     ("jabber" emacspeak-jabber)
     ("jdee" emacspeak-jdee)
+    ("journalctl-mode" emacspeak-journalctl)
     ("js2-mode" emacspeak-js2)
     ("kmacro" emacspeak-kmacro)
     ("lispy" emacspeak-lispy)
@@ -411,9 +412,11 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
   (dtk-initialize)
+  (mapc #'load
+        (directory-files-recursively
+         emacspeak-sounds-directory "define-theme.el"))
   (emacspeak-pronounce-load-dictionaries)
   (funcall #'(lambda () (ems--fastload "emacspeak-advice")))
-  (emacspeak-sounds-define-theme emacspeak-sounds-default-theme ".wav")
   (emacspeak-setup-programming-modes)
   (setq line-number-mode nil column-number-mode nil)
   (funcall #'emacspeak-prepare-emacs)

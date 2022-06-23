@@ -197,8 +197,7 @@ Use Custom to customize where possible. "
   (setq custom-file (expand-file-name "~/.customize-emacs"))
   (load-theme 'modus-vivendi t)
   (add-hook 'prog-mode-hook 'format-all-mode)
-  (when (executable-find "light")
-    (emacspeak-brightness-alert-toggle))
+  ;(emacspeak-sounds-select-theme "ogg-chimes/")
   (tvr-time-load (when (file-exists-p custom-file)  (load custom-file))))
 
 (defun tvr-after-init ()
@@ -223,7 +222,8 @@ Use Custom to customize where possible. "
   "TVR:text-mode"
   (auto-fill-mode)
   (emacspeak-pronounce-toggle-use-of-dictionaries t)
-;; company-wordfreq setup:
+  (setq auto-correct-predicate #'(lambda () t))
+  ;; company-wordfreq setup:
   (setq-local company-backends '(company-wordfreq))
   (setq-local company-transformers nil)
   (abbrev-mode)

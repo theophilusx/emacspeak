@@ -40,23 +40,32 @@
 
 ;;; Commentary:
 ;; This module provides the interface for generating auditory icons in
-;; emacspeak.  Design goal: 1) Auditory icons should be used to
-;; provide additional feedback, not as a gimmick.  2) The interface
-;; should be usable at all times without the icons: e.g. when on a
-;; machine without a sound card.  3) General principle for when to use
+;; emacspeak.
+;; @subsection Design goal:
+;;
+;; @itemize
+;; @item   Auditory icons should be used to
+;; provide additional feedback, not as a gimmick.
+;; @item   The interface
+;; should be usable at all times without the icons.
+;; @item   General principle for when to use
 ;; an icon: Convey information about events taking place in parallel.
-;; For instance, if making a selection automatically moves the current
+;;@item  For instance, if making a selection automatically moves the current
 ;; focus to the next choice, We speak the next choice, while
-;; indicating the fact that something was selected with a sound cue.
-;; This interface will assume the availability of a shell command
-;; "play" that can take one or more sound files and play them.  This
-;; module will also provide a mapping between names in the elisp world
-;; and actual sound files.  Modules that wish to use auditory icons
-;; should use these names, instead of actual file names.  As of
+;; indicating the fact that something was selected with a auditory icon.
+;;@item  This interface will assume the availability of a shell command
+;; @code{play} that can take one or more sound files and play them.
+;; @item This
+;; module provides  a mapping between names in the elisp world
+;; and actual sound files.
+;; @item Modules that wish to use auditory icons
+;; should use these names, instead of actual file names.
+;; @item As of
 ;; Emacspeak 13.0, this module defines a themes architecture for
 ;; auditory icons.  Sound files corresponding to a given theme are
-;; found in appropriate subdirectories of emacspeak-sounds-directory
-
+;; found in appropriate subdirectories of emacspeak-sounds-directory.
+;; @item The auditory icon player is configure via custom option @code{emacspeak-play-program}.
+;; @end itemize
 ;;}}}
 ;;{{{ required modules
 
@@ -80,7 +89,7 @@ play : Launches play-program to play.
 Serve: Send a command to the speech-server to play.
 Queue : Add auditory icon to speech queue.
 Use Serve when working with remote speech servers.")
-
+;;;###autoload
 (defsubst emacspeak-auditory-icon (icon)
   "Play an auditory ICON."
   (when emacspeak-use-auditory-icons
@@ -99,33 +108,12 @@ Use Serve when working with remote speech servers.")
   (make-hash-table)
   "Maps valid sound themes to the file name extension used by that theme.")
 
-(defsubst emacspeak-sounds-define-theme (theme-name file-ext)
+(defun emacspeak-sounds-define-theme (theme-name file-ext)
   "Define a sounds theme for auditory icons. "
   (cl-declare (special emacspeak-sounds-themes-table))
   (setq theme-name (intern theme-name))
   (setf (gethash  theme-name emacspeak-sounds-themes-table)
         file-ext))
-
-(defcustom emacspeak-sounds-default-theme
-  (expand-file-name "pan-chimes/" emacspeak-sounds-directory)
-  "Default theme for auditory icons. "
-  :type '(directory :tag "Sound Theme Directory")
-  :group 'emacspeak)
-
-(defcustom emacspeak-play-program
-  (or
-   (executable-find "aplay")
-   (executable-find "play"))
-  "Play program."
-  :group 'emacspeak
-  :type 'string)
-
-(defvar emacspeak-sounds-current-theme
-  emacspeak-sounds-default-theme
-  "Name of current theme for auditory icons.
-Do not set this by hand;
---use command \\[emacspeak-sounds-select-theme].")
-
 (defun emacspeak-sounds-theme-get-extension (theme-name)
   "Retrieve filename extension for specified theme. "
   (cl-declare (special emacspeak-sounds-themes-table))
@@ -133,41 +121,7 @@ Do not set this by hand;
    (intern theme-name)
    emacspeak-sounds-themes-table))
 
-(defun emacspeak-sounds-define-theme-if-necessary (theme-name)
-  "Define selected theme if necessary."
-  (cond
-   ((emacspeak-sounds-theme-get-extension theme-name) t)
-   ((file-exists-p (expand-file-name "define-theme.el" theme-name))
-    ;; `ems--fastload' is defined in `emacspeak-preamble' which requires
-    ;; us, so we can't require it at top-level.
-    (require 'emacspeak-preamble)
-    (declare-function ems--fastload "emacspeak-preamble" (file))
-    (ems--fastload (expand-file-name "define-theme.el" theme-name)))
-   (t (error "Theme %s is missing its configuration file. " theme-name))))
 
-(defun emacspeak-sounds-theme-p  (theme)
-  "Predicate to test if theme is available."
-  (cl-declare (special emacspeak-sounds-directory))
-  (file-exists-p
-   (expand-file-name theme emacspeak-sounds-directory)))
-
-(defun emacspeak-sounds-select-theme  (theme)
-  "Select theme for auditory icons."
-  (interactive
-   (list
-    (expand-file-name
-     (read-directory-name "Theme: " emacspeak-sounds-directory))))
-  (cl-declare (special emacspeak-sounds-current-theme
-                       emacspeak-sounds-themes-table
-                       emacspeak-sounds-directory))
-  (setq theme (expand-file-name theme emacspeak-sounds-directory))
-  (unless (file-directory-p theme)
-    (setq theme  (file-name-directory theme)))
-  (unless (file-exists-p theme)
-    (error "Theme %s is not installed" theme))
-  (setq emacspeak-sounds-current-theme theme)
-  (emacspeak-sounds-define-theme-if-necessary theme)
-  (emacspeak-auditory-icon 'select-object))
 
 (defun emacspeak-get-sound-filename (sound-name)
   "Get name of  file that produces  auditory icon SOUND-NAME."
@@ -180,11 +134,97 @@ Do not set this by hand;
                   (emacspeak-sounds-theme-get-extension emacspeak-sounds-current-theme))
           emacspeak-sounds-current-theme)))
     (cond
+     ((and
+       (string= emacspeak-play-program (executable-find "pactl"))
+       (string=
+        emacspeak-sounds-current-theme
+        (expand-file-name "ogg-chimes/" emacspeak-sounds-directory)))
+      (file-name-nondirectory f))
      ((file-exists-p f) f)
      (t
       (let ((emacspeak-use-auditory-icons nil))
         (message "Icon %s not defined." sound-name))
       emacspeak-default-sound))))
+(defun emacspeak-sounds-define-theme-if-necessary (theme-name)
+  "Define selected theme if necessary."
+  (cond
+   ((emacspeak-sounds-theme-get-extension theme-name) t)
+   ((file-exists-p (expand-file-name "define-theme.el" theme-name))
+    (load (expand-file-name "define-theme.el" theme-name)))
+   (t (error "Theme %s is missing its configuration file. "
+             theme-name))))
+
+;;;###autoload
+(defun emacspeak-sounds-select-theme  (theme)
+  "Select theme for auditory icons."
+  (interactive
+   (list
+    (expand-file-name
+     (read-directory-name "Theme: " emacspeak-sounds-directory))))
+  (cl-declare (special emacspeak-sounds-current-theme
+                       emacspeak-sounds-themes-table
+                       emacspeak-play-program
+                       emacspeak-sounds-directory))
+  (when (string= emacspeak-play-program (executable-find "pactl"))
+    (error "Only ogg-chimes with Pulse Advanced."))
+  (setq theme (expand-file-name theme emacspeak-sounds-directory))
+  (unless (file-directory-p theme)
+    (setq theme  (file-name-directory theme)))
+  (unless (file-exists-p theme)
+    (error "Theme %s is not installed" theme))
+  (setq emacspeak-sounds-current-theme theme)
+  (emacspeak-sounds-define-theme-if-necessary theme)
+  t)
+
+
+(defcustom emacspeak-play-program
+  (or
+   (executable-find "aplay")
+   (executable-find "paplay")
+   (executable-find "play")
+   (executable-find "pactl"))
+  "Play program."
+  :type
+  '(choice
+    (const :tag "Alsa" "/usr/bin/aplay")
+    (const :tag "Pulse Basic" "/usr/bin/paplay")
+    (const  :tag "Pulse Advanced" "/usr/bin/pactl")
+    (const  :tag "SoX" "/usr/bin/play"))
+  :set
+  #'(lambda(sym val)
+      (cl-declare (special emacspeak-play-args
+                           emacspeak-sounds-current-theme))
+      (set-default sym val)
+      (cond
+       ((string= (executable-find "pactl") val)
+        (setq emacspeak-play-args "play-sample")
+        (setq emacspeak-sounds-current-theme
+              (expand-file-name "ogg-chimes/" emacspeak-sounds-directory)))
+       ((string= (executable-find "paplay") val)
+        (setq emacspeak-play-args nil))
+       ((string= (executable-find "aplay") val)
+        (setq emacspeak-play-args nil)
+        (setq emacspeak-sounds-current-theme
+              (expand-file-name "pan-chimes/" emacspeak-sounds-directory)))
+       ((string= (executable-find "play") val)
+        (setq emacspeak-play-args nil))))
+  :group 'emacspeak)
+
+(defvar emacspeak-sounds-current-theme
+  (expand-file-name "pan-chimes/" emacspeak-sounds-directory)
+  "Name of current theme for auditory icons.
+Do not set this by hand;
+--use command \\[emacspeak-sounds-select-theme].")
+
+(defun emacspeak-sounds-theme-p  (theme)
+  "Predicate to test if theme is available."
+  (cl-declare (special emacspeak-sounds-directory))
+  (file-exists-p
+   (expand-file-name theme emacspeak-sounds-directory)))
+
+
+
+
 
 ;;}}}
 ;;{{{  queue an auditory icon
@@ -209,12 +249,9 @@ Do not set this by hand;
 ;;}}}
 ;;{{{  Play an icon
 
-(defcustom emacspeak-play-args nil
-  
-  "Set this to nil if using paplay from pulseaudio."
-  :type '(choice (string :tag "Arguments" "-q")
-                 (const :tag "None" nil))
-  :group 'emacspeak)
+(defvar emacspeak-play-args nil
+  "Set this to nil if using paplay from pulseaudio.
+Automatically set to `play-sample' if using pactl.")
 
 (defun emacspeak-play-auditory-icon (sound-name)
   "Produce auditory icon SOUND-NAME."
