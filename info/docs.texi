@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1153 commands and 145 options.
+This chapter documents a total of 1155 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -291,10 +291,44 @@ Persist  amixer.
 @end format
 @end deffn
 
+@subsubsection amixer-volume-down
+@deffn {Command} amixer-volume-down   
+@table @kbd
+@item <XF86AudioLowerVolume>
+@kindex <XF86AudioLowerVolume>
+@item C-<f2>
+@kindex C-<f2>
+@end table
+
+@findex amixer-volume-down
+
+@format
+Lower Mastervolume 5%.
+@end format
+@end deffn
+
+@subsubsection amixer-volume-up
+@deffn {Command} amixer-volume-up   
+@table @kbd
+@item <XF86AudioRaiseVolume>
+@kindex <XF86AudioRaiseVolume>
+@item C-<f1>
+@kindex C-<f1>
+@end table
+
+@findex amixer-volume-up
+
+@format
+Raise Master volume 5%.
+@end format
+@end deffn
+
 @subsection amixer Options
 
 @defvar {User Option} amixer-device
 ALSA Control Device.
+
+Default Value: @code{@verb{|default|}}
 
 @end defvar
 
@@ -341,6 +375,8 @@ cap C   Save clip to disk
 @defvar {User Option} cd-tool-start-command
 Name of cdstart command; most likely either "cdstart" or "cdplay".
 
+Default Value: @code{@verb{|cdstart|}}
+
 @end defvar
 
 @node dectalk-voices
@@ -371,6 +407,8 @@ Dectalk TTS.
 
 @defvar {User Option} dectalk-default-speech-rate
 Default speech rate . 
+
+Default Value: @code{@verb{|225|}}
 
 @end defvar
 
@@ -941,10 +979,14 @@ Speak version.
 @defvar {User Option} dtk-allcaps-prefix
 Prefix used to indicate AllCaps
 
+Default Value: @code{@verb{| acc |}}
+
 @end defvar
 
 @defvar {User Option} dtk-caps-prefix
 Prefix used to indicate capitalization
+
+Default Value: @code{@verb{|cap|}}
 
 @end defvar
 
@@ -957,35 +999,49 @@ More than 3 consecutive occurrences
 of a  pattern   is
 replaced with a repeat count. 
 
+Default Value: @code{@verb{|(.  . _ - = / + * : ; % \/ /\ { } ~ $ ) # <> ^ < >)|}}
+
 @end defvar
 
 @defvar {User Option} dtk-cloud-server
 Set this to your preferred cloud TTS server.
+
+Default Value: @code{@verb{|cloud-outloud|}}
 
 @end defvar
 
 @defvar {User Option} dtk-local-engine
 Engine we use  for our local TTS  server.
 
+Default Value: @code{@verb{|outloud|}}
+
 @end defvar
 
 @defvar {User Option} dtk-speech-rate-base
 Value of lowest speech rate.
+
+Default Value: @code{@verb{|50|}}
 
 @end defvar
 
 @defvar {User Option} dtk-speech-rate-step
 Speech rate step used by ‘dtk-set-predefined-speech-rate’.
 
+Default Value: @code{@verb{|8|}}
+
 @end defvar
 
 @defvar {User Option} dtk-unicode-character-replacement-alist
 Replacements for  characters.
 
+Default Value: @code{@verb{|((150 . -) (9473 . -) (9475 . |) (176 .  degrees ) (8451 . Degree C) (8457 . Degree F ) (8220 . ") (8221 . ") (8902 . *) (173 . -) (8216 . `) (8217 . ') (8208 . -) (8211 .  -- ) (8212 .  --- ) (8202 .  ) (65279 .  ) (8204 . ) (8203 .  ) (8201 .  ) (8213 . ----) (8214 . ||) (8230 . ...) (8226 .  bullet ) (149 .  ... ) (8482 . TM) (64256 . ff) (64257 . fi) (64258 . fl) (64259 . ffi) (64260 . Ffl))|}}
+
 @end defvar
 
 @defvar {User Option} dtk-unicode-name-transformation-rules-alist
 Alist of character name transformation rules.
+
+Default Value: @code{@verb{|((BOX DRAWING lambda (_ignored) .) (^Mathematical Sans-Serif\( small\| capital\)? letter \(.*\)$ lambda (s) (match-string 2 s)) (^greek\( small\| capital\)? letter \(.*\)$ lambda (s) (match-string 2 s)) (^latin\( small\| capital\)? letter \(.*\)$ lambda (s) (match-string 2 s)) (^DEVANAGARI \(sign\|vowel sign\|letter\)? \(.*\)$ lambda (s) (match-string 2 s)))|}}
 
 @end defvar
 
@@ -993,16 +1049,22 @@ Alist of character name transformation rules.
 Characters of these charsets are  ignored by
   dtk-unicode-replace-chars.
 
+Default Value: @code{@verb{|(ascii latin-iso8859-1)|}}
+
 @end defvar
 
 @defvar {User Option} dtk-use-tones
 Toggle tones. 
+
+Default Value: @code{@verb{|t|}}
 
 @end defvar
 
 @defvar {User Option} tts-notification-device
 Virtual sound device to use for notifications stream.
 Set to nil to disable a separate Notification stream.
+
+Default Value: @code{@verb{|tts_right|}}
 
 @end defvar
 
@@ -1021,10 +1083,14 @@ It implements function emacspeak which loads the rest of the system.
 @defvar {User Option} emacspeak-play-emacspeak-startup-icon
 If set to T, emacspeak plays its icon as it launches.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-soundscapes
 Whether we should turn on soundscapes.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -1198,10 +1264,14 @@ not needed in Emacs 22.
 @defvar {User Option} emacspeak-speak-messages-filter
 List of strings used to filter spoken messages.
 
+Default Value: @code{@verb{|(psession)|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-speak-tooltips
 Enable to get tooltips spoken.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -2030,10 +2100,14 @@ Web API  key for this application.
 See http://developer.bookshare.org/docs for details on how to get
   an API key. 
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-bookshare-directory
 Customize this to the root of where books are organized.
+
+Default Value: @code{@verb{|/home/raman/books/book-share|}}
 
 @end defvar
 
@@ -2580,15 +2654,6 @@ Advice comint and friends to speak.
 
 @subsection Emacspeak-Comint Commands
 
-@subsubsection emacspeak-completion-pick-completion
-@deffn {Command} emacspeak-completion-pick-completion   
-@findex emacspeak-completion-pick-completion
-
-@format
-Pick completion.
-@end format
-@end deffn
-
 @subsubsection emacspeak-toggle-comint-autospeak
 @deffn {Command} emacspeak-toggle-comint-autospeak  (&optional prefix)
 @findex emacspeak-toggle-comint-autospeak
@@ -2641,6 +2706,8 @@ toggles personality under point.
 @defvar {User Option} emacspeak-comint-autospeak
 Speak comint output.
 Use M-x emacspeak-toggle-comint-autospeak to toggle this setting.
+
+Default Value: @code{@verb{|t|}}
 
 @end defvar
 
@@ -2881,8 +2948,6 @@ Open CSV file on current dired line.
 @table @kbd
 @item C-. d
 @kindex C-. d
-@item C-' d
-@kindex C-' d
 @item C-x @@ s d
 @kindex C-x @@ s d
 @end table
@@ -4084,25 +4149,35 @@ Custom URL executor for use in EPub Mode.
 @defvar {User Option} emacspeak-epub-bookshelf-directory
 Directory where we keep .bsf files defining various bookshelves.
 
+Default Value: @code{@verb{|/home/raman/EBooks/bsf/|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-epub-calibre-root-dir
 Root of Calibre library.
+
+Default Value: @code{@verb{|/home/raman/EBooks/calibre|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-epub-gutenberg-mirror
 Base URL  for Gutenberg mirror.
 
+Default Value: @code{@verb{|http://www.gutenberg.org/ebooks/|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-epub-gutenberg-suffix
 Suffix of book type we retrieve.
 
+Default Value: @code{@verb{|.epub.noimages|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-epub-library-directory
 Directory under which we store Epubs.
+
+Default Value: @code{@verb{|/home/raman/EBooks/|}}
 
 @end defvar
 
@@ -4190,15 +4265,21 @@ set the current local value to the result.
 Set to T if you dont want to see notification  messages from the
 server.
 
+Default Value: @code{@verb{|t|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-erc-my-nick
 My IRC nick.
 
+Default Value: @code{@verb{||}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-erc-speak-all-participants
 Speak all things said if t.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -5922,10 +6003,14 @@ Turn this on to make section navigation autospeak.
 This also reverses the meaning of the prefix-arg to section nav
   commands.
 
+Default Value: @code{@verb{|t|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-eww-inhibit-images
 Turn this on to avoid rendering images.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -6139,10 +6224,14 @@ File used to save Emacspeak clipboard.
 The emacspeak clipboard provides a convenient mechanism for exchanging
 information between different Emacs sessions.
 
+Default Value: @code{@verb{|/home/raman/.emacspeak//clipboard|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-curl-cookie-store
 Cookie store used by Curl.
+
+Default Value: @code{@verb{|/home/raman/.curl-cookies|}}
 
 @end defvar
 
@@ -6151,6 +6240,8 @@ Tramp locations used by Emacspeak tramp wizard.
 Locations added here via custom can be opened using command
 emacspeak-wizards-tramp-open-location
 bound to C-x @@ h C-t.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -6299,10 +6390,14 @@ Display RSS feed.
 Table of RSS/Atom feeds.
 The feed list is persisted to file saved-feeds on exit.
 
+Default Value: @code{@verb{|((BBC News http://www.bbc.co.uk/syndication/feeds/news/ukfs_news/front_page/rss091.xml rss) (BBC Podcast Directory http://www.bbc.co.uk/podcasts.opml opml) (CNet Tech News http://feeds.feedburner.com/cnet/tcoc rss) (Wired News http://www.wired.com/news_drop/netcenter/netcenter.rdf rss))|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-feeds-awesome-rss
 Location of Awesome RSS
+
+Default Value: @code{@verb{|/home/raman/sourceforge/awesome-rss-feeds/|}}
 
 @end defvar
 
@@ -6409,6 +6504,8 @@ between ido, popup and helm.
 
 @defvar {User Option} emacspeak-flyspell-correct
 Correction style to use with flyspell.
+
+Default Value: @code{@verb{|flyspell-correct-ido|}}
 
 @end defvar
 
@@ -6582,10 +6679,14 @@ emacspeak-gnus-large-article lines will be considered to be a large article.
 A large article is not spoken all at once;
 instead you hear only the first screenful.
 
+Default Value: @code{@verb{|100|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-gnus-punctuation-mode
 Pronunciation mode to use for gnus buffers.
+
+Default Value: @code{@verb{|all|}}
 
 @end defvar
 
@@ -7126,10 +7227,14 @@ current page.
 @defvar {User Option} emacspeak-google-kg-key
 API Key for Google Knowledge Graph.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-google-tts-default-language
 Default language used for Google TTS.
+
+Default Value: @code{@verb{|en-us|}}
 
 @end defvar
 
@@ -7354,6 +7459,8 @@ the entire list.
 @defvar {User Option} emacspeak-ido-typing-delay
 How long we wait before speaking completions.
 
+Default Value: @code{@verb{|0.15|}}
+
 @end defvar
 
 @node emacspeak-iedit
@@ -7433,6 +7540,8 @@ Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node.
 
+Default Value: @code{@verb{|node|}}
+
 @end defvar
 
 @node emacspeak-ispell
@@ -7455,6 +7564,8 @@ i.e. you can move through corrections with C-r and C-s.
 @defvar {User Option} emacspeak-ispell-max-choices
 Emacspeak will not speak the choices if there are more than this
 many available corrections.
+
+Default Value: @code{@verb{|10|}}
 
 @end defvar
 
@@ -7542,6 +7653,8 @@ Speak most recent message if one exists.
 @defvar {User Option} emacspeak-jabber-speak-presence-alerts
 Set to T if you want to hear presence alerts.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @node emacspeak-jdee
@@ -7575,30 +7688,56 @@ Note that the <fn> key found on laptops is denoted <fn>
 @defvar {User Option} emacspeak-alt-keys
 Alt key bindings. 
 
+Default Value: @code{@verb{|((, eldoc) (SPC emacspeak-eww-smart-tabs) (a emacspeak-feeds-atom-display) (b sox-binaural) (d sdcv-search-input) (e eww) (f ffap) (g rg) (l eww-open-file) (o emacspeak-feeds-opml-display) (p emacspeak-wizards-pdf-open) (q emacspeak-wizards-iex-show-price) (r emacspeak-feeds-rss-display) (s emacspeak-wizards-tune-in-radio-search) (t emacspeak-wizards-tune-in-radio-browse) (u emacspeak-m-player-url) (v visual-line-mode) (w define-word) (y emacspeak-m-player-youtube-player))|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ctl-z-keys
 CTL-z keymap.
+
+Default Value: @code{@verb{|((SPC flyspell-mode) (b emacspeak-wizards-view-buffers-filtered-by-this-mode) (c calibredb) (d magit-dispatch) (e emacspeak-wizards-eww-buffer-list) (f magit-file-dispatch) (l locate) (n emacspeak-wizards-cycle-to-next-buffer) (p emacspeak-wizards-cycle-to-previous-buffer) (r restart-emacs) (s magit-status) (z suspend-frame))|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-hyper-keys
 Hyper-Key bindings. 
 
+Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-wizards-view-buffers-filtered-by-m-player-mode) (; emacspeak-m-player-using-openal) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
+
+@end defvar
+
+@defvar {User Option} emacspeak-multi-keys
+Multi key bindings. 
+
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-personal-ctlx-keys
 Key bindings for use with C-e C-x. 
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-personal-keys
 Key bindings for  C-e x. 
 
+Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacspeak-wizards-shell-directory-reset) (0 emacspeak-wizards-shell-by-key) (1 emacspeak-wizards-shell-by-key) (2 emacspeak-wizards-shell-by-key) (3 emacspeak-wizards-shell-by-key) (4 emacspeak-wizards-shell-by-key) (5 emacspeak-wizards-shell-by-key) (6 emacspeak-wizards-shell-by-key) (7 emacspeak-wizards-shell-by-key) (8 emacspeak-wizards-shell-by-key) (9 emacspeak-wizards-shell-by-key) (; emacspeak-m-player-loop) (= emacspeak-wizards-find-longest-line-in-region) (C emacspeak-wizards-colors) (SPC emacspeak-jabber-speak-recent-message) (a emacspeak-wizards-alpha-vantage-quotes) (b battery) (c emacspeak-wizards-color-wheel) (d emacspeak-speak-load-directory-settings) (e emacspeak-we-xsl-map) (f emacspeak-wizards-remote-frame) (h emacspeak-wizards-how-many-matches) (i ibuffer) (j emacspeak-jabber-popup-roster) (l emacspeak-m-player-youtube-live) (m mspools-show) (o emacspeak-wizards-occur-header-lines) (p paradox-list-packages) (q emacspeak-wizards-quote) (r jabber-activity-switch-to) (t emacspeak-speak-telephone-directory) (u emacspeak-wizards-units) (v emacspeak-wizards-vc-viewer) (w emacspeak-wizards-noaa-weather) (| emacspeak-wizards-squeeze-blanks) ( desktop-clear))|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-super-keys
 Super key bindings. 
+
+Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC emacspeak-wizards-scratch) (a emacspeak-wizards-execute-asynchronously) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (f flyspell-mode) (h emacspeak-org-capture-link) (l emacspeak-m-player-locate-media) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood))|}}
+
+@end defvar
+
+@defvar {User Option} emacspeak-windows-keys
+Key bindings on the windows  key. 
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -7635,10 +7774,10 @@ for accessing the book.
 @subsubsection emacspeak-librivox
 @deffn {Command} emacspeak-librivox  (search-type)
 @table @kbd
-@item C-; l
-@kindex C-; l
-@item C-x @@ h l
-@kindex C-x @@ h l
+@item C-; C-l
+@kindex C-; C-l
+@item C-x @@ h C-l
+@kindex C-x @@ h C-l
 @end table
 
 @findex emacspeak-librivox
@@ -7703,6 +7842,8 @@ more results.
 
 @defvar {User Option} emacspeak-librivox-local-cache
 Location where we cache LIBRIVOX playlists.
+
+Default Value: @code{@verb{|/home/raman/.emacspeak/librivox|}}
 
 @end defvar
 
@@ -8192,8 +8333,6 @@ Load playlist.
 @table @kbd
 @item C-. l
 @kindex C-. l
-@item C-' l
-@kindex C-' l
 @item C-x @@ s l
 @kindex C-x @@ s l
 @end table
@@ -8823,20 +8962,28 @@ M-l		emacspeak-m-player-load-playlist
 @defvar {User Option} emacspeak-m-player-clips
 Directory where we store clips.
 
+Default Value: @code{@verb{|/home/raman/mp3/clips|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-m-player-custom-filters
 Additional filters to apply to streams.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-m-player-program
 Media player program.
 
+Default Value: @code{@verb{|/usr/local/bin/mplayer|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-media-location-bindings
 Map  keys  to launch MPlayer on a  directory.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -9097,6 +9244,8 @@ advice for posting message commands
 
 @defvar {User Option} emacspeak-message-punctuation-mode
 Pronunciation mode to use for message buffers.
+
+Default Value: @code{@verb{|all|}}
 
 @end defvar
 
@@ -9490,18 +9639,14 @@ The heads for the associated hydra are:
 
 "?":    ‘(emacspeak-hydra-self-help "emacspeak-muggles-toggle-option")’,
 "C-f":    ‘(call-interactively #’folding-mode)’,
-"C":    ‘(call-interactively #’flycheck-mode)’,
-"F":    ‘(call-interactively #’flyspell-mode)’,
 "a":    ‘(call-interactively #’abbrev-mode)’,
 "d":    ‘(call-interactively #’toggle-debug-on-error)’,
-"f":    ‘(call-interactively #’auto-fill-mode)’,
+"F":    ‘(call-interactively #’flyspell-mode)’,
 "e":    ‘(call-interactively #’emacspeak-m-player-toggle-extrastereo)’,
+"f":    ‘(call-interactively #’auto-fill-mode)’,
 "g":    ‘(call-interactively #’toggle-debug-on-quit)’,
 "h":    ‘(setq hydra-is-helpful (not hydra-is-helpful))’,
-"i":    ‘(call-interactively #’ido-everywhere)’,
-"I":    ‘(call-interactively #’flx-ido-mode)’,
 "p":    ‘emacspeak-muggles-lispy-or-sp’,
-"t":    ‘(call-interactively #’toggle-truncate-lines)’,
 "u":    ‘(call-interactively #’ido-ubiquitous-mode)’,
 "q":    nil
 
@@ -9907,66 +10052,92 @@ Writes out recognized text from all pages in current document.
 @defvar {User Option} emacspeak-ocr-compress-image
 Command used to compress the scanned tiff file.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-compress-image-options
 Options used for compressing tiff image.
+
+Default Value: @code{@verb{|-c g3 |}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-compress-photo-options
 Options used when created JPEG from  scanned photographs.
 
+Default Value: @code{@verb{|-optimize -progressive|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-engine
 OCR engine to process acquired image.
+
+Default Value: @code{@verb{|/home/raman/emacs/lisp/emacspeak/etc/tesseract.pl|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-engine-options
 Command line options to pass to OCR engine.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-image-extension
 Filename extension used for acquired image.
+
+Default Value: @code{@verb{|.tif|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-jpeg-metadata-writer
 Program to add metadata to JPEG files.
 
+Default Value: @code{@verb{|wrjpgcom|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-keep-uncompressed-image
 If set to T, uncompressed image is not removed.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-photo-compress
 Program to create JPEG compressed images.
 
+Default Value: @code{@verb{|cjpeg|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-scan-image
 Name of image acquisition program.
+
+Default Value: @code{@verb{|scanimage|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-scan-image-options
 Command line options to pass to image acquisition program.
 
+Default Value: @code{@verb{|--resolution 300 --mode lineart --format=tiff|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-scan-photo-options
 Options  used when scanning in photographs.
+
+Default Value: @code{@verb{|--mode color --format=pnm|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-ocr-working-directory
 Directory where images and OCR results
 will be placed.
+
+Default Value: @code{@verb{|/home/raman/.emacspeak/ocr/|}}
 
 @end defvar
 
@@ -9985,8 +10156,6 @@ or http://orgmode.org/
 @table @kbd
 @item C-. h
 @kindex C-. h
-@item C-' h
-@kindex C-' h
 @item C-x @@ s h
 @kindex C-x @@ s h
 @end table
@@ -10091,6 +10260,8 @@ echoes row header and element
 
 @defvar {User Option} emacspeak-org-table-after-movement-function
 The function to call after moving in a table
+
+Default Value: @code{@verb{|emacspeak-org-table-speak-current-element|}}
 
 @end defvar
 
@@ -10622,15 +10793,21 @@ Toggle use of pronunciation personality.
 @defvar {User Option} emacspeak-pronounce-common-xml-namespace-uri-pronunciations
 Namespace URIs.
 
+Default Value: @code{@verb{|((http://www.w3.org/2005/Atom .  atom ) (http://www.w3.org/1999/02/22-rdf-syntax-ns# . RDF Syntax) (http://www.w3.org/2002/06/xhtml2 .  xhtml2 ) (http://www.w3.org/2003/XInclude . XInclude) (http://www.w3.org/1999/XSL/Transform .  XSLT ) (http://www.w3.org/2002/xforms .  XForms ) (http://www.w3.org/2001/xml-events .  XEvents ) (http://www.w3.org/2001/vxml .  vxml ) (http://www.w3.org/2001/XMLSchema-instance .  XSI ) (http://www.w3.org/2001/XMLSchema .  XSD ) (http://www.w3.org/1999/xhtml .  xhtml ) (http://purl.org/dc/elements/1.1/ . DC) (http://search.yahoo.com/mrss/ . media))|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-pronounce-dictionaries-file
 File that holds  emacspeak pronunciations.
 
+Default Value: @code{@verb{|/home/raman/.emacspeak/.dictionary|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-pronounce-internet-smileys-pronunciations
 Smileys
+
+Default Value: @code{@verb{|((:-) .  smile ) (;) .  half-wink ) (:) .  grin ) (:-( .  frown ) (:( .  sigh ) (:-I .  shrug ) (:-> .  sarcastic smile ) (>:-> .  devillish smile ) (>;-> .  lewd smile ) (;-) .  wink ))|}}
 
 @end defvar
 
@@ -11039,6 +11216,8 @@ Optional interactive PREFIX arg toggles global value.
 @defvar {User Option} emacspeak-play-program
 Play program.
 
+Default Value: @code{@verb{|/usr/bin/aplay|}}
+
 @end defvar
 
 @node emacspeak-speak
@@ -11357,6 +11536,8 @@ Run shell command COMMANDAND speak its output.
 @table @kbd
 @item <silence>
 @kindex <silence>
+@item <XF86AudioPlay>
+@kindex <XF86AudioPlay>
 @end table
 
 @findex emacspeak-silence
@@ -12652,6 +12833,8 @@ You can use  command ‘emacspeak-toggle-audio-indentation’ bound
 to C-e d i to toggle this
 setting.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-character-echo
@@ -12660,12 +12843,16 @@ You can
 use C-e d k to toggle this
 setting.
 
+Default Value: @code{@verb{|t|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-line-echo
 If t, then emacspeak echoes lines as you type.
 You can use C-e d l to set this
 option.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -12677,11 +12864,15 @@ You can use command
 ‘emacspeak-toggle-mail-alert’ bound to
 C-e M-m to set this option. 
 
+Default Value: @code{@verb{|t|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-mail-alert-interval
 Interval in seconds between mail alerts for the same pending
   message.
+
+Default Value: @code{@verb{|300|}}
 
 @end defvar
 
@@ -12689,15 +12880,21 @@ Interval in seconds between mail alerts for the same pending
 Mail spool file examined  to alert you about newly
 arrived mail.
 
+Default Value: @code{@verb{|/var/mail/raman|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-silence-hook
 Functions run after emacspeak-silence is called.
 
+Default Value: @code{@verb{|(emacspeak-m-player-pause-or-resume emacspeak-emms-pause-or-resume)|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-speak-filter-persistent-store
 File where emacspeak filters are persisted.
+
+Default Value: @code{@verb{|/home/raman/.emacspeak/.filters|}}
 
 @end defvar
 
@@ -12708,6 +12905,8 @@ message area.  You can use command
 ‘emacspeak-toggle-speak-messages’ bound to
 C-e q.
 
+Default Value: @code{@verb{|t|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-speak-time-format-string
@@ -12715,10 +12914,14 @@ Format string that specifies how the time should be spoken.
 See the documentation for function
 ‘format-time-string’
 
+Default Value: @code{@verb{|%H:%M   on %A, %B %_e, %Y |}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-speak-zoneinfo-directory
 Directory containing timezone data.
+
+Default Value: @code{@verb{|/usr/share/zoneinfo/|}}
 
 @end defvar
 
@@ -12726,6 +12929,8 @@ Directory containing timezone data.
 If t, then emacspeak echoes words as you type.
 You can use C-e d w to toggle this
 option.
+
+Default Value: @code{@verb{|t|}}
 
 @end defvar
 
@@ -14522,11 +14727,15 @@ Yank specified header into kill ring.
 Executable that converts calendar invitations    on
   standard input to plain text.
 
+Default Value: @code{@verb{|/home/raman/emacs/lisp/emacspeak/etc/cal2text|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-vm-customize-mime-settings
 Non-nil will cause Emacspeak to configure VM mime
 settings to match what the author of Emacspeak uses.
+
+Default Value: @code{@verb{|t|}}
 
 @end defvar
 
@@ -14534,16 +14743,22 @@ settings to match what the author of Emacspeak uses.
 Executable that converts PDF on standard input to plain
 text using pdftotext.
 
+Default Value: @code{@verb{|/home/raman/emacs/lisp/emacspeak/etc/pdf2text|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-vm-use-raman-settings
 Should VM  use the customizations used by the author of Emacspeak.
+
+Default Value: @code{@verb{|t|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-vm-voice-loc
 Set this to T if you want messages automatically voice locked.
 Note that some badly formed mime messages  cause trouble.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -15249,6 +15464,8 @@ Select XSL transformation applied to Web pages before they are displayed .
 @defvar {User Option} emacspeak-we-filters-rename-buffer
 Set to T  if you want the buffer name to contain the applied filter.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @node emacspeak-websearch
@@ -15466,8 +15683,6 @@ WEBSPACE == Smart Web Gadgets For The Emacspeak Desktop
 @table @kbd
 @item C-. R
 @kindex C-. R
-@item C-' R
-@kindex C-' R
 @item C-x @@ s R
 @kindex C-x @@ s R
 @end table
@@ -15573,6 +15788,8 @@ Yank link under point into kill ring.
 
 @defvar {User Option} emacspeak-webspace-feeds
 Feeds to use in Headline Ticker.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -16287,12 +16504,8 @@ updating custom settings for a specific package or group of packages.
 @kindex C-z n
 @item C-; n
 @kindex C-; n
-@item C-; C-.
-@kindex C-; C-.
 @item C-x @@ h n
 @kindex C-x @@ h n
-@item C-x @@ h C-.
-@kindex C-x @@ h C-.
 @end table
 
 @findex emacspeak-wizards-cycle-to-next-buffer
@@ -16309,12 +16522,8 @@ Cycles to next buffer having same mode.
 @kindex C-z p
 @item C-; p
 @kindex C-; p
-@item C-; C-,
-@kindex C-; C-,
 @item C-x @@ h p
 @kindex C-x @@ h p
-@item C-x @@ h C-,
-@kindex C-x @@ h C-,
 @end table
 
 @findex emacspeak-wizards-cycle-to-previous-buffer
@@ -16474,8 +16683,6 @@ Update exec-path from shell path.
 @table @kbd
 @item C-. a
 @kindex C-. a
-@item C-' a
-@kindex C-' a
 @item C-x @@ s a
 @kindex C-x @@ s a
 @end table
@@ -16623,8 +16830,6 @@ Generate a widget-enabled finder wizard.
 @table @kbd
 @item C-. C-n
 @kindex C-. C-n
-@item C-' C-n
-@kindex C-' C-n
 @item C-x @@ s C-n
 @kindex C-x @@ s C-n
 @end table
@@ -16641,8 +16846,6 @@ Display just the headlines from Google News.
 @table @kbd
 @item C-. n
 @kindex C-. n
-@item C-' n
-@kindex C-' n
 @item C-x @@ s n
 @kindex C-x @@ s n
 @end table
@@ -16731,15 +16934,6 @@ Quick Quote: Just stock price from IEXCloud.
 
 @subsubsection emacspeak-wizards-iex-show-quote
 @deffn {Command} emacspeak-wizards-iex-show-quote  (&optional refresh)
-@table @kbd
-@item C-. q
-@kindex C-. q
-@item C-' q
-@kindex C-' q
-@item C-x @@ s q
-@kindex C-x @@ s q
-@end table
-
 @findex emacspeak-wizards-iex-show-quote
 
 @format
@@ -16987,8 +17181,6 @@ Works best when you already are ssh-impel-ed in and have a talking
 @table @kbd
 @item C-. SPC
 @kindex C-. SPC
-@item C-' SPC
-@kindex C-' SPC
 @item C-x @@ s SPC
 @kindex C-x @@ s SPC
 @end table
@@ -17076,12 +17268,12 @@ of the source buffer.
 Switch to shell buffer by key. This provides a predictable
   means for switching to a specific shell buffer. When invoked
   from a non-shell-mode buffer that is a dired-buffer or is
-  visiting a file, invokes ‘cd ’ in the shell to change to the
-  value of ‘default-directory’ --- if called with a
-  prefix-arg. When already in a shell buffer, interactive prefix
-  arg ‘prefix’ causes this shell to be re-keyed if appropriate
-  --- see M-x emacspeak-wizards-shell-re-key for an explanation
-  of how re-keying works.
+  visiting a file, invokes ‘cd ’ in the shell to change to the.
+  value of ‘default-directory’ When already in a shell buffer,
+  interactive prefix arg ‘prefix’ causes this shell to be
+  re-keyed if appropriate --- see
+  M-x emacspeak-wizards-shell-re-key for an explanation of how
+  re-keying works.
 
 (fn &optional PREFIX)
 @end format
@@ -17110,8 +17302,6 @@ Prompts for and runs shell command on current file.
 @table @kbd
 @item C-. .
 @kindex C-. .
-@item C-' .
-@kindex C-' .
 @item C-e x .
 @kindex C-e x .
 @item <fn> x .
@@ -17129,6 +17319,13 @@ Set current directory to this shell’s initial directory if one was defined.
 
 @subsubsection emacspeak-wizards-shell-directory-set
 @deffn {Command} emacspeak-wizards-shell-directory-set   
+@table @kbd
+@item C-e x ,
+@kindex C-e x ,
+@item <fn> x ,
+@kindex <fn> x ,
+@end table
+
 @findex emacspeak-wizards-shell-directory-set
 
 @format
@@ -17143,20 +17340,10 @@ Define current directory as this shell’s project directory.
 @kindex C-e <f11>
 @item C-; C-j
 @kindex C-; C-j
-@item C-. ,
-@kindex C-. ,
-@item C-' ,
-@kindex C-' ,
 @item <fn> <f11>
 @kindex <fn> <f11>
-@item C-e x ,
-@kindex C-e x ,
-@item <fn> x ,
-@kindex <fn> x ,
 @item C-x @@ h C-j
 @kindex C-x @@ h C-j
-@item C-x @@ s ,
-@kindex C-x @@ s ,
 @end table
 
 @findex emacspeak-wizards-shell-toggle
@@ -17310,6 +17497,15 @@ Toggle pronunciation of mm-dd-yyyy dates.
 @end format
 @end deffn
 
+@subsubsection emacspeak-wizards-toggle-yyyy-mm-dd-date-pronouncer
+@deffn {Command} emacspeak-wizards-toggle-yyyy-mm-dd-date-pronouncer   
+@findex emacspeak-wizards-toggle-yyyy-mm-dd-date-pronouncer
+
+@format
+Toggle pronunciation of yyyy-mm-dd dates.
+@end format
+@end deffn
+
 @subsubsection emacspeak-wizards-toggle-yyyymmdd-date-pronouncer
 @deffn {Command} emacspeak-wizards-toggle-yyyymmdd-date-pronouncer   
 @findex emacspeak-wizards-toggle-yyyymmdd-date-pronouncer
@@ -17446,12 +17642,6 @@ Buffer menu filtered by  m-player mode.
 @kindex C-z b
 @item C-. m
 @kindex C-. m
-@item C-' m
-@kindex C-' m
-@item C-, c
-@kindex C-, c
-@item C-x @@ a c
-@kindex C-x @@ a c
 @item C-x @@ s m
 @kindex C-x @@ s m
 @end table
@@ -17468,6 +17658,8 @@ Buffer menu filtered by  mode of current-buffer.
 @defvar {User Option} emacspeak-brightness-autoblack
 Set to T to automatically turn display black.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-iex-api-key
@@ -17476,11 +17668,15 @@ See IEX Login Console   at
 https://iexcloud.io/cloud-login/
 for how to get  an API key. 
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-speak-telephone-directory
 File holding telephone directory.
 This is just a text file, and we use grep to search it.
+
+Default Value: @code{@verb{|/home/raman/.emacspeak/tel-dir|}}
 
 @end defvar
 
@@ -17488,15 +17684,21 @@ This is just a text file, and we use grep to search it.
 API Key  used to retrieve stock data from alpha-vantage.
 Visit https://www.alphavantage.co/support/#api-key to get your key.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-wizards-find-switches-widget
 Widget to get find switch.
 
+Default Value: @code{@verb{|(cons :tag Find Expression (menu-choice :tag Find (string :tag Test) (const -name) (const -iname) (const -path) (const -ipath) (const -regexp) (const -iregexp) (const -exec) (const -ok) (const -newer) (const -anewer) (const -cnewer) (const -used) (const -user) (const -uid) (const -nouser) (const -nogroup) (const -perm) (const -fstype) (const -lname) (const -ilname) (const -empty) (const -prune) (const -or) (const -not) (const -inum) (const -atime) (const -ctime) (const -mtime) (const -amin) (const -mmin) (const -cmin) (const -size) (const -type) (const -maxdepth) (const -mindepth) (const -mount) (const -noleaf) (const -xdev)) (string :tag Value))|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-wizards-pdf-to-text-options
 options to Command for running pdftotext.
+
+Default Value: @code{@verb{|-layout|}}
 
 @end defvar
 
@@ -17505,15 +17707,24 @@ Set this to the stock tickers you want to check. Default is
 GAFA. Tickers are separated by white-space and are automatically
 sorted in lexical order with duplicates removed when saving.
 
+Default Value: @code{@verb{|aapl
+amzn
+fb
+goog|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-wizards-project-shells
 List of shell-name/initial-directory pairs.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} emacspeak-wizards-remote-workstation
 Name of remote workstation.
+
+Default Value: @code{@verb{||}}
 
 @end defvar
 
@@ -17641,6 +17852,8 @@ Start ESpeak.
 
 @defvar {User Option} espeak-default-speech-rate
 Default speech rate for eSpeak.
+
+Default Value: @code{@verb{|175|}}
 
 @end defvar
 
@@ -17834,8 +18047,6 @@ The body can be accessed via ‘emacspeak-muggles-m-player/body’.
 @table @kbd
 @item C-. o
 @kindex C-. o
-@item C-' o
-@kindex C-' o
 @item C-x @@ s o
 @kindex C-x @@ s o
 @end table
@@ -17936,8 +18147,6 @@ The body can be accessed via ‘emacspeak-muggles-smartparens/body’.
 @table @kbd
 @item C-. v
 @kindex C-. v
-@item C-' v
-@kindex C-' v
 @item C-x @@ s v
 @kindex C-x @@ s v
 @end table
@@ -18038,26 +18247,36 @@ Used by modules like gphoto, gblogger etc.
 @defvar {User Option} g-atom-view-xsl
 XSLT transform to convert Atom feed to HTML.
 
+Default Value: @code{@verb{|/home/raman/emacs/lisp/emacspeak/xsl/atom-view.xsl|}}
+
 @end defvar
 
 @defvar {User Option} g-cookie-jar
 Cookie jar used for Google services.
 Customize this to live on your local disk.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} g-curl-common-options
 Common options to pass to all Curl invocations.
+
+Default Value: @code{@verb{|--http1.0 --compressed --silent --location --location-trusted --max-time 4 --connect-timeout 1|}}
 
 @end defvar
 
 @defvar {User Option} g-curl-debug
 Set to T to see Curl stderr output.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} g-xslt-program
 XSLT Processor.
+
+Default Value: @code{@verb{|xsltproc|}}
 
 @end defvar
 
@@ -18319,11 +18538,15 @@ This function has :around advice: ‘ad-Advice-gmaps-walking-directions’.
 @defvar {User Option} gmaps-api-key
 Maps  API  key --- goto  https://code.google.com/apis/console to get one.
 
+Default Value: @code{@verb{|nil|}}
+
 @end defvar
 
 @defvar {User Option} gmaps-my-address
 Location address. Setting this updates gmaps-my-location
 coordinates via geocoding.
+
+Default Value: @code{@verb{|nil|}}
 
 @end defvar
 
@@ -18484,6 +18707,8 @@ This module defines the various voices used in voice-lock mode by Mac TTS.
 @defvar {User Option} mac-default-speech-rate
 Default speech rate for mac.
 
+Default Value: @code{@verb{|225|}}
+
 @end defvar
 
 @node outloud-voices
@@ -18516,6 +18741,8 @@ Start Outloud.
 
 @defvar {User Option} outloud-default-speech-rate
 Default speech rate.
+
+Default Value: @code{@verb{|50|}}
 
 @end defvar
 
@@ -18579,8 +18806,6 @@ communication == email, IM, ... map to  the same @emph{mood}.
 @table @kbd
 @item C-. s
 @kindex C-. s
-@item C-' s
-@kindex C-' s
 @item C-x @@ s s
 @kindex C-x @@ s s
 @end table
@@ -18641,8 +18866,6 @@ Activate scapes named ‘names’ --- a list of strings.
 @table @kbd
 @item C-. r
 @kindex C-. r
-@item C-' r
-@kindex C-' r
 @item C-x @@ s r
 @kindex C-x @@ s r
 @end table
@@ -18683,8 +18906,6 @@ Shows default theme in a special buffer.
 @table @kbd
 @item C-. t
 @kindex C-. t
-@item C-' t
-@kindex C-' t
 @item C-x @@ s t
 @kindex C-x @@ s t
 @end table
@@ -18702,8 +18923,6 @@ Run command M-x soundscape-theme to see the default mode->mood mapping.
 @table @kbd
 @item C-. u
 @kindex C-. u
-@item C-' u
-@kindex C-' u
 @item C-x @@ s u
 @kindex C-x @@ s u
 @end table
@@ -18724,16 +18943,22 @@ Optional interactive prefix arg ‘prompt-mode’ prompts for the mode.
 @defvar {User Option} soundscape-data
 Soundscape data directory.
 
+Default Value: @code{@verb{|/home/raman/.boodler/Collection|}}
+
 @end defvar
 
 @defvar {User Option} soundscape-device
 Alsa sound device to use for soundscapes.
+
+Default Value: @code{@verb{|default|}}
 
 @end defvar
 
 @defvar {User Option} soundscape-manager-options
 User customizable options list passed to boodler.
 Defaults specify alsa as the output and set master volume
+
+Default Value: @code{@verb{|(-m 0.3)|}}
 
 @end defvar
 
@@ -19079,11 +19304,15 @@ Play wind-down set of  binaural beats for ‘length’ seconds.
 User specified offset that is added to default gain when generating
 tones using SoX, e.g., for binaural beats.
 
+Default Value: @code{@verb{|0|}}
+
 @end defvar
 
 @defvar {User Option} sox-binaural-slider-scale
 Scale factor used to compute slide duration when moving from one
 binaural beat to another.
+
+Default Value: @code{@verb{|5.0|}}
 
 @end defvar
 
@@ -19162,125 +19391,175 @@ distinct parts of the utterance.
 @defvar {User Option} voice-animate-extra-settings
 Settings for voice-animate-extra
 
+Default Value: @code{@verb{|(nil nil 8 8 8)|}}
+
 @end defvar
 
 @defvar {User Option} voice-animate-medium-settings
 Settings for voice-animate-medium
+
+Default Value: @code{@verb{|(nil nil 7 7 7)|}}
 
 @end defvar
 
 @defvar {User Option} voice-animate-settings
 Settings for voice-animate
 
+Default Value: @code{@verb{|(nil nil 6 6 6)|}}
+
 @end defvar
 
 @defvar {User Option} voice-annotate-settings
 Settings for voice-annotate
+
+Default Value: @code{@verb{|(nil nil 4 0 4)|}}
 
 @end defvar
 
 @defvar {User Option} voice-bolden-and-animate-settings
 Settings for voice-bolden-and-animate
 
+Default Value: @code{@verb{|(nil 3 8 8 8)|}}
+
 @end defvar
 
 @defvar {User Option} voice-bolden-extra-settings
 Settings for voice-bolden-extra
+
+Default Value: @code{@verb{|(nil 1 nil 8)|}}
 
 @end defvar
 
 @defvar {User Option} voice-bolden-medium-settings
 Settings for voice-bolden-medium
 
+Default Value: @code{@verb{|(nil 2 nil 7)|}}
+
 @end defvar
 
 @defvar {User Option} voice-bolden-settings
 Settings for voice-bolden
+
+Default Value: @code{@verb{|(nil 3 nil 6)|}}
 
 @end defvar
 
 @defvar {User Option} voice-brighten-extra-settings
 Settings for voice-brighten-extra
 
+Default Value: @code{@verb{|(nil nil nil 3 8)|}}
+
 @end defvar
 
 @defvar {User Option} voice-brighten-medium-settings
 Settings for voice-brighten-medium
+
+Default Value: @code{@verb{|(nil nil nil 4 7)|}}
 
 @end defvar
 
 @defvar {User Option} voice-brighten-settings
 Settings for voice-brighten
 
+Default Value: @code{@verb{|(nil nil nil 5 6)|}}
+
 @end defvar
 
 @defvar {User Option} voice-indent-settings
 Settings for voice-indent
+
+Default Value: @code{@verb{|(nil nil 3 1 3)|}}
 
 @end defvar
 
 @defvar {User Option} voice-lighten-extra-settings
 Settings for voice-lighten-extra
 
+Default Value: @code{@verb{|(nil 9 nil 4)|}}
+
 @end defvar
 
 @defvar {User Option} voice-lighten-medium-settings
 Settings for voice-lighten-medium
+
+Default Value: @code{@verb{|(nil 7 nil 3)|}}
 
 @end defvar
 
 @defvar {User Option} voice-lighten-settings
 Settings for voice-lighten
 
+Default Value: @code{@verb{|(nil 6 nil 2)|}}
+
 @end defvar
 
 @defvar {User Option} voice-monotone-extra-settings
 Settings for voice-monotone-extra
+
+Default Value: @code{@verb{|(nil nil 0 0)|}}
 
 @end defvar
 
 @defvar {User Option} voice-monotone-medium-settings
 Settings for voice-monotone-medium
 
+Default Value: @code{@verb{|(nil nil 2 2)|}}
+
 @end defvar
 
 @defvar {User Option} voice-monotone-settings
 Settings for voice-monotone
+
+Default Value: @code{@verb{|(nil nil 4 4)|}}
 
 @end defvar
 
 @defvar {User Option} voice-overlay-0-settings
 Settings for voice-overlay-0
 
+Default Value: @code{@verb{|(nil 8 nil nil nil nil)|}}
+
 @end defvar
 
 @defvar {User Option} voice-overlay-1-settings
 Settings for voice-overlay-1
+
+Default Value: @code{@verb{|(nil nil 8 nil nil nil)|}}
 
 @end defvar
 
 @defvar {User Option} voice-overlay-2-settings
 Settings for voice-overlay-2
 
+Default Value: @code{@verb{|(nil nil nil 8 nil nil)|}}
+
 @end defvar
 
 @defvar {User Option} voice-overlay-3-settings
 Settings for voice-overlay-3
+
+Default Value: @code{@verb{|(nil nil nil nil 8 nil)|}}
 
 @end defvar
 
 @defvar {User Option} voice-smoothen-extra-settings
 Settings for voice-smoothen-extra
 
+Default Value: @code{@verb{|(nil nil nil 0 2)|}}
+
 @end defvar
 
 @defvar {User Option} voice-smoothen-medium-settings
 Settings for voice-smoothen-medium
 
+Default Value: @code{@verb{|(nil nil nil 2 4)|}}
+
 @end defvar
 
 @defvar {User Option} voice-smoothen-settings
 Settings for voice-smoothen
+
+Default Value: @code{@verb{|(nil nil nil 4 6)|}}
 
 @end defvar
 
@@ -19405,6 +19684,8 @@ Hook run after entering or leaving ‘voice-lock-mode’.
 No problems result if this variable is not bound.
 ‘add-hook’ automatically binds it.  (This is true for all hook variables.)
 
+Default Value: @code{@verb{|(voice-lock-mode-set-explicitly)|}}
+
 @end defvar
 
 @node xbacklight
@@ -19479,7 +19760,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 74 URL Templates.
+This section documents a total of 75 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -19626,7 +19907,9 @@ Format is stationid+AM/FM.@item @b{Tech News From CNet}
 
 Display tech news from CNET@item @b{TuneIn Radio}
 
-Translate StreamId to playable stream.@item @b{Washington Post}
+Translate StreamId to playable stream.@item @b{US Stock Market From Google }
+
+Light-weight Google US Stock Markets.@item @b{Washington Post}
 
 Washington Post Contents@item @b{Wiki Data Search}
 

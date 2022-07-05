@@ -1317,8 +1317,7 @@ Useful for fulltext search in a book."
                        emacspeak-speak-directory-settings emacspeak-bookshare-this-book))
   (unless (fboundp 'eww)
     (error "Your Emacs doesn't have EWW."))
-  (let ((gc-cons-threshold (max 8000000 gc-cons-threshold))
-        (xsl (emacspeak-bookshare-xslt directory))
+  (let ((xsl (emacspeak-bookshare-xslt directory))
         (buffer (get-buffer-create "Full Text"))
         (command nil)
         (inhibit-read-only t))
@@ -1335,7 +1334,9 @@ Useful for fulltext search in a book."
       (add-hook
        'emacspeak-eww-post-process-hook
        #'(lambda nil
-           (setq emacspeak-bookshare-this-book directory)
+           (setq
+            emacspeak-bookshare-this-book directory
+            default-directory directory)
            (emacspeak-speak-load-directory-settings directory)
            (emacspeak-auditory-icon 'open-object)
            (emacspeak-speak-mode-line)))
@@ -1350,7 +1351,7 @@ Useful for fulltext search in a book."
   (interactive)
   (goto-char (line-end-position))
   (goto-char (next-single-property-change (point) 'id))
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'select-object)
   (forward-char 1)
   (emacspeak-speak-line))
 
@@ -1359,7 +1360,7 @@ Useful for fulltext search in a book."
   (interactive)
   (goto-char (previous-single-property-change (point) 'id))
   (beginning-of-line)
-  (emacspeak-auditory-icon 'large-movement)
+  (emacspeak-auditory-icon 'select-object)
   (emacspeak-speak-line))
 
 (defun emacspeak-bookshare-flush-lines(regexp)

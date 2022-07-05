@@ -59,25 +59,6 @@
 ;;}}}
 ;;{{{ comint
 
-(defun emacspeak-completion-pick-completion ()
-  "Pick completion."
-  (interactive)
-  (cl-declare (special completion-reference-buffer))
-  (let ((completion-ignore-case t))
-    (choose-completion-string (emacspeak-get-current-completion) completion-reference-buffer))
-  (emacspeak-auditory-icon 'select-object)
-  (cond
-   ((not (or
-          (window-minibuffer-p)
-          (one-window-p)
-          (window-dedicated-p (selected-window))))
-    (delete-window)
-    (bury-buffer "*Completions*")
-    (other-window 1))
-   (t
-    (kill-buffer "*Completions*")))
-  (emacspeak-speak-line))
-
 (defcustom emacspeak-comint-autospeak t
   "Speak comint output.
 Use \\[emacspeak-toggle-comint-autospeak] to toggle this setting."
@@ -134,9 +115,10 @@ Interactive PREFIX arg means toggle the global default value. ")
 (defun emacspeak-comint-speech-setup ()
   "Speech setup."
   (cl-declare (special comint-mode-map
+                       emacspeak-pronounce-sha-checksum-pattern emacspeak-pronounce-date-mm-dd-yyyy-pattern
                        header-line-format emacspeak-use-header-line))
-  ;; Experimental: discard undo info in comint:
   (setq buffer-undo-list t)
+  (define-key comint-mode-map "\C-o" 'switch-to-completions)
   (when emacspeak-use-header-line
     (setq
      header-line-format
@@ -149,7 +131,31 @@ Interactive PREFIX arg means toggle the global default value. ")
          (when (> (length (window-list)) 1)
            (format "%s" (length (window-list)))))))))
   (dtk-set-punctuations 'all)
-  (define-key comint-mode-map "\C-o" 'switch-to-completions)
+  (emacspeak-pronounce-add-dictionary-entry
+   'comint-mode
+   emacspeak-pronounce-uuid-pattern
+   (cons 're-search-forward
+         'emacspeak-pronounce-uuid))
+  (emacspeak-pronounce-add-dictionary-entry
+   'comint-mode
+   emacspeak-pronounce-sha-checksum-pattern
+   (cons 're-search-forward
+         'emacspeak-pronounce-sha-checksum))
+  (emacspeak-pronounce-add-dictionary-entry
+   'comint-mode
+   emacspeak-pronounce-date-mm-dd-yyyy-pattern
+   (cons 're-search-forward
+         'emacspeak-pronounce-mm-dd-yyyy-date))
+  (emacspeak-pronounce-add-dictionary-entry
+   'comint-mode
+   emacspeak-pronounce-date-yyyy-mm-dd-pattern
+   (cons 're-search-forward
+         'emacspeak-pronounce-yyyy-mm-dd-date))
+  (emacspeak-pronounce-add-dictionary-entry
+   'comint-mode
+   emacspeak-pronounce-rfc-3339-datetime-pattern
+   (cons 're-search-forward
+         'emacspeak-pronounce-decode-rfc-3339-datetime))
   (emacspeak-pronounce-refresh-pronunciations))
 
 (add-hook 'comint-mode-hook 'emacspeak-comint-speech-setup)
@@ -226,21 +232,12 @@ Interactive PREFIX arg means toggle the global default value. ")
  '(
    (comint-highlight-prompt voice-lighten-extra)
    (comint-highlight-input voice-bolden-medium)))
-(cl-declaim (special emacspeak-pronounce-sha-checksum-pattern))
 
-(emacspeak-pronounce-add-dictionary-entry
- 'comint-mode
- emacspeak-pronounce-sha-checksum-pattern
- (cons 're-search-forward
-       'emacspeak-pronounce-sha-checksum))
 
-(cl-declaim (special emacspeak-pronounce-uuid-pattern))
 
-(emacspeak-pronounce-add-dictionary-entry
- 'comint-mode
- emacspeak-pronounce-uuid-pattern
- (cons 're-search-forward
-       'emacspeak-pronounce-uuid))
+
+
+
 (cl-loop
  for mode in
  '(conf-space-mode conf-unix-mode conf-mode)
@@ -250,8 +247,6 @@ Interactive PREFIX arg means toggle the global default value. ")
   emacspeak-pronounce-uuid-pattern
   (cons 're-search-forward
         'emacspeak-pronounce-uuid)))
-
-(add-hook 'shell-mode-hook 'emacspeak-pronounce-refresh-pronunciations)
 
 (defadvice shell-dirstack-message (around emacspeak pre act comp)
   "Silence messages"

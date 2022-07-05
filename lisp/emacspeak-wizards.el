@@ -409,15 +409,16 @@ command."
   "Helps you learn the keys.  You can press keys and hear what they do.
 To leave, press \\[keyboard-quit]."
   (interactive)
-  (let ((continue t)
-        (dtk-stop-immediately nil))
-    (while continue
-      (call-interactively 'describe-key-briefly)
-      (sit-for 1)
-      (when (and (numberp last-input-event)
-                 (= last-input-event 7))
-        (setq continue nil)))
-    (message "Leaving learn mode ")))
+  (ems-with-messages-silenced
+    (let ((continue t)
+          (dtk-stop-immediately nil))
+      (while continue
+        (call-interactively 'describe-key-briefly)
+        (sit-for 1)
+        (when (and (numberp last-input-event)
+                   (= last-input-event 7))
+          (setq continue nil)))
+      (message "Leaving learn mode "))))
 
 (defun emacspeak-describe-emacspeak ()
   "Give a brief overview of emacspeak."
@@ -1309,6 +1310,31 @@ dates.")
            (if emacspeak-wizards-mm-dd-yyyy-date-pronounce "" "
   not ")))
 
+(defvar emacspeak-wizards-yyyy-mm-dd-date-pronounce nil
+  "Toggled by wizard to record how we are pronouncing yyyy-mm-dd
+  dates.")
+
+(defun emacspeak-wizards-toggle-yyyy-mm-dd-date-pronouncer ()
+  "Toggle pronunciation of yyyy-mm-dd dates."
+  (interactive)
+  (cl-declare (special emacspeak-wizards-yyyy-mm-dd-date-pronounce
+                       emacspeak-pronounce-date-yyyy-mm-dd-pattern))
+  (cond
+   (emacspeak-wizards-yyyy-mm-dd-date-pronounce
+    (setq emacspeak-wizards-yyyy-mm-dd-date-pronounce nil)
+    (emacspeak-pronounce-remove-buffer-local-dictionary-entry
+     emacspeak-pronounce-date-yyyy-mm-dd-pattern))
+   (t (setq emacspeak-wizards-yyyy-mm-dd-date-pronounce t)
+      (emacspeak-pronounce-add-buffer-local-dictionary-entry
+       emacspeak-pronounce-date-yyyy-mm-dd-pattern
+       (cons #'re-search-forward
+             'emacspeak-pronounce-yyyy-mm-dd-date))))
+  (message "Will %s pronounce yyyy-mm-dd date strings in
+  English."
+           (if emacspeak-wizards-yyyy-mm-dd-date-pronounce
+               "" " not ")))
+
+
 (defvar emacspeak-wizards-yyyymmdd-date-pronounce nil
   "Toggled by wizard to record how we are pronouncing yyyymmdd dates.")
 
@@ -1451,12 +1477,12 @@ of the source buffer."
   "Switch to shell buffer by key. This provides a predictable
   means for switching to a specific shell buffer. When invoked
   from a non-shell-mode buffer that is a dired-buffer or is
-  visiting a file, invokes `cd ' in the shell to change to the
-  value of `default-directory' --- if called with a
-  prefix-arg. When already in a shell buffer, interactive prefix
-  arg `prefix' causes this shell to be re-keyed if appropriate
-  --- see \\[emacspeak-wizards-shell-re-key] for an explanation
-  of how re-keying works."
+  visiting a file, invokes `cd ' in the shell to change to the.
+  value of `default-directory' When already in a shell buffer,
+  interactive prefix arg `prefix' causes this shell to be
+  re-keyed if appropriate --- see
+  \\[emacspeak-wizards-shell-re-key] for an explanation of how
+  re-keying works."
   (interactive "P")
   (cl-declare (special last-input-event emacspeak-wizards--shells-table
                        major-mode default-directory))
@@ -1474,10 +1500,8 @@ of the source buffer."
              (read (format "%c" last-input-event))
              (length (hash-table-keys emacspeak-wizards--shells-table))))
            (buffer (gethash key emacspeak-wizards--shells-table)))
-      (when
-          (and prefix
-                                        ;  source determines target directory
-               (or (eq major-mode 'dired-mode) buffer-file-name))
+      (when ;  source determines target directory
+               (or (eq major-mode 'dired-mode) buffer-file-name)
         (ems--shell-pushd-if-needed directory buffer))
       (funcall-interactively #'pop-to-buffer buffer)))))
 
@@ -1606,7 +1630,7 @@ buffer keyed by `key'gets the key of buffer `buffer'."
   (let ((prev (emacspeak-wizards-buffer-cycle-previous major-mode)))
     (cond
      (prev
-      (funcall-interactively #'pop-to-buffer prev))
+      (funcall-interactively #'switch-to-buffer prev))
      (t (error "No previous buffer in mode %s" major-mode)))))
 
 ;;;###autoload
@@ -1616,7 +1640,7 @@ buffer keyed by `key'gets the key of buffer `buffer'."
   (let ((next (emacspeak-wizards-buffer-cycle-next major-mode)))
     (cond
      (next (bury-buffer)
-           (funcall-interactively #'pop-to-buffer next))
+           (funcall-interactively #'switch-to-buffer next))
      (t (error "No next buffer in mode %s" major-mode)))))
 
 ;;}}}
