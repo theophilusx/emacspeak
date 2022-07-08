@@ -311,6 +311,33 @@
     (when (self-document-options self)(self-document-module-options self)))))
 
 ;;}}}
+;;{{{Document Keybindings For Various Prefix Maps:
+
+(cl-declaim (special emacspeak-prefix))
+(defvar sd-emacspeak-prefixes
+  (list emacspeak-prefix
+        (kbd "C-;") (kbd "C-'") (kbd "C-.") (kbd "C-,")
+        (kbd "C-z") (kbd "C-e x") (kbd "C-e C-x"))
+  "Key prefixes  for which we generate a help section.")
+
+(defun sd-describe-keys (buffer)
+  "Generate a Texinfo section in `buffer' listing commands bound
+ to prefix in `sd-emacspeak-prefixes'."
+  (cl-declare (special sd-emacspeak-prefixes))
+  (with-current-buffer buffer
+    (insert "@section Commands Organized By Keymaps\n")
+    (insert "@node Commands Organized By Keymaps\n\n")
+    (cl-loop
+     for prefix in sd-emacspeak-prefixes
+     do
+     (insert
+      (format "@subsection Commands on prefix %s" (key-description prefix)))
+     (insert "\n\n@code{@verb{|")
+      (describe-buffer-bindings (current-buffer) prefix)
+      (insert "|}}\n")
+     )))
+
+;;}}}
 ;;{{{ Iterate over all modules
 
 (declare-function emacspeak-url-template-generate-texinfo-documentation (buffer))
@@ -351,6 +378,7 @@
 (defun self-document-all-modules()
   "Generate documentation for all modules."
   (cl-declare (special self-document-map))
+  (self-document-all-keymaps)
   (let ((file-name-handler-alist nil)
         (output (find-file-noselect "docs.texi"))
         (keys nil))
@@ -402,7 +430,7 @@ This chapter documents a total of %d commands and %d options.\n\n"
     emacspeak-keymap emacspeak-dtk-submap
     emacspeak-hyper-keymap emacspeak-super-keymap emacspeak-alt-keymap
     emacspeak-personal-keymap emacspeak-personal-ctlx-keymap
-    )
+    emacspeak-multi-keymap)
 "List of keymaps that we document.")
 
 (defun self-document-keymap (keymap)
@@ -430,9 +458,10 @@ This chapter documents a total of %d commands and %d options.\n\n"
     (with-current-buffer output
       (erase-buffer)
       (texinfo-mode)
+      (insert "@node Emacspeak Keymaps\n @chapter Emacspeak Keymaps\n\n ")
       (cl-loop
        for keymap in self-document-keymap-list do
-       (setq title (format "Emacspeak Keybindings from %s" (symbol-name keymap)))
+       (setq title (format "Emacspeak Keybindings On %s" (symbol-name keymap)))
        (insert (format "\n@node %s\n @section %s\n\n" title title))
        (self-document-keymap (symbol-value keymap)))
       (shell-command-on-region          ; squeeze blanks

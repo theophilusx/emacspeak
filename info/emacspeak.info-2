@@ -12,7 +12,106 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on July 5, 2022.
+last updated on July 7, 2022.
+
+
+File: emacspeak.info,  Node: emacspeak-geiser,  Next: emacspeak-gh-explorer,  Prev: emacspeak-forms,  Up: Emacspeak Commands And Options
+
+12.86 emacspeak-geiser
+======================
+
+geiser.el — GNU Emacs and Scheme talk to each other This module
+speech-enables all interactive aspects of geiser, including the
+geiser->scheme REPL. This is used by racket-mode for racket interaction,
+And also for interacting with Guile.
+
+
+File: emacspeak.info,  Node: emacspeak-gh-explorer,  Next: emacspeak-gnuplot,  Prev: emacspeak-geiser,  Up: Emacspeak Commands And Options
+
+12.87 emacspeak-gh-explorer
+===========================
+
+GH-EXPLORER == GitHub Explorer This module speech-enables Github
+Explorer.
+
+12.87.1 Emacspeak-Gh-Explorer Commands
+--------------------------------------
+
+12.87.1.1 emacspeak-gh-explorer-next
+....................................
+
+ -- Command: emacspeak-gh-explorer-next
+
+     Move forward and speak current entry.
+
+12.87.1.2 emacspeak-gh-explorer-previous
+........................................
+
+ -- Command: emacspeak-gh-explorer-previous
+
+     Moveback and speak current entry.
+
+
+File: emacspeak.info,  Node: emacspeak-gnuplot,  Next: emacspeak-gnus,  Prev: emacspeak-gh-explorer,  Up: Emacspeak Commands And Options
+
+12.88 emacspeak-gnuplot
+=======================
+
+This module speech-enables gnuplot-mode an Emacs add-on that enables
+fluent interaction with gnuplot.  Use gnuplot to generate plots of
+mathematical functions for inclusion in documents.
+
+
+File: emacspeak.info,  Node: emacspeak-gnus,  Next: emacspeak-go-mode,  Prev: emacspeak-gnuplot,  Up: Emacspeak Commands And Options
+
+12.89 emacspeak-gnus
+====================
+
+This module advises gnus to speak.  Updating support in 2014 (Emacspeak
+is nearly 20 years old) Updating in 2018 as I switch to gnus as my
+primary mail interface.  These customizations to gnus make it convenient
+to listen to news: You can read news mostly by using the four arrow
+keys.  By default all article headers are hidden, so you hear the real
+news.
+
+12.89.1 Emacspeak-Gnus Commands
+-------------------------------
+
+12.89.1.1 emacspeak-gnus-personal-gmail-last-week
+.................................................
+
+ -- Command: emacspeak-gnus-personal-gmail-last-week
+
+     Look for mail addressed personally in the last week.
+
+12.89.1.2 emacspeak-gnus-personal-gmail-recent
+..............................................
+
+ -- Command: emacspeak-gnus-personal-gmail-recent
+
+     Look for mail addressed personally in the last day.
+
+12.89.1.3 emacspeak-gnus-summary-catchup-quietly-and-exit
+.........................................................
+
+ -- Command: emacspeak-gnus-summary-catchup-quietly-and-exit
+
+     Catch up on all articles in current group.
+
+12.89.2 emacspeak-gnus Options
+------------------------------
+
+ -- Variable: User Option emacspeak-gnus-large-article
+     Articles having more than emacspeak-gnus-large-article lines will
+     be considered to be a large article.  A large article is not spoken
+     all at once; instead you hear only the first screenful.
+
+     Default Value: ‘100’
+
+ -- Variable: User Option emacspeak-gnus-punctuation-mode
+     Pronunciation mode to use for gnus buffers.
+
+     Default Value: ‘all’
 
 
 File: emacspeak.info,  Node: emacspeak-go-mode,  Next: emacspeak-gomoku,  Prev: emacspeak-gnus,  Up: Emacspeak Commands And Options
@@ -9853,127 +9952,4 @@ email, IM, ...  map to the same _mood_.
      alsa as the output and set master volume
 
      Default Value: ‘(-m 0.3)’
-
-
-File: emacspeak.info,  Node: sox,  Next: sox-gen,  Prev: soundscape,  Up: Emacspeak Commands And Options
-
-12.230 sox
-==========
-
-This module defines a convenient speech-enabled interface for editing
-mp3 and wav files using SoX.
-
-   Launching M-x sox creates a special interaction buffer that provides
-single keystroke commands for editing and applying effects to a selected
-sound file.  For adding mp3 support to sox, do
-
-   sudo apt-get libsox-fmt-mp3 install
-
-   This module provides support for ladspa effects using module
-ladspa.el.  To use ladspa effects with SoX, you need a relatively new
-build of Sox; The stock SoX that is package for Debian/Ubuntu does not
-always work.  This module can be used independent of Emacspeak.
-
-12.230.1 Sox Commands
----------------------
-
-12.230.1.1 sox-add-effect
-.........................
-
- -- Command: sox-add-effect (name)
-
-     Adds  effect at the end of the effect list
-
-     (fn NAME)
-
-12.230.1.2 sox-delete-effect-at-point
-.....................................
-
- -- Command: sox-delete-effect-at-point
-
-     Delete effect at point.
-
-     This function has :around advice: ‘ad-Advice-sox-delete-effect-at-point’.
-
-     (fn)
-
-12.230.1.3 sox-edit-effect-at-point
-...................................
-
- -- Command: sox-edit-effect-at-point
-
-     Edit effect at point.
-
-12.230.1.4 sox-mode
-...................
-
- -- Command: sox-mode
-
-     An audio workbench for the Emacspeak desktop.
-
-     In addition to any hooks its parent mode ‘special-mode’ might have
-     run, this mode runs the hook ‘sox-mode-hook’, as the final or
-     penultimate step during initialization.
-
-
-12.230.1.5 sox-open-file
-........................
-
- -- Command: sox-open-file (snd-file)
-
-     Open specified snd-file on the Audio Workbench.
-
-     This function has :around advice: ‘ad-Advice-sox-open-file’.
-
-     (fn SND-FILE)
-
-12.230.1.6 sox-play
-...................
-
- -- Command: sox-play
-
-     Play sound .
-
-12.230.1.7 sox-refresh
-......................
-
- -- Command: sox-refresh
-
-     Redraw Audio Workbench.
-
-     This function has :around advice: ‘ad-Advice-sox-refresh’.
-
-     (fn)
-
-12.230.1.8 sox-save
-...................
-
- -- Command: sox-save (save-file)
-
-     Save context to  file after prompting.
-
-     (fn SAVE-FILE)
-
-12.230.1.9 sox-set-effect
-.........................
-
- -- Command: sox-set-effect (name)
-
-     Set effect.
-
-     (fn NAME)
-
-12.230.1.10 sox-show-timestamp
-..............................
-
- -- Command: sox-show-timestamp
-
-     Show timestamp   in stream.
-
-12.230.1.11 sox-stop
-....................
-
- -- Command: sox-stop
-
-     Stop currently playing  sound from current context.
 

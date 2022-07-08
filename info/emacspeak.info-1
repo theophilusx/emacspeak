@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on July 5, 2022.
+last updated on July 7, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -34,8 +34,9 @@ The manual is divided into the following chapters:
 * Voice Lock: Voice Lock.
 * Using Online Help: Using Online Help.
 * Emacs Packages:  Emacs Packages.
-* Running Terminal Based Applications: Running Terminal Based Applications.
+* Emacspeak Keymaps: Emacspeak Keymaps.
 * Emacspeak Commands And Options:  Emacspeak Commands And Options.
+* Running Terminal Based Applications: Running Terminal Based Applications.
 * Emacspeak Keyboard Commands: Emacspeak Keyboard Commands.
 * TTS Servers:  TTS Servers.
 *  Emacspeak At Twenty: Emacspeak At Twenty.
@@ -1497,7 +1498,7 @@ Emacs by defining several commands of its own, as follows:
      terminated with the ‘C-g’ ‘keyboard-quit’ command.
 
 
-File: emacspeak.info,  Node: Emacs Packages,  Next: Running Terminal Based Applications,  Prev: Using Online Help,  Up: Top
+File: emacspeak.info,  Node: Emacs Packages,  Next: Emacspeak Keymaps,  Prev: Using Online Help,  Up: Top
 
 10 Emacs Packages.
 ******************
@@ -2622,217 +2623,762 @@ key-bindings and a brief description:
      “describe-mode” Describe OCR mode.
 
 
-File: emacspeak.info,  Node: Running Terminal Based Applications,  Next: Emacspeak Commands And Options,  Prev: Emacs Packages,  Up: Top
+File: emacspeak.info,  Node: Emacspeak Keymaps,  Next: Emacspeak Commands And Options,  Prev: Emacs Packages,  Up: Top
 
-11 Running Terminal Based Applications.
-***************************************
+11 Emacspeak Keymaps
+********************
 
-You can use the terminal emulator mode to run arbitrary terminal-based
-programs from within Emacs.  You open a terminal emulator buffer using
-‘M-x term’, with an extra carriage return to accept the default shell
-(such as ‘bash’).  (Incidentally, don’t confuse this command with ‘M-x
-terminal-emulator’, which starts an older terminal emulator mode not
-supported by Emacspeak.)
+* Menu:
 
-   Three kinds of commands are used within the terminal emulator.
-Normal term commands use a prefix of ‘C-c’.  The emacspeak commands for
-eterm mode use a prefix of ‘C-t’.  Anything else is a normal shell
-command.
-
-   There are two sub-modes of term mode: char sub-mode and line
-sub-mode.  In char sub-mode, emacspeak will only speak the final chunk
-of output — typically the last line displayed.  Each character typed
-(except ‘term-escape-char‘) is sent immediately.  Use char sub-mode for
-screen oriented programs like ‘vi’ or ‘pine’.
-
-   In line sub-mode, program output is spoken if user option
-‘eterm-autospeak’ is turned on.  When you type a return at the end of
-the buffer, that line is sent as input, while return not at end copies
-the rest of the line to the end and sends it.  When using terminal line
-mode with option ‘eterm-autospeak’ turned on, speech feedback is similar
-to that obtained in regular ‘shell-mode’ buffers.
-
-   The default is char sub-mode.  You can switch to line sub-mode with
-‘C-c C-j’ (recall that control J is a linefeed), and back to char
-sub-mode with ‘C-c C-k’ (think of character spelled with a K).
-
-   Note: Use char-mode with the terminal emulator for running
-screen-oriented programs like Lynx or Pine.  For regular shell
-interaction just use ‘M-x shell’ instead of using the terminal emulator.
-
-11.1 Char Sub-mode of Term Mode
-===============================
-
-In char sub-mode of term, each character you type is sent directly to
-the inferior process without intervention from emacs, except for the
-escape character (usually ‘C-c’).
-
-   Here are some of the useful commands for the char sub-mode.  Note
-that the usual commands for killing a buffer or switching buffers do not
-work in this mode, so new key bindings are supplied.  The first five
-commands are different ways of leaving this mode.
-
-‘C-c C-j’
-‘M-x term-line-mode’
-     Switch to line sub-mode of term mode.
-
-‘C-c o’
-‘M-x other-window’
-     Select the next window on this frame.  All windows on current frame
-     are arranged in a cyclic order.  This command selects the next
-     window in that order.  If there are no other windows, this command
-     does nothing.
-
-‘C-c C-f’
-‘M-x find-file’
-     Switch to a buffer visiting a file, creating one if none already
-     exists.
-
-‘C-c 0’
-‘M-x delete-window’
-     Remove current window from the display.
-
-‘C-c k’
-‘M-x kill-buffer’
-     Kill the current buffer.
-
-‘C-c C-x C-c’
-‘M-x save-buffers-kill-emacs’
-     Offer to save each buffer, then kill this Emacs process.
-
-‘C-c C-d’
-‘M-x list-directory’
-     Display a list of files in or matching DIRNAME, a la ‘ls’.  DIRNAME
-     is globbed by the shell if necessary.  Prefix arg (‘C-u’) means
-     supply -l switch to ‘ls’.  The list appears in a second window.
-
-‘C-c 1’
-‘M-x delete-other-windows’
-     Delete all other windows in the frame, making the current window
-     fill its frame.
-
-‘C-c C-c’
-‘M-x term-send-raw’
-     Send the last character typed through the terminal-emulator without
-     any interpretation.
-
-‘C-c (’
-‘M-x start-kbd-macro’
-     Record subsequent keyboard input, defining a keyboard macro.  The
-     commands are recorded even as they are executed.  Use ‘C-c )’ to
-     finish recording and make the macro available.  Use ‘M-x
-     name-last-kbd-macro’ to give it a permanent name.  Prefix arg
-     (‘C-u’) means append to last macro defined; This begins by
-     re-executing that macro as if you had typed it again.
-
-‘C-c )’
-‘M-x end-kbd-macro’
-     Finish defining a keyboard macro.  The definition was started by
-     ‘C-c (’.  The macro is now available for use via ‘C-c e’, or it can
-     be given a name with ‘M-x name-last-kbd-macro’ and then invoked
-     under that name.
-
-‘C-c e’
-‘M-x call-last-kbd-macro’
-     Call the last keyboard macro that you defined with ‘C-c (’.  A
-     prefix argument serves as a repeat count.  Zero means repeat until
-     error.
-
-   You can get a list of all the key sequences with a C-c prefix by
-typing ‘C-c C-h’ while in this sub-mode.  Some of those commands are
-only available in the char sub-mode, while others are generally
-available.
-
-11.2 Line Sub-mode of Term Mode
-===============================
-
-In line sub-mode of term mode, emacs editing commands work normally,
-until you type <RETURN> which sends the current line to the inferior
-process.
-
-   Here are some of the useful commands for the line sub-mode of the
-term mode.  In addition, the usual commands for handling a buffer work
-in this mode (‘C-x o’ to switch windows, ‘C-x k’ to kill a buffer, ‘C-x
-f’ to find a file, and so forth).
-
-‘C-c C-k’
-‘M-x term-char-mode’
-     Switch to char sub-mode of term mode.
-
-‘C-c C-z’
-‘M-x term-stop-subjob’
-     Stop the current subjob.  Resume the subjob in the foreground with
-     the ordinary command ‘fg’, or run it in the background with ‘bg’.
-     WARNING: if there is no current subjob, you can end up suspending
-     the top-level process running in the buffer.  If you accidentally
-     do this, use ‘M-x term-continue-subjob’ to resume the process.
-     (This is not a problem with most shells, including ‘bash’, since
-     they ignore this signal.)
-
-‘C-c C-\’
-‘M-x term-quit-subjob’
-     Send quit signal to the current subjob.
-
-‘C-c C-c’
-‘M-x term-interrupt-subjob’
-     Interrupt the current subjob.
-
-‘C-c C-w’
-‘M-x backward-kill-word’
-     Kill characters backward until encountering the end of a word.
-
-‘C-c C-u’
-‘M-x term-kill-input’
-     Kill all text from last stuff output by interpreter to point.
-
-‘C-c C-a’
-‘M-x term-bol’
-     Goes to the beginning of line, then skips past the prompt, if any.
-     If a prefix argument is given (‘C-u’), then no prompt skip — go
-     straight to column 0.
-
-‘C-c C-d’
-‘M-x term-send-eof’
-     Send an end of file character (EOF) to the current buffer’s
-     process.
-
-   You can get a list of all the key sequences with a ‘C-c’ prefix by
-typing ‘C-c C-h’ while in this sub-mode.  Some of those commands are
-only available in the line sub-mode, while others are generally
-available.
-
-11.3 Eterm Mode Commands
-========================
-
-The eterm mode maintains a pointer, which is not necessarily the same as
-the terminal’s cursor.  It is intended to be used in eterm’s char
-submode.  In char submode, ‘C-t ,’ (that’s control-t followed by comma)
-will tell you where the eterm pointer is.  ‘C-t C-i’ will tell you where
-the terminal’s cursor is.  The top left corner of the window is "row 0
-column 0".
-
-   The eterm pointer can be moved with ‘C-t <’ (to the top of the
-screen), ‘C-t >’ (to the bottom of the screen), ‘C-t n’ (to the next
-line), ‘C-t p’ (to the previous line), and ‘C-t .’ (to the cursor).
-Each of these also speaks the line the pointer moves to.  You can also
-search forward with ‘C-t s’.
-
-   These commands speak without moving the pointer: ‘C-t l’ (current
-line), ‘C-t w’ (current word), ‘C-t c’ (current character), and ‘C-t
-<SPACE>’ (from eterm pointer to cursor).
-
-   You may enter review mode with ‘C-t q’.  In review mode, you can
-search the buffer and speak its contents, without disturbing the
-terminal.  Commands for moving the pointer are similar to normal editing
-commands, but without a control key: ‘n’ and ‘p’ for next and previous
-line, ‘f’ and ‘b’ for forward and back by characters, ‘<’ and ‘>’ for
-the beginning or end of the buffer.  ‘c’, ‘w’, and ‘l’ speak the current
-character, word, and line.  ‘s’ searches forward (not incrementally).  A
-comma speaks the pointer location.  A period moves the pointer to the
-terminal cursor.  Return to normal term mode by typing ‘q’.
+* Emacspeak Keybindings On emacspeak-keymap::
+* Emacspeak Keybindings On emacspeak-dtk-submap::
+* Emacspeak Keybindings On emacspeak-hyper-keymap::
+* Emacspeak Keybindings On emacspeak-super-keymap::
+* Emacspeak Keybindings On emacspeak-alt-keymap::
+* Emacspeak Keybindings On emacspeak-personal-keymap::
+* Emacspeak Keybindings On emacspeak-personal-ctlx-keymap::
+* Emacspeak Keybindings On emacspeak-multi-keymap::
 
 
-File: emacspeak.info,  Node: Emacspeak Commands And Options,  Next: Emacspeak Keyboard Commands,  Prev: Running Terminal Based Applications,  Up: Top
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-keymap,  Next: Emacspeak Keybindings On emacspeak-dtk-submap,  Up: Emacspeak Keymaps
+
+11.1 Emacspeak Keybindings On emacspeak-keymap
+==============================================
+
+‘!’
+     emacspeak-speak-run-shell-command
+
+‘"’
+     emacspeak-speak-sexp
+
+‘$’
+     emacspeak-shell-command
+
+‘%’
+     emacspeak-speak-current-percentage
+
+‘&’
+     emacspeak-wizards-shell-command-on-current-file
+
+‘'’
+     emacspeak-pianobar
+
+‘(’
+     amixer
+
+‘)’
+     emacspeak-sounds-select-theme
+
+‘/’
+     emacspeak-speak-this-buffer-other-window-display
+
+‘0’
+     emacspeak-speak-predefined-window
+
+‘1’
+     emacspeak-speak-predefined-window
+
+‘2’
+     emacspeak-speak-predefined-window
+
+‘3’
+     emacspeak-speak-predefined-window
+
+‘4’
+     emacspeak-speak-predefined-window
+
+‘5’
+     emacspeak-speak-predefined-window
+
+‘6’
+     emacspeak-speak-predefined-window
+
+‘7’
+     emacspeak-speak-predefined-window
+
+‘8’
+     emacspeak-speak-predefined-window
+
+‘9’
+     emacspeak-speak-predefined-window
+
+‘:’
+     emacspeak-m-player-shuffle
+
+‘;’
+     emacspeak-multimedia
+
+‘=’
+     emacspeak-speak-current-column
+
+‘?’
+     emacspeak-websearch-dispatch
+
+‘@’
+     emacspeak-speak-message-at-time
+
+‘A’
+     emacspeak-appt-repeat-announcement
+
+‘B’
+     emacspeak-speak-buffer-interactively
+
+‘C’
+     emacspeak-customize
+
+‘C-@’
+     emacspeak-speak-current-mark
+
+‘C-a’
+     emacspeak-toggle-auditory-icons
+
+‘C-b’
+     emacspeak-bookshare
+
+‘C-c’
+     emacspeak-clipboard-copy
+
+‘C-d’
+     emacspeak-toggle-show-point
+
+‘C-e’
+     end-of-line
+
+‘C-j’
+     emacspeak-hide-speak-block-sans-prefix
+
+‘C-k’
+     browse-kill-ring
+
+‘C-l’
+     what-line
+
+‘C-o’
+     emacspeak-ocr
+
+‘C-q’
+     emacspeak-toggle-inaudible-or-comint-autospeak
+
+‘C-s’
+     tts-restart
+
+‘C-u’
+     emacspeak-feeds-browse
+
+‘C-v’
+     view-mode
+
+‘C-w’
+     emacspeak-speak-window-information
+
+‘C-y’
+     emacspeak-clipboard-paste
+
+‘I’
+     emacspeak-speak-show-active-network-interfaces
+
+‘L’
+     emacspeak-speak-line-interactively
+
+‘M’
+     emacspeak-speak-minor-mode-line
+
+‘N’
+     emacspeak-view-emacspeak-news
+
+‘P’
+     emacspeak-speak-paragraph-interactively
+
+‘R’
+     emacspeak-speak-rectangle
+
+‘RET’
+     emacspeak-speak-continuously
+
+‘SPC’
+     emacspeak-speak-header-line
+
+‘T’
+     emacspeak-view-emacspeak-tips
+
+‘TAB’
+     emacspeak-open-info
+
+‘V’
+     emacspeak-speak-version
+
+‘W’
+     emacspeak-select-window-by-name
+
+‘[’
+     emacspeak-speak-page
+
+‘\’
+     emacspeak-toggle-speak-line-invert-filter
+
+‘]’
+     emacspeak-speak-page-interactively
+
+‘^’
+     emacspeak-filtertext
+
+‘a’
+     emacspeak-speak-message-again
+
+‘b’
+     emacspeak-speak-buffer
+
+‘c’
+     emacspeak-speak-char
+
+‘e’
+     end-of-line
+
+‘f’
+     emacspeak-speak-buffer-filename
+
+‘g’
+     emacspeak-epub
+
+‘h’
+     emacspeak-speak-help
+
+‘j’
+     emacspeak-hide-or-expose-block
+
+‘k’
+     emacspeak-speak-current-kill
+
+‘l’
+     emacspeak-speak-line
+
+‘m’
+     emacspeak-speak-mode-line
+
+‘n’
+     emacspeak-speak-rest-of-buffer
+
+‘o’
+     emacspeak-toggle-comint-output-monitor
+
+‘p’
+     emacspeak-speak-paragraph
+
+‘q’
+     emacspeak-toggle-speak-messages
+
+‘r’
+     emacspeak-speak-region
+
+‘s’
+     dtk-stop
+
+‘t’
+     emacspeak-speak-time
+
+‘u’
+     emacspeak-url-template-fetch
+
+‘v’
+     view-register
+
+‘w’
+     emacspeak-speak-word
+
+‘|’
+     emacspeak-speak-line-set-column-filter
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-dtk-submap,  Next: Emacspeak Keybindings On emacspeak-hyper-keymap,  Prev: Emacspeak Keybindings On emacspeak-keymap,  Up: Emacspeak Keymaps
+
+11.2 Emacspeak Keybindings On emacspeak-dtk-submap
+==================================================
+
+‘,’
+     dtk-toggle-punctuation-mode
+
+‘.’
+     dtk-notify-stop
+
+‘0’
+     dtk-set-predefined-speech-rate
+
+‘1’
+     dtk-set-predefined-speech-rate
+
+‘2’
+     dtk-set-predefined-speech-rate
+
+‘3’
+     dtk-set-predefined-speech-rate
+
+‘4’
+     dtk-set-predefined-speech-rate
+
+‘5’
+     dtk-set-predefined-speech-rate
+
+‘6’
+     dtk-set-predefined-speech-rate
+
+‘7’
+     dtk-set-predefined-speech-rate
+
+‘8’
+     dtk-set-predefined-speech-rate
+
+‘9’
+     dtk-set-predefined-speech-rate
+
+‘C-c’
+     dtk-cloud
+
+‘C-d’
+     dectalk
+
+‘C-e’
+     espeak
+
+‘C-n’
+     dtk-notify-initialize
+
+‘C-o’
+     outloud
+
+‘C-v’
+     global-voice-lock-mode
+
+‘L’
+     dtk-local-server
+
+‘N’
+     dtk-set-next-language
+
+‘P’
+     dtk-set-previous-language
+
+‘R’
+     dtk-reset-state
+
+‘RET’
+     dtk-set-chunk-separator-syntax
+
+‘S’
+     dtk-set-language
+
+‘SPC’
+     dtk-toggle-splitting-on-white-space
+
+‘V’
+     tts-speak-version
+
+‘a’
+     dtk-add-cleanup-pattern
+
+‘c’
+     dtk-toggle-caps
+
+‘d’
+     dtk-select-server
+
+‘f’
+     dtk-set-character-scale
+
+‘i’
+     emacspeak-toggle-audio-indentation
+
+‘k’
+     emacspeak-toggle-character-echo
+
+‘l’
+     emacspeak-toggle-line-echo
+
+‘n’
+     dtk-toggle-speak-nonprinting-chars
+
+‘o’
+     dtk-toggle-strip-octals
+
+‘p’
+     dtk-set-punctuations
+
+‘r’
+     dtk-set-rate
+
+‘s’
+     dtk-toggle-split-caps
+
+‘v’
+     voice-lock-mode
+
+‘w’
+     emacspeak-toggle-word-echo
+
+‘z’
+     emacspeak-zap-tts
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-hyper-keymap,  Next: Emacspeak Keybindings On emacspeak-super-keymap,  Prev: Emacspeak Keybindings On emacspeak-dtk-submap,  Up: Emacspeak Keymaps
+
+11.3 Emacspeak Keybindings On emacspeak-hyper-keymap
+====================================================
+
+‘'’
+     emacspeak-m-player-using-hrtf
+
+‘,’
+     previous-buffer
+
+‘.’
+     next-buffer
+
+‘/’
+     emacspeak-websearch-google-with-toolbelt
+
+‘:’
+     emacspeak-wizards-view-buffers-filtered-by-m-player-mode
+
+‘;’
+     emacspeak-m-player-using-openal
+
+‘C-a’
+     emacspeak-wizards-term
+
+‘C-b’
+     eww-list-bookmarks
+
+‘C-d’
+     dictionary-search
+
+‘C-e’
+     eshell
+
+‘C-j’
+     emacspeak-wizards-shell-toggle
+
+‘C-l’
+     emacspeak-librivox
+
+‘C-o’
+     eaf-open-browser
+
+‘C-t’
+     emacspeak-wizards-tramp-open-location
+
+‘DEL’
+     emacspeak-wizards-snarf-sexp
+
+‘TAB’
+     hippie-expand
+
+‘b’
+     eww-list-buffers
+
+‘c’
+     browse-url-chrome
+
+‘d’
+     magit-dispatch
+
+‘e’
+     gmaps
+
+‘f’
+     magit-file-dispatch
+
+‘g’
+     gnus
+
+‘h’
+     emacspeak-m-player-from-history
+
+‘k’
+     emacspeak-google-knowledge-search
+
+‘l’
+     locate
+
+‘m’
+     vm
+
+‘n’
+     emacspeak-wizards-cycle-to-next-buffer
+
+‘o’
+     find-file
+
+‘p’
+     emacspeak-wizards-cycle-to-previous-buffer
+
+‘r’
+     emacspeak-wizards-find-file-as-root
+
+‘s’
+     magit-status
+
+‘t’
+     twit
+
+‘u’
+     list-unicode-display
+
+‘w’
+     emacspeak-wizards-noaa-weather
+
+‘y’
+     yas-expand
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-super-keymap,  Next: Emacspeak Keybindings On emacspeak-alt-keymap,  Prev: Emacspeak Keybindings On emacspeak-hyper-keymap,  Up: Emacspeak Keymaps
+
+11.4 Emacspeak Keybindings On emacspeak-super-keymap
+====================================================
+
+‘.’
+     emacspeak-wizards-shell-directory-reset
+
+‘C-n’
+     emacspeak-wizards-google-headlines
+
+‘R’
+     emacspeak-webspace-feed-reader
+
+‘SPC’
+     emacspeak-wizards-scratch
+
+‘a’
+     emacspeak-wizards-execute-asynchronously
+
+‘c’
+     calculator
+
+‘d’
+     emacspeak-dired-downloads
+
+‘e’
+     elfeed
+
+‘f’
+     flyspell-mode
+
+‘h’
+     emacspeak-org-capture-link
+
+‘l’
+     emacspeak-m-player-locate-media
+
+‘m’
+     emacspeak-wizards-view-buffers-filtered-by-this-mode
+
+‘n’
+     emacspeak-wizards-google-news
+
+‘p’
+     proced
+
+‘r’
+     soundscape-restart
+
+‘s’
+     soundscape
+
+‘t’
+     soundscape-toggle
+
+‘u’
+     soundscape-update-mood
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-alt-keymap,  Next: Emacspeak Keybindings On emacspeak-personal-keymap,  Prev: Emacspeak Keybindings On emacspeak-super-keymap,  Up: Emacspeak Keymaps
+
+11.5 Emacspeak Keybindings On emacspeak-alt-keymap
+==================================================
+
+‘,’
+     eldoc
+
+‘SPC’
+     emacspeak-eww-smart-tabs
+
+‘a’
+     emacspeak-feeds-atom-display
+
+‘b’
+     sox-binaural
+
+‘d’
+     sdcv-search-input
+
+‘e’
+     eww
+
+‘f’
+     ffap
+
+‘g’
+     rg
+
+‘l’
+     eww-open-file
+
+‘o’
+     emacspeak-feeds-opml-display
+
+‘p’
+     emacspeak-wizards-pdf-open
+
+‘q’
+     emacspeak-wizards-iex-show-price
+
+‘r’
+     emacspeak-feeds-rss-display
+
+‘s’
+     emacspeak-wizards-tune-in-radio-search
+
+‘t’
+     emacspeak-wizards-tune-in-radio-browse
+
+‘u’
+     emacspeak-m-player-url
+
+‘v’
+     visual-line-mode
+
+‘w’
+     define-word
+
+‘y’
+     emacspeak-m-player-youtube-player
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-personal-keymap,  Next: Emacspeak Keybindings On emacspeak-personal-ctlx-keymap,  Prev: Emacspeak Keybindings On emacspeak-alt-keymap,  Up: Emacspeak Keymaps
+
+11.6 Emacspeak Keybindings On emacspeak-personal-keymap
+=======================================================
+
+‘,’
+     emacspeak-wizards-shell-directory-set
+
+‘.’
+     emacspeak-wizards-shell-directory-reset
+
+‘0’
+     emacspeak-wizards-shell-by-key
+
+‘1’
+     emacspeak-wizards-shell-by-key
+
+‘2’
+     emacspeak-wizards-shell-by-key
+
+‘3’
+     emacspeak-wizards-shell-by-key
+
+‘4’
+     emacspeak-wizards-shell-by-key
+
+‘5’
+     emacspeak-wizards-shell-by-key
+
+‘6’
+     emacspeak-wizards-shell-by-key
+
+‘7’
+     emacspeak-wizards-shell-by-key
+
+‘8’
+     emacspeak-wizards-shell-by-key
+
+‘9’
+     emacspeak-wizards-shell-by-key
+
+‘;’
+     emacspeak-m-player-loop
+
+‘=’
+     emacspeak-wizards-find-longest-line-in-region
+
+‘C’
+     emacspeak-wizards-colors
+
+‘DEL’
+     desktop-clear
+
+‘SPC’
+     emacspeak-jabber-speak-recent-message
+
+‘a’
+     emacspeak-wizards-alpha-vantage-quotes
+
+‘b’
+     battery
+
+‘c’
+     emacspeak-wizards-color-wheel
+
+‘d’
+     emacspeak-speak-load-directory-settings
+
+‘f’
+     emacspeak-wizards-remote-frame
+
+‘h’
+     emacspeak-wizards-how-many-matches
+
+‘i’
+     ibuffer
+
+‘j’
+     emacspeak-jabber-popup-roster
+
+‘l’
+     emacspeak-m-player-youtube-live
+
+‘m’
+     mspools-show
+
+‘o’
+     emacspeak-wizards-occur-header-lines
+
+‘p’
+     paradox-list-packages
+
+‘q’
+     emacspeak-wizards-quote
+
+‘r’
+     jabber-activity-switch-to
+
+‘t’
+     emacspeak-speak-telephone-directory
+
+‘u’
+     emacspeak-wizards-units
+
+‘v’
+     emacspeak-wizards-vc-viewer
+
+‘w’
+     emacspeak-wizards-noaa-weather
+
+‘|’
+     emacspeak-wizards-squeeze-blanks
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-personal-ctlx-keymap,  Next: Emacspeak Keybindings On emacspeak-multi-keymap,  Prev: Emacspeak Keybindings On emacspeak-personal-keymap,  Up: Emacspeak Keymaps
+
+11.7 Emacspeak Keybindings On emacspeak-personal-ctlx-keymap
+============================================================
+
+
+File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-multi-keymap,  Prev: Emacspeak Keybindings On emacspeak-personal-ctlx-keymap,  Up: Emacspeak Keymaps
+
+11.8 Emacspeak Keybindings On emacspeak-multi-keymap
+====================================================
+
+
+File: emacspeak.info,  Node: Emacspeak Commands And Options,  Next: Running Terminal Based Applications,  Prev: Emacspeak Keymaps,  Up: Top
 
 12 Emacspeak Commands And Options
 *********************************
@@ -8509,103 +9055,4 @@ Provide additional advice to forms-mode
  -- Command: emacspeak-forms-summarize-current-record
 
      Summarize current record
-
-
-File: emacspeak.info,  Node: emacspeak-geiser,  Next: emacspeak-gh-explorer,  Prev: emacspeak-forms,  Up: Emacspeak Commands And Options
-
-12.86 emacspeak-geiser
-======================
-
-geiser.el — GNU Emacs and Scheme talk to each other This module
-speech-enables all interactive aspects of geiser, including the
-geiser->scheme REPL. This is used by racket-mode for racket interaction,
-And also for interacting with Guile.
-
-
-File: emacspeak.info,  Node: emacspeak-gh-explorer,  Next: emacspeak-gnuplot,  Prev: emacspeak-geiser,  Up: Emacspeak Commands And Options
-
-12.87 emacspeak-gh-explorer
-===========================
-
-GH-EXPLORER == GitHub Explorer This module speech-enables Github
-Explorer.
-
-12.87.1 Emacspeak-Gh-Explorer Commands
---------------------------------------
-
-12.87.1.1 emacspeak-gh-explorer-next
-....................................
-
- -- Command: emacspeak-gh-explorer-next
-
-     Move forward and speak current entry.
-
-12.87.1.2 emacspeak-gh-explorer-previous
-........................................
-
- -- Command: emacspeak-gh-explorer-previous
-
-     Moveback and speak current entry.
-
-
-File: emacspeak.info,  Node: emacspeak-gnuplot,  Next: emacspeak-gnus,  Prev: emacspeak-gh-explorer,  Up: Emacspeak Commands And Options
-
-12.88 emacspeak-gnuplot
-=======================
-
-This module speech-enables gnuplot-mode an Emacs add-on that enables
-fluent interaction with gnuplot.  Use gnuplot to generate plots of
-mathematical functions for inclusion in documents.
-
-
-File: emacspeak.info,  Node: emacspeak-gnus,  Next: emacspeak-go-mode,  Prev: emacspeak-gnuplot,  Up: Emacspeak Commands And Options
-
-12.89 emacspeak-gnus
-====================
-
-This module advises gnus to speak.  Updating support in 2014 (Emacspeak
-is nearly 20 years old) Updating in 2018 as I switch to gnus as my
-primary mail interface.  These customizations to gnus make it convenient
-to listen to news: You can read news mostly by using the four arrow
-keys.  By default all article headers are hidden, so you hear the real
-news.
-
-12.89.1 Emacspeak-Gnus Commands
--------------------------------
-
-12.89.1.1 emacspeak-gnus-personal-gmail-last-week
-.................................................
-
- -- Command: emacspeak-gnus-personal-gmail-last-week
-
-     Look for mail addressed personally in the last week.
-
-12.89.1.2 emacspeak-gnus-personal-gmail-recent
-..............................................
-
- -- Command: emacspeak-gnus-personal-gmail-recent
-
-     Look for mail addressed personally in the last day.
-
-12.89.1.3 emacspeak-gnus-summary-catchup-quietly-and-exit
-.........................................................
-
- -- Command: emacspeak-gnus-summary-catchup-quietly-and-exit
-
-     Catch up on all articles in current group.
-
-12.89.2 emacspeak-gnus Options
-------------------------------
-
- -- Variable: User Option emacspeak-gnus-large-article
-     Articles having more than emacspeak-gnus-large-article lines will
-     be considered to be a large article.  A large article is not spoken
-     all at once; instead you hear only the first screenful.
-
-     Default Value: ‘100’
-
- -- Variable: User Option emacspeak-gnus-punctuation-mode
-     Pronunciation mode to use for gnus buffers.
-
-     Default Value: ‘all’
 
