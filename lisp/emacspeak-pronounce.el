@@ -63,6 +63,39 @@
 (require 'emacspeak-sounds)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 ;;}}}
+;;{{{Helper:ems--pronounce-string-template:
+
+;; Helper to split a string using split-pattern and format using format-template
+
+(defun ems--pronounce-string-template (str split template)
+  "Return an audio formatted representation of string `STR'.
+Split using pattern given by `SPLIT' and format using `TEMPLATE'.
+Template is a list:
+Number: Select element at position n from splits.
+String: Return it as is.
+(func number number ...): Apply func treating rest of the list as
+  positions into splits."
+  (let ((fields (split-string str split))
+        (values nil))
+    (cl-loop
+     for  v in template do
+      (push
+       (cond
+        ((stringp v) (format " %s " v))
+        ((and (numberp v) (< v (length fields)))
+         (propertize (nth v fields) 'personality voice-smoothen))
+        ((and
+          (listp v) (symbolp (nth 0 v)) (fboundp (nth 0 v)))
+         (apply
+          (nth 0 v)
+                (cl-loop
+                 for k in (cdr v)
+                 collect (nth k fields))))
+        (t (error "bad template?")))
+       values))
+    (mapconcat #'identity (nreverse values) " ")))
+
+;;}}}
 ;;{{{ Dictionary structure:
 
 (defvar emacspeak-pronounce-dictionaries (make-hash-table :test #'eq)

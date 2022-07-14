@@ -188,8 +188,8 @@
 ;; One-finger use on laptop:
 (global-set-key (ems-kbd "<XF86WakeUp>")  'emacspeak-prefix-command)
 (global-set-key (ems-kbd "<XF86AudioPlay>")  'emacspeak-silence)
-(global-set-key (ems-kbd "C-<f1>")  'amixer-volume-up)
-(global-set-key (ems-kbd "C-<f2>")  'amixer-volume-down)
+(global-set-key (ems-kbd "C-<f1>")  'amixer-volume-down)
+(global-set-key (ems-kbd "C-<f2>")  'amixer-volume-up)
 (global-set-key (ems-kbd "<XF86AudioLowerVolume>")  'amixer-volume-down)
 (global-set-key (ems-kbd "<XF86AudioRaiseVolume>") 'amixer-volume-up)
 
@@ -658,7 +658,7 @@
     ("e" elfeed)
     ("f" flyspell-mode)
     ("h" emacspeak-org-capture-link)
-    ("l" emacspeak-m-player-locate-media)
+    ("l" emacspeak-wizards-locate-content)
     ("m" emacspeak-wizards-view-buffers-filtered-by-this-mode)
     ("n" emacspeak-wizards-google-news)
     ("p" proced)
@@ -740,6 +740,7 @@
 
 (defcustom emacspeak-multi-keys
   '(
+    ("l" emacspeak-m-player-locate-media) ("h" emacspeak-m-player-browse-history)
     )
   "Multi key bindings. "
   :group 'emacspeak
@@ -795,7 +796,7 @@
 
 ;;}}}
 ;;{{{ Global Bindings From Other Modules:
-
+(global-set-key (ems-kbd "C-x r C-e") 'emacspeak-eww-marks-list)
 (global-set-key (ems-kbd "C-x r e") 'emacspeak-eww-open-mark)
 
 ;;}}}

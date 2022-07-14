@@ -1135,6 +1135,15 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
 (defvar emacspeak-m-player-media-history nil
   "Record media urls we played.")
 
+(defun emacspeak-m-player-remove-from-media-history (url) 
+  "Remove URL from media history"
+  (interactive "sURL:")
+  (cl-declare (special emacspeak-m-player-media-history))
+  (setq emacspeak-m-player-media-history
+        (cl-remove-if
+         #'(lambda(u) (string= u url))
+         emacspeak-m-player-media-history)))
+
 (defun emacspeak-m-player-from-history (posn)
   "Play media from position `posn'media-history. "
   (interactive "p")
@@ -1143,8 +1152,22 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
   (cond
    ((and emacspeak-m-player-media-history
          (> (length emacspeak-m-player-media-history) posn))
-    (apply #'emacspeak-m-player (elt emacspeak-m-player-media-history posn)))
+    (funcall #'emacspeak-m-player (elt emacspeak-m-player-media-history posn)))
    (t (error "Not enough history"))))
+
+
+(defun emacspeak-m-player-browse-history ()
+  "Create a  media history browser from media-history."
+  (interactive )
+  (cl-declare (special emacspeak-m-player-media-history))
+  (with-temp-buffer
+    (insert "<ol>\n")
+    (cl-loop
+     for u in emacspeak-m-player-media-history do
+     (insert (format "<li><a href='%s'>%s: %s</a></li>\n"
+                     u (url-host (url-generic-parse-url u)) (file-name-base  u))))
+    (insert "</ol>\n")
+    (call-interactively #'browse-url-of-buffer)))
 
 ;;}}}
 ;;{{{ Reset Options:

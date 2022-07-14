@@ -682,7 +682,7 @@ Optional interactive prefix arg `playlist-p' treats
     (cl-assert (stringp url) t "No URL under point." )
     (message "Playing media  URL under point")
     (kill-new url)
-    (push (list url (if playlist-p t nil)) emacspeak-m-player-media-history)
+      (cl-pushnew  url emacspeak-m-player-media-history :test #'string=)
     (emacspeak-m-player  url  playlist-p)))
 
 (defun emacspeak-eww-curl-play-media-at-point ()
@@ -2081,6 +2081,21 @@ arg `delete', delete that mark instead."
 (defvar emacspeak-eww-marks-save-timer
   (run-at-time 3600 3600  #'emacspeak-eww-marks-save)
   "Idle timer for saving EWW marks.")
+
+(defun emacspeak-eww-marks-list ()
+  "List EWW Marks."
+  (interactive)
+  (cl-declare (special emacspeak-eww-marks))
+  (let ((buffer (get-buffer-create "*EWW Marks*"))
+        (inhibit-read-only t))
+    (with-current-buffer buffer
+      (special-mode)
+      (erase-buffer)
+      (setq buffer-undo-list t)
+      (cl-loop for k being the hash-keys of emacspeak-eww-marks do
+               (insert (format "%s\n" k)))
+      (goto-char (point-min)))
+    (funcall-interactively #'switch-to-buffer buffer)))
 
 ;;}}}
 ;;{{{ quick setup for reading:

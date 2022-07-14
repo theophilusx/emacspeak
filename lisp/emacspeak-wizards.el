@@ -165,6 +165,7 @@ Prompts for the new location and preserves modification time
   existing file being overwritten."
   (interactive)
   (cl-declare (special emacspeak-copy-file-location-history
+                       minibuffer-history
                        emacspeak-copy-associated-location))
   (let ((file (or (buffer-file-name)
                   (error "Current buffer is not visiting any file")))
@@ -1502,7 +1503,7 @@ of the source buffer."
            (buffer (gethash key emacspeak-wizards--shells-table)))
       (when ;  source determines target directory
                (or (eq major-mode 'dired-mode) buffer-file-name)
-        (ems--shell-pushd-if-needed directory buffer))
+        (unless prefix (ems--shell-pushd-if-needed directory buffer)))
       (funcall-interactively #'pop-to-buffer buffer)))))
 
 (defcustom emacspeak-wizards-project-shells nil
@@ -2015,6 +2016,7 @@ access to the various functions provided by alpha-vantage."
 
 ;;}}}
 ;;{{{ Stock Quotes from iextrading
+
 ;; Moving from iextrading to iexcloud.
 ;; This service is the new iextrading, but needs an API key.
 ;; The service still has a free tier that should be sufficient for
@@ -2072,8 +2074,7 @@ Parameter `action' specifies relative URL. '"
 Uses symbols set in `emacspeak-wizards-personal-portfolio '.
 Caches results locally in `emacspeak-wizards-iex-portfolio-file'."
   (cl-declare (special emacspeak-wizards-iex-portfolio-file g-curl-program
-                       emacspeak-wizards-personal-portfolio
-                       emacspeak-wizards-iex-cache))
+                       emacspeak-wizards-personal-portfolio emacspeak-wizards-iex-cache))
   (let* ((symbols
           (mapconcat
            #'identity
@@ -3227,7 +3228,46 @@ before brightness is checked.")
      (if emacspeak-brightness-autoblack 'on 'off))))
 
 ;;}}}
+;;{{{ Content Locator:
+
+;; Content locate wizard:
+;; Like  m-player-locate-media but for documents (tex,html, org, pdf
+
+(defvar emacspeak-wizards-content-extensions
+  (eval-when-compile
+    (let
+        ((ext
+          '("tex" "org" "html" "pdf")))
+      (concat
+       "\\."
+       (regexp-opt
+        (nconc ext (mapcar #'upcase ext))
+        'parens)
+       "$")))
+  "Content extensions.")
+
+(defun emacspeak-wizards-locate-content (pattern)
+  "Locate content matching  pattern.  The results can be
+ opened by \\[emacspeak-dired-open-this-file] locally bound to C-RET ."
+  (interactive "sSearch Pattern: ")
+  (cl-declare  (special emacspeak-wizards-content-extensions
+                        locate-command locate-make-command-line))
+  (let ((inhibit-read-only t)
+        (locate-make-command-line #'(lambda (s) (list locate-command "-i" "--regexp" s))))
+    (locate-with-filter
+     (mapconcat #'identity
+                (split-string pattern)
+                "[ '/\"_.,-]")
+     emacspeak-wizards-content-extensions)
+    (goto-char (point-min))
+    (emacspeak-auditory-icon 'open-object)
+    (rename-buffer (format "Content  matching %s" pattern))
+    (emacspeak-speak-mode-line)))
+
+;;}}}
+
 (provide 'emacspeak-wizards)
+
 ;;{{{ end of file
 
 ;; local variables:

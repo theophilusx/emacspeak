@@ -526,7 +526,7 @@
  emacspeak-org-capture-link
 
 @item l
- emacspeak-m-player-locate-media
+ emacspeak-wizards-locate-content
 
 @item m
  emacspeak-wizards-view-buffers-filtered-by-this-mode
@@ -738,4 +738,10 @@
  @section Emacspeak Keybindings On emacspeak-multi-keymap
 
 @table @kbd
+@item h
+ emacspeak-m-player-browse-history
+
+@item l
+ emacspeak-m-player-locate-media
+
 @end table

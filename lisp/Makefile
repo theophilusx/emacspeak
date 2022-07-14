@@ -203,6 +203,7 @@ emacspeak-muse.elc \
 emacspeak-navi-mode.elc \
 emacspeak-net-utils.elc \
 emacspeak-newsticker.elc \
+emacspeak-notmuch.elc \
 emacspeak-nov.elc \
 emacspeak-nxml.elc \
 emacspeak-ocr.elc \
@@ -314,7 +315,6 @@ lint:
 emacs -batch -q \
 -f package-initialize \
 -l advice.el -l emacspeak-preamble.el  -l emacspeak-loaddefs.el \
--l g-utils.el \
 -f elint-directory 
 
 # }}}
