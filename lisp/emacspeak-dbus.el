@@ -234,14 +234,14 @@ already disabled."
 (defun emacspeak-dbus-resume ()
   "Emacspeak hook for Login1-resume."
   (cl-declare (special amixer-alsactl-config-file))
+  (emacspeak-prompt "resume")
   (ems-with-messages-silenced
     (tts-restart)
     (ems-with-environment '(("PULSE_SINK" . "tts_left"))
                           (emacspeak-prompt "waking-up"))
     (amixer-restore amixer-alsactl-config-file)
     (when (featurep 'soundscape) (soundscape-restart))
-    (when (featurep 'light)
-      (run-with-timer  10 nil #'light-black))
+    (when (featurep 'light) (light-black))
     (when
         (dbus-call-method
          :session
@@ -373,8 +373,10 @@ already disabled."
         (if lock
             (progn (emacspeak-screen-saver))
           (progn
-            (ems-with-environment '(("PULSE_SINK" . "tts_right"))
-                                  (emacspeak-prompt "success"))
+            (ems-with-environment
+              '(("PULSE_SINK" . "tts_right"))
+              (emacspeak-prompt "success")
+              (light-black))
             (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
             (when
                 (window-configuration-p emacspeak-screen-saver-saved-configuration)

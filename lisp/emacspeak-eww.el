@@ -512,9 +512,13 @@
   #'(lambda ()
       (let ((url (shr-url-at-point nil)))
         (cond
+         ((and url ;;; google  Result
+               (stringp url)
+               (string-prefix-p (emacspeak-google-result-url-prefix) url))
+          (emacspeak-google-canonicalize-result-url url))
          ((and url (stringp url))url)
          (t (error "No URL under point.")))))
-  "EWW Url At point.")
+  "EWW Url At point that also handle google specialities.")
 
 (add-hook
  'eww-mode-hook
@@ -1839,6 +1843,36 @@ The %s is automatically spoken if there is no user activity."
                  (emacspeak-speak-region start (point)))
              (error nil))))))))
 
+
+(cl-loop
+ for f in
+ '(url-retrieve-internal  url-truncate-url-for-viewing eww)
+ do
+ (eval
+  `
+  (defadvice ,f (before cleanup-url  pre act comp)
+    "Canonicalize Google search URLs."
+    (let ((u (ad-get-arg 0)))
+      (cond
+       ((and u (stringp u)
+             (string-prefix-p (emacspeak-google-result-url-prefix) u))
+        (ad-set-arg 0 (emacspeak-google-canonicalize-result-url
+ u))))))))
+
+(defadvice shr-copy-url (around emacspeak pre act comp)
+  "Canonicalize Google URLs"
+  (ems-with-messages-silenced
+    ad-do-it
+    (when (ems-interactive-p)
+      (emacspeak-auditory-icon 'delete-object)
+      (let ((u (car kill-ring)))
+        (when
+            (and u (stringp u)
+                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
+          (kill-new  (emacspeak-google-canonicalize-result-url u))))
+      (emacspeak-speak-current-kill))))
+
+
 ;;}}}
 ;;{{{ Speech-enable EWW buffer list:
 
@@ -2114,23 +2148,24 @@ arg `delete', delete that mark instead."
 (defvar emacspeak-eww-url-shell-commands
   (delete nil
           (list
-           (expand-file-name "cbox" emacspeak-etc-directory)
-           (expand-file-name "cbox-left" emacspeak-etc-directory)
-           (expand-file-name "cbox-right" emacspeak-etc-directory)
-           (expand-file-name "cbox-amp" emacspeak-etc-directory)
-           (executable-find "youtube-dl")))
+           (expand-file-name "nmpv" emacspeak-etc-directory)(executable-find "mpv")
+           (expand-file-name "cbox" emacspeak-etc-directory)))
   "Shell commands we permit on URL under point.")
 
-(defun emacspeak-eww-shell-command-on-url-at-point (&optional prefix)
-  "Run specified shell command on URL at point.
-Warning: Running shell script cbox through this fails mysteriously."
+(defun emacspeak-eww-shell-command-on-url-at-point (&optional prompt)
+  "Run specified shell command on URL at point. "
   (interactive "P")
   (cl-declare (special emacspeak-eww-url-shell-commands))
-  (cl-assert (shr-url-at-point prefix) t "No URL at point.")
-  (let ((url (shr-url-at-point prefix))
+  (let ((url
+         (or (shr-url-at-point nil)
+             (browse-url-url-at-point)))
         (cmd
-         (completing-read "Shell Command: " emacspeak-eww-url-shell-commands)))
-    (shell-command (format "%s '%s'" cmd url))
+         (if prompt
+             (completing-read "Shell Command: "
+                              emacspeak-eww-url-shell-commands)
+           (cl-first emacspeak-eww-url-shell-commands))))
+    (cl-assert url t "No url found")
+    (async-shell-command (format "%s '%s'" cmd url))
     (emacspeak-auditory-icon 'task-done)))
 ;;}}}
 ;;{{{Smart Tabs:

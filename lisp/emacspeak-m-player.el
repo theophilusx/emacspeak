@@ -1450,12 +1450,15 @@ flat classical club dance full-bass full-bass-and-treble
    0 -1))
 
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
+;; yt player using mplayer is broken  due to xml manifests
+(declare-function
+ emacspeak-google-canonicalize-result-url "emacspeak-google" (url))
+(declare-function mpv-start "mpv" (&rest args))
 
 ;;;###autoload
-(defun emacspeak-m-player-youtube-player (url &optional best)
-  "Use youtube-dl and mplayer to stream  audio from Youtube.
-Default picks lowest quality ---
-Optional prefix arg `best' chooses highest."
+(defun emacspeak-m-player-youtube-player (url &optional prefix)
+  "Use youtube-dl  to stream  using mpv.
+ Optional interactive prefix arg uses mplayer  instead. "
   (interactive
    (list
     (emacspeak-eww-read-url)
@@ -1463,19 +1466,22 @@ Optional prefix arg `best' chooses highest."
   (cl-declare (special emacspeak-m-player-youtube-dl))
   (unless (file-executable-p emacspeak-m-player-youtube-dl)
     (error "Please install youtube-dl first."))
-  (when (string-prefix-p (emacspeak-google-result-url-prefix) url))
-  (let ((u
-         (string-trim
-          (shell-command-to-string
-           (format "%s -f %s -g '%s' 2> /dev/null"
-                   emacspeak-m-player-youtube-dl
-                   (if best
-                       (ems--m-p-get-yt-audio-last-fmt url)
-                     (ems--m-p-get-yt-audio-first-fmt url))
-                   url)))))
-    (when (= 0 (length  u)) (error "Error retrieving Media URL "))
-    (kill-new u)
-    (emacspeak-m-player u)))
+  (when (string-prefix-p (emacspeak-google-result-url-prefix) url)
+    (setq url (emacspeak-google-canonicalize-result-url url)))
+  (cond
+   ((not prefix)
+    (require 'mpv)
+    (mpv-start url))
+   (t
+    (let ((u
+           (string-trim
+            (shell-command-to-string
+             (format "%s --youtube-skip-dash-manifest    -g '%s' 2> /dev/null"
+                     emacspeak-m-player-youtube-dl
+                     url)))))
+      (when (= 0 (length  u)) (error "Error retrieving Media URL "))
+      (kill-new u)
+        (emacspeak-m-player u)))))
 
 ;;;###autoload
 (defun emacspeak-m-player-youtube-live (url)
@@ -1488,7 +1494,7 @@ Optional prefix arg `best' chooses highest."
   (unless (file-executable-p emacspeak-m-player-youtube-dl)
     (error "Please install youtube-dl first."))
   (when (string-prefix-p (emacspeak-google-result-url-prefix) url)
-    )
+    (setq url (emacspeak-google-canonicalize-result-url url)))
   (let ((emacspeak-m-player-options
          (append emacspeak-m-player-options (list "-loop" "0")))
         (u
