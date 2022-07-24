@@ -134,6 +134,7 @@ This chapter documents a total of 1160 commands and 148 options.
 * emacspeak-metapost::speech-enable metapost mode.
 * emacspeak-midge::Speech-enable MIDI editor.
 * emacspeak-mines::Speech-enable MINES.
+* emacspeak-mpv::Speech-enable MPV.
 * emacspeak-mspools::Speech enable MSpools -- Monitor multiple mail drops.
 * emacspeak-muggles::Convenience Hydras.
 * emacspeak-muse::Speech-enable Muse.
@@ -5302,17 +5303,17 @@ are available are cued by an auditory icon on the header line.
 @end format
 @end deffn
 
-@subsubsection emacspeak-eww-marks-list
-@deffn {Command} emacspeak-eww-marks-list   
+@subsubsection emacspeak-eww-marks-browse
+@deffn {Command} emacspeak-eww-marks-browse   
 @table @kbd
 @item C-x r C-e
 @kindex C-x r C-e
 @end table
 
-@findex emacspeak-eww-marks-list
+@findex emacspeak-eww-marks-browse
 
 @format
-List EWW Marks.
+List EWW Marks as actionable buttons.
 @end format
 @end deffn
 
@@ -8913,7 +8914,7 @@ Use youtube-dl and mplayer to live-stream   from Youtube.
 @end deffn
 
 @subsubsection emacspeak-m-player-youtube-player
-@deffn {Command} emacspeak-m-player-youtube-player  (url &optional mpv)
+@deffn {Command} emacspeak-m-player-youtube-player  (url &optional prefix)
 @table @kbd
 @item C-, y
 @kindex C-, y
@@ -8924,11 +8925,10 @@ Use youtube-dl and mplayer to live-stream   from Youtube.
 @findex emacspeak-m-player-youtube-player
 
 @format
-Use youtube-dl and mplayer to stream  audio from Youtube.
- Optional interactive prefix arg uses mpv instead --- that works with
-manifest xml files.
+Use youtube-dl  to stream  using mpv.
+ Optional interactive prefix arg uses mplayer  instead. 
 
-(fn URL &optional MPV)
+(fn URL &optional PREFIX)
 @end format
 @end deffn
 
@@ -9448,6 +9448,13 @@ Speak neighboring cells in sorted order.
 Speak number of uncovered cells.
 @end format
 @end deffn
+
+@node emacspeak-mpv
+@section emacspeak-mpv
+
+MPV ==   Media Player
+Enables seamless playback of Youtube content among others.
+Binds mpv commands on C-e C-; as the  prefix key.
 
 @node emacspeak-mspools
 @section emacspeak-mspools

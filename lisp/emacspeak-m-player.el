@@ -182,6 +182,15 @@ This is set to nil when playing Internet  streams.")
     (setq emacspeak-m-player-metadata (make-emacspeak-m-player-metadata))
     (setq buffer-undo-list t)))
 
+
+(define-prefix-command 'emacspeak-media-prefix 'emacspeak-m-player-mode-map )
+(global-set-key (ems-kbd "C-' ;")'emacspeak-media-prefix)
+(map-keymap
+ (lambda (_key cmd)
+   (when (symbolp cmd)
+     (put cmd 'repeat-map 'emacspeak-m-player-mode-map)))
+ emacspeak-m-player-mode-map)
+
 ;;}}}
 ;;{{{Dynamic playlist:
 
@@ -448,6 +457,7 @@ If a dynamic playlist exists, just use it."
              (emacspeak-m-player-slave-command (format "get_meta_%s" f))
              "="))))
     emacspeak-m-player-metadata))
+
 (defvar emacspeak-m-player-cue-info nil
   "Set to T if  ICY info cued automatically.")
 
@@ -991,14 +1001,12 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
     (let* ((m (emacspeak-m-player-metadata-info  emacspeak-m-player-metadata))
            (info (and m (cl-second (split-string m "=")))))
       (when toggle-cue
-        (setq emacspeak-m-player-cue-info (not emacspeak-m-player-cue-info)))
-      (if toggle-cue
-          (progn
-            (emacspeak-auditory-icon
-             (if emacspeak-m-player-cue-info 'on 'off))
-            (message "ICY messages  turned %s."
-                     (if emacspeak-m-player-cue-info "on" "off")))
-        (message"%s" (format "%s" (or info  "No Stream Info")))))))
+        (setq emacspeak-m-player-cue-info
+              (not emacspeak-m-player-cue-info))
+        (when  emacspeak-m-player-cue-info
+          (emacspeak-auditory-icon
+           (if emacspeak-m-player-cue-info 'on 'off))))
+      (dtk-speak-and-echo (format "%s" (or info  "No Stream Info"))))))
 
 (defun emacspeak-m-player-get-length ()
   "Display length of track."
@@ -1137,12 +1145,13 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
 
 (defun emacspeak-m-player-remove-from-media-history (url) 
   "Remove URL from media history"
-  (interactive "sURL:")
+  (interactive (list (emacspeak-eww-read-url)))
   (cl-declare (special emacspeak-m-player-media-history))
   (setq emacspeak-m-player-media-history
         (cl-remove-if
          #'(lambda(u) (string= u url))
-         emacspeak-m-player-media-history)))
+         emacspeak-m-player-media-history))
+  (message "Media History: %d" (length emacspeak-m-player-media-history)))
 
 (defun emacspeak-m-player-from-history (posn)
   "Play media from position `posn'media-history. "

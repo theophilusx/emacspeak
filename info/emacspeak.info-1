@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on July 15, 2022.
+last updated on July 23, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3552,6 +3552,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-metapost::speech-enable metapost mode.
 * emacspeak-midge::Speech-enable MIDI editor.
 * emacspeak-mines::Speech-enable MINES.
+* emacspeak-mpv::Speech-enable MPV.
 * emacspeak-mspools::Speech enable MSpools – Monitor multiple mail drops.
 * emacspeak-muggles::Convenience Hydras.
 * emacspeak-muse::Speech-enable Muse.
@@ -8013,13 +8014,13 @@ prefix arg to delete a previously created eww-mark.
      Display Link tags of type rel.  Web pages for which alternate links
      are available are cued by an auditory icon on the header line.
 
-12.75.9.9 emacspeak-eww-marks-list
-..................................
+12.75.9.9 emacspeak-eww-marks-browse
+....................................
 
- -- Command: emacspeak-eww-marks-list
+ -- Command: emacspeak-eww-marks-browse
      ‘C-x r C-e’
 
-     List EWW Marks.
+     List EWW Marks as actionable buttons.
 
 12.75.9.10 emacspeak-eww-marks-load
 ...................................

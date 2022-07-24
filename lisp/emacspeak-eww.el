@@ -542,7 +542,7 @@
   (format "User-Agent: %s\r\n"
           "Mozilla/5.0 (X11; Linux x86_64) \
 AppleWebKit/537.36 (KHTML, like Gecko) \
-Chrome/86.0.4240.75 \
+Chrome/100.0.4240.75 \
 Safari/537.36"
           )
   "User Agent string sent when masquerading.")
@@ -2116,18 +2116,22 @@ arg `delete', delete that mark instead."
   (run-at-time 3600 3600  #'emacspeak-eww-marks-save)
   "Idle timer for saving EWW marks.")
 
-(defun emacspeak-eww-marks-list ()
-  "List EWW Marks."
+(defun emacspeak-eww-marks-browse ()
+  "List EWW Marks as actionable buttons."
   (interactive)
   (cl-declare (special emacspeak-eww-marks))
-  (let ((buffer (get-buffer-create "*EWW Marks*"))
+  (let ((buffer (get-buffer-create "EWW Marks"))
         (inhibit-read-only t))
     (with-current-buffer buffer
       (special-mode)
       (erase-buffer)
       (setq buffer-undo-list t)
-      (cl-loop for k being the hash-keys of emacspeak-eww-marks do
-               (insert (format "%s\n" k)))
+      (cl-loop
+       for k being the hash-keys of emacspeak-eww-marks do
+       (insert-text-button
+        (format "%s" k)
+        'action #'(lambda (b) (emacspeak-eww-open-mark (button-label b))))
+       (insert "\n"))
       (goto-char (point-min)))
     (funcall-interactively #'switch-to-buffer buffer)))
 
