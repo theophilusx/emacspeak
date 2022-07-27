@@ -84,9 +84,9 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-
 (require 'ansi-color)
 (require 'emacspeak-comint)
+;(require 'pianobar)
 ;;}}}
 ;;{{{ Pianobar Fixups:
 
@@ -216,9 +216,7 @@ If electric mode is on, keystrokes invoke pianobar commands directly."
   "Start or control Emacspeak Pianobar player."
   (interactive)
   (cl-declare (special pianobar-buffer emacspeak-comint-autospeak))
-  (condition-case nil
-      (unless (featurep 'pianobar) (require 'pianobar))
-    (error "Pianobar not installed."))
+  (require 'pianobar)
   (cond
    ((and  (buffer-live-p (get-buffer pianobar-buffer))
           (processp (get-buffer-process pianobar-buffer))
@@ -300,7 +298,6 @@ If electric mode is on, keystrokes invoke pianobar commands directly."
   (pianobar-send-string (format "%s\n" string)))
 
 ;;}}}
-
 (provide 'emacspeak-pianobar)
 ;; reload pianobar to fix our vol-change commands.
 (load "pianobar")

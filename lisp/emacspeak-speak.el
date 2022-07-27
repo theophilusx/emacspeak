@@ -689,7 +689,8 @@ current local  value to the result.")
   "^[^[:alnum:]]+$"
   "Pattern to match lines of special chars.
 This is a regular expression that matches lines containing only
-non-alphanumeric characters for the current locale.  emacspeak will generate a tone
+non-alphanumeric characters for the current locale.
+emacspeak will generate a tone
 instead of speaking such lines when punctuation mode is set
 to some.")
 
@@ -2821,6 +2822,37 @@ but quickly switch to a window by name."
     (setq emacspeak-battery-prev data)))
 (when (boundp 'battery-update-functions)
   (add-to-list 'battery-update-functions 'emacspeak-battery-alarm))
+;;}}}
+;;{{{Repeat Mode:
+;; See https://karthinks.com/software/it-bears-repeating/
+
+(defvar emacspeak-repeat-was-active nil
+  "Cache repeat-progress")
+
+(defun emacspeak-repeat-check-hook ()
+  "Play appropriate repeat icon."
+  (cl-declare (special repeat-in-progress emacspeak-repeat-was-active))
+  (cond
+   ((and repeat-in-progress (not emacspeak-repeat-was-active))
+    (setq emacspeak-repeat-was-active t)
+    (emacspeak-auditory-icon 'repeat-start))
+   ((and (not repeat-in-progress)  emacspeak-repeat-was-active)
+    (setq emacspeak-repeat-was-active nil)
+    (emacspeak-auditory-icon 'repeat-end))
+   (repeat-in-progress (emacspeak-auditory-icon 'repeat-active))))
+
+(defun emacspeak-repeat-mode-hook ()
+  "Add or remove emacspeak-repeat-check-hook from post-command-hook"
+  (cl-declare (special repeat-mode))
+  (cond
+   (repeat-mode
+    (add-hook 'post-command-hook 'emacspeak-repeat-check-hook 'at-end))
+   (t (remove-hook 'post-command-hook 'emacspeak-repeat-check-hook))))
+
+(add-hook 'repeat-mode-hook 'emacspeak-repeat-mode-hook )
+
+
+
 ;;}}}
 (provide 'emacspeak-speak)
 ;;{{{ end of file

@@ -97,11 +97,15 @@ Use Serve when working with remote speech servers.")
 
 ;;}}}
 ;;{{{  Setup sound themes
+
+(defvar emacspeak-sounds-current-theme
+  (expand-file-name "pan-chimes/" emacspeak-sounds-directory)
+  "Name of current theme for auditory icons.
+Do not set this by hand;
+--use command \\[emacspeak-sounds-select-theme].")
 (cl-declaim (special emacspeak-sounds-directory))
 (defvar emacspeak-default-sound
-  (expand-file-name
-   "classic/button.wav"
-   emacspeak-sounds-directory)
+  (expand-file-name "button.wav" emacspeak-sounds-current-theme)
   "Fallback icon.")
 
 (defvar emacspeak-sounds-themes-table
@@ -136,15 +140,20 @@ Use Serve when working with remote speech servers.")
     (cond
      ((and
        (string= emacspeak-play-program (executable-find "pactl"))
-       (string=
-        emacspeak-sounds-current-theme
-        (expand-file-name "ogg-chimes/" emacspeak-sounds-directory)))
+       (or
+        (string=
+         emacspeak-sounds-current-theme
+         (expand-file-name "ogg-chimes/" emacspeak-sounds-directory))
+        (string=
+         emacspeak-sounds-current-theme
+         (expand-file-name "ogg-3d/" emacspeak-sounds-directory))))
       (file-name-nondirectory f))
      ((file-exists-p f) f)
      (t
       (let ((emacspeak-use-auditory-icons nil))
         (message "Icon %s not defined." sound-name))
       emacspeak-default-sound))))
+
 (defun emacspeak-sounds-define-theme-if-necessary (theme-name)
   "Define selected theme if necessary."
   (cond
@@ -159,21 +168,27 @@ Use Serve when working with remote speech servers.")
   "Select theme for auditory icons."
   (interactive
    (list
-    (expand-file-name
-     (read-directory-name "Theme: " emacspeak-sounds-directory))))
+    (expand-file-name (read-directory-name "Theme: " emacspeak-sounds-directory))))
   (cl-declare (special emacspeak-sounds-current-theme
                        emacspeak-sounds-themes-table
-                       emacspeak-play-program
-                       emacspeak-sounds-directory))
-  (when (string= emacspeak-play-program (executable-find "pactl"))
-    (error "Only ogg-chimes with Pulse Advanced."))
-  (setq theme (expand-file-name theme emacspeak-sounds-directory))
+                       emacspeak-play-program emacspeak-sounds-directory))
+  (when
+      (and (string= emacspeak-play-program (executable-find "pactl"))
+           (not
+            (member (file-relative-name theme emacspeak-sounds-directory)
+                    '("ogg-3d/" "ogg-chimes/"))))
+    (error "%s: Only ogg-3d or ogg-chimes with Pulse Advanced" theme))
   (unless (file-directory-p theme)
     (setq theme  (file-name-directory theme)))
   (unless (file-exists-p theme)
     (error "Theme %s is not installed" theme))
   (setq emacspeak-sounds-current-theme theme)
   (emacspeak-sounds-define-theme-if-necessary theme)
+  (when (string= (executable-find "pactl") emacspeak-play-program)
+    (shell-command
+                  (format "%s load-sample-dir-lazy %s"
+                          (executable-find "pacmd") theme))
+    )
   t)
 
 
@@ -209,12 +224,6 @@ Use Serve when working with remote speech servers.")
        ((string= (executable-find "play") val)
         (setq emacspeak-play-args nil))))
   :group 'emacspeak)
-
-(defvar emacspeak-sounds-current-theme
-  (expand-file-name "pan-chimes/" emacspeak-sounds-directory)
-  "Name of current theme for auditory icons.
-Do not set this by hand;
---use command \\[emacspeak-sounds-select-theme].")
 
 (defun emacspeak-sounds-theme-p  (theme)
   "Predicate to test if theme is available."
@@ -267,7 +276,9 @@ Automatically set to `play-sample' if using pactl.")
       (start-process
        emacspeak-play-program nil emacspeak-play-program
        (emacspeak-get-sound-filename sound-name)))))
+
 (defvar emacspeak-sox (executable-find "sox")
+  
   "Name of SoX executable.")
 
 ;;}}}
