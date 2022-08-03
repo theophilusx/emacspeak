@@ -72,6 +72,7 @@
 
 ;;}}}
 ;;{{{ AMark Functions:
+
 (defun emacspeak-amark-names ()
   "Return list of  amark names."
   (cl-declare (special emacspeak-amark-list))
@@ -138,6 +139,73 @@ given name, it is updated with path and position."
           (setq l (read buff))
           (kill-buffer buff))
         (setq emacspeak-amark-list l)))))
+
+;;}}}
+;;{{{Browse Amarks:
+
+(declare-function emacspeak-m-player-seek-absolute "emacspeak-m-player" (pos))
+
+(defun emacspeak-amark-play (amark)
+  "Play amark using m-player."
+  (emacspeak-m-player
+   (expand-file-name
+    (emacspeak-amark-path  amark)
+    default-directory))
+  (emacspeak-m-player-seek-absolute (emacspeak-amark-position amark)))
+
+(defun emacspeak-amark-delete (amark)
+  "Delete Amark and save."
+  (cl-declare (special emacspeak-amark-list))
+  (setq emacspeak-amark-list
+        (cl-remove-if
+         #'(lambda(m)
+             (string=
+              (emacspeak-amark-name m)
+              (emacspeak-amark-name amark)))
+         emacspeak-amark-list))
+  (emacspeak-amark-save)
+  (emacspeak-amark-browse)
+  (message "Updated amarks"))
+
+;;;###autoload
+(defun emacspeak-amark-browse ()
+  "Browse  nearest amarks file."
+  (interactive)
+  (cl-declare (special emacspeak-amark-list))
+  (let ((amarks
+         (or 
+          (emacspeak-amark-load)
+          (error "No Amarks here")))
+        (buff (get-buffer-create "*Amarks Browser"))
+        (inhibit-read-only t))
+    (with-current-buffer buff
+      (special-mode)
+      (local-set-key "p" 'backward-button)
+      (local-set-key "n" 'forward-button)
+      (erase-buffer)
+      (setq emacspeak-amark-list amarks)
+      (setq buffer-undo-list t)
+      (cl-loop
+       for m in amarks do
+       (insert
+        (format
+         "%s\t" (emacspeak-amark-name m)))
+       (insert-text-button
+        "Delete\t" 
+        'mark m
+        'action
+        #'(lambda (b) (emacspeak-amark-delete (button-get b 'mark))))
+       (insert (format "%s\t" (emacspeak-amark-position m)))
+       (insert-text-button
+        (format "%s" (abbreviate-file-name (emacspeak-amark-path m)))
+        'mark m
+        'action
+        #'(lambda (b) (emacspeak-amark-play (button-get b 'mark))))
+       (insert "\n"))
+      (goto-char (point-min))
+      (forward-button 1))
+    (funcall-interactively #'switch-to-buffer buff)))
+
 
 ;;}}}
 (provide  'emacspeak-amark)

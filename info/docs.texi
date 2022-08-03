@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1160 commands and 148 options.
+This chapter documents a total of 1160 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -1313,6 +1313,22 @@ bookmarks in audio content. If there is an existing amark of the
 given name, it is updated with path and position.
 
 (fn PATH NAME POSITION)
+@end format
+@end deffn
+
+@subsubsection emacspeak-amark-browse
+@deffn {Command} emacspeak-amark-browse   
+@table @kbd
+@item C-; a
+@kindex C-; a
+@item C-x @@ h a
+@kindex C-x @@ h a
+@end table
+
+@findex emacspeak-amark-browse
+
+@format
+Browse  nearest amarks file.
 @end format
 @end deffn
 
@@ -3135,6 +3151,22 @@ Speak the header line of the dired buffer.
 
 @format
 Speaks the target of the symlink on the current line.
+@end format
+@end deffn
+
+@subsubsection emacspeak-find-dired
+@deffn {Command} emacspeak-find-dired   
+@table @kbd
+@item C-e C-f
+@kindex C-e C-f
+@item <fn> C-f
+@kindex <fn> C-f
+@end table
+
+@findex emacspeak-find-dired
+
+@format
+Prompt for find-dired arguments using context and completion.
 @end format
 @end deffn
 
@@ -7609,7 +7641,7 @@ i.e. you can move through corrections with C-r and C-s.
 Emacspeak will not speak the choices if there are more than this
 many available corrections.
 
-Default Value: @code{@verb{|10|}}
+Default Value: @code{@verb{|8|}}
 
 @end defvar
 
@@ -7746,7 +7778,7 @@ Default Value: @code{@verb{|((SPC flyspell-mode) (b emacspeak-wizards-view-buffe
 @defvar {User Option} emacspeak-hyper-keys
 Hyper-Key bindings. 
 
-Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-wizards-view-buffers-filtered-by-m-player-mode) (; emacspeak-m-player-using-openal) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
+Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-wizards-view-buffers-filtered-by-m-player-mode) (; emacspeak-m-player-using-openal) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
 
 @end defvar
 
@@ -7774,7 +7806,7 @@ Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacsp
 @defvar {User Option} emacspeak-super-keys
 Super key bindings. 
 
-Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC emacspeak-wizards-scratch) (a emacspeak-wizards-execute-asynchronously) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (f flyspell-mode) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood))|}}
+Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC emacspeak-wizards-scratch) (a emacspeak-wizards-execute-asynchronously) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood))|}}
 
 @end defvar
 
@@ -9457,6 +9489,24 @@ Enables seamless playback of Youtube content among others.
 Binds mpv commands on C-e C-; as the  prefix key.
 This leverages Emacs' repeat-mode functionality, so successive mpv
 commands require only one initial ress of C-e C-;.
+
+@subsection Emacspeak-Mpv Commands
+
+@subsubsection emacspeak-mpv-position
+@deffn {Command} emacspeak-mpv-position   
+@table @kbd
+@item C-e C-; .
+@kindex C-e C-; .
+@item <fn> C-; .
+@kindex <fn> C-; .
+@end table
+
+@findex emacspeak-mpv-position
+
+@format
+Show position and duration.
+@end format
+@end deffn
 
 @node emacspeak-mspools
 @section emacspeak-mspools
@@ -11595,13 +11645,6 @@ but quickly switch to a window by name.
 
 @subsubsection emacspeak-shell-command
 @deffn {Command} emacspeak-shell-command  (command)
-@table @kbd
-@item C-e $
-@kindex C-e $
-@item <fn> $
-@kindex <fn> $
-@end table
-
 @findex emacspeak-shell-command
 
 @format
@@ -16836,32 +16879,6 @@ Moves to the shortest line when called interactively.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-finder-find
-@deffn {Command} emacspeak-wizards-finder-find  (directory)
-@findex emacspeak-wizards-finder-find
-
-@format
-Run find-dired on specified switches after prompting for the
-directory to where find is to be launched.
-
-(fn DIRECTORY)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-finder-mode
-@deffn {Command} emacspeak-wizards-finder-mode   
-@findex emacspeak-wizards-finder-mode
-
-@format
-Emacspeak Finder
-
-In addition to any hooks its parent mode ‘special-mode’ might have
-run, this mode runs the hook ‘emacspeak-wizards-finder-mode-hook’, as
-the final or penultimate step during initialization.
-
-@end format
-@end deffn
-
 @subsubsection emacspeak-wizards-frame-colors
 @deffn {Command} emacspeak-wizards-frame-colors   
 @findex emacspeak-wizards-frame-colors
@@ -16893,15 +16910,6 @@ Optional interactive prefix arg ext says this comes from an
 external package.
 
 (fn F &optional EXT)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-generate-finder
-@deffn {Command} emacspeak-wizards-generate-finder   
-@findex emacspeak-wizards-generate-finder
-
-@format
-Generate a widget-enabled finder wizard.
 @end format
 @end deffn
 
@@ -17784,13 +17792,6 @@ API Key  used to retrieve stock data from alpha-vantage.
 Visit https://www.alphavantage.co/support/#api-key to get your key.
 
 Default Value: @code{@verb{|nil|}}
-
-@end defvar
-
-@defvar {User Option} emacspeak-wizards-find-switches-widget
-Widget to get find switch.
-
-Default Value: @code{@verb{|(cons :tag Find Expression (menu-choice :tag Find (string :tag Test) (const -name) (const -iname) (const -path) (const -ipath) (const -regexp) (const -iregexp) (const -exec) (const -ok) (const -newer) (const -anewer) (const -cnewer) (const -used) (const -user) (const -uid) (const -nouser) (const -nogroup) (const -perm) (const -fstype) (const -lname) (const -ilname) (const -empty) (const -prune) (const -or) (const -not) (const -inum) (const -atime) (const -ctime) (const -mtime) (const -amin) (const -mmin) (const -cmin) (const -size) (const -type) (const -maxdepth) (const -mindepth) (const -mount) (const -noleaf) (const -xdev)) (string :tag Value))|}}
 
 @end defvar
 
