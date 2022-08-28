@@ -1758,17 +1758,6 @@ unless   `dtk-quiet' is set to t. "
      (let ((emacspeak-speak-messages nil)
            (inhibit-message t))
        ,@body)))
-;;;###autoload
-(defmacro ems-with-environment (env-alist &rest body)
-  "Evaluate body  an updated `ENV'.
-Argument ` env-alist' is an alist of shell env-var/env-value pairs."
-  (declare (indent 0) (debug t))
-  `(let ((process-environment (copy-sequence process-environment)))
-        (cl-loop
-         for b in ,env-alist do
-         (setq process-environment
-               (setenv-internal process-environment (car b) (cdr b) t)))
-        ,@body))
 
 (defun dtk-speak-and-echo (message)
   "Speak message and echo it."
@@ -1928,20 +1917,12 @@ Designed to work with ALSA and Pulseaudio."
   "Initialize notification TTS stream."
   (interactive)
   (cl-declare (special dtk-notify-process))
-  (let ((process-environment (copy-sequence process-environment))
-        (device (dtk-get-notify-device))
-        (dtk-program
-         (if
-             (string-match "cloud" dtk-program)
-             "cloud-notify"
-           dtk-program))
+  (let ((dtk-program
+         (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program))
         (new-process nil))
-    (setq process-environment
-          (cond
-           ((> (length (shell-command-to-string "pidof pulseaudio")) 0)
-            (setenv-internal process-environment"PULSE_SINK" device t))
-           (t (setenv-internal process-environment"ALSA_DEFAULT" device t))))
-    (setq new-process (dtk-make-process "Notify"))
+    (with-environment-variables
+        (("PULSE_SINK" "tts_right"))
+      (setq  new-process (dtk-make-process "Notify")))
     (when
         (memq (process-status new-process) '(run open))
       (when (and dtk-notify-process (process-live-p dtk-notify-process))

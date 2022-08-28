@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1160 commands and 147 options.
+This chapter documents a total of 1161 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -9491,6 +9491,24 @@ This leverages Emacs' repeat-mode functionality, so successive mpv
 commands require only one initial ress of C-e C-;.
 
 @subsection Emacspeak-Mpv Commands
+
+@subsubsection emacspeak-mpv-play-url
+@deffn {Command} emacspeak-mpv-play-url  (url &optional left-channel)
+@table @kbd
+@item C-e C-; ;
+@kindex C-e C-; ;
+@item <fn> C-; ;
+@kindex <fn> C-; ;
+@end table
+
+@findex emacspeak-mpv-play-url
+
+@format
+Play URL using mpv. Prefix arg plays on left channel..
+
+(fn URL &optional LEFT-CHANNEL)
+@end format
+@end deffn
 
 @subsubsection emacspeak-mpv-position
 @deffn {Command} emacspeak-mpv-position   
@@ -19860,7 +19878,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 75 URL Templates.
+This section documents a total of 74 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -19890,9 +19908,7 @@ Logout from Google to do an anonymous search.@item @b{ArchWiki Search}
 
 Search Linux ArchWiki@item @b{BBC Podcast Directory}
 
-BBC PodCast Directory@item @b{BBC World News Summary}
-
-BBC World News Summary@item @b{Baseball Box Scores}
+BBC PodCast Directory@item @b{Baseball Box Scores}
 
 Display baseball Play By Play.@item @b{Baseball Game Details}
 
