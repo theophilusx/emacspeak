@@ -30,6 +30,9 @@
 @item )
  emacspeak-sounds-select-theme
 
+@item .
+ emacspeak-speak-windowful
+
 @item /
  emacspeak-speak-this-buffer-other-window-display
 
@@ -365,6 +368,9 @@
 
 @item p
  dtk-set-punctuations
+
+@item q
+ dtk-toggle-quiet
 
 @item r
  dtk-set-rate

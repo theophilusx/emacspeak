@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1161 commands and 147 options.
+This chapter documents a total of 1162 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -849,6 +849,13 @@ Interactive PREFIX arg makes the new setting global.
 
 @subsubsection dtk-toggle-quiet
 @deffn {Command} dtk-toggle-quiet  (&optional prefix)
+@table @kbd
+@item C-e d q
+@kindex C-e d q
+@item <fn> d q
+@kindex <fn> d q
+@end table
+
 @findex dtk-toggle-quiet
 
 @format
@@ -9504,7 +9511,7 @@ commands require only one initial ress of C-e C-;.
 @findex emacspeak-mpv-play-url
 
 @format
-Play URL using mpv. Prefix arg plays on left channel..
+Play URL using mpv;  Prefix arg plays on left channel.
 
 (fn URL &optional LEFT-CHANNEL)
 @end format
@@ -12706,6 +12713,22 @@ which-func without turning that mode on.
 
 @format
 Speaks information about current window.
+@end format
+@end deffn
+
+@subsubsection emacspeak-speak-windowful
+@deffn {Command} emacspeak-speak-windowful   
+@table @kbd
+@item C-e .
+@kindex C-e .
+@item <fn> .
+@kindex <fn> .
+@end table
+
+@findex emacspeak-speak-windowful
+
+@format
+Line to top, then Speak window contents.
 @end format
 @end deffn
 

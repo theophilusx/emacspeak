@@ -2052,6 +2052,14 @@ The message is also placed in the kill ring for convenient yanking "
      (window-start (selected-window))
      (window-end (selected-window)  'update ))))
 
+
+(defun emacspeak-speak-windowful ()
+  "Line to top, then Speak window contents."
+  (interactive)
+  (recenter 0)
+  (emacspeak-auditory-icon 'scroll)
+  (dtk-speak (emacspeak-get-window-contents)))
+
 (defun emacspeak-speak-window-information ()
   "Speaks information about current window."
   (interactive)
