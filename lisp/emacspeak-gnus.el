@@ -1,4 +1,4 @@
-;;; emacspeak-gnus.el --- Speech enable GNUS -- Fluent spoken access to imap, usenet  -*- lexical-binding: t; -*-
+;;; emacspeak-gnus.el --- Speech enable Gnus   -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $ 
 ;; Description:  Emacspeak extension to speech enable Gnus
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;;{{{  Introduction:
@@ -95,9 +96,10 @@ instead you hear only the first screenful."
                        gnus-article-mode-map))
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
   (define-key gnus-summary-mode-map "t" 'gnus-summary-toggle-header)
-  (define-key gnus-summary-mode-map '[left] 'emacspeak-gnus-summary-catchup-quietly-and-exit)
+  (define-key
+   gnus-summary-mode-map
+   '[left] 'emacspeak-gnus-summary-catchup-quietly-and-exit)
   (define-key gnus-summary-mode-map '[right] 'gnus-summary-show-article)
-                                        ;(define-key  gnus-group-mode-map "?" 'gm-nnir-group-make-nnir-group)
   (define-key gnus-group-mode-map "/" 'gm-nnir-group-make-gmail-group)
   (define-key gnus-group-mode-map ";" 'emacspeak-gnus-personal-gmail-recent)
   (define-key gnus-group-mode-map ":" 'emacspeak-gnus-personal-gmail-last-week)
@@ -479,7 +481,8 @@ the previous group was closed."
     (emacspeak-auditory-icon 'mark-object)
     (emacspeak-gnus-summary-speak-subject)))
 
-(defadvice gnus-summary-kill-same-subject-and-select (after emacspeak pre act comp)
+(defadvice gnus-summary-kill-same-subject-and-select
+    (after emacspeak pre act comp)
   "Speak the subject and speak the first screenful.
 Produce an auditory icon
 indicating the article is being opened."

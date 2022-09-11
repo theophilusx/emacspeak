@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -133,11 +134,13 @@
 
 ;;}}}
 ;;{{{ pronunciations 
-(cl-declaim (special emacspeak-pronounce-common-xml-namespace-uri-pronunciations))
+(cl-declaim (special
+             emacspeak-pronounce-common-xml-namespace-uri-pronunciations))
 
 ;; nxml mode inherits from xml mode
-(emacspeak-pronounce-augment-pronunciations 'xml-mode
-                                            emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
+(emacspeak-pronounce-augment-pronunciations
+ 'xml-mode
+ emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
 (emacspeak-pronounce-add-super 'xml-mode 'nxml-mode)
 
 ;;}}}

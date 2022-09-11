@@ -1,4 +1,4 @@
-;;; emacspeak-abc-mode.el --- Speech-enable ABC-MODE  -*- lexical-binding: t; -*-
+;;; emacspeak-abc-mode.el --- Speech-enable ABC  -*- lexical-binding: t; -*-
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable ABC-MODE An Emacs Interface to abc-mode
 ;; Keywords: Emacspeak,  Audio Desktop abc-mode
@@ -32,7 +32,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

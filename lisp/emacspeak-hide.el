@@ -1,4 +1,4 @@
-;;; emacspeak-hide.el --- Provides user commands for hiding and exposing blocks of text  -*- lexical-binding: t; -*-
+;;; emacspeak-hide.el --- Hide/Expose Text blocks   -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Hide and expose blocks of text
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -166,8 +167,8 @@ STRING is the token's text."
 (defun emacspeak-hide-prefix-matches-this-line (prefix)
   (unless (eobp)
     (string-equal (nth 2 prefix)
-                  (buffer-substring-no-properties  (point)
-                                                   (+ (point) (nth 1  prefix))))))
+                  (buffer-substring-no-properties
+                   (point) (+ (point) (nth 1  prefix))))))
 
 ;;}}}
 
@@ -208,10 +209,11 @@ Returns t if a block was found and hidden."
                                  (list 'invisible t
                                        'cursor-intangible t
                                        'intangible t))
-            (add-text-properties begin (point)
-                                 (list 'emacspeak-hide-block-prefix (nth 2  prefix)
-                                       'emacspeak-hidden-block (cl-first prefix)
-                                       'personality emacspeak-hidden-header-line-personality)))
+            (add-text-properties
+             begin (point)
+             (list 'emacspeak-hide-block-prefix (nth 2  prefix)
+                   'emacspeak-hidden-block (cl-first prefix)
+                   'personality emacspeak-hidden-header-line-personality)))
           (message "Hid %s  %s lines"
                    count (cl-first prefix))
           t)

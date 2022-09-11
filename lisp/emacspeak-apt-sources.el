@@ -1,4 +1,4 @@
-;;; emacspeak-apt-sources.el --- speech-enable APT's sources.list file editor  -*- lexical-binding: t; -*-
+;;; emacspeak-apt-sources.el --- speech-enable apt -*- lexical-binding: t -*-
 ;; Description:  Emacspeak extension to speech-enable editing of sources.list
 ;; Keywords: Emacspeak, apt, sources.list
 ;;{{{  LCD Archive entry:
@@ -32,7 +32,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

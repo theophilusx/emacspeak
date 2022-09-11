@@ -196,16 +196,16 @@ Use Custom to customize where possible. "
   (tvr-tabs)
   (setq custom-file (expand-file-name "~/.customize-emacs"))
   (load-theme 'modus-vivendi t)
-  (require 'pulseaudio-control)
   (require 'dired-x)
   (tvr-time-load (when (file-exists-p custom-file)  (load custom-file))))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
-;; load  library-specific settings, customize, then start things.
+  ;; load  library-specific settings, customize, then start things.
   (cl-declare (special  tvr-libs emacspeak-soundscapes))
-   ;;; load  settings   not  customizable via custom.
+;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
+   (load "emacspeak-mpv")
   (tvr-customize) ;;; customizations
   (with-eval-after-load
       'yasnippet
@@ -220,6 +220,7 @@ Use Custom to customize where possible. "
 
 (defun tvr-text-mode-hook ()
   "TVR:text-mode"
+  (cl-declare (special auto-correct-predicate))
   (auto-fill-mode)
   (emacspeak-pronounce-toggle-use-of-dictionaries t)
   (setq auto-correct-predicate #'(lambda () t))

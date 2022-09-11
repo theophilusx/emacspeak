@@ -1,4 +1,4 @@
-;;; emacspeak-flycheck.el --- Speech-enable FLYCHECK  -*- lexical-binding: t; -*-
+;;; emacspeak-flycheck.el --- Speech-enable FLYCHECK -*- lexical-binding: t; -*-
 ;; $Id: emacspeak-flycheck.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable FLYCHECK An Emacs Interface to flycheck
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

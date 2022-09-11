@@ -1,4 +1,4 @@
-;;; emacspeak-autoload.el --- Emacspeak Autoload Generator  -*- lexical-binding: t; -*-
+;;; emacspeak-autoload.el ---  Autoload Generator  -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; Description:  autoload Wizard for the emacspeak desktop
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,7 +51,8 @@
 
 ;;}}}
 (defvar emacspeak-auto-autoloads-file
-  (expand-file-name "emacspeak-loaddefs.el"   (file-name-directory load-file-name))
+  (expand-file-name "emacspeak-loaddefs.el"
+                    (file-name-directory load-file-name))
   "File that holds automatically generated autoloads for Emacspeak.")
 
 (defvar dtk-quiet)
@@ -59,7 +61,8 @@
   "Generate emacspeak autoloads."
   (let ((dtk-quiet t)
         (generated-autoload-file emacspeak-auto-autoloads-file))
-    (update-directory-autoloads (file-name-directory emacspeak-auto-autoloads-file))))
+    (update-directory-autoloads
+     (file-name-directory emacspeak-auto-autoloads-file))))
 
 (provide 'emacspeak-autoload)
 ;;{{{ end of file

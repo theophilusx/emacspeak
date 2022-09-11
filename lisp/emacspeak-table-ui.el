@@ -29,7 +29,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 
@@ -306,7 +307,10 @@ Full List Of Keybindings:
      (concat row-head " " col-head
              (format " %s" element)))))
 
-(defun emacspeak-table-get-entry-with-headers  (row column &optional row-head-p col-head-p)
+(defun emacspeak-table-get-entry-with-headers  (row column
+                                                    &optional
+                                                    row-head-p
+                                                    col-head-p)
   "Return table element. Optional args specify  if we return any headers."
   (cl-declare (special emacspeak-table))
   (cl-assert  (boundp 'emacspeak-table) nil "No table here")
@@ -328,7 +332,8 @@ Full List Of Keybindings:
        'face 'bold col-head))
     (concat
      row-head " " col-head " "
-     (format " %s" (emacspeak-table-this-element emacspeak-table row column)))))
+     (format " %s"
+             (emacspeak-table-this-element emacspeak-table row column)))))
 
 (defvar emacspeak-table-speak-row-filter nil
   "Template specifying how a row is filtered before it is spoken.")
@@ -380,7 +385,8 @@ Full List Of Keybindings:
 Optional prefix arg prompts for a new filter."
   (interactive "P")
   (cl-declare (special emacspeak-table-speak-row-filter emacspeak-table))
-  (and emacspeak-table-speak-row-filter(push emacspeak-table-speak-row-filter minibuffer-default))
+  (and emacspeak-table-speak-row-filter
+       (push emacspeak-table-speak-row-filter minibuffer-default))
   (unless (and  emacspeak-table-speak-row-filter
                 (listp emacspeak-table-speak-row-filter)
                 (not prefix))
@@ -418,7 +424,8 @@ Optional prefix arg prompts for a new filter."
      ((and (listp token)
            (numberp (cl-first token))
            (numberp (cl-second token)))
-      (emacspeak-table-get-entry-with-headers (cl-first token) (cl-second token)))
+      (emacspeak-table-get-entry-with-headers
+       (cl-first token) (cl-second token)))
      ((and (symbolp (cl-first token)) (fboundp  (cl-first token)))
       ;; applying a function:
       (setq value
@@ -1082,17 +1089,18 @@ table markup.")
                                    :col-end "\""
                                    :col-separator ", "))
 
-(emacspeak-table-markup-set-table 'text-mode
-                                  (emacspeak-table-make-markup
-                                   :table-start
-                                   "\n------------------------------------------------------------\n"
-                                   :table-end
-                                   "\n------------------------------------------------------------\n"
-                                   :row-start ""
-                                   :row-end "\n"
-                                   :col-start ""
-                                   :col-end ""
-                                   :col-separator "\t"))
+(emacspeak-table-markup-set-table
+ 'text-mode
+ (emacspeak-table-make-markup
+  :table-start
+  "\n------------------------------------------------------------\n"
+  :table-end
+  "\n------------------------------------------------------------\n"
+  :row-start ""
+  :row-end "\n"
+  :col-start ""
+  :col-end ""
+  :col-separator "\t"))
 
 ;;}}}
 ;;{{{ copy and paste tables
@@ -1136,19 +1144,22 @@ markup to use."
             col-end (emacspeak-table-markup-col-end markup)
             col-separator (emacspeak-table-markup-col-separator markup))
       (insert (format "%s" table-start))
-      (cl-loop for row across table
-               do
-               (insert (format "%s" row-start))
-               (let
-                   ((current 0)
-                    (final (length row)))
-                 (cl-loop
-                  for column across row do
-                  (insert (format "%s %s %s"
-                                  col-start column col-end))
-                  (cl-incf current)
-                  (unless (= current final)
-                    (insert (format "%s" col-separator)))))              (insert (format "%s" row-end)))
+      (cl-loop
+       for row across table
+       do
+       (insert (format "%s" row-start))
+       (let
+           ((current 0)
+            (final (length row)))
+         (cl-loop
+          for column across row do
+          (insert (format "%s %s %s"
+                          col-start column col-end))
+          (cl-incf current)
+          (unless (= current final)
+            (insert
+             (format "%s" col-separator)))))
+       (insert (format "%s" row-end)))
       (insert (format "%s" table-end))))))
 
 ;;}}}

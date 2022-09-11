@@ -1,4 +1,4 @@
-;;; emacspeak-outline.el --- Speech enable Outline --   Browsing  Structured Documents  -*- lexical-binding: t; -*-
+;;; emacspeak-outline.el --- Speech enable Outline -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; DescriptionEmacspeak extensions for outline-mode
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 

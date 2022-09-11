@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -281,7 +282,9 @@ Optional interactive prefix arg prompts for a filename."
 
 ;;}}}
 ;;{{{ Setup
-(declare-function emacspeak-pronounce-define-local-pronunciation "emacspeak-pronounce" (word pron))
+(declare-function
+ emacspeak-pronounce-define-local-pronunciation
+ "emacspeak-pronounce" (word pron))
 
 (defun emacspeak-2048-setup ()
   "Emacspeak setup for 2048."

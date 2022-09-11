@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -359,7 +360,8 @@ On a directory line, run du -s on the directory to speak its size."
   (define-key dired-mode-map "'" 'emacspeak-dired-show-file-type)
   (define-key  dired-mode-map "/" 'emacspeak-dired-speak-file-permissions)
   (define-key  dired-mode-map ";" 'emacspeak-dired-play-duration)
-  (define-key  dired-mode-map (ems-kbd "M-;") 'emacspeak-m-player-add-to-dynamic)
+  (define-key  dired-mode-map
+               (ems-kbd "M-;") 'emacspeak-m-player-add-to-dynamic)
   (define-key  dired-mode-map "a" 'emacspeak-dired-speak-file-access-time)
   (define-key dired-mode-map "c" 'emacspeak-dired-speak-file-modification-time)
   (define-key dired-mode-map "z" 'emacspeak-dired-speak-file-size)
@@ -372,7 +374,8 @@ On a directory line, run du -s on the directory to speak its size."
   "Open directory corresponding to file on current line."
   (interactive)
   (cl-assert (dired-get-filename) t "No file here.")
-  (funcall-interactively #'dired (file-name-directory    (dired-get-filename))))
+  (funcall-interactively
+   #'dired (file-name-directory    (dired-get-filename))))
 
 (cl-loop
  for f in

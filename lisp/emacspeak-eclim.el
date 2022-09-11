@@ -1,7 +1,8 @@
-;;; emacspeak-eclim.el --- Speech-enable ECLIM: emacs/eclipse integration  -*- lexical-binding: t; -*-
+;;; emacspeak-eclim.el --- Speech-enable ECLIM -*- lexical-binding: t; -*-
 ;; $Id: emacspeak-eclim.el 4797 2007-07-16 23:31:22Z tv.raman.tv $
 ;; $Author: tv.raman.tv $
-;; Description:  Speech-enable ECLIM An Emacs Interface to eclim: eclipse/emacs integration    
+;; Description:  Speech-enable ECLIM An Emacs Interface to eclim:
+;; eclipse/emacs integration    
 ;; Keywords: Emacspeak,  Audio Desktop, eclim: Emacs/Eclipse
 ;;{{{  LCD Archive entry:
 
@@ -33,7 +34,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -42,7 +44,8 @@
 
 ;;; Commentary:
 ;; ECLIM ==  Eclipse/Vim integration.
-;; http://www.eclim.org turns Eclipse into a headless server that can be called from other programs.
+;; http://www.eclim.org turns Eclipse into a headless server
+;; that can be called from other programs.
 ;; Package Emacs-Eclim connects Emacs to Eclim.
 ;; Package emacspeak-eclim speech-enables emacs-eclim.
 ;; 

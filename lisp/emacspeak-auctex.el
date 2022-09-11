@@ -34,7 +34,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;;{{{ Required modules 
@@ -211,7 +212,8 @@ the opening line of the newly inserted environment. "
                (cl-declare (special imenu-generic-expression
                                     imenu-create-index-function))
                (require 'imenu)
-               (setq imenu-create-index-function 'imenu-default-create-index-function)
+               (setq imenu-create-index-function
+                     'imenu-default-create-index-function)
                (setq imenu-generic-expression
                      '(
                        (nil

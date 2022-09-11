@@ -1,4 +1,4 @@
-;;; emacspeak-widget.el --- Speech enable Emacs' native GUI widget library  -*- lexical-binding: t; -*-
+;;; emacspeak-widget.el --- Speech enable widgets -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $ 
 ;; Description: Emacspeak extensions to widgets
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 
@@ -352,7 +353,8 @@ Returns a string with appropriate personality."
 
 (defun emacspeak-widget-help-menu-choice  (widget)
   "Summarize a pull down list"
-  (let* ((label (emacspeak-widget-label widget)) (value (format " %s " (widget-get widget :value)))
+  (let* ((label (emacspeak-widget-label widget))
+         (value (format " %s " (widget-get widget :value)))
          (child (car (widget-get widget :children))))
     (concat label
             " is "
@@ -369,7 +371,9 @@ Returns a string with appropriate personality."
 (defun emacspeak-widget-help-toggle (widget)
   "Summarize a toggle."
   (let* (
-         (help-echo (emacspeak-widget-help-echo widget))(label (emacspeak-widget-label widget))
+         (help-echo
+          (emacspeak-widget-help-echo widget))
+         (label (emacspeak-widget-label widget))
          (value (widget-value widget)))
     (concat label
             help-echo
@@ -654,7 +658,9 @@ widget before summarizing."
    do
    (when  (keymapp map)
      (define-key map  emacspeak-prefix 'emacspeak-prefix-command)
-     (define-key map  (concat emacspeak-prefix emacspeak-prefix) 'widget-end-of-line)
+     (define-key map
+                 (concat emacspeak-prefix emacspeak-prefix)
+                 'widget-end-of-line)
      (define-key map "\M-h" 'emacspeak-widget-help)
      (define-key map "\M-p" 'emacspeak-widget-summarize-parent)
      (define-key map "\M-\C-m" 'emacspeak-widget-update-from-minibuffer))))

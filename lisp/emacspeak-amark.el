@@ -1,4 +1,4 @@
-;;; emacspeak-amark.el --- BookMarks For Audio Content  -*- lexical-binding: t; -*-
+;;; emacspeak-amark.el --- BookMarks For Audio -*- lexical-binding: t; -*-
 ;; $Id: emacspeak-amarks.el 5798 2008-08-22 17:35:01Z tv.raman.tv $
 ;; $Author: tv.raman.tv $
 ;; Description: Bookmarks for audio content like mp3
@@ -34,7 +34,8 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 
@@ -47,8 +48,11 @@
 ;; name: Bookmark tag
 ;; Position: time offset from start
 
-;;  This library will be used from emacspeak-m-player,
-;; to set and jump to bookmarks.
+;;  This library will be used from emacspeak-m-player to set and jump
+;; to bookmarks. Amarks are stored in a .amarks.el file in the working
+;; directory.  It also provides a simple AMark Browser to use from a
+;; directory containing mp3 files where Amarks have been created.
+
 ;;; Code:
 
 ;;}}}
@@ -83,7 +87,8 @@
   "Return matching AMark if found in buffer-local AMark list."
   (interactive (list (completing-read "Name: " (emacspeak-amark-names))))
   (cl-declare (special emacspeak-amark-list))
-  (cl-find name emacspeak-amark-list :test #'string= :key #'emacspeak-amark-name))
+  (cl-find name emacspeak-amark-list
+           :test #'string= :key #'emacspeak-amark-name))
 
 (defun emacspeak-amark-add (path name position)
   "Add an AMark to the buffer local list of AMarks. AMarks are
@@ -125,32 +130,30 @@ given name, it is updated with path and position."
 ;;;###autoload
 (defun emacspeak-amark-load (&optional dir)
   "Load AMarks file from  DIR ---current  directory is default."
-  (cl-declare (special emacspeak-amark-list
-                       emacspeak-amark-file))
+  (cl-declare (special emacspeak-amark-list emacspeak-amark-file))
   (let ((buff nil)
-        (file (expand-file-name emacspeak-amark-file (or dir
-                                                         default-directory)))
+        (file (expand-file-name emacspeak-amark-file
+                                (or dir default-directory)))
         (l nil ))
     (when (file-exists-p file)
-      (setq buff
-            (find-file-noselect file))
+      (setq buff (find-file-noselect file))
       (with-current-buffer buff
         (goto-char (point-min))
         (setq l (read buff))
         (kill-buffer buff)))
-    ;;  clean up stale marks 
-    (setq emacspeak-amark-list (cl-remove-if-not #'file-exists-p l :key #'emacspeak-amark-path))))
+    ;;  sort and clean up stale marks 
+    (setq
+     emacspeak-amark-list
+     (sort
+      (cl-remove-if-not #'file-exists-p l :key #'emacspeak-amark-path)
+      #'(lambda (a b) ;; predicate for sort
+          (string-lessp (emacspeak-amark-name a) (emacspeak-amark-name b )))))))
 
 (defun emacspeak-amark-delete (amark)
   "Delete Amark and save."
   (cl-declare (special emacspeak-amark-list))
-  (setq emacspeak-amark-list
-        (cl-remove-if
-         #'(lambda(m)
-             (string=
-              (emacspeak-amark-name m)
-              (emacspeak-amark-name amark)))
-         emacspeak-amark-list))
+  (setq emacspeak-amark-list (remove amark emacspeak-amark-list))
+  (emacspeak-auditory-icon 'delete-object)
   (emacspeak-amark-save)
   (emacspeak-amark-browse)
   (message "Updated amarks"))
@@ -170,32 +173,27 @@ given name, it is updated with path and position."
 (defun emacspeak-amark-browse ()
   "Browse   amarks  in current directory."
   (interactive)
+  (cl-declare (special emacspeak-amark-list))
   (let ((amarks (or (emacspeak-amark-load) (error "No Amarks here")))
         (buff (get-buffer-create "*Amarks Browser"))
         (inhibit-read-only t))
     (with-current-buffer buff
       (special-mode)
+      (setq emacspeak-amark-list amarks)
       (local-set-key "p" 'backward-button)
       (local-set-key "n" 'forward-button)
       (erase-buffer)
       (setq buffer-undo-list t)
       (cl-loop
-       for m in
-       (sort
-        amarks
-        #'(lambda (a b)
-            (string-lessp (emacspeak-amark-name a) (emacspeak-amark-name b ))))
-       do
+       for m in amarks do
        (insert-text-button
         (format "%s\t" (emacspeak-amark-name m))
         'mark m
         'action #'(lambda (b) (emacspeak-amark-play (button-get b 'mark))))
-       (insert (format "%s\t" (emacspeak-amark-path m) ))
+       (insert (format "%s\t" (emacspeak-amark-path m)))
        (insert-text-button
-        "Delete\n"
-        'mark m
-        'action
-        #'(lambda (b) (emacspeak-amark-delete (button-get b 'mark)))))
+        "Delete\n" 'mark m
+        'action #'(lambda (b) (emacspeak-amark-delete (button-get b 'mark)))))
       (emacspeak-speak-load-directory-settings)
       (goto-char (point-min)))
     (funcall-interactively #'switch-to-buffer buff)))

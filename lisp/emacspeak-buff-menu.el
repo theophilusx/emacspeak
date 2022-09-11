@@ -1,4 +1,4 @@
-;;; emacspeak-buff-menu.el --- Speech enable Buffer Menu Mode -- used to manage buffers  -*- lexical-binding: t; -*-
+;;; emacspeak-buff-menu.el --- Speech enable buff-menu -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $ 
 ;; Description: Auditory interface to buff-menu
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -135,7 +136,8 @@ and set up additional Emacspeak bindings."
     (select-window  ad-return-value)
     (goto-char (point-min))
     (forward-line 2)
-    (define-key Buffer-menu-mode-map "," 'emacspeak-list-buffers-speak-buffer-name)
+    (define-key
+     Buffer-menu-mode-map "," 'emacspeak-list-buffers-speak-buffer-name)
     (define-key Buffer-menu-mode-map "."
                 'emacspeak-list-buffers-speak-buffer-line)
     (define-key Buffer-menu-mode-map "n" 'emacspeak-list-buffers-next-line)

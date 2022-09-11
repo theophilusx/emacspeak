@@ -1,4 +1,4 @@
-;;; emacspeak-bbdb.el --- Speech enable BBDB -- a powerful address manager  -*- lexical-binding: t; -*-
+;;; emacspeak-bbdb.el --- Speech enable BBDB -*- lexical-binding: t; -*-
 
 ;;
 ;; $Author: tv.raman.tv $ 
@@ -34,7 +34,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 
@@ -75,7 +76,8 @@
 ;;}}}
 ;;{{{ Advice:
 
-(defadvice              bbdb-delete-current-field-or-record (after emacspeak pre act comp)
+(defadvice              bbdb-delete-current-field-or-record
+    (after emacspeak pre act comp)
   "speak"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'delete-object)

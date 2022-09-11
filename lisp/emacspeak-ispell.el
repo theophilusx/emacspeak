@@ -1,4 +1,4 @@
-;;; emacspeak-ispell.el --- Speech enable Ispell -- Emacs' interactive spell checker  -*- lexical-binding: t; -*-
+;;; emacspeak-ispell.el --- Speech enable Ispell -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to speech enable ispell
@@ -33,24 +33,25 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;{{{  Introduction:
 ;;; Commentary:
-;; This module speech enables ispell.
-;; Implementation note: This is hard because of how  ispell.el is written
-;; Namely, all of the work is done by one huge hairy function.
-;; This makes advising it hard.
-;; The ispell commands work well with Emacspeak as long as the list of correction choices are few.
-;; For interactively moving through corrections, install package flyspell-correct from MELPA
-;; (package-install "flyspell-correct")
-;; Then use M-x flyspell-mode.
-;; Package flyspell is speech-enabled by Emacspeak module emacspeak-flyspell
-;; And that module sets up flyspell-correct to use IDO-style completion,
-;; i.e. you can move through corrections with C-r and C-s.
+;; This module speech enables ispell.  Implementation note: This is
+;; hard because of how ispell.el is written Namely, all of the work is
+;; done by one huge hairy function.  This makes advising it hard.  The
+;; ispell commands work well with Emacspeak as long as the list of
+;; correction choices are few.  For interactively moving through
+;; corrections, install package flyspell-correct from MELPA
+;; (package-install "flyspell-correct") Then use M-x flyspell-mode.
+;; Package flyspell is speech-enabled by Emacspeak module
+;; emacspeak-flyspell And that module sets up flyspell-correct to use
+;; IDO-style completion, i.e. you can move through corrections with
+;; C-r and C-s.
 
 ;;; Code:
 ;;}}}
@@ -91,7 +92,8 @@ many available corrections."
     (setq line
           (ems-set-personality-temporarily
               start end voice-bolden
-              (buffer-substring (line-beginning-position) (line-end-position))))
+              (buffer-substring
+               (line-beginning-position) (line-end-position))))
     (with-temp-buffer
       (setq voice-lock-mode t)
       (setq buffer-undo-list t)

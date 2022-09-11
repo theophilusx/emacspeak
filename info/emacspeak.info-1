@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on September 1, 2022.
+last updated on September 11, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3441,25 +3441,25 @@ documentation, then read *Note emacspeak-eww::.
 * dtk-speak::Interface to speech server.
 * emacspeak::The Complete Audio Desktop.
 * emacspeak-2048::Speech-enable 2048 Game.
-* emacspeak-abc-mode::Speech-enable ABC-MODE.
+* emacspeak-abc-mode::Speech-enable ABC.
 * emacspeak-actions::Emacspeak actions.
 * emacspeak-add-log::Speech-enable add-log.
 * emacspeak-advice::Advice Emacs Core.
-* emacspeak-amark::BookMarks For Audio Content.
-* emacspeak-analog::Speech-enable analog – a log viewer.
-* emacspeak-annotate::Speech-enable ANNOTATE.
-* emacspeak-apt-sources::speech-enable APT’s sources.list file editor.
+* emacspeak-amark::BookMarks For Audio.
+* emacspeak-analog::
+* emacspeak-annotate::Annotations.
+* emacspeak-apt-sources::speech-enable apt.
 * emacspeak-arc::Speech enable archive-mode.
 * emacspeak-auctex::Speech enable AucTeX –.
 * emacspeak-bbc::Light-Weight BBC Client.
-* emacspeak-bbdb::Speech enable BBDB – a powerful address manager.
+* emacspeak-bbdb::Speech enable BBDB.
 * emacspeak-bibtex::Speech enable bibtex.
-* emacspeak-bookmark::Speech enable Emacs’ builtin bookmarks.
-* emacspeak-bookshare::Speech-enabled  BOOKSHARE client.
-* emacspeak-browse-kill-ring::browse-kill-ring  for emacspeak desktop.
-* emacspeak-bs::speech-enable bs buffer selection.
-* emacspeak-buff-menu::Speech enable Buffer Menu Mode – used to manage buffers.
-* emacspeak-c::Speech enable CC-mode and friends – supports C, C++, Java.
+* emacspeak-bookmark::Speech enable bookmark.
+* emacspeak-bookshare::BOOKSHARE client.
+* emacspeak-browse-kill-ring::kill-ring.
+* emacspeak-bs::speech-enable bs.
+* emacspeak-buff-menu::Speech enable buff-menu.
+* emacspeak-c::Speech enable C, C++.
 * emacspeak-calc::Speech enable  Emacs Calculator.
 * emacspeak-calculator::Speech enable  desktop calculator.
 * emacspeak-calendar::Speech enable Emacs Calendar.
@@ -3471,13 +3471,13 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-cmuscheme::Scheme support for emacspeak.
 * emacspeak-comint::Speech-enable COMINT.
 * emacspeak-company::Speech-enable COMPANY-mode.
-* emacspeak-compile::Speech enable  navigation of  compile errors, grep matches.
-* emacspeak-cperl::Speech enable CPerl Mode.
+* emacspeak-compile::Speech enable compile.
+* emacspeak-cperl::Speech enable CPerl.
 * emacspeak-crossword::Speech-enable CROSSWORD.
-* emacspeak-custom::Speech enable interactive Emacs customization.
+* emacspeak-custom::Speech enable custom.
 * emacspeak-dbus::DBus On Emacspeak Desktop.
 * emacspeak-deadgrep::Speech-enable DEADGREP.
-* emacspeak-debugger::Speech-enable DEBUGGER.
+* emacspeak-debugger::Speech-enable DEBUG.
 * emacspeak-desktop::Speech-enable desktop.
 * emacspeak-dictionary::speech-enable dictionaries.
 * emacspeak-diff-mode::Speech-enable DIFF-MODE.
@@ -3486,8 +3486,8 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-dumb-jump::Speech-enable DUMB-JUMP.
 * emacspeak-eaf::Speech-enable EAF.
 * emacspeak-ecb::speech-enable Emacs Class Browser.
-* emacspeak-eclim::Speech-enable ECLIM: emacs/eclipse integration.
-* emacspeak-ediff::Speech enable Emacs interface to diff and merge.
+* emacspeak-eclim::Speech-enable ECLIM.
+* emacspeak-ediff::Speech enable  ediff.
 * emacspeak-eglot::Speech-enable EGLOT.
 * emacspeak-ein::Speech-enable EIN For IPython Notebooks.
 * emacspeak-elfeed::Speech-enable ELFEED, A Feed Reader.
@@ -3505,7 +3505,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-eshell::Speech-enable EShell - Emacs Shell.
 * emacspeak-ess::Speech-enable ESS: Emacs Speaks Statistics.
 * emacspeak-etable::Speech enable table.el.
-* emacspeak-eterm::Speech enable eterm – Emacs’ terminal emulator  term.el.
+* emacspeak-eterm::Speech enable eterm.
 * emacspeak-eudc::Speech enable  LDAP directory client.
 * emacspeak-evil::Speech-enable EVIL.
 * emacspeak-eww::Speech-enable EWW Browser.
@@ -3516,13 +3516,13 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-flycheck::Speech-enable FLYCHECK.
 * emacspeak-flymake::Speech-enable FLYMAKE.
 * emacspeak-flyspell::Speech enable flyspell.
-* emacspeak-folding::Speech enable Folding Mode – enables structured editing.
+* emacspeak-folding::
 * emacspeak-forge::Speech-enable FORGE.
 * emacspeak-forms::Speech enable Emacs’ forms mode.
 * emacspeak-geiser::Speech-enable GEISER.
 * emacspeak-gh-explorer::Speech-enable GH-EXPLORER.
 * emacspeak-gnuplot::speech-enable gnuplot mode.
-* emacspeak-gnus::Speech enable GNUS – Fluent spoken access to imap, usenet.
+* emacspeak-gnus::Speech enable Gnus.
 * emacspeak-go-mode::Speech-enable GO-MODE.
 * emacspeak-gomoku::Speech enable the game of Gomoku.
 * emacspeak-google::Google Search Tools.
@@ -3531,7 +3531,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-gud::Speech enable debugger interface.
 * emacspeak-haskell::Speech-enable HASKELL.
 * emacspeak-helm::Speech-enable HELM.
-* emacspeak-hide::Provides user commands for hiding and exposing blocks of text.
+* emacspeak-hide::Hide/Expose Text blocks.
 * emacspeak-hide-lines::Speech-enable HIDE-LINES.
 * emacspeak-hideshow::speech-enable hideshow.
 * emacspeak-hydra::Speech-Enable hydra.
@@ -3540,7 +3540,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-iedit::Speech-enable IEDIT.
 * emacspeak-indium::Speech-enable INDIUM, A Javascript IDE.
 * emacspeak-info::Speech enable Info – Emacs’ online documentation viewer.
-* emacspeak-ispell::Speech enable Ispell – Emacs’ interactive spell checker.
+* emacspeak-ispell::Speech enable Ispell.
 * emacspeak-ivy::Speech-enable IVY.
 * emacspeak-jabber::Speech-Enable jabber.
 * emacspeak-jdee::Speech enable JDEE.
@@ -3575,7 +3575,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-org::Speech-enable org.
 * emacspeak-orgalist::Speech-enable ORGALIST.
 * emacspeak-origami::Speech-enable ORIGAMI.
-* emacspeak-outline::Speech enable Outline –   Browsing  Structured Documents.
+* emacspeak-outline::Speech enable Outline.
 * emacspeak-package::Speech-enable PACKAGE.
 * emacspeak-paradox::Speech-enable PARADOX.
 * emacspeak-perl::Speech enable Perl Mode.
@@ -3585,16 +3585,16 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-project::Speech-enable PROJECT.
 * emacspeak-projectile::Speech-enable PROJECTILE.
 * emacspeak-pronounce::Emacspeak pronunciation dictionaries.
-* emacspeak-py::Speech enable Python development environment.
+* emacspeak-py::Speech enable Python.
 * emacspeak-pydoc::Speech-enable PYDOC.
-* emacspeak-python::Speech enable Python development environment.
+* emacspeak-python::Speech enable Python.
 * emacspeak-racer::Speech-enable RACER.
 * emacspeak-racket::Speech-enable RACKET.
 * emacspeak-re-builder::speech-enable re-builder.
-* emacspeak-reftex::speech enable reftex, Cross-References In La)TeX.
+* emacspeak-reftex::speech enable reftex.
 * emacspeak-related::Speech-enable RELATED buffer switching.
 * emacspeak-rg::Speech-enable RG.
-* emacspeak-rmail::Speech enable RMail – Emacs’ default mail agent.
+* emacspeak-rmail::Speech enable RMail.
 * emacspeak-rpm-spec::Speech enable rpm spec editor.
 * emacspeak-rst::Speech-enable RST.
 * emacspeak-ruby::Speech enable Ruby Mode.
@@ -3621,11 +3621,11 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-tab-bar::Speech-enable tab-bar.
 * emacspeak-table::Implements data model for table browsing.
 * emacspeak-table-ui::Table Navigation UI.
-* emacspeak-tabulate::Interpret tabulated information as a table.
-* emacspeak-tar::Speech enable Tar Mode – Manipulate tar archives from Emacs.
+* emacspeak-tabulate::Handle table data.
+* emacspeak-tar::Speech enable Tar Mode.
 * emacspeak-tcl::Speech enable TCL development environment.
 * emacspeak-tempo::Speech enable tempo.
-* emacspeak-tetris::Speech enable game of Tetris.
+* emacspeak-tetris::Tetris.
 * emacspeak-texinfo::Speech enable texinfo mode.
 * emacspeak-threes::Speech-enable THREES.
 * emacspeak-tide::Speech-enable TIDE.
@@ -3641,10 +3641,10 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-vterm::Speech-enable VTERM.
 * emacspeak-vuiet::Speech-enable VUIET.
 * emacspeak-wdired::Speech-enable wdired.
-* emacspeak-we::Transform Web Pages Using XSLT.
+* emacspeak-we::Transform WebUsing XSLT.
 * emacspeak-websearch::search utilities.
-* emacspeak-webspace::Webspaces In Emacspeak.
-* emacspeak-widget::Speech enable Emacs’ native GUI widget library.
+* emacspeak-webspace::Webspaces.
+* emacspeak-widget::Speech enable widgets.
 * emacspeak-windmove::speech-enable windmove.
 * emacspeak-winring::Speech enable WinRing.
 * emacspeak-wizards::Magic For Power Users.
@@ -3667,7 +3667,7 @@ documentation, then read *Note emacspeak-eww::.
 * soundscape::Soundscapes for The Emacspeak Desktop.
 * sox::An Audio Work-Bench.
 * sox-gen::Binaural Beats And More Using SoX.
-* tetris::implementation of Tetris for Emacs.
+* tetris::Tetris for Emacs.
 * toy-braille::
 * voice-defs::Define voices for voice-lock.
 * voice-setup::Setup voices for voice-lock.
@@ -4469,8 +4469,10 @@ Structure emacspeak-amark holds a bookmark into an mp3 file path:
 filename containing marked name: Bookmark tag Position: time offset from
 start
 
-   This library will be used from emacspeak-m-player, to set and jump to
-bookmarks.
+   This library will be used from emacspeak-m-player to set and jump to
+bookmarks.  Amarks are stored in a .amarks.el file in the working
+directory.  It also provides a simple AMark Browser to use from a
+directory containing mp3 files where Amarks have been created.
 
 12.12.1 Emacspeak-Amark Commands
 --------------------------------
@@ -4493,7 +4495,7 @@ bookmarks.
      ‘C-; a’
      ‘C-x @ h a’
 
-     Browse  nearest amarks file.
+     Browse   amarks  in current directory.
 
 12.12.1.3 emacspeak-amark-find
 ..............................
@@ -5220,7 +5222,7 @@ File: emacspeak.info,  Node: emacspeak-browse-kill-ring,  Next: emacspeak-bs,  P
 ================================
 
 Browse the kill ring using browse-kill-ring.el - interactively insert
-items from kill-ring (by Colin Walters)
+items from kill-ring
 
 
 File: emacspeak.info,  Node: emacspeak-bs,  Next: emacspeak-buff-menu,  Prev: emacspeak-browse-kill-ring,  Up: Emacspeak Commands And Options
@@ -5766,9 +5768,7 @@ File: emacspeak.info,  Node: emacspeak-compile,  Next: emacspeak-cperl,  Prev: e
 12.38 emacspeak-compile
 =======================
 
-This module makes compiling code from inside Emacs speech friendly.  It
-is an example of how a little amount of code can make Emacspeak even
-better.
+This module makes compiling code from inside Emacs speech friendly.
 
 12.38.1 Emacspeak-Compile Commands
 ----------------------------------
@@ -7596,10 +7596,10 @@ move around the terminal and have different parts spoken.
  -- Command: emacspeak-toggle-eterm-autospeak (&optional prefix)
 
      Toggle state of eterm autospeak.
-     When eterm autospeak is turned on and the terminal is in line mode,
-     all output to the terminal is automatically spoken.
-       Interactive prefix arg means toggle  the global default value, and then set the
-       current local  value to the result.
+     When eterm autospeak is turned on and the terminal is in line
+     mode, all output to the terminal is automatically spoken.
+     Interactive prefix arg means toggle the global default value, and
+     then set the current local value to the result.
 
 
 File: emacspeak.info,  Node: emacspeak-eudc,  Next: emacspeak-evil,  Prev: emacspeak-eterm,  Up: Emacspeak Commands And Options
@@ -9037,4 +9037,24 @@ popup and helm.
      Correction style to use with flyspell.
 
      Default Value: ‘flyspell-correct-ido’
+
+
+File: emacspeak.info,  Node: emacspeak-folding,  Next: emacspeak-forge,  Prev: emacspeak-flyspell,  Up: Emacspeak Commands And Options
+
+12.83 emacspeak-folding
+=======================
+
+Folding mode turns emacs into a folding editor.  Folding mode is what I
+use: emacs 19 comes with similar packages, e.g.  allout.el This module
+defines some advice forms for folding mode Think of a fold as a
+container.
+
+
+File: emacspeak.info,  Node: emacspeak-forge,  Next: emacspeak-forms,  Prev: emacspeak-folding,  Up: Emacspeak Commands And Options
+
+12.84 emacspeak-forge
+=====================
+
+FORGE == Work with Github, Gitlab etc from inside magit.  This module
+speech-enables magit/forge.
 

@@ -32,7 +32,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -95,7 +96,8 @@
  '(
    geiser-compile-current-buffer geiser-compile-definition
    geiser-compile-definition-and-go geiser-compile-file geiser-eval-buffer
-   geiser-eval-buffer-and-go geiser-eval-definition geiser-eval-definition-and-go
+   geiser-eval-buffer-and-go geiser-eval-definition
+   geiser-eval-definition-and-go
    geiser-eval-last-sexp geiser-eval-region geiser-eval-region-and-go
    geiser-expand-definition geiser-expand-last-sexp geiser-expand-region
    geiser-load-current-buffer geiser-load-file

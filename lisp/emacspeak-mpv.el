@@ -30,7 +30,8 @@
 ;;;
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Emacs; see the file COPYING.  If not, write to
-;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -140,7 +141,8 @@
    (when (symbolp cmd)
      (put cmd 'repeat-map 'emacspeak-mpv-keymap)))
  emacspeak-mpv-keymap)
-
+;;; Turn off repeat-mode on stop:
+(put 'mpv-kill  'repeat-map nil)
 ;;}}}
 (provide 'emacspeak-mpv)
 ;;{{{ end of file

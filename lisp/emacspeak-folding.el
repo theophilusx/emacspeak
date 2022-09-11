@@ -1,4 +1,4 @@
-;;; emacspeak-folding.el --- Speech enable Folding Mode -- enables structured editing  -*- lexical-binding: t; -*-
+=;;; emacspeak-folding.el --- Speech enable Folding -*- lexical-binding: t; -*-
 ;; $Author: tv.raman.tv $
 ;; DescriptionEmacspeak extensions for folding-mode
 ;; Keywords:emacspeak, audio interface to emacs Folding editor
@@ -33,7 +33,8 @@
 ;; 
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;;{{{  Introduction:
@@ -42,7 +43,7 @@
 ;; Folding mode turns emacs into a folding editor.
 ;; Folding mode is what I use:
 ;; emacs 19 comes with similar packages, e.g. allout.el
-;; This module defines some advice forms that make folding mode a pleasure to use.
+;; This module defines some advice forms for  folding mode 
 ;; Think of a fold as a container.
 ;; 
 ;;; Code:
@@ -142,7 +143,8 @@ Then speak the  line."
  #'(lambda ()
      (cl-declare (special folding-mode-map))
      (when (boundp 'folding-mode-map)
-       (define-key folding-mode-map (ems-kbd "C-e") 'emacspeak-prefix-command))))
+       (define-key
+        folding-mode-map (ems-kbd "C-e") 'emacspeak-prefix-command))))
 
 ;;}}}
 (provide  'emacspeak-folding)
