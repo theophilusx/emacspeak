@@ -1,4 +1,4 @@
-;;; emacspeak-url-template.el --- Create library of URI templates -*- lexical-binding: t; -*-
+;;; emacspeak-url-template.el ---  URI templates -*- lexical-binding: t; -*-
 ;;
 ;; $Author: tv.raman.tv $
 ;; Description: Implement library of URI templates
@@ -224,12 +224,13 @@ dont-url-encode if true then url arguments are not url-encoded "
 ;;}}}
 ;;{{{ bbc
 
-(declare-function emacspeak-xslt-view-xml "emacspeak-xslt" (style url &optional unescape-charent))
+(declare-function
+ emacspeak-xslt-view-xml
+ "emacspeak-xslt" (style url &optional unescape-charent))
 
 (emacspeak-url-template-define
  "BBC Podcast Directory"
  "http://www.bbc.co.uk/podcasts.opml"
-                                        ;"http://www.bbc.co.uk/radio/opml/bbc_podcast_opml.xml"
  nil nil
  "BBC PodCast Directory"
  #'emacspeak-feeds-opml-display)
@@ -251,14 +252,16 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 (defun emacspeak-url-template-setup-content-filter ()
   "Set up content filter in displayed page."
-  (cl-declare (special emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
+  (cl-declare
+   (special emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
   (setq emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
 
 ;;}}}
 ;;{{{ Anonimize google search
 (emacspeak-url-template-define
  "Sign in to Google"
- "https://accounts.google.com/ServiceLogin?hl=en&continue=https://www.google.com/"
+ (concat  "https://accounts.google.com/ServiceLogin"
+"?hl=en&continue=https://www.google.com/")
  nil
  nil
  "Login to Google.")
@@ -328,20 +331,6 @@ dont-url-encode if true then url arguments are not url-encoded "
      (emacspeak-we-extract-by-id "center_col" url 'speak)))
 
 ;;}}}
-;;{{{ seeking alpha stock search
-
-(emacspeak-url-template-define
- "Seeking Alpha Stock Search"
- "http://seekingalpha.com/search/?cx=001514237567335583750%%3Acdhc2yeo2ko&cof=FORID%%3A11%%3BNB%%3A1&q=%s"
- (list "Company:")
- nil
- "Seeking Alpha search."
-
- #'(lambda (url)
-     (emacspeak-we-extract-by-id "content_section" url 'speak))
- )
-
-;;}}}
 ;;{{{ google finance
 
 (emacspeak-url-template-define
@@ -377,7 +366,8 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 (emacspeak-url-template-define
  "Google Scholar"
- "https://scholar.google.com/scholar?ie=UTF-8&oe=UTF-8&hl=en&btnG=Search&num=25&q=%s"
+ (concat  "https://scholar.google.com/scholar"
+"?ie=UTF-8&oe=UTF-8&hl=en&btnG=Search&num=25&q=%s")
  (list "Google Scholar Search: ")
  nil
  "Google Scholar Search"
@@ -440,7 +430,9 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 (emacspeak-url-template-define
  "Google News Search"
- "https://news.google.com/atom/search?hl=en-US&q=%s&btnG=Google+Search&gl=US&ceid=US:en"
+ (concat
+ "https://news.google.com/atom/"
+"search?hl=en-US&q=%s&btnG=Google+Search&gl=US&ceid=US:en")
  (list #'gweb-news-autocomplete)
  nil
  "Search Google news."
@@ -619,7 +611,6 @@ name of the list.")
 
 (emacspeak-url-template-define
  "MLB Scorecard"
-                                        ;"http://gd.mlb.com/components/game/mlb/%s/master_scoreboard.xml"
  "http://gd.mlb.com/components/game/mlb/%s/scoreboard.xml"
  (list
   #'(lambda nil
@@ -848,7 +839,8 @@ JSON is retrieved from `url'."
 
 (emacspeak-url-template-define
  "WordNet Search"
- "http://wordnetweb.princeton.edu/perl/webwn?s=%s&o1=1&o8=1&o0=1&sub=Search+WordNet"
+ (concat "http://wordnetweb.princeton.edu/perl/webwn"
+"?s=%s&o1=1&o8=1&o0=1&sub=Search+WordNet")
  (list "WordNet Define: ")
  #'(lambda ()
      (search-forward "(gloss)")
@@ -964,7 +956,8 @@ Format is stationid+AM/FM."
  "http://opml.radiotime.com/browse.ashx?c=%s"
  (list
   #'(lambda ()
-      (completing-read "Category: " emacspeak-url-template--radiotime-categories)))
+      (completing-read
+       "Category: " emacspeak-url-template--radiotime-categories)))
  nil
  "RadioTime Categories ."
  #'emacspeak-feeds-opml-display)
@@ -974,7 +967,8 @@ Format is stationid+AM/FM."
 
 (emacspeak-url-template-define
  "OpenLibrary"
- "https://openlibrary.org/search?subject_facet=Accessible+book&q=%s&has_fulltext=true"
+ (concat  "https://openlibrary.org/search?"
+"subject_facet=Accessible+book&q=%s&has_fulltext=true")
  (list "Query: ")
  nil
  "Open Library Search")
@@ -1129,7 +1123,9 @@ Each URL template carries out the following steps:
         ((case-fold-search  t)
          (keys
           (sort
-           (cl-loop for k being the hash-keys of emacspeak-url-template-table collect k)
+           (cl-loop
+            for k being the hash-keys of emacspeak-url-template-table
+            collect k)
            'string-lessp)))
       (insert "@enumerate \n\n")
       (cl-loop
@@ -1170,11 +1166,13 @@ Each URL template carries out the following steps:
 
 (emacspeak-url-template-define
  "NLS Bard Search"
- "https://nlsbard.loc.gov/nlsbardprod/search/collection/page/1/sort/s/srch/%s/local/0"
+ (concat  "https://nlsbard.loc.gov/nlsbardprod/search/"
+"collection/page/1/sort/s/srch/%s/local/0")
  (list "Search For: ")
  #'(lambda nil
      (cl-declare (special emacspeak-we-url-executor))
-     (setq emacspeak-we-url-executor #'emacspeak-url-template-nls-add-to-wishlist)
+     (setq emacspeak-we-url-executor
+           #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
  "Search NLS Bard Catalog. Login once before using this template."
  #'(lambda (url)
@@ -1188,7 +1186,8 @@ Each URL template carries out the following steps:
  nil
  #'(lambda nil
      (cl-declare (special emacspeak-we-url-executor))
-     (setq emacspeak-we-url-executor #'emacspeak-url-template-nls-add-to-wishlist)
+     (setq emacspeak-we-url-executor
+           #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
  "NLS Bard Catalog: Most Popular. Login once before using this
 template."
@@ -1199,11 +1198,14 @@ template."
 
 (emacspeak-url-template-define
  "NLS Bard Popular"
- "https://nlsbard.loc.gov:443/nlsbardprod/search/most_popular/page/1/sort/s/srch/most_popular/local/0"
+ (concat
+  "https://nlsbard.loc.gov:443/"
+  "nlsbardprod/search/most_popular/page/1/sort/s/srch/most_popular/local/0")
  nil
  #'(lambda nil
      (cl-declare (special emacspeak-we-url-executor))
-     (setq emacspeak-we-url-executor #'emacspeak-url-template-nls-add-to-wishlist)
+     (setq emacspeak-we-url-executor
+           #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
  "NLS Bard Catalog: Most Popular. Login once before using this
 template."
@@ -1218,7 +1220,8 @@ template."
  nil
  #'(lambda nil
      (cl-declare (special emacspeak-we-url-executor))
-     (setq emacspeak-we-url-executor #'emacspeak-url-template-nls-add-to-wishlist)
+     (setq emacspeak-we-url-executor
+           #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
  "NLS Bard Catalog: Recently Added. Login once before using this
 template."

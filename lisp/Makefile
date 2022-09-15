@@ -88,7 +88,6 @@ emacspeak-annotate.elc \
 emacspeak-apt-sources.elc \
 emacspeak-arc.elc \
 emacspeak-auctex.elc \
-emacspeak-autoload.el \
 emacspeak-bbc.elc \
 emacspeak-bbdb.elc \
 emacspeak-bibtex.elc \
@@ -323,8 +322,7 @@ emacs -batch -q \
 
 emacspeak-loaddefs.el: 
 	$(EMACS) $(BATCH)  -l ./emacspeak-preamble.el  \
-	-l ./emacspeak-autoload.el  \
-	-f emacspeak-auto-generate-autoloads
+	-f loaddefs-generate-batch  emacspeak-loaddefs.el .
 
 # }}}
 # {{{Development  target: indent, tags, relint 

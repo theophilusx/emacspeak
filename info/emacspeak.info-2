@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on September 11, 2022.
+last updated on September 14, 2022.
 
 
 File: emacspeak.info,  Node: emacspeak-forms,  Next: emacspeak-geiser,  Prev: emacspeak-forge,  Up: Emacspeak Commands And Options
@@ -1057,7 +1057,7 @@ found on laptops is denoted <fn>
      Hyper-Key bindings.
 
      Default Value:
-     ‘((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-wizards-view-buffers-filtered-by-m-player-mode) (; emacspeak-m-player-using-openal) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))’
+     ‘((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-m-player-using-openal) (; emacspeak-multimedia) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))’
 
  -- Variable: User Option emacspeak-multi-keys
      Multi key bindings.
@@ -1951,8 +1951,8 @@ achieve the same by pressing ‘C-e ; v’.  Press ‘C-h b’ in the
 
  -- Command: emacspeak-m-player-using-openal (resource &optional
           play-list)
-     ‘C-; ;’
-     ‘C-x @ h ;’
+     ‘C-; :’
+     ‘C-x @ h :’
 
      Use openal.
 
@@ -2025,7 +2025,9 @@ achieve the same by pressing ‘C-e ; v’.  Press ‘C-h b’ in the
 
  -- Command: emacspeak-multimedia
      ‘C-e ;’
+     ‘C-; ;’
      ‘<fn> ;’
+     ‘C-x @ h ;’
 
      Start or control Emacspeak multimedia player.
      Controls media playback when already playing.
@@ -3234,49 +3236,56 @@ http://orgmode.org/
 
      (fn MODE)
 
-12.139.1.4 emacspeak-org-table-speak-both-headers-and-element
+12.139.1.4 emacspeak-org-speak-item
+...................................
+
+ -- Command: emacspeak-org-speak-item
+
+     Speak item
+
+12.139.1.5 emacspeak-org-table-speak-both-headers-and-element
 .............................................................
 
  -- Command: emacspeak-org-table-speak-both-headers-and-element
 
      echoes both row and col headers.
 
-12.139.1.5 emacspeak-org-table-speak-column-header
+12.139.1.6 emacspeak-org-table-speak-column-header
 ..................................................
 
  -- Command: emacspeak-org-table-speak-column-header
 
      echoes column header
 
-12.139.1.6 emacspeak-org-table-speak-column-header-and-element
+12.139.1.7 emacspeak-org-table-speak-column-header-and-element
 ..............................................................
 
  -- Command: emacspeak-org-table-speak-column-header-and-element
 
      echoes col header and element
 
-12.139.1.7 emacspeak-org-table-speak-coordinates
+12.139.1.8 emacspeak-org-table-speak-coordinates
 ................................................
 
  -- Command: emacspeak-org-table-speak-coordinates
 
      echoes coordinates
 
-12.139.1.8 emacspeak-org-table-speak-current-element
+12.139.1.9 emacspeak-org-table-speak-current-element
 ....................................................
 
  -- Command: emacspeak-org-table-speak-current-element
 
      echoes current table element
 
-12.139.1.9 emacspeak-org-table-speak-row-header
-...............................................
+12.139.1.10 emacspeak-org-table-speak-row-header
+................................................
 
  -- Command: emacspeak-org-table-speak-row-header
 
      echoes row header
 
-12.139.1.10 emacspeak-org-table-speak-row-header-and-element
+12.139.1.11 emacspeak-org-table-speak-row-header-and-element
 ............................................................
 
  -- Command: emacspeak-org-table-speak-row-header-and-element
@@ -3285,6 +3294,11 @@ http://orgmode.org/
 
 12.139.2 emacspeak-org Options
 ------------------------------
+
+ -- Variable: User Option emacspeak-org-hotlist
+     Emacspeak org hotlist location.
+
+     Default Value: ‘/home/raman/.org/hotlist.org’
 
  -- Variable: User Option emacspeak-org-table-after-movement-function
      The function to call after moving in a table
@@ -8697,7 +8711,8 @@ Contains various wizards for the Emacspeak desktop.
      ‘<fn> x .’
      ‘C-x @ s .’
 
-     Set current directory to this shell’s initial directory if one was defined.
+     Set current directory to this shell’s initial directory if one was
+     defined.  If not in a shell buffer, switch to our Home shell buffer.
 
 12.214.1.90 emacspeak-wizards-shell-directory-set
 .................................................
@@ -8906,8 +8921,6 @@ Contains various wizards for the Emacspeak desktop.
 .....................................................................
 
  -- Command: emacspeak-wizards-view-buffers-filtered-by-m-player-mode
-     ‘C-; :’
-     ‘C-x @ h :’
 
      Buffer menu filtered by  m-player mode.
 

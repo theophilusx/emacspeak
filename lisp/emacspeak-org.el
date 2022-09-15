@@ -133,6 +133,29 @@
 ;;}}}
 ;;{{{ Structure Navigation:
 
+(defun emacspeak-org-speak-item  ()
+  "Speak item"
+  (interactive )
+  (unless (eq major-mode 'org-mode) (error "Not in an org buffer"))
+  (unless (org-at-item-p) (error "Not at an item"))
+  (save-excursion
+   (let ((start (org-beginning-of-item))
+         (end (org-end-of-item)))
+     (emacspeak-speak-region start end))))
+
+(cl-loop
+ for f in 
+ '(org-next-item org-previous-item)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-org-speak-item)))))
+
+
+
 (cl-loop
  for f in
  '(
@@ -146,7 +169,6 @@
    org-goto  org-goto-ret
    org-goto-left org-goto-right
    org-goto-quit
-   org-next-item org-previous-item
    org-metaleft org-metaright org-metaup org-metadown
    org-meta-return
    org-shiftmetaleft org-shiftmetaright org-shiftmetaup org-shiftmetadown
@@ -172,12 +194,16 @@
   "The function to call after moving in a table"
   :type
   '(choice
-    (const :tag "speak cell contents only" emacspeak-org-table-speak-current-element)
+    (const :tag "speak cell contents only"
+           emacspeak-org-table-speak-current-element)
     (const :tag "speak column header" emacspeak-org-table-speak-column-header)
     (const :tag "speak row header" emacspeak-org-table-speak-row-header)
-    (const :tag "speak cell contents and column header" emacspeak-org-table-speak-column-header-and-element)
-    (const :tag "speak cell contents and row header" emacspeak-org-table-speak-row-header-and-element)
-    (const :tag "speak column contents and both headers" emacspeak-org-table-speak-both-headers-and-element))
+    (const :tag "speak cell contents and column header"
+           emacspeak-org-table-speak-column-header-and-element)
+    (const :tag "speak cell contents and row header"
+           emacspeak-org-table-speak-row-header-and-element)
+    (const :tag "speak column contents and both headers"
+           emacspeak-org-table-speak-both-headers-and-element))
   :group 'emacspeak-org)
 
 ;; orgalist-mode defines structured navigators that in turn call org-cycle.
@@ -489,7 +515,8 @@
  for f in
  '(
    org-occur org-beginning-of-line org-end-of-line
-   org-beginning-of-item org-beginning-of-item-list)
+   org-beginning-of-item org-beginning-of-item-list
+   org-end-of-item org-end-of-item-list)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -618,6 +645,15 @@ Before doing so, re-align the table if necessary."
 
 ;;}}}
 ;;{{{ Capture
+
+
+(defcustom emacspeak-org-hotlist  (expand-file-name
+                                   "~/.org/hotlist.org")
+  "Emacspeak org hotlist location."
+  :type 'file
+  :group 'emacspeak-org)
+
+
 ;;;###autoload
 (defun emacspeak-org-capture-link (&optional open)
   "Capture hyperlink to current context.
@@ -630,7 +666,7 @@ arg just opens the file"
   (require 'ol-eww)
   (cond
    (open
-    (funcall-interactively #'find-file (expand-file-name "~/.org/hotlist.org")))
+    (funcall-interactively #'find-file  emacspeak-org-hotlist))
    (t
     (org-store-link nil)
     (org-capture nil "h"))))
