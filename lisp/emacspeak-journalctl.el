@@ -1,4 +1,4 @@
-;;; emacspeak-journalctl.el --- Speech-enable JOURNALCTL  -*- lexical-binding: t; -*-
+;;; emacspeak-journalctl.el --- JOURNALCTL  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable JOURNALCTL An Emacs Interface to journalctl
 ;;; Keywords: Emacspeak,  Audio Desktop journalctl
@@ -56,14 +56,14 @@
 
 (voice-setup-add-map
  '
-(
- (journalctl-error-face voice-animate)
- (journalctl-finished-face voice-lighten)
- (journalctl-host-face voice-smoothen)
- (journalctl-process-face voice-monotone)
- (journalctl-starting-face voice-lighten)
- (journalctl-timestamp-face voice-monotone)
- (journalctl-warning-face voice-animate)))
+ (
+  (journalctl-error-face voice-animate)
+  (journalctl-finished-face voice-lighten)
+  (journalctl-host-face voice-smoothen)
+  (journalctl-process-face voice-monotone)
+  (journalctl-starting-face voice-lighten)
+  (journalctl-timestamp-face voice-monotone)
+  (journalctl-warning-face voice-animate)))
 
 ;;}}}
 ;;{{{ Interactive Commands:
@@ -71,17 +71,14 @@
 (cl-loop
  for f in 
  '(journalctl-boot journalctl
-journalctl-unit journalctl-user-unit)
+                   journalctl-unit journalctl-user-unit)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
-    (emacspeak-speak-line)))))
-
-
-
+       (emacspeak-auditory-icon 'open-object)
+       (emacspeak-speak-line)))))
 
 (cl-loop
  for f in 

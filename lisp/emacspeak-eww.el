@@ -271,7 +271,8 @@
 ;; @item @kbd{M-,} emacspeak-eww-table-speak-dimensions @MDash{}
 ;; Speak number of rows and columns.
 ;; @item @kbd{C-t} emacspeak-eww-table-data @MDash{}
-;; Browse this table in Emacspeak's Table UI @MDash{} @xref{emacspeak-table-ui}.
+;; Browse this table in Emacspeak's Table UI
+;;  @MDash{} @xref{emacspeak-table-ui}.
 ;; @end itemize
 
 ;; Emacspeak EWW supports table navigation via keys @kbd{M-.},
@@ -458,7 +459,8 @@
 (require 'emacspeak-google)
 (declare-function emacspeak-epub-eww
                   "emacspeak-epub" (epub-file &optional broken-ncx))
-(declare-function emacspeak-m-player "emacspeak-m-player" (resource &optional play-list))
+(declare-function
+ emacspeak-m-player "emacspeak-m-player" (resource &optional play-list))
 
 ;;}}}
 ;;{{{ Helpers:
@@ -687,7 +689,7 @@ Optional interactive prefix arg `playlist-p' treats
     (cl-assert (stringp url) t "No URL under point." )
     (message "Playing media  URL under point")
     (kill-new url)
-      (cl-pushnew  url emacspeak-m-player-media-history :test #'string=)
+    (cl-pushnew  url emacspeak-m-player-media-history :test #'string=)
     (emacspeak-m-player  url  playlist-p)))
 
 (defun emacspeak-eww-curl-play-media-at-point ()
@@ -1844,7 +1846,6 @@ The %s is automatically spoken if there is no user activity."
                  (emacspeak-speak-region start (point)))
              (error nil))))))))
 
-
 (cl-loop
  for f in
  '(url-retrieve-internal  url-truncate-url-for-viewing eww)
@@ -1858,21 +1859,20 @@ The %s is automatically spoken if there is no user activity."
        ((and u (stringp u)
              (string-prefix-p (emacspeak-google-result-url-prefix) u))
         (ad-set-arg 0 (emacspeak-google-canonicalize-result-url
- u))))))))
+                       u))))))))
 
 (defadvice shr-copy-url (around emacspeak pre act comp)
   "Canonicalize Google URLs"
   (ems-with-messages-silenced
-    ad-do-it
-    (when (ems-interactive-p)
-      (emacspeak-auditory-icon 'delete-object)
-      (let ((u (car kill-ring)))
-        (when
-            (and u (stringp u)
-                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
-          (kill-new  (emacspeak-google-canonicalize-result-url u))))
-      (emacspeak-speak-current-kill))))
-
+   ad-do-it
+   (when (ems-interactive-p)
+     (emacspeak-auditory-icon 'delete-object)
+     (let ((u (car kill-ring)))
+       (when
+           (and u (stringp u)
+                (string-prefix-p (emacspeak-google-result-url-prefix) u))
+         (kill-new  (emacspeak-google-canonicalize-result-url u))))
+     (emacspeak-speak-current-kill))))
 
 ;;}}}
 ;;{{{ Speech-enable EWW buffer list:
@@ -1999,7 +1999,8 @@ The %s is automatically spoken if there is no user activity."
            ((and (string-match "^file:///" (eww-current-url))
                  (not (string-match "^file:///tmp" (eww-current-url))))
             'local-file)
-           (t (error "EWW marks only work in Local EWW pages,EPub and Bookshare buffers.")))
+           (t
+            (error "EWW marks only work in  EPub  and Bookshare buffers.")))
           :book
           (or
            (bound-and-true-p emacspeak-bookshare-this-book)
@@ -2153,7 +2154,7 @@ arg `delete', delete that mark instead."
 (defvar emacspeak-eww-url-shell-commands
   (delete nil
           (list
-           (expand-file-name "nmpv" emacspeak-etc-directory)(executable-find "mpv")
+           (executable-find "mpv")
            (expand-file-name "cbox" emacspeak-etc-directory)))
   "Shell commands we permit on URL under point.")
 
@@ -2487,7 +2488,8 @@ With interactive prefix arg, move to the start of the table."
 
 ;;}}}
 ;;{{{Repeat Support:
-(put 'emacspeak-eww-play-media-at-point 'repeat-map  'emacspeak-m-player-mode-map)
+(put 'emacspeak-eww-play-media-at-point
+     'repeat-map  'emacspeak-m-player-mode-map)
 ;;}}}
 (provide 'emacspeak-eww)
 ;;{{{ end of file

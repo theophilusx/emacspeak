@@ -237,11 +237,6 @@ Interactive PREFIX arg means toggle the global default value. ")
    (comint-highlight-prompt voice-lighten-extra)
    (comint-highlight-input voice-bolden-medium)))
 
-
-
-
-
-
 (cl-loop
  for mode in
  '(conf-space-mode conf-unix-mode conf-mode)
@@ -353,10 +348,10 @@ instead, always play an auditory icon when the shell prompt is displayed."
            comint-last-output-start
            (or monitor (eq (window-buffer) buffer)))
         (let ((prompt-p
-              (save-excursion
-                (goto-char comint-last-output-start)
-                (or (looking-at shell-prompt-pattern)
-                    (looking-at comint-prompt-regexp)))))
+               (save-excursion
+                 (goto-char comint-last-output-start)
+                 (or (looking-at shell-prompt-pattern)
+                     (looking-at comint-prompt-regexp)))))
           (cond
            ( (and emacspeak-comint-autospeak (not prompt-p))
              (dtk-speak output))
@@ -517,9 +512,9 @@ instead, always play an auditory icon when the shell prompt is displayed."
 (defadvice comint-kill-input (before emacspeak pre act comp)
   "Speak."
   (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'delete-object)
     (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
       (when (> (point) (marker-position pmark))
-        (emacspeak-auditory-icon 'delete-object)
         (emacspeak-speak-region pmark (point))))))
 
 (defadvice comint-dynamic-list-filename-completions

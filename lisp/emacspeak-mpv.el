@@ -64,7 +64,8 @@
    mpv-kill mpv-pause mpv-play
    mpv-playlist-next mpv-playlist-prev
    mpv-revert-seek mpv-seek mpv-seek-backward mpv-seek-forward
-   mpv-seek-to-position-at-point mpv-speed-decrease mpv-speed-increase mpv-speed-set 
+   mpv-seek-to-position-at-point
+   mpv-speed-decrease mpv-speed-increase mpv-speed-set 
    mpv-volume-set)
  do
  (eval
@@ -77,7 +78,6 @@
   "Icon."
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'right)))
-
 
 (defadvice mpv-volume-decrease (after emacspeak pre act comp)
   "Icon."

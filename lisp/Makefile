@@ -101,7 +101,6 @@ emacspeak-calc.elc \
 emacspeak-calculator.elc \
 emacspeak-calendar.elc \
 emacspeak-calibredb.elc \
-emacspeak-crossword.elc \
 emacspeak-chess.elc \
 emacspeak-cider.elc \
 emacspeak-ciel.elc \
@@ -200,7 +199,6 @@ emacspeak-midge.elc \
 emacspeak-mines.elc \
 emacspeak-mspools.elc \
 emacspeak-muse.elc \
-emacspeak-navi-mode.elc \
 emacspeak-net-utils.elc \
 emacspeak-newsticker.elc \
 emacspeak-notmuch.elc \
@@ -243,7 +241,6 @@ emacspeak-sgml-mode.elc \
 emacspeak-sh-script.elc \
 emacspeak-shx.elc \
 emacspeak-slime.elc \
-emacspeak-smart-window.elc \
 emacspeak-smartparens.elc \
 emacspeak-solitaire.elc \
 emacspeak-speedbar.elc \
@@ -322,7 +319,8 @@ emacs -batch -q \
 
 emacspeak-loaddefs.el: 
 	$(EMACS) $(BATCH)  -l ./emacspeak-preamble.el  \
-	-f loaddefs-generate-batch  emacspeak-loaddefs.el .
+	-l ./emacspeak-autoload.el  \
+	-f emacspeak-auto-generate-autoloads
 
 # }}}
 # {{{Development  target: indent, tags, relint 
