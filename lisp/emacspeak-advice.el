@@ -1322,6 +1322,13 @@ Indicate change of selection with an auditory icon
     (emacspeak-auditory-icon 'tick-tick)
     (emacspeak-speak-mode-line)))
 
+(defadvice scratch-buffer (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'tick-tick)
+    (emacspeak-speak-mode-line)))
+
+
 (defadvice display-buffer (after emacspeak pre act comp)
   "Provide auditory icon."
   (when (ems-interactive-p)
@@ -2078,13 +2085,15 @@ Produce an auditory icon if possible."
     (emacspeak-auditory-icon 'open-object)
     (when minibuffer-default (emacspeak-auditory-icon 'help))
     (tts-with-punctuations
-     'all
-     (dtk-speak
-      (concat
-       (buffer-string)
-       (if (stringp minibuffer-default)
-           minibuffer-default
-         ""))))))
+        'all
+      (emacspeak-pronounce-add-buffer-local-dictionary-entry
+        default-directory "")
+      (dtk-speak
+       (concat
+        (buffer-string)
+        (if (stringp minibuffer-default)
+            minibuffer-default
+          ""))))))
 
 (add-hook 'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook 'at-end)
 

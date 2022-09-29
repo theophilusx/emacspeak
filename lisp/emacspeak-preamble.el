@@ -101,7 +101,8 @@
   (eval-when-compile
     (let
         ((ext
-          '("mov" "wma" "wmv" "flv" "m4a" "m4b"  "flac"
+          '("m3u" "pls"                 ; incorporate playlist ext
+            "mov" "wma" "wmv" "flv" "m4a" "m4b"  "flac"
             "aiff" "aac" "opus ""mkv"
             "ogv" "oga""ogg" "mp3"  "mp4" "webm" "wav")))
       (concat
@@ -117,7 +118,7 @@
   (eval-when-compile
     (concat
      (regexp-opt
-      (list ".m3u" ".asx" ".pls" ".rpm" ".ram"))
+      (list ".m3u" ".asx" ".pls"  ".ram"))
      "$"))
   "Playlist pattern.")
 

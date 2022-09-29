@@ -291,11 +291,12 @@ Reset immediately after being used.")
   "Map  keys  to launch MPlayer on a  directory."
   :group 'emacspeak-m-player
   :group 'emacspeak-media
-  :type '(repeat
-          :tag "Media Locations"
-          (list
-           (string :tag "Key")
-           (directory :tag "Directory")))
+  :type
+  '(repeat
+    :tag "Media Locations"
+    (list
+     (string :tag "Key")
+     (directory :tag "Directory")))
   :set
   #'(lambda (sym val)
       (mapc
@@ -334,7 +335,7 @@ Controls media playback when already playing.
   (unless (process-live-p emacspeak-m-player-process)
     (emacspeak-multimedia))
   (funcall-interactively
-   #'pop-to-buffer (process-buffer emacspeak-m-player-process)))
+   #'switch-to-buffer (process-buffer emacspeak-m-player-process)))
 
 (defun emacspeak-m-player-command (key)
   "Invoke MPlayer commands."
@@ -358,18 +359,20 @@ Controls media playback when already playing.
   (let ((command
          (eval
           `(defun
-               ,(intern (format "emacspeak-media-%s"
-                                (file-name-base
-                                 (directory-file-name directory))))
+               ,(intern
+                 (format "emacspeak-media-%s"
+                         (file-name-base (directory-file-name directory))))
                ()
              ,(format "Launch media from directory %s" directory)
              (interactive)
-             (cl-declare  (special emacspeak-m-player-current-directory))
-             (setq emacspeak-m-player-current-directory ,directory)
-             (emacspeak-m-player-accelerator ,directory)))))
+             (cl-declare  (special
+                           default-directory
+                           emacspeak-m-player-current-directory))
+             (let ((default-directory ,directory))
+               (setq emacspeak-m-player-current-directory ,directory)
+               (emacspeak-m-player-accelerator ,directory))))))
     (global-set-key key command)
-    (put command 'repeat-map 'emacspeak-m-player-mode-map)
-    (put 'emacspeak-m-player-quit  'repeat-map nil)))
+    (put command 'repeat-map 'emacspeak-m-player-mode-map)))
 
 (defvar emacspeak-m-player-accelerator-p nil
   "Flag set by accelerators. Let-binding this causes default-directory
@@ -415,29 +418,45 @@ Controls media playback when already playing.
 (defvar-local emacspeak-m-player-url-p nil
   "Records if  playing a URL")
 
-(defun emacspeak-media-read-resource ()
+(defun emacspeak-media-local-resource (prefix)
+  "Read local resource starting from default-directory"
+  (cl-declare (special default-directory))
+  (let ((completion-ignore-case t))
+    (cond
+     (prefix
+      (read-directory-name "Media:" emacspeak-m-player-current-directory))
+     (t
+      (completing-read
+       "Media: "
+       (directory-files-recursively default-directory emacspeak-media-extensions))))))
+
+(defun emacspeak-media-read-resource (&optional prefix)
   "Read resource from minibuffer.
 If a dynamic playlist exists, just use it."
-  (cl-declare (special emacspeak-m-player-dynamic-playlist))
+  (cl-declare (special emacspeak-m-player-dynamic-playlist
+                       emacspeak-m-player-accelerator-p))
   (unless emacspeak-m-player-dynamic-playlist
-    (let ((completion-ignore-case t)
-          (read-file-name-function
-           (if (eq major-mode 'locate-mode)
-               #'read-file-name-default
-             #'ido-read-file-name))
-          (read-file-name-completion-ignore-case t)
-          (default-filename
-           (when (or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode))
-             (dired-get-filename nil 'no-error)))
-          (dir (emacspeak-media-guess-directory))
-          (result nil))
-      (setq result
-            (expand-file-name
-             (funcall read-file-name-function
-                      "Media Resource: "
-                      dir
-                      default-filename 'must-match)))
-      result)))
+    (cond
+     (emacspeak-m-player-accelerator-p (emacspeak-media-local-resource prefix))
+     (t
+      (let ((completion-ignore-case t)
+            (read-file-name-function
+             (if (eq major-mode 'locate-mode)
+                 #'read-file-name-default
+               #'ido-read-file-name))
+            (read-file-name-completion-ignore-case t)
+            (default-filename
+             (when (or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode))
+               (dired-get-filename nil 'no-error)))
+            (dir (emacspeak-media-guess-directory))
+            (result nil))
+        (setq result
+              (expand-file-name
+               (funcall read-file-name-function
+                        "Media Resource: "
+                        dir
+                        default-filename 'must-match)))
+        result)))))
 
 (defun emacspeak-m-player-refresh-metadata ()
   "Populate metadata fields from current  stream."
@@ -505,25 +524,29 @@ See command \\[emacspeak-m-player-add-to-dynamic] for adding to the
 dynamic playlist. "
   (interactive
    (list
-    (emacspeak-media-read-resource)
+    (emacspeak-media-read-resource current-prefix-arg)
     current-prefix-arg))
   (cl-declare (special
                emacspeak-m-player-dynamic-playlist
+               emacspeak-m-player-accelerator-p
                emacspeak-m-player-file-list emacspeak-m-player-current-directory
                emacspeak-media-directory-regexp
                emacspeak-media-shortcuts-directory emacspeak-m-player-process
                emacspeak-m-player-program emacspeak-m-player-options
                emacspeak-m-player-custom-filters))
-  (when (and emacspeak-m-player-process
-             (eq 'run (process-status emacspeak-m-player-process))
-             (y-or-n-p "Stop currently playing music? "))
+  (when
+      (and emacspeak-m-player-process
+           (eq 'run (process-status emacspeak-m-player-process))
+           (y-or-n-p "Stop currently playing music? "))
     (emacspeak-m-player-quit)
     (setq emacspeak-m-player-process nil))
   (let ((buffer (get-buffer-create "*M-Player*"))
         (process-connection-type nil)
         (playlist-p
          (when resource
-           (or play-list (emacspeak-m-player-playlist-p resource))))
+           (and (not emacspeak-m-player-accelerator-p)
+                (or play-list (emacspeak-m-player-playlist-p resource))
+                )))
         (options (copy-sequence emacspeak-m-player-options))
         (file-list  (reverse emacspeak-m-player-dynamic-playlist))
         (duration
@@ -1374,9 +1397,7 @@ flat classical club dance full-bass full-bass-and-treble
     ("E" emacspeak-m-player-add-equalizer)
     ("C-m" emacspeak-m-player-load)
     ("DEL" emacspeak-m-player-reset-speed)
-    ("L" emacspeak-m-player-locate-media)
     ("M" emacspeak-m-player-display-metadata)
-    ("M-l" emacspeak-m-player-load-playlist)
     ("C-l" ladspa)
     ("A" emacspeak-m-player-amark-add)
     ("O" emacspeak-m-player-reset-options)
@@ -1391,7 +1412,6 @@ flat classical club dance full-bass full-bass-and-treble
     ("]" emacspeak-m-player-faster)
     ("G" emacspeak-m-player-seek-percentage)
     ("a" emacspeak-m-player-add-autopan)
-    ("b" emacspeak-wizards-view-buffers-filtered-by-m-player-mode)
     ("c" emacspeak-m-player-slave-command)
     ("d" emacspeak-m-player-delete-filter)
     ("e" emacspeak-m-player-equalizer-preset)
@@ -1405,7 +1425,6 @@ flat classical club dance full-bass full-bass-and-treble
     ("n" emacspeak-m-player-next-track)
     ("o" emacspeak-m-player-customize-options)
     ("p" emacspeak-m-player-previous-track)
-    ("q" bury-buffer)
     ("r" emacspeak-m-player-seek-relative)
     ("s" emacspeak-m-player-scale-speed)
     ("t" emacspeak-m-player-play-tracks-jump)
@@ -1417,8 +1436,9 @@ flat classical club dance full-bass full-bass-and-treble
     )
   "M-Player Key bindings.")
 
-(cl-loop for k in emacspeak-m-player-bindings do
-         (emacspeak-keymap-update  emacspeak-m-player-mode-map k))
+(cl-loop
+ for k in emacspeak-m-player-bindings do
+ (emacspeak-keymap-update  emacspeak-m-player-mode-map k))
 
 (put 'emacspeak-m-player-shuffle 'repeat-map 'emacspeak-m-player-mode-map)
 (put 'emacspeak-m-player-loop 'repeat-map 'emacspeak-m-player-mode-map)
@@ -1436,6 +1456,7 @@ flat classical club dance full-bass full-bass-and-treble
 
 ;;; disable on stop:
 (put 'emacspeak-m-player-quit  'repeat-map nil)
+(put 'ladspa  'repeat-map nil)
 
 (defun emacspeak-m-player-volume-set (&optional arg)
   "Set Volume in steps from 1 to 9."

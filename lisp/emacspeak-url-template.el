@@ -511,8 +511,7 @@ name of the list.")
 
 (defun emacspeak-url-template-cnn-content (url)
   "Extract CNN content."
-  (emacspeak-we-extract-by-class
-   "zn-body__paragraph" url 'speak))
+  (emacspeak-we-xslt-filter "//p" url 'speak))
 
 (emacspeak-url-template-define
  "CNN Content"

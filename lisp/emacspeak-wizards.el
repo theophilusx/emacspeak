@@ -1267,7 +1267,7 @@ Direction specifies previous/next."
             (if (> direction 0)
                 (cl-second shells)
               (nth (1- (length shells)) shells)))
-      (funcall-interactively #'pop-to-buffer target))
+      (funcall-interactively #'switch-to-buffer target))
      ((= 1 (length shells)) (shell "1-shell"))
      (t (call-interactively #'shell)))))
 
@@ -1300,7 +1300,7 @@ of the source buffer."
            (setq target s)
            (setq target-len (length sd)))))
       (cond
-       (target (funcall-interactively #'pop-to-buffer target)
+       (target (funcall-interactively #'switch-to-buffer target)
                (ems--shell-pushd-if-needed dir target))
        (t (call-interactively #'shell)))))
    (t (call-interactively 'emacspeak-wizards-cycle-to-next-buffer))))
@@ -1360,7 +1360,7 @@ of the source buffer."
       (when ;  source determines target directory
           (or (eq major-mode 'dired-mode) buffer-file-name)
         (unless prefix (ems--shell-pushd-if-needed directory buffer)))
-      (funcall-interactively #'pop-to-buffer buffer)))))
+      (funcall-interactively #'switch-to-buffer buffer)))))
 
 (defcustom emacspeak-wizards-project-shells nil
   "List of shell-name/initial-directory pairs."
@@ -1409,7 +1409,7 @@ defined.  If not in a shell buffer, switch to our Home shell buffer."
      emacspeak-wizards--project-shell-directory (current-buffer))
     (message (abbreviate-file-name default-directory)))
    (t
-    (funcall-interactively #'pop-to-buffer "Home"))))
+    (funcall-interactively #'switch-to-buffer "Home"))))
 
 (defun emacspeak-wizards-shell-re-key (key buffer)
   "Re-key shell-buffer `buffer' to be accessed via key `key'. The old shell
@@ -2285,7 +2285,7 @@ Optional interactive prefix arg shows  unprocessed results."
          for s across (g-json-get 'standing standings) do
          (insert (emacspeak-wizards--format-mlb-standing s)))))
       (goto-char (point-min))
-      (funcall-interactively #'pop-to-buffer buffer))))
+      (funcall-interactively #'switch-to-buffer buffer))))
 
 (defun emacspeak-wizards--format-nba-standing (s)
   "Format  NBA standing."
@@ -2327,7 +2327,7 @@ Optional interactive prefix arg shows  unprocessed results."
          for s across (g-json-get 'standing standings) do
          (insert (emacspeak-wizards--format-nba-standing s)))))
       (goto-char (point-min))
-      (funcall-interactively #'pop-to-buffer buffer))))
+      (funcall-interactively #'switch-to-buffer buffer))))
 
 ;;}}}
 ;;{{{ Color at point:
@@ -2633,13 +2633,6 @@ q: Quit color wheel, after copying current hex value to kill-ring."
 
 ;;}}}
 ;;{{{ Smart Scratch:
-
-(defun emacspeak-wizards-scratch ()
-  "Switch to *scratch* buffer, creating it if necessary."
-  (interactive)
-  (let ((buffer (get-buffer-create "*scratch*")))
-    (with-current-buffer buffer (lisp-interaction-mode))
-    (funcall-interactively #'pop-to-buffer buffer)))
 
 ;;}}}
 ;;{{{ Customize Saved Settings  By Pattern:

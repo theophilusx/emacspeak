@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on September 18, 2022.
+last updated on September 28, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3159,7 +3159,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-super-keymap,  N
      emacspeak-webspace-feed-reader
 
 ‘SPC’
-     emacspeak-wizards-scratch
+     scratch-buffer
 
 ‘a’
      emacspeak-wizards-execute-asynchronously
@@ -3433,7 +3433,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the EWW
 documentation, then read *Note emacspeak-eww::.
 
-   This chapter documents a total of 1163 commands and 148 options.
+   This chapter documents a total of 1162 commands and 148 options.
 
 * Menu:
 
@@ -7797,8 +7797,7 @@ streams, or to open various feed-types such as ‘ATOM’, ‘RSS’, or ‘OPML
      ‘emacspeak-feeds-atom-display’ Display link under point as an
      ‘ATOM’ feed.
 ‘y’
-     ‘emacspeak-m-player-youtube-player’ Play link under point as a
-     Youtube stream.
+     ‘emacspeak-mpv-play-url’ Play link under point as a Youtube stream.
 
 12.74.5 Table Browsing
 ----------------------

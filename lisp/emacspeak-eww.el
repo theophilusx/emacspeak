@@ -250,7 +250,7 @@
 ;; @command{emacspeak-feeds-atom-display}
 ;; Display link under point as an @code{ATOM} feed.
 ;; @item y
-;; @command{emacspeak-m-player-youtube-player}
+;; @command{emacspeak-mpv-play-url}
 ;; Play link under point as a Youtube stream.
 ;; @end table
 ;; 
@@ -600,7 +600,7 @@ Safari/537.36"
   (define-key eww-link-keymap (ems-kbd "C-o") 'emacspeak-feeds-opml-display)
   (define-key eww-link-keymap (ems-kbd "C-r") 'emacspeak-feeds-rss-display)
   (define-key eww-link-keymap (ems-kbd "C-a") 'emacspeak-feeds-atom-display)
-  (define-key eww-link-keymap  "y" 'emacspeak-m-player-youtube-player)
+  (define-key eww-link-keymap  "y" 'emacspeak-mpv-play-url)
   (cl-loop
    for binding  in
    '(
