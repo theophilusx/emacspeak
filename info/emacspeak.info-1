@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on September 28, 2022.
+last updated on October 8, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -1884,6 +1884,8 @@ Note that there is newer material at
 <http://emacspeak.blogspot.com/2014/05/emacspeak-eww-updates-for-complete.html>
 and in *Note emacspeak-eww::.  For Emacs 24.4 and later, note that the
 built-in Web browser EWW is also the browser of choice for emacspeak.
+Finally, note that Emacs/W3 is now considered obsolete, and Emacspeak
+support for w3m is no longer maintained.
 
    — T. V. Raman, October 2014.
 
@@ -3199,6 +3201,9 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-super-keymap,  N
 
 ‘u’
      soundscape-update-mood
+
+‘y’
+     emacspeak-mpv-play-url
 
 
 File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-alt-keymap,  Next: Emacspeak Keybindings On emacspeak-personal-keymap,  Prev: Emacspeak Keybindings On emacspeak-super-keymap,  Up: Emacspeak Keymaps

@@ -7616,7 +7616,7 @@ Possible values are:
 screenfull  -- speak the displayed screen
 node -- speak the entire node.
 
-Default Value: @code{@verb{|node|}}
+Default Value: @code{@verb{|screenfull|}}
 
 @end defvar
 
@@ -7806,7 +7806,7 @@ Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacsp
 @defvar {User Option} emacspeak-super-keys
 Super key bindings. 
 
-Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (a emacspeak-wizards-execute-asynchronously) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood))|}}
+Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (a emacspeak-wizards-execute-asynchronously) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood) (y emacspeak-mpv-play-url))|}}
 
 @end defvar
 
@@ -7963,19 +7963,23 @@ from a convenient Emacs interface.
 
 @subsection Usage
 
-The main entry-point is command @code{emacspeak-multimedia}
-bound to @kbd{C-e ;}.
-This prompts for and launches the desired media stream.
-Once a stream is playing, you can control it with single-letter keystrokes
-in the @code{*M-Player*} buffer.
-Alternatively, you can switch away from that buffer to do real work,
-And invoke @code{m-player} commands by  first pressing @kbd{C-e ;}.
+The main entry-point is command @code{emacspeak-multimedia} bound
+to @kbd{C-e ;}.  This prompts for and launches the desired media
+stream.  Once a stream is playing, you can control it with
+single-letter keystrokes in the @code{*M-Player*} buffer.
+Alternatively, you can switch away from that buffer to do real
+work, And invoke @code{m-player} commands by first pressing
+prefix-key @kbd{C-e ;}.  If your Emacs supports @code{repeat-mode},
+--- @xref{repeating, , , emacs} you can avoid the need to
+repeatedly press the prefix-key @code{C-e ;} each time; with
+@code{repeat-mode} active, you only need to press the prefix
+@code{C-e ;} the first time; subsequent invocations can happen via
+single-letter presses as long as they are performed in a sequence.
 As an example, pressing @kbd{v} in the @code{*M-Player*} buffer
-prompts for and sets the volume;
-When not in the @code{*M-Player*} buffer, you can achieve the same
-by pressing @kbd{C-e ; v}.
-Press @kbd{C-h b} in the @code{*M-Player*}
-buffer  to list  @code{m-player} keybindings.
+prompts for and sets the volume; When not in the @code{*M-Player*}
+buffer, you can achieve the same by pressing @kbd{C-e ; v}.  Press
+@kbd{C-h b} in the @code{*M-Player*} buffer to list @code{m-player}
+keybindings.
 
 @subsection Emacspeak-M-Player Commands
 
@@ -8505,6 +8509,7 @@ d		emacspeak-m-player-delete-filter
 e		emacspeak-m-player-equalizer-preset
 f		emacspeak-m-player-add-filter
 g		emacspeak-m-player-seek-absolute
+h		emacspeak-m-player-from-history
 i		emacspeak-m-player-stream-info
 j		emacspeak-m-player-amark-jump
 k		emacspeak-m-player-quit
@@ -8536,9 +8541,9 @@ DEL		emacspeak-m-player-reset-speed
 M-,		emacspeak-m-player-set-clip-start
 M-.		emacspeak-m-player-set-clip-end
 
-In addition to any hooks its parent mode ‘comint-mode’ might have run,
-this mode runs the hook ‘emacspeak-m-player-mode-hook’, as the final
-or penultimate step during initialization.
+In addition to any hooks its parent mode ‘special-mode’ might have
+run, this mode runs the hook ‘emacspeak-m-player-mode-hook’, as the
+final or penultimate step during initialization.
 @end format
 @end deffn
 
@@ -9021,6 +9026,7 @@ d		emacspeak-m-player-delete-filter
 e		emacspeak-m-player-equalizer-preset
 f		emacspeak-m-player-add-filter
 g		emacspeak-m-player-seek-absolute
+h		emacspeak-m-player-from-history
 i		emacspeak-m-player-stream-info
 j		emacspeak-m-player-amark-jump
 k		emacspeak-m-player-quit
@@ -9051,7 +9057,7 @@ DEL		emacspeak-m-player-reset-speed
 
 M-,		emacspeak-m-player-set-clip-start
 M-.		emacspeak-m-player-set-clip-end
-.
+
 @end format
 @end deffn
 
@@ -9495,10 +9501,14 @@ commands require only one initial ress of C-e C-;.
 @subsubsection emacspeak-mpv-play-url
 @deffn {Command} emacspeak-mpv-play-url  (url &optional left-channel)
 @table @kbd
+@item C-. y
+@kindex C-. y
 @item C-e C-; ;
 @kindex C-e C-; ;
 @item <fn> C-; ;
 @kindex <fn> C-; ;
+@item C-x @@ s y
+@kindex C-x @@ s y
 @end table
 
 @findex emacspeak-mpv-play-url

@@ -51,19 +51,23 @@
 ;; 
 ;; @subsection Usage
 ;; 
-;; The main entry-point is command @code{emacspeak-multimedia}
-;; bound to @kbd{C-e ;}.
-;; This prompts for and launches the desired media stream.
-;; Once a stream is playing, you can control it with single-letter keystrokes
-;; in the @code{*M-Player*} buffer.
-;; Alternatively, you can switch away from that buffer to do real work,
-;; And invoke @code{m-player} commands by  first pressing @kbd{C-e ;}.
+;; The main entry-point is command @code{emacspeak-multimedia} bound
+;; to @kbd{C-e ;}.  This prompts for and launches the desired media
+;; stream.  Once a stream is playing, you can control it with
+;; single-letter keystrokes in the @code{*M-Player*} buffer.
+;; Alternatively, you can switch away from that buffer to do real
+;; work, And invoke @code{m-player} commands by first pressing
+;; prefix-key @kbd{C-e ;}.  If your Emacs supports @code{repeat-mode},
+;; --- @xref{repeating, , , emacs} you can avoid the need to
+;; repeatedly press the prefix-key @code{C-e ;} each time; with
+;; @code{repeat-mode} active, you only need to press the prefix
+;; @code{C-e ;} the first time; subsequent invocations can happen via
+;; single-letter presses as long as they are performed in a sequence.
 ;; As an example, pressing @kbd{v} in the @code{*M-Player*} buffer
-;; prompts for and sets the volume;
-;; When not in the @code{*M-Player*} buffer, you can achieve the same
-;; by pressing @kbd{C-e ; v}.
-;; Press @kbd{C-h b} in the @code{*M-Player*}
-;; buffer  to list  @code{m-player} keybindings.
+;; prompts for and sets the volume; When not in the @code{*M-Player*}
+;; buffer, you can achieve the same by pressing @kbd{C-e ; v}.  Press
+;; @kbd{C-h b} in the @code{*M-Player*} buffer to list @code{m-player}
+;; keybindings.
 ;; 
 ;;; Code:
 
@@ -78,7 +82,7 @@
 (require 'emacspeak-amark)
 (declare-function dired-get-filename "dired" (&optional localp
                                                         no-error-if-not-filep))
-(declare-function comint-mode "comint" nil)
+
 (declare-function emacspeak-xslt-get "emacspeak-xslt" (style))
 
 ;;}}}
@@ -176,13 +180,14 @@ This is set to nil when playing Internet  streams.")
           (cl-second info)))))
     (t (format "Process MPlayer not running.")))))
 
-(define-derived-mode emacspeak-m-player-mode comint-mode
+(define-derived-mode emacspeak-m-player-mode special-mode
   "M-Player Interaction"
   "Major mode for m-player interaction. \n\n
 \\{emacspeak-m-player-mode-map}"
   (progn
-    (setq emacspeak-m-player-metadata (make-emacspeak-m-player-metadata))
-    (setq buffer-undo-list t)))
+    (setq emacspeak-m-player-metadata (make-emacspeak-m-player-metadata)
+          buffer-undo-list t
+          buffer-read-only nil)))
 
 ;;}}}
 ;;{{{Dynamic playlist:
@@ -316,7 +321,7 @@ Reset immediately after being used.")
   "Start or control Emacspeak multimedia player.
 Controls media playback when already playing.
 
-\\{emacspeak-m-player-mode-map}."
+\\{emacspeak-m-player-mode-map}"
   (interactive)
   (cl-declare (special emacspeak-m-player-process))
   (cond
@@ -356,21 +361,23 @@ Controls media playback when already playing.
    (list
     (read-directory-name"Media Directory: ")
     (read-key-sequence "Key: ")))
-  (let ((command
-         (eval
-          `(defun
-               ,(intern
-                 (format "emacspeak-media-%s"
-                         (file-name-base (directory-file-name directory))))
-               ()
-             ,(format "Launch media from directory %s" directory)
-             (interactive)
-             (cl-declare  (special
-                           default-directory
-                           emacspeak-m-player-current-directory))
-             (let ((default-directory ,directory))
-               (setq emacspeak-m-player-current-directory ,directory)
-               (emacspeak-m-player-accelerator ,directory))))))
+  (let
+      ((command
+        (eval
+         `(defun
+              ,(intern
+                (format "emacspeak-media-%s"
+                        (file-name-base (directory-file-name directory))))
+              (&optional prefix)
+            ,(format "Launch media from directory %s. Prefix arg
+plays result as a directory." directory)
+            (interactive)
+            (cl-declare  (special
+                          default-directory
+                          emacspeak-m-player-current-directory))
+            (let ((default-directory ,directory))
+              (setq emacspeak-m-player-current-directory ,directory)
+              (emacspeak-m-player-accelerator ,directory))))))
     (global-set-key key command)
     (put command 'repeat-map 'emacspeak-m-player-mode-map)))
 
@@ -424,11 +431,13 @@ Controls media playback when already playing.
   (let ((completion-ignore-case t))
     (cond
      (prefix
+      (setq current-prefix-arg nil)
       (read-directory-name "Media:" emacspeak-m-player-current-directory))
      (t
       (completing-read
        "Media: "
-       (directory-files-recursively default-directory emacspeak-media-extensions))))))
+       (directory-files-recursively
+        default-directory emacspeak-media-extensions))))))
 
 (defun emacspeak-media-read-resource (&optional prefix)
   "Read resource from minibuffer.
@@ -446,7 +455,8 @@ If a dynamic playlist exists, just use it."
                #'ido-read-file-name))
             (read-file-name-completion-ignore-case t)
             (default-filename
-             (when (or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode))
+             (when
+                 (or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode))
                (dired-get-filename nil 'no-error)))
             (dir (emacspeak-media-guess-directory))
             (result nil))
@@ -514,6 +524,11 @@ If a dynamic playlist exists, just use it."
     (with-current-buffer
         (process-buffer emacspeak-m-player-process)
       (emacspeak-amark-save))))
+(defun ems--repeat-sentinel (process _state)
+  "Process sentinel to disable repeat."
+  (cl-declare (special repeat-mode))
+  (when (and repeat-mode (memq (process-status process) '(failed signal exit)))
+    (repeat-exit)))
 
 ;;;###autoload
 (defun emacspeak-m-player (resource &optional play-list)
@@ -543,10 +558,7 @@ dynamic playlist. "
   (let ((buffer (get-buffer-create "*M-Player*"))
         (process-connection-type nil)
         (playlist-p
-         (when resource
-           (and (not emacspeak-m-player-accelerator-p)
-                (or play-list (emacspeak-m-player-playlist-p resource))
-                )))
+         (and resource (or play-list (emacspeak-m-player-playlist-p resource))))
         (options (copy-sequence emacspeak-m-player-options))
         (file-list  (reverse emacspeak-m-player-dynamic-playlist))
         (duration
@@ -593,6 +605,9 @@ dynamic playlist. "
             (apply
              #'start-process "MPLayer" buffer
              emacspeak-m-player-program options))
+      (set-process-sentinel
+       emacspeak-m-player-process
+       #'ems--repeat-sentinel)
       (set-process-filter  emacspeak-m-player-process
                            #'emacspeak-m-player-process-filter)
       (when
@@ -1177,7 +1192,9 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
         (cl-remove-if
          #'(lambda(u) (string= u url))
          emacspeak-m-player-media-history))
-  (message "Media History: %d" (length emacspeak-m-player-media-history)))
+  (emacspeak-auditory-icon 'delete-object)
+  (message
+   "Media History Length: %d" (length emacspeak-m-player-media-history)))
 
 (defun emacspeak-m-player-from-history (posn)
   "Play media from position `posn'media-history. "
@@ -1189,20 +1206,42 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
          (> (length emacspeak-m-player-media-history) posn))
     (funcall #'emacspeak-m-player (elt emacspeak-m-player-media-history posn)))
    (t (error "Not enough history"))))
+(defvar emacspeak-m-player-history-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map ";" 'emacspeak-eww-play-media-at-point)
+    (define-key map "k" 'shr-copy-url)
+    (define-key map "r" 'emacspeak-m-player-remove-from-media-history)
+    map)
+  "Keymap used in media history browser.")
 
 (defun emacspeak-m-player-browse-history ()
   "Create a  media history browser from media-history."
   (interactive )
-  (cl-declare (special emacspeak-m-player-media-history))
+  (cl-declare (special
+               emacspeak-m-player-history-map
+               emacspeak-m-player-media-history))
   (with-temp-buffer
-    (insert "<ol>\n")
+    (insert "<html>\n
+<head><title>Emacspeak Media History</title></head>\n
+<body>\n<p>Press 'r' on a link to remove it from the history.</p>\n
+<ol>\n")
     (cl-loop
      for u in emacspeak-m-player-media-history do
      (insert
       (format "<li><a href='%s'>%s: %s</a></li>\n"
               u (url-host (url-generic-parse-url u)) (file-name-base  u))))
-    (insert "</ol>\n")
+    (insert "</ol></body></html>\n")
+    (add-hook
+ 'browse-url-of-file-hook
+ #'(lambda ()
+     (let ((inhibit-read-only t))
+       (put-text-property
+        (point-min) (point-max)
+        'keymap  emacspeak-m-player-history-map)
+       (emacspeak-auditory-icon 'open-object)
+       (emacspeak-speak-line))))
     (call-interactively #'browse-url-of-buffer)))
+
 
 ;;}}}
 ;;{{{ Reset Options:
@@ -1417,6 +1456,7 @@ flat classical club dance full-bass full-bass-and-treble
     ("e" emacspeak-m-player-equalizer-preset)
     ("f" emacspeak-m-player-add-filter)
     ("g" emacspeak-m-player-seek-absolute)
+    ("h" emacspeak-m-player-from-history)
     ("i" emacspeak-m-player-stream-info)
     ("j" emacspeak-m-player-amark-jump)
     ("k" emacspeak-m-player-quit)
@@ -1453,6 +1493,7 @@ flat classical club dance full-bass full-bass-and-treble
    (when (symbolp cmd)
      (put cmd 'repeat-map 'emacspeak-m-player-mode-map)))
  emacspeak-m-player-mode-map)
+
 
 ;;; disable on stop:
 (put 'emacspeak-m-player-quit  'repeat-map nil)
@@ -1536,7 +1577,9 @@ flat classical club dance full-bass full-bass-and-treble
       (kill-new u)
       (emacspeak-m-player u)))))
 
-(put 'emacspeak-m-player-youtube-player 'repeat-map 'emacspeak-mpv-keymap)
+(put 'emacspeak-m-player-youtube-player 'repeat-map
+     'emacspeak-mpv-keymap)
+
 ;;;###autoload
 (defun emacspeak-m-player-youtube-live (url)
   "Use youtube-dl and mplayer to live-stream   from Youtube. "

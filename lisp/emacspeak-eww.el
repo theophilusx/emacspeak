@@ -965,7 +965,7 @@ Retain previously set punctuations  mode."
 
 ;;;###autoload
 (defun emacspeak-eww-autospeak()
-  "Setup post process hook to speak the Web page. "
+  "Setup post process hook to speak the first windowful . "
   (add-hook
    'emacspeak-eww-post-process-hook
    #'(lambda nil
@@ -973,7 +973,7 @@ Retain previously set punctuations  mode."
        (setq emacspeak-we-xpath-filter
              emacspeak-we-paragraphs-xpath-filter)
        (dtk-set-punctuations-to-some)
-       (emacspeak-speak-buffer))
+       (emacspeak-speak-windowful))
    'at-end))
 
 ;;;###autoload
@@ -2097,13 +2097,14 @@ arg `delete', delete that mark instead."
            'emacspeak-eww-post-process-hook
            #'(lambda ()
                (goto-char point)
+               (delete-other-windows)
+               (emacspeak-speak-windowful)
                (emacspeak-auditory-icon 'large-movement))
            'at-end)
           (when (eq type 'local-file)
             (add-hook 'emacspeak-eww-post-process-hook
                       #'emacspeak-speak-line
-                      'at-end))
-          )
+                      'at-end)))
         (funcall handler book)))))))
 
 (defun emacspeak-eww-marks-save ()
@@ -2132,7 +2133,8 @@ arg `delete', delete that mark instead."
        for k being the hash-keys of emacspeak-eww-marks do
        (insert-text-button
         (format "%s" k)
-        'action #'(lambda (b) (emacspeak-eww-open-mark (button-label b))))
+        'action
+        #'(lambda (b) (emacspeak-eww-open-mark (button-label b))))
        (insert "\n"))
       (goto-char (point-min)))
     (funcall-interactively #'switch-to-buffer buffer)))
