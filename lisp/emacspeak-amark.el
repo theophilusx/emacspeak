@@ -183,18 +183,40 @@ given name, it is updated with path and position."
   (emacspeak-m-player-seek-absolute (emacspeak-amark-position amark)))
 
 ;;}}}
+;;{{{Amark Mode:
+
+(define-derived-mode emacspeak-amark-mode special-mode
+  "AMark Browser"
+  "A light-weight mode for the `*Emacspeak Amark Browser*'.
+ 1. Provides buttons for opening and removing AMarks.
+ 2. Enables org integration via command
+ `org-store-link' bound to \\[org-store-link].
+ 3. Stored links can be inserted into org files in the same directory
+via command `org-insert-link' bound to \\[org-insert-link]."
+  (setq header-line-format "AMark Browser")
+  t)
+
+(cl-loop
+ for b   in
+ '(
+   ("C-c i" org-insert-link)
+   ("C-c l" org-store-link))
+ do
+ (emacspeak-keymap-update emacspeak-amark-mode-map b))
+
+;;}}}
 ;;{{{Browse Amarks:
 
 ;;;###autoload
 (defun emacspeak-amark-browse ()
-  "Browse   amarks  in current directory."
+  "Browse   amarks  in current directory using `emacspeak-amark-mode'."
   (interactive)
   (cl-declare (special emacspeak-amark-list))
   (let ((amarks (or (emacspeak-amark-load) (error "No Amarks here")))
         (buff (get-buffer-create "*Amarks Browser"))
         (inhibit-read-only t))
     (with-current-buffer buff
-      (special-mode)
+      (emacspeak-amark-mode)
       (setq emacspeak-amark-list amarks)
       (local-set-key "p" 'backward-button)
       (local-set-key "n" 'forward-button)

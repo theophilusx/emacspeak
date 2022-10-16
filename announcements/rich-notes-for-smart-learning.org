@@ -1,0 +1,134 @@
+* Background 
+
+As a student, I learned to take [[https://www.cs.cornell.edu/info/people/raman/phd-thesis/html/root-thesis.html][notes in Braille]] while in class and
+while learning from audio books.   When reviewing the material, reading
+the notes was far more efficient than re-listening to the original
+recordings; however at the time, I had no means to easily jump to the
+original content when perusing my notes.
+
+Fast-forward to the age of online computing, a complete audio desktop
+in the form of Emacspeak, a wealth of online resources in the form of
+E-Books, Audio Books, Podcasts and Blogs, all backed by Universal
+Search and accessible from a consistent environment. So I've been
+asking myself what /note-taking/ in this environment should look like.
+This article summarizes the present state of what I use at present.
+
+* Use Case Requirements 
+  1. All of the following should work equally well for locally stored
+     material, e.g., downloaded E-Books from [[https://www.bookshare.org/cms/][Bookshare.org]]  or Project
+     Gutenberg, as well as material hosted on the Internet in the form of
+     Blogs and Podcasts.
+  2. Create named bookmarks in E-Books (EPub, Daisy).
+  3. Create  AMarks —bookmarks  that point to positions in an audio files.
+  4. Above should be possible independent of whether the learning
+     material is available locally, or accessed via the Internet.
+  5. Enable the creation of hyperlinks to such bookmarks.
+  6. Enable the easy creation of notes — organized by topic — while
+    reading E-Books  or listening to  audio material.
+  7. Enable the embedding of hyperlinks to the bookmarks mentioned
+     earlier within these notes.
+  8. Final experience: creation of notes should require minimal
+     effort; when reding the notes, it should be  easy to open the
+     relevant portion of the content that underlies the notes.
+
+
+     being 
+
+* User Experience 
+
+** Create And Browse Bookmarks In E-Books 
+
+
+  1. You can open Project Gutenberg EPubs via the Emacspeak Bookshelf
+     --- see  see
+     [[https://tvraman.github.io/emacspeak/manual/emacspeak_002depub.html][Emacspeak Epub]].
+  2. You can download and open Bookshare books using module
+    [[https://tvraman.github.io/emacspeak/manual/emacspeak_002dbookshare.html][Emacspeak Bookshare]].
+  3. Both of those modules open books using Emacs' built-in EWW browser.
+  4. Module
+     [[https://tvraman.github.io/emacspeak/manual/emacspeak_002deww.html][Emacspeak
+     eww]] implements /eww-marks/, a bookmarking facility that manages
+     bookmarks in EPub and Daisy books.
+
+With a book open, you can:
+
+  1. Create named bookmarks,
+  2. Browse all saved bookmarks in your library,
+  3. And open a given bookmark to continue reading.
+  4. Bookmarks can also be stored as /org-mode links/ for later
+     insertion  in an /org-mode/ file,  this means these hyperlinks
+     integrate into notes taken in /org-mode/ without any additional work.
+
+See [[https://orgmode.org/org.html][Org Mode Manual]], [[https://tvraman.github.io/emacspeak/manual/emacspeak_002dbookmark.html][Emacspeak Bookmarks]], [[https://tvraman.github.io/emacspeak/manual/emacspeak_002dbookshare.html][Emacspeak Bookshare]], and
+[[https://tvraman.github.io/emacspeak/manual/emacspeak_002depub.html][Emacspeak EPub]] for relevant sections of the user manual.
+
+** Create And Browse AMarks In Audio Books 
+
+  1. AMarks are Emacspeak's audio equivalent of traditional bookmarks.
+  2. An AMark encapsulates the location of the audio content,  a
+     time-offset, and a bookmark name.
+  3. AMarks once created can be navigated to when playing that content
+     via module [[https://tvraman.github.io/emacspeak/manual/emacspeak_002dm_002dplayer.html][Emacspeak MPlayer]] which provides a rich but seamless
+     interface — here, /seamless/
+     means you can play media content without switching from any
+     on-going task, and in the context of this article, that means you
+     can continue taking notes without explicitly switching context to
+     the media-player.
+  4. Emacspeak provides an AMarks Browser that lets you browse and
+     play any AMark in your library.
+  5. Finally, AMarks like bookmarks can be stored as org-mode links
+     for later insertion into an org-mode file.
+
+See [[https://tvraman.github.io/emacspeak/manual/emacspeak_002damark.html][Emacspeak Amarks]] for the user manual.
+** Create  Bookmarks   On Web Pages 
+
+See module ~org-capture~ for inspiration.
+
+**  Create Audio Bookmarks In Podcasts 
+
+  1. Module ~emacspeak-m-player~ is used to play Podcasts and other
+    forms of online audio-content, e.g., talks published on Youtube.
+  2. This module can   store org-mode links to such content; storing
+     such a link captures the current time offset into the content
+     being played.
+  3. These  stored links can then be inserted into an org-mode file;
+     opening those links using org-mode hyperlinking facilities lets
+     you resume playback at the marked position.
+
+**  Create On-Line Notes Using Org-Mode
+
+
+1. See the [[https://orgmode.org/org.html][Org Manual]] for details on taking notes in org-mode.   
+2. Insert Hyperlinks To E-Books And Audio In Org-Mode by first storing
+   the link as described earlier.
+3. Review Notes, Follow Hyperlinks To Review Original Material  by
+   opening the notes file in /org-mode/.
+
+
+
+* Conclusion: Looking Back, Looking Forward 
+
+  1. This describes a flexible workflow that is built out of multiple
+    small components.
+  2. Illustrating various   workflows as above outlines the space
+    of possible solutions.
+  3. Keeping the notes in /org-mode/ ensures that the notes are
+     long-lived, since /org-mode/ files are essentially plain-text
+     with an easy to parse syntax for parsing the underlying structure
+     if needed to implement future extensions.
+
+
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:nil todo:t |:t
+#+title: Learn Smarter By Taking Rich, Hypertext Notes
+#+date: <2022-10-14 Fri>
+#+author: T.V Raman
+#+email: raman@google.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 29.0.50 (Org mode 9.5.5)
+#+cite_export:

@@ -8,29 +8,29 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; 
+;;
 ;;  $Revision: 4347 $ |
 ;; Location undetermined
-;; 
+;;
 
 ;;}}}
 ;;{{{  Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
-;; 
+;;
 ;; This file is not part of GNU Emacs, but the same permissions apply.
-;; 
+;;
 ;; GNU Emacs is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
@@ -46,7 +46,7 @@
 ;;  Org allows you to keep organized notes and todo lists.
 ;; Homepage: http://www.astro.uva.nl/~dominik/Tools/org/
 ;; or http://orgmode.org/
-;; 
+;;
 ;;; Code:
 
 ;;}}}
@@ -55,6 +55,7 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
+(require 'emacspeak-amark)
 (require 'org "org" 'no-error)
 (require 'org-table "org-table" 'no-error)
 (defvar org-ans2 nil)
@@ -144,7 +145,7 @@
       (emacspeak-speak-region start end))))
 
 (cl-loop
- for f in 
+ for f in
  '(org-next-item org-previous-item)
  do
  (eval
@@ -178,6 +179,8 @@
   `(defadvice ,f(after emacspeak pre act comp)
      "Speak."
      (when (ems-interactive-p)
+                                        ; to help voice-lock
+       (org-mode) ; fixme:
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'paragraph)))))
 
@@ -292,10 +295,10 @@
     ad-do-it
     (if (> (point) prior)
         (tts-with-punctuations
-         'all
-         (if (> (length (emacspeak-get-minibuffer-contents)) 0)
-             (dtk-speak (emacspeak-get-minibuffer-contents))
-           (emacspeak-speak-line)))
+            'all
+          (if (> (length (emacspeak-get-minibuffer-contents)) 0)
+              (dtk-speak (emacspeak-get-minibuffer-contents))
+            (emacspeak-speak-line)))
       (emacspeak-speak-completions-if-available))
     ad-return-value))
 
@@ -478,8 +481,7 @@
 
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
-  (cl-declare (special org-mode-map
-                       org-link-parameters))
+  (cl-declare (special org-mode-map org-link-parameters))
   (emacspeak-org-update-keys)
   (define-key org-mode-map (ems-kbd "C-o e") 'tvr-org-enumerate)
   (define-key org-mode-map (ems-kbd "C-o i") 'tvr-org-itemize)
@@ -796,14 +798,94 @@ arg just opens the file"
     (emacspeak-auditory-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
-
-
 ;;}}}
 ;;{{{Amark:
+
 (org-link-set-parameters
  "amark"
- :follow #'org-amark-open
+ :follow #'org-amark-follow-link
  :store #'org-amark-store-link)
+
+(defun org-amark-store-link ()
+  "Store a link to a AMark.
+Is enabled in the AMark Browser and M-Player Interaction buffers."
+  (when-let
+      ((m (memq major-mode '(emacspeak-m-player-mode emacspeak-amark-mode)))
+       (amark
+        (if  (button-at (point))
+            (button-get (button-at (point)) 'mark)
+          (call-interactively #'emacspeak-amark-find)))
+       (link
+        (concat
+         "amark:" (emacspeak-amark-path amark)
+         "#" (emacspeak-amark-position amark))))
+    (org-link-store-props
+     :type "amark" :link link
+     :description (emacspeak-amark-name amark) )
+    link))
+
+(defun org-amark-follow-link (name)
+  "Follow an AMark link."
+  (when-let
+      ((match (string-match "\\(.*\\)#\\(.*\\)" name))
+       (filename (match-string 1 name))
+       (position  (match-string 2 name)))
+    (message "play: %s at %s" filename position)
+    (emacspeak-amark-play
+     (make-emacspeak-amark :path filename  :position position))))
+
+;;}}}
+;;{{{EWW Marks:
+
+(org-link-set-parameters
+ "ebook"
+ :follow #'emacspeak-eww-open-mark
+ :store #'org-ebook-store-link)
+
+(defun org-ebook-store-link ()
+  "Store a link to an EWW mark from an EBook. "
+  (when-let
+      ((m (eq major-mode 'emacspeak-eww-marks-mode))
+       (b (button-at (point)))
+       (desc  (buffer-substring (button-start b) (button-end b)))
+       (link
+        (concat
+         "ebook:" (button-label b))))
+    (org-link-store-props
+     :type "ebook" :link link :description desc )
+    link))
+
+;;}}}
+;;{{{e-media:
+
+(defsubst org--ems-yt-p (url)
+  "Predicate to check for YT urls."
+  (string-match
+   (format
+    "^%s"
+    (regexp-opt
+     '("https://www.youtube.com/"
+       "https://youtube.com/"
+       "https://youtu.be/"
+       "https://yewtu.be/"
+       "http://www.youtube.com/"
+       "http://youtube.com/"
+       "http://youtu.be/"
+       "http://yewtu.be/")))
+   url))
+
+(org-link-set-parameters
+ "e-media"        ; stored from m-player or mtp
+ :follow #'org-e-media-follow-url)
+
+(declare-function
+ emacspeak-eww-play-media-at-point "emacspeak-eww" (&optional playlist-p))
+
+(defun org-e-media-follow-url (url)
+  "Handle e-media URL, either mtv or mplayer based on URL."
+  (cond
+   ((org--ems-yt-p url) (emacspeak-mpv-play-url url))
+   (t (emacspeak-eww-play-media-at-point url))))
 
 ;;}}}
 (provide 'emacspeak-org)

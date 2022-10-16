@@ -53,7 +53,28 @@
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'mpv "mpv" 'no-error))
+(require 'emacspeak-google)
+(eval-when-compile (require 'mpv "mpv" 'no-error)
+                   (require 'url-parse))
+
+;;}}}
+;;{{{Helper: yt-url->time-offset:
+
+(defsubst ems--yt-get-time (url)
+  "Get time offset if present from YT URL."
+  (let ((u (url-generic-parse-url url)))
+    (cadr
+     (assoc
+      "t"
+      (mapcar
+       #'(lambda (s) (split-string s "="))
+       (split-string (cdr (url-path-and-query u)) "&"))))))
+
+(defsubst ems--yt-set-time (url offset)
+  "Return YT URL after updating   time offset in   URL."
+  (cond
+   ((null (ems--yt-get-time url)) (format "%s&t=%s" url offset))
+   (t (replace-regexp-in-string "t=[0-9]+" (format "t=%s" offset) url))))
 
 ;;}}}
 ;;{{{ Interactive Commands:
@@ -68,7 +89,7 @@
 (cl-loop
  for f in 
  '(
-   mpv-kill mpv-pause mpv-play
+    mpv-pause mpv-play
    mpv-playlist-next mpv-playlist-prev
    mpv-revert-seek mpv-seek mpv-seek-backward mpv-seek-forward
    mpv-seek-to-position-at-point
@@ -80,6 +101,21 @@
      "Icon."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'button)))))
+
+(defvar emacspeak-mpv-url nil
+  "URL being played in mpv.")
+
+(defadvice mpv-kill (before emacspeak pre act comp)
+  "Add org integration."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'button)
+    (cl-pushnew
+     `(
+       ,(format "e-media:%s"
+                (ems--yt-set-time emacspeak-mpv-url (mpv-get-playback-position)))
+       "URL")
+     org-stored-links)
+    (setq emacspeak-mpv-url nil)))
 
 (defadvice mpv-volume-increase (after emacspeak pre act comp)
   "Icon."
@@ -112,6 +148,7 @@
      for b in
      '(("SPC" mpv-pause)
        (";" emacspeak-mpv-play-url)
+       ("l" emacspeak-mpv-store-link)
        ("s" mpv-seek)
        ("n" mpv-playlist-next)
        ("p" mpv-playlist-prev)
@@ -126,20 +163,41 @@
     map)
   "MPV Keymap")
 
+
+(define-key emacspeak-keymap (ems-kbd "C-;")  emacspeak-mpv-keymap)
+(global-set-key (kbd "s-;") emacspeak-mpv-keymap)
+
 (declare-function emacspeak-eww-read-url "emacspeak-eww" nil)
+
+(defun emacspeak-mpv-store-link ()
+  "Store link at current position."
+  (interactive)
+  (cl-declare (special org-stored-links emacspeak-mpv-url))
+  (cl-pushnew
+   `(
+     ,(format "e-media:%s"
+                (ems--yt-set-time emacspeak-mpv-url (mpv-get-playback-position)))
+     "URL")
+   org-stored-links)
+  (message "Stored link to current play position."))
 
 ;;;###autoload
 (defun emacspeak-mpv-play-url (url &optional left-channel)
   "Play URL using mpv;  Prefix arg plays on left channel."
   (interactive
    (list (emacspeak-eww-read-url) current-prefix-arg ))
+  (cl-declare (special emacspeak-mpv-url))
+  (when
+      (and url
+           (stringp url)
+           (string-prefix-p (emacspeak-google-result-url-prefix) url))
+    (setq url  (emacspeak-google-canonicalize-result-url url)))
+  (setq emacspeak-mpv-url url)
   (if left-channel
       (with-environment-variables (("PULSE_SINK" "tts_left"))
         (mpv-play-url url))
     (mpv-play-url url)))
 
-(define-key emacspeak-keymap (ems-kbd "C-;")  emacspeak-mpv-keymap)
-(global-set-key (kbd "s-;") emacspeak-mpv-keymap)
 ;;}}}
 ;;{{{repeatable:
 

@@ -14,6 +14,10 @@ Author: T. V. Raman <tv.raman.tv@gmail.com>
 
 
 * Emacspeak 57 --- Emacspeak 57 User Visible Changes
+** Learn Smarter By Taking Rich, Hypertext Notes
+
+Integrates Audio Marks, E-Bookmarks and friends into  a note-taking
+workflow --- see [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][blog article]].
 
 ** MPV
 
@@ -47,6 +51,13 @@ alternative to xbacklight.el
 ** Emacspeak Speciality Browsers
 
 Interactive browsers for EWW Marks,AMarks,  Media History.
+
+* Org-Mode Enhancements 
+
+Module ~emacspeak-org~ now integrates ~AMark~ support into org-mode;
+users can now enhance notes taken in org-mode with hyperlinks to
+AMarks that point to the relevant audio content when listening to
+audio books etc.
 
 ** Speech-Enable ~journalctl-mode~
 

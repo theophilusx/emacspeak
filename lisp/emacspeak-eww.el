@@ -235,6 +235,8 @@
 ;; @item ;
 ;; @command{emacspeak-eww-play-media-at-point}
 ;; Play media URL under point using @code{emacs-m-player}.
+;; Handles URL fragment as time-stamp where we resume; use @kbd{J} in
+;; M-Player to jump to that offset.
 ;; @item U
 ;; @command{emacspeak-eww-curl-play-media-at-point}
 ;; Play media url under point by first downloading the URL using
@@ -472,7 +474,7 @@
 
 ;; Return URL under point or URL read from minibuffer.
 ;;;###autoload
-(defun emacspeak-eww-read-url ()
+(defsubst emacspeak-eww-read-url ()
   (or
    (shr-url-at-point nil)
    (read-string "URL:" (browse-url-url-at-point))))
@@ -677,20 +679,27 @@ Safari/537.36"
 
 (defun emacspeak-eww-play-media-at-point (&optional  playlist-p)
   "Play media url under point.
-Optional interactive prefix arg `playlist-p' treats
- link as a playlist.  A second interactive prefix arg adds
- mplayer option -allow-dangerous-playlist-parsing"
+Interprets url-fragment identifier #nnn as time-offset in
+seconds.  Use command `emacspeak-m-player-jump-action' bound to
+'J' in m-player interaction to move to that offset.  Optional
+interactive prefix arg `playlist-p' treats link as a playlist.  A
+second interactive prefix arg adds mplayer option
+-allow-dangerous-playlist-parsing"
   (interactive "P")
-  (cl-declare (special emacspeak-m-player-media-history
-                       emacspeak-eww-url-at-point))
+  (cl-declare (special
+               emacspeak-m-player-media-history 
+               emacspeak-eww-url-at-point))
   (let ((url
-         (or (funcall emacspeak-eww-url-at-point)
-             (browse-url-url-at-point))))
+             (browse-url-url-at-point)))
     (cl-assert (stringp url) t "No URL under point." )
-    (message "Playing media  URL under point")
     (kill-new url)
-    (cl-pushnew  url emacspeak-m-player-media-history :test #'string=)
-    (emacspeak-m-player  url  playlist-p)))
+    (cl-pushnew                         ; strip #target
+     (cl-first (split-string url "#"))
+     emacspeak-m-player-media-history :test #'string=)
+    (message "%s Playing url under point"
+             (if (string-match "#" url)
+                 "Press J to resume where you left off"))
+    (emacspeak-m-player url playlist-p)))
 
 (defun emacspeak-eww-curl-play-media-at-point ()
   "Use Curl to pull a URL, then pass
@@ -870,7 +879,10 @@ Retain previously set punctuations  mode."
     (cond
      (emacspeak-eww-post-process-hook
       (emacspeak-eww-run-post-process-hook))
-     (t (emacspeak-speak-mode-line)))))
+     (t (emacspeak-speak-mode-line)))
+    ;; Experimental: cleanup eww-data
+    (plist-put eww-data :source nil)
+    (plist-put eww-data :dom nil)))
 
 (add-hook 'eww-after-render-hook 'emacspeak-eww-after-render-hook)
 
@@ -1979,7 +1991,9 @@ The %s is automatically spoken if there is no user activity."
   "Stores   EWW-marks.")
 
 (defun emacspeak-eww-add-mark (name)
-  "Interactively add a mark with name title+`name' at current position."
+  "Interactively add a mark with name title+`name' at current
+  position.  Also store it as an org link for later insertion
+into `notes'.`m"
   (interactive
    (list
     (concat
@@ -1987,8 +2001,10 @@ The %s is automatically spoken if there is no user activity."
      (let ((input (read-from-minibuffer "Mark: " nil nil nil nil "current")))
        (if (zerop (length input))
            "current" input)))))
-  (cl-declare (special emacspeak-eww-marks major-mode
-                       emacspeak-epub-this-epub emacspeak-bookshare-this-book))
+  (cl-declare (special
+               emacspeak-bookshare-directory
+               org-stored-links emacspeak-eww-marks 
+               emacspeak-epub-this-epub emacspeak-bookshare-this-book))
   (let ((bm
          (make-emacspeak-eww-mark
           :name name
@@ -1996,11 +2012,11 @@ The %s is automatically spoken if there is no user activity."
           (cond
            ((bound-and-true-p emacspeak-epub-this-epub) 'epub)
            ((bound-and-true-p emacspeak-bookshare-this-book)'daisy)
-           ((and (string-match "^file:///" (eww-current-url))
+           ((and (eww-current-url)
+                 (string-match "^file:///" (eww-current-url))
                  (not (string-match "^file:///tmp" (eww-current-url))))
             'local-file)
-           (t
-            (error "EWW marks only work in  EPub  and Bookshare buffers.")))
+           (t (error "EWW marks only work in  EPub  and Bookshare buffers.")))
           :book
           (or
            (bound-and-true-p emacspeak-bookshare-this-book)
@@ -2009,6 +2025,7 @@ The %s is automatically spoken if there is no user activity."
           :point (point))))
     (puthash  name bm emacspeak-eww-marks)
     (emacspeak-eww-marks-save)
+    (cl-pushnew `(,(concat "ebook:" name) ,name) org-stored-links)
     (emacspeak-auditory-icon 'mark-object)
     (message "Created  EWW mark %s." name)))
 
@@ -2097,6 +2114,7 @@ arg `delete', delete that mark instead."
            'emacspeak-eww-post-process-hook
            #'(lambda ()
                (goto-char point)
+               ;(eww-mode)
                (delete-other-windows)
                (emacspeak-speak-windowful)
                (emacspeak-auditory-icon 'large-movement))
@@ -2119,6 +2137,19 @@ arg `delete', delete that mark instead."
   (run-at-time 3600 3600  #'emacspeak-eww-marks-save)
   "Idle timer for saving EWW marks.")
 
+
+
+(define-derived-mode emacspeak-eww-marks-mode special-mode
+  "EWW Marks  Browser"
+  "A light-weight mode for the `*Emacspeak EWW Marks Browser*'.
+ 1. Enables org integration via command
+ `org-store-link' bound to \\[org-store-link].
+ 2. Stored links can be inserted into org files in the same directory
+via command `org-insert-link' bound to \\[org-insert-link]."
+  (setq header-line-format "EWW Marks Browser")
+  t)
+
+;;;###autoload
 (defun emacspeak-eww-marks-browse ()
   "List EWW Marks as actionable buttons."
   (interactive)
@@ -2126,7 +2157,7 @@ arg `delete', delete that mark instead."
   (let ((buffer (get-buffer-create "EWW Marks"))
         (inhibit-read-only t))
     (with-current-buffer buffer
-      (special-mode)
+      (emacspeak-eww-marks-mode)
       (erase-buffer)
       (setq buffer-undo-list t)
       (cl-loop
