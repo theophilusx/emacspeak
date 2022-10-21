@@ -658,6 +658,7 @@ Safari/537.36"
      ("[" emacspeak-eww-previous-p)
      ("DEL" emacspeak-eww-restore)
      ("]" emacspeak-eww-next-p)
+     (";" emacspeak-eww-cleanup-eww-data)
      ("b" shr-previous-link)
      ("e" emacspeak-we-xsl-map)
      ("f" shr-next-link)
@@ -879,10 +880,7 @@ Retain previously set punctuations  mode."
     (cond
      (emacspeak-eww-post-process-hook
       (emacspeak-eww-run-post-process-hook))
-     (t (emacspeak-speak-mode-line)))
-    ;; Experimental: cleanup eww-data
-    (plist-put eww-data :source nil)
-    (plist-put eww-data :dom nil)))
+     (t (emacspeak-speak-mode-line)))))
 
 (add-hook 'eww-after-render-hook 'emacspeak-eww-after-render-hook)
 
@@ -2523,6 +2521,20 @@ With interactive prefix arg, move to the start of the table."
 ;;{{{Repeat Support:
 (put 'emacspeak-eww-play-media-at-point
      'repeat-map  'emacspeak-m-player-mode-map)
+;;}}}
+;;{{{Command: eww-cleanup:
+;;; Command to cleanup dom and source for large web pages: e.g. ebooks
+
+(defun emacspeak-eww-cleanup-eww-data ()
+  "Clean up DOM and Source from eww-data.
+Use for large EBook buffers."
+  (interactive)
+  (cl-declare (special eww-data))
+  (plist-put eww-data :source nil)
+  (plist-put eww-data :dom nil)
+  (when  (called-interactively-p 'interactive)
+    (emacspeak-auditory-icon 'task-done)))
+
 ;;}}}
 (provide 'emacspeak-eww)
 ;;{{{ end of file

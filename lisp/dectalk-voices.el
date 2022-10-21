@@ -77,12 +77,20 @@
   (dtk-select-server "dtk-exp")
   (dtk-initialize))
 
+;;;###autoload
+(defun dectalk-soft ()
+  "Software Dectalk TTS."
+  (interactive)
+  (dectalk-configure-tts)
+  (ems--fastload "voice-defs")
+  (dtk-select-server "dtk-soft")
+  (dtk-initialize)
+  (dtk-set-rate dectalk-default-speech-rate 'global))
+
 ;;}}}
 ;;{{{ Forward declarations:
 
 ;; From dtk-speak.el:
-
-(defvar tts-default-speech-rate)
 
 (defvar dtk-speech-rate-step)
 (defvar dtk-speech-rate-base)

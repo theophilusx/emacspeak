@@ -932,19 +932,16 @@ this pattern if previously added.    "
 Interactive PREFIX arg means set   the global default value, and then set the
 current local  value to the result."
   (interactive
-   (list
-    (read-from-minibuffer "Enter new rate: ")
+   (list (read-from-minibuffer "Enter new rate: ")
     current-prefix-arg))
   (cl-declare (special dtk-speech-rate dtk-speaker-process
-                       tts-default-speech-rate
                        dtk-program dtk-speak-server-initialized))
   (when dtk-speak-server-initialized
     (cond
      (prefix
       (unless (eq dtk-speaker-process (dtk-notify-process))
         (let ((dtk-speaker-process (dtk-notify-process)))
-          (dtk-set-rate rate)))
-      (setq tts-default-speech-rate rate)
+          (dtk-set-rate rate prefix)))
       (setq-default dtk-speech-rate rate)
       (setq dtk-speech-rate rate))
      (t (setq dtk-speech-rate rate)))
@@ -969,16 +966,14 @@ rate = dtk-speech-rate-base + dtk-speech-rate-step * level."
            (error nil))))
     (or (numberp level)
         (setq level
-              (read-minibuffer "Enter level between 1 and 9 to set
-speech rate:")))
+              (read-minibuffer "Enter level between 1 and 9:")))
     (cond
      ((or (not (numberp level))
           (< level 0)
           (> level 9))
       (error "Invalid level %s" level))
      (t (dtk-set-rate
-         (+ dtk-speech-rate-base
-            (* dtk-speech-rate-step level))
+         (+ dtk-speech-rate-base (* dtk-speech-rate-step level))
          prefix)
         (when (called-interactively-p 'interactive)
           (message "Set speech rate to level %s %s"
@@ -1489,7 +1484,8 @@ Set by \\[dtk-set-punctuations].")
   "Checks if this tts-engine can support multiple streams."
   (cl-declare (special tts-notification-device))
   (and
-   (member tts-engine '("outloud"  "cloud-outloud" "espeak"  "cloud-espeak"))
+   (member tts-engine '("outloud"  "cloud-outloud" "espeak"
+                        "cloud-espeak" "dtk-soft" "cloud-dtk-soft"))
    (not (string= tts-notification-device "default"))))
 
 (defun dtk-cloud ()
