@@ -1972,9 +1972,9 @@ Designed to work with ALSA and Pulseaudio."
     (?­ . "-")                          ; soft-hyphen
     (?‘ . "`")                          ; LEFT SINGLE QUOTATION MARK
     (?’ . "'")                          ; right SINGLE QUOTATION MARK
-    (?‐ . "-")                          ; hyphenm
-    (?– . " -- ")                       ; n-dash
-    (?— . " --- ")                      ; m-dash
+    (?‐ . " dash ")                          ; hyphenm
+    (?– . " dash dash  ")                       ; n-dash
+    (?— . " em dash  ")                      ; m-dash
     (?  . " ")                          ; hair space
     (?﻿ . " ")                           ; zero-width  no-break space
     (?‌ . "") ; zero width non-joiner
