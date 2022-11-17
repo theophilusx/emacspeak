@@ -61,7 +61,6 @@
 ;;}}}
 ;;{{{
 (declare-function 'vertico--candidate "vertico.el" (&optional hl))
-(declare-function 'vertico--allow-prompt-p "vertico.el" ())
 ;;}}}
 ;;{{{ Advice interactive commands
 
@@ -75,7 +74,7 @@
 
 (defadvice vertico--exhibit (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special vertico--index vertico--base))
+  (cl-declare (special vertico--index vertico--base vertico--allow-prompt))
   (let ((new-cand
          (substring (vertico--candidate)
                     (if (>= vertico--index 0)
@@ -93,7 +92,7 @@
                 (and (not (equal vertico--index -1))
                      (equal emacspeak-vertico--prev-index -1)))
         (push "candidate" to-speak)))
-    (when (and (not (vertico--allow-prompt-p))
+    (when (and (not vertico--allow-prompt)
                (equal emacspeak-vertico--prev-candidate nil))
       (push "first candidate" to-speak))
     (when to-speak
