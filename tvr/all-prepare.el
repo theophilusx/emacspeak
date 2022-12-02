@@ -170,7 +170,9 @@ This moves them into the Spam folder."
   (define-key smartparens-mode-map "\M-e" 'sp-up-sexp)
   (define-key smartparens-mode-map "\M-k" 'sp-kill-sexp)
   (define-key smartparens-mode-map "\C-\M-f" 'forward-sexp)
-  (define-key smartparens-mode-map "\C-\M-b" 'backward-sexp))
+  (define-key smartparens-mode-map "\C-\M-b" 'backward-sexp)
+  (diminish 'smartparens-mode "" )
+  )
 (define-key emacs-lisp-mode-map (ems-kbd "C-c e") 'macrostep-expand)
 (defun conditionally-enable-lispy ()
   (when (memq this-command '(eval-expression emacspeak-wizards-show-eval-result))
@@ -188,10 +190,13 @@ This moves them into the Spam folder."
   (define-key lispy-mode-map "\M-\C-d" 'lispy-delete)
   (define-key lispy-mode-map "\M-d" 'kill-word)
   (define-key lispy-mode-map "a" 'special-lispy-beginning-of-defun)
-;; lispy in ielm
+  ;; lispy in ielm
   (add-hook 'ielm-mode-hook 'lispy-mode)
-;;  Lispy for eval-expression:
-  (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy))
+  ;;  Lispy for eval-expression:
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
+  (diminish 'lispy-mode "")
+  (diminish 'lispy-other-mode "")
+  (diminish 'lispy-goto-mode ""))
 ;;; slime-autoloads is broken alas:
 (load-library "slime")
 (with-eval-after-load "slime"
@@ -217,13 +222,17 @@ This moves them into the Spam folder."
   (require 'ol-eww)
   (require 'ox-md)
   (define-key org-mode-map (ems-kbd "C-,") 'emacspeak-alt-keymap)
-  (define-key org-mode-map (ems-kbd "C-c m")
-              'org-md-export-as-markdown)
-  (define-key global-map "\C-ci" 'org-insert-link)
-  (define-key global-map "\C-cl" 'org-store-link)
-  (define-key global-map "\C-cb" 'org-switchb)
-  (define-key global-map  "\C-cc" 'org-capture)
+  (define-key org-mode-map (ems-kbd "C-'") 'emacspeak-multi-keymap)
+  (define-key org-mode-map (ems-kbd "C-' n") #'org-next-link)
+  (define-key org-mode-map (ems-kbd "C-' p") #'org-previous-link)
+  (define-key org-mode-map (ems-kbd "C-c m") 'org-md-export-as-markdown)
+  (define-key global-map (ems-kbd "C-c i") 'org-insert-link)
+  (define-key global-map (ems-kbd "C-c l") 'org-store-link)
+  (define-key global-map (ems-kbd "C-c b") 'org-switchb)
+  (define-key global-map  (ems-kbd "C-c c") 'org-capture)
   )
+(with-eval-after-load "orgalist"
+  (diminish 'orgalist-mode ""))
 ;;; Jump to Emacs Git Logs At HEAD:
 (defalias 'tvr-km-emacs-log
    (kmacro "C-c 3 C-; d F u C-; d l l C-e d q M-< C-e C-q C-e d q n"))

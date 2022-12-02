@@ -163,6 +163,17 @@ the match  being passed to the func which returns  the new pronunciation."
              (buffer-name))))
 
 ;;}}}
+;;{{{mode hierarcy per define-derived-mode:
+
+(defun ems--mode-derive-chain (mode)
+  "Return mode derivation chain as a list."
+  (let ((parents nil))
+    (while mode
+           (cl-pushnew mode parents)
+           (setq mode (get mode  'derived-mode-parent )))
+    parents))
+
+;;}}}
 ;;{{{ setting up inheritance relations
 
 ;; child inherits parents dictionary
@@ -193,45 +204,45 @@ the match  being passed to the func which returns  the new pronunciation."
          (filename (buffer-file-name buffer))
          (directory (and filename (file-name-directory filename)))
          (mode
-          (save-current-buffer
+           (save-current-buffer
             (set-buffer buffer)
             major-mode))
          (mode-supers (emacspeak-pronounce-get-supers mode))
+         (mode-parents (ems--mode-derive-chain mode))
          (file-alist
-          (and filename (emacspeak-pronounce-get-dictionary filename)))
+           (and filename (emacspeak-pronounce-get-dictionary filename)))
          (dir-alist
-          (and directory (emacspeak-pronounce-get-dictionary directory)))
+           (and directory (emacspeak-pronounce-get-dictionary directory)))
          (mode-alist (emacspeak-pronounce-get-dictionary mode))
-         (super-alist nil))
-    (cl-loop for super in mode-supers
-             do
-             (setq super-alist (emacspeak-pronounce-get-dictionary super))
-             (cl-loop for element in super-alist
-                      do
-                      (puthash (car element) (cdr element) table)))
-    (cl-loop for element in mode-alist
-             do
-             (puthash (car element) (cdr element) table))
+         (super-alist nil)
+         (parent-alist nil))
+    (cl-loop
+     for super in mode-supers do
+     (setq super-alist (emacspeak-pronounce-get-dictionary super))
+     (cl-loop for element in super-alist do
+              (puthash (car element) (cdr element) table)))
+    (cl-loop
+     for parent in mode-parents do
+     (setq parent-alist (emacspeak-pronounce-get-dictionary parent))
+     (cl-loop for element in parent-alist do
+              (puthash (car element) (cdr element) table)))
+    (cl-loop
+     for element in mode-alist do
+     (puthash (car element) (cdr element) table))
     (cl-loop for element in dir-alist
              do
              (puthash (car element) (cdr element) table))
-    (cl-loop for element in file-alist
-             do
-             (puthash (car element) (cdr element) table))
+    (cl-loop
+     for element in file-alist do
+     (puthash (car element) (cdr element) table))
     table))
 
 ;;}}}
 ;;{{{ defining some inheritance relations:
 
-;; gnus server mode inherits from gnus group mode
-
-(emacspeak-pronounce-add-super 'gnus-group-mode
-                               'gnus-server-mode)
-
 ;; c++ mode inherits from C mode
 (emacspeak-pronounce-add-super 'c-mode 'c++-mode)
-;; shell inherits from comint:
-(emacspeak-pronounce-add-super 'comint-mode 'shell-mode)
+
 ;; latex-mode and latex2e-mode inherit from plain-tex-mode
 
 (emacspeak-pronounce-add-super 'plain-tex-mode 'latex-mode)

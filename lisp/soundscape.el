@@ -254,9 +254,12 @@ Default is to return NullAgent if name not found."
 (defun soundscape-current ()
   "Return names of currently running scapes."
   (cl-declare (special soundscape--scapes))
-  (concat
-   (mapconcat #'soundscape-lookup-scape soundscape--scapes " ")
-   " "))
+  (propertize
+   (concat
+    " "
+    (mapconcat #'soundscape-lookup-scape soundscape--scapes ", ")
+    " ")
+   'personality 'voice-smoothen))
 
 ;;}}}
 ;;{{{ Modes->SoundScapes:
@@ -413,10 +416,12 @@ Optional interactive prefix arg `prompt-mode' prompts for the mode."
   "Initialize Soundscape."
   (soundscape-catalog)
   (soundscape-listener)
-  (unless (member '(soundscape--auto (:eval (soundscape-current)))
-                  minor-mode-alist)
-    (push   '(soundscape--auto (:eval (soundscape-current)))
-            minor-mode-alist)))
+  (unless
+      (member '(soundscape--auto (:eval (soundscape-current))) minor-mode-alist)
+    (add-to-list
+     'minor-mode-alist
+     '(soundscape--auto (:eval (soundscape-current)))
+     'at-end)))
 
 ;;;###autoload
 (defun soundscape-listener  (&optional restart)

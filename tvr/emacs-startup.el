@@ -56,8 +56,7 @@
 
 (when (file-exists-p tvr-site-lib)
   (push tvr-site-lib load-path)
-  (push (expand-file-name "vm/lisp/" tvr-site-lib) load-path)
-  (push (expand-file-name "eaf/" tvr-site-lib) load-path))
+  (push (expand-file-name "vm/lisp/" tvr-site-lib) load-path))
 
 (defvar tvr-libs
   "all-prepare"
@@ -125,6 +124,19 @@ Produce timing information as the last step."
    (define-key shell-mode-map (ems-kbd (cl-first b)) (cl-second b))))
 
 ;;}}}
+;;{{{Node/NVM Setup:
+(defun tvr-nvm-setup ()
+  "Set up NVM/NPM."
+  (when (require 'nvm)
+    (let ((v (car (sort (mapcar #'car (nvm--installed-versions)) #'string>))))
+      (nvm-use v)
+      (executable-find "node"))))
+
+(defvar tvr-npm-node
+  (tvr-nvm-setup)
+  "Find the right Node executable.")
+
+;;}}}
 ;;{{{Functions: emacs-startup-hook, after-init-hook, tvr-customize
 
 (defun tvr-emacs-startup-hook ()
@@ -146,7 +158,10 @@ startup sound."
 Use Custom to customize where possible. "
   (cl-declare (special custom-file
                        python-mode-hook outline-mode-prefix-map
+                       emacspeak-directory
                        outline-minor-mode-prefix))
+  (load-library "aster")
+  (load-library "diminish")
   (add-hook 'python-mode-hook
             #'(lambda nil
                 (elpy-enable)))
@@ -156,7 +171,7 @@ Use Custom to customize where possible. "
   (mapc
    #'(lambda (f) (put f 'disabled nil))
    '(list-threads narrow-to-page list-timers upcase-region
-                  downcase-region  narrow-to-region eval-expression ))
+     downcase-region  narrow-to-region eval-expression ))
   (prefer-coding-system 'utf-8-emacs)
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
   (cl-loop ;;; global key-bindings
@@ -199,7 +214,12 @@ Use Custom to customize where possible. "
   (setq custom-file (expand-file-name "~/.customize-emacs"))
   (load-theme 'modus-vivendi t)
   (require 'dired-x)
-  (tvr-time-load (when (file-exists-p custom-file)  (load custom-file))))
+  (tvr-time-load (when (file-exists-p custom-file)  (load
+                                                     custom-file)))
+  (diminish 'voice-lock-mode "")
+  (diminish 'auto-fill-function "")
+  (diminish 'abbrev-mode "")
+  (diminish 'auto-correct-mode ""))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
@@ -210,8 +230,9 @@ Use Custom to customize where possible. "
    (load "emacspeak-mpv")
   (tvr-customize) ;;; customizations
   (with-eval-after-load
-      'yasnippet
-    (yas-reload-all))
+    'yasnippet
+    (yas-reload-all)
+    (diminish 'yas-minor-mode ""))
   (load "emacspeak-muggles")
   (emacspeak-wizards-project-shells-initialize)
   (when emacspeak-soundscapes (soundscape-toggle)))
@@ -237,14 +258,16 @@ Use Custom to customize where possible. "
   (cl-declare (special dtk-caps))
   (local-set-key "\C-m" 'newline-and-indent)
   (company-mode)
+  (diminish 'company-mode "")
   (hs-minor-mode)
+  (diminish 'hs-minor-mode "")
   (auto-fill-mode)
   (cond
-   ((memq major-mode '(emacs-lisp-mode lisp-mode lisp-interaction-mode))
-    (when dtk-caps
-      (setq dtk-caps nil))
-    (lispy-mode ))
-   (t (smartparens-mode)))
+    ((memq major-mode '(emacs-lisp-mode lisp-mode lisp-interaction-mode))
+     (when dtk-caps
+       (setq dtk-caps nil))
+     (lispy-mode ))
+    (t (smartparens-mode)))
   (yas-minor-mode)
   (abbrev-mode))
 
@@ -259,12 +282,13 @@ configuration happens via the after-init-hook. "
   (setenv "PULSE_SINK" "binaural")
   (unless (featurep 'emacspeak)
     (tvr-time-load ;;; load emacspeak:
-        (load ;; setenv EMACSPEAK_DIR if you want to load a different version
-         (expand-file-name
-          "lisp/emacspeak-setup"
-          (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
+     (load ;; setenv EMACSPEAK_DIR if you want to load a different version
+      (expand-file-name
+       "lisp/emacspeak-setup"
+       (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
   (cl-pushnew (expand-file-name "tvr/" emacspeak-directory) load-path
               :test #'string-equal)
+  (push (expand-file-name "aster-math/ui" emacspeak-directory) load-path)
   (add-hook 'after-init-hook #'tvr-after-init)
   (add-hook 'emacs-startup-hook #'tvr-emacs-startup-hook))
 

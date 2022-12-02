@@ -15,7 +15,10 @@
   (define-key lispy-mode-map "\M-\C-d" 'lispy-delete)
   (define-key lispy-mode-map "\M-d" 'kill-word)
   (define-key lispy-mode-map "a" 'special-lispy-beginning-of-defun)
-;; lispy in ielm
+  ;; lispy in ielm
   (add-hook 'ielm-mode-hook 'lispy-mode)
-;;  Lispy for eval-expression:
-  (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy))
+  ;;  Lispy for eval-expression:
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-lispy)
+  (diminish 'lispy-mode "")
+  (diminish 'lispy-other-mode "")
+  (diminish 'lispy-goto-mode ""))
