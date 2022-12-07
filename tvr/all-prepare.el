@@ -201,11 +201,12 @@ This moves them into the Spam folder."
 (load-library "slime")
 (with-eval-after-load "slime"
   (add-hook 'slime-repl-mode-hook 'lispy-mode)
+  (define-key slime-prefix-map "d" slime-doc-map)
   (setq inferior-lisp-program (executable-find "sbcl"))
   (setq common-lisp-hyperspec-root
         (if (file-exists-p "/usr/share/doc/hyperspec/")
             "file:///usr/share/doc/hyperspec/"
-          "http://www.lispworks.com/reference/HyperSpec/"))
+            "http://www.lispworks.com/reference/HyperSpec/"))
   (global-set-key (ems-kbd "C-c s") 'slime-selector)
   (setq slime-contribs '(slime-fancy slime-hyperdoc slime-quicklisp slime-asdf))
   (slime-setup)
@@ -214,7 +215,7 @@ This moves them into the Spam folder."
   (setq
    slime-lisp-implementations
    `((sbcl ("sbcl" "--core"
-            ,(expand-file-name "sbcl.core-for-slime" user-emacs-directory))))))
+                   ,(expand-file-name "sbcl.core-for-slime" user-emacs-directory))))))
 ;;;$Id: org-prepare.el 6727 2011-01-14 23:22:20Z tv.raman.tv $  -*- lexical-binding: nil; -*-
 
 (with-eval-after-load "org"
@@ -222,10 +223,14 @@ This moves them into the Spam folder."
   (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
   (require 'ol-eww)
   (require 'ox-md)
-  (define-key org-mode-map (ems-kbd "C-,") 'emacspeak-alt-keymap)
-  (define-key org-mode-map (ems-kbd "C-'") 'emacspeak-multi-keymap)
+  
+
+  (define-prefix-command 'org-multi-keymap)
+  (define-key org-mode-map (ems-kbd "C-'") 'org-multi-keymap)
   (define-key org-mode-map (ems-kbd "C-' n") #'org-next-link)
+  (define-key org-mode-map (ems-kbd "C-' '") #'org-open-at-point)
   (define-key org-mode-map (ems-kbd "C-' p") #'org-previous-link)
+  (define-key org-mode-map (ems-kbd "C-,") 'emacspeak-alt-keymap)
   (define-key org-mode-map (ems-kbd "C-c m") 'org-md-export-as-markdown)
   (define-key global-map (ems-kbd "C-c i") 'org-insert-link)
   (define-key global-map (ems-kbd "C-c l") 'org-store-link)

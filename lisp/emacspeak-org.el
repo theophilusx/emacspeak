@@ -451,7 +451,7 @@
   (cl-loop
    for k in
    '(
-     ("C-e" emacspeak-prefix-command)
+     ("C-e" emacspeak-keymap)
      ("C-j" org-insert-heading)
      ("M-<down>" org-metadown)
      ("M-<left>"  org-metaleft)
@@ -479,16 +479,17 @@
 
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
-  (cl-declare (special org-mode-map org-link-parameters))
+  (cl-declare (special org-mode-map ))
   (emacspeak-org-update-keys)
   (define-key org-mode-map (ems-kbd "C-o e") 'tvr-org-enumerate)
   (define-key org-mode-map (ems-kbd "C-o i") 'tvr-org-itemize)
   (define-key outline-minor-mode-map (ems-kbd "C-o i") 'tvr-org-itemize)
   (define-key outline-minor-mode-map (ems-kbd "C-o e") 'tvr-org-enumerate)
   (when (fboundp 'org-end-of-line)
-    (define-key org-mode-map emacspeak-prefix  'emacspeak-prefix-command)
+    (define-key org-mode-map emacspeak-prefix  'emacspeak-keymap)
     (emacspeak-setup-programming-mode)
-    (when dtk-caps (dtk-toggle-caps))))
+    (when dtk-caps (dtk-toggle-caps))
+    (emacspeak-speak-load-directory-settings)))
 
 (add-hook 'org-mode-hook #'emacspeak-org-mode-setup)
 
@@ -790,6 +791,7 @@ arg just opens the file"
 
 ;;}}}
 ;;{{{md export:
+
 (defadvice org-md-export-as-markdown (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
@@ -802,7 +804,8 @@ arg just opens the file"
 (org-link-set-parameters
  "amark"
  :follow #'org-amark-follow-link
- :store #'org-amark-store-link)
+ :store #'org-amark-store-link
+ :display 'org-link)
 
 (defun org-amark-store-link ()
   "Store a link to a AMark.
@@ -838,7 +841,8 @@ Is enabled in the AMark Browser and M-Player Interaction buffers."
 (org-link-set-parameters
  "ebook"
  :follow #'emacspeak-eww-open-mark
- :store #'org-ebook-store-link)
+ :store #'org-ebook-store-link
+ :display 'org-link)
 
 (defun org-ebook-store-link ()
   "Store a link to an EWW mark from an EBook. "
@@ -874,12 +878,12 @@ Is enabled in the AMark Browser and M-Player Interaction buffers."
 
 (org-link-set-parameters
  "e-media"        ; stored from m-player or mtp
- :follow #'org-e-media-follow-url)
+ :follow #'emacspeak-org-e-media-follow-url)
 
 (declare-function
  emacspeak-eww-play-media-at-point "emacspeak-eww" (&optional playlist-p))
 
-(defun org-e-media-follow-url (url)
+(defun emacspeak-org-e-media-follow-url (url)
   "Handle e-media URL, either mtv or mplayer based on URL."
   (cond
    ((org--ems-yt-p url) (emacspeak-mpv-play-url url))
