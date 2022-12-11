@@ -1659,32 +1659,25 @@ This is so text marked invisible is silenced.")
 (declare-function org-fold-initialize "org-fold" (ellipsis))
 (declare-function org-set-regexps-and-options "org" (&optional tags-only))
 
-(defsubst dtk-org-fold-p ()
-  "Predicate to check for org-mode special handling."
-  (and
-   (fboundp 'org-fold-initialize)
-   (boundp 'org-link-descriptive)
-   (bound-and-true-p org-fold-core-style)
-   (eq org-fold-core-style 'text-properties)))
-
-(define-derived-mode dtk-org-fold-mode outline-mode
-  "dtk-fold-org" "Org fold magic."
-  (cl-declare (special org-link-descriptive org-link--link-folding-spec))
-  (when (dtk-org-fold-p)
+(defun dtk-org-fold ()
+  "Prepare Org fold." 
+  (cl-declare (special
+               org-fold-core-style org-link-descriptive
+               org-link--link-folding-spec))
+  (when (eq org-fold-core-style 'text-properties)
+    (outline-mode)
     (org-fold-initialize "...")
-    (if org-link-descriptive
-        (org-fold-core-set-folding-spec-property
-         (car org-link--link-folding-spec) :visible nil)
-        (org-fold-core-set-folding-spec-property
-         (car org-link--link-folding-spec) :visible t))))
+    (org-fold-core-set-folding-spec-property
+     (car org-link--link-folding-spec)
+     :visible (not org-link-descriptive))))
 
 (defun dtk-speak (text)
   "Speak the TEXT string
 unless   `dtk-quiet' is set to t. "
   (cl-declare (special
+               char-property-alias-alist
                org-link-descriptive
                major-mode
-               org-fold-core-style
                dtk-yank-excluded-properties
                dtk-speaker-process dtk-stop-immediately
                tts-strip-octals
@@ -1716,7 +1709,8 @@ unless   `dtk-quiet' is set to t. "
              (emacspeak-auditory-icon 'ellipses))))
     (let (                              ;snapshot relevant state
           (orig-mode major-mode)
-          (links-desc org-link-descriptive)
+          (char-alias  char-property-alias-alist)
+          (links-desc (and (eq major-mode 'org-mode) org-link-descriptive  ))
           (inhibit-read-only t)
           (inhibit-modification-hooks t)
           (invisibility-spec buffer-invisibility-spec)
@@ -1740,10 +1734,11 @@ unless   `dtk-quiet' is set to t. "
         (erase-buffer)
         (when (eq orig-mode 'org-mode)
           (setq org-link-descriptive links-desc)
-          (dtk-org-fold-mode))
+          (dtk-org-fold))
         ;; inherit environment
         (setq                           ; mirror snapshot
          yank-excluded-properties dtk-yank-excluded-properties
+         char-property-alias-alist  char-alias
          emacspeak-pronounce-pronunciation-table pron-table
          emacspeak-pronounce-personality pron-personality
          buffer-invisibility-spec invisibility-spec

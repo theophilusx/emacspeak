@@ -142,10 +142,11 @@ proc tts_split_caps {flag} {
     set tts(split_caps) $flag
     return ""
 }
-
+# we set allcaps_beep as well for dtk-soft
 proc tts_capitalize {flag} {
     global tts 
     set tts(capitalize) $flag
+    set tts(allcaps_beep) $flag
     return ""
 }
 
@@ -211,73 +212,50 @@ proc speech_task {}  {
 #preprocess element before sending it out:
 proc clean {element} {
     global queue tts
-	set element [string trim $element]
+    set tone {[:to 440 20]}
+    set atone {[:to 1300 20]}
+    set abbrev {\y[-_[:upper:]]{3,}\y}
+    set element [string trim $element]
     if {[string match all $tts(punctuations)] } {
-        regsub -all {\#} $element \
-            { pound } element
-		regsub -all {\*} $element \
-			{ star } element
+        regsub -all {\#} $element { pound } element
+		regsub -all {\*} $element { star } element
         regsub -all  {[%&;()$+=/]} $element  { \0 }   element
-        regsub -all {\.,} $element \
-            { dot comma [_,] } element
-        regsub -all {\.\.\.} $element \
-            { dot dot dot } element
-        regsub -all {\.\.} $element \
-            { dot dot } element
-        regsub -all {([a-zA-Z])\.([a-zA-Z])} $element \
-            {\1 dot \2} element
-        regsub -all {[0-9]+} $element { & } element
+        regsub -all {\.,} $element { dot comma [_,] } element
+        regsub -all {\.\.\.} $element { dot dot dot } element
+        regsub -all {\.\.} $element { dot dot } element
+        regsub -all {([[:alpha:]])\.([[:alpha:]])} $element {\1 dot \2} element
+        regsub -all {\y[[:digit:]]+\y} $element { & } element
     } else {
- #       regsub -all {\.,} $element  {[_,]} element
-        regsub -all {([0-9a-zA-Z])([\"!;/:()=])+([0-9a-zA-z])} $element \
+        regsub -all {([[:alnum:]])([[:punct:]])+([[:alnum:]])} $element \
             {\1 \2 \3} element
-		regsub -all {([a-zA-Z])(,)+([a-zA-z])} $element \
+        regsub -all {([[:alpha:]])(,)+([[:alpha:]])} $element \
             {\1 \2 \3} element
-#        regsub -all {([a-zA-Z])(\.)([a-zA-z])} $element {\1[*]dot[*]\3} element
-        regsub -all {([a-zA-Z])(\.)([a-zA-z])} $element {\1 dot \3} element
+        regsub -all {([[:alpha:]])(\.)([:alpha:])} $element {\1 dot \3} element
         regsub -all {``} $element {[_<1>/]} element
         regsub -all {''} $element {[_<1>\\]} element
-#        regsub -all { '}  $element {[_']} element
-#        regsub -all {' }  $element {[_']} element
-#        regsub -all --  {--} $element { [_,]} element
-        regsub -all -- {-}  $element { } element 
     }
-    if {$tts(capitalize) } {
-        regsub -all {[A-Z]} $element {[_ :to 440 10]&} element
+    if {$tts(capitalize)} { #handle abbrevs
+        while {[regexp $abbrev  $element match    ]}  {
+            regsub  $match $element "[string tolower $match] $atone" element
+        }
     }
+    regsub -all {\y[aA]\y} $element {[ey]} element
     if {$tts(split_caps) } {
-        if  {$tts(allcaps_beep)} {
-            set tone {[_:to 660 10]}
-            set abbrev_tone ":to 660 10"
-        } else {
-            set tone ""
-            set abbrev_tone ""
-        }
-        set allcaps [regexp {[^a-zA-Z0-9]?([A-Z][A-Z0-9]+)[^a-zA-Z0-9]} $element full  match ]
-        while {$allcaps } {
-            if {[string length $match] <=3} {
-#                set abbrev "\[_ $abbrev_tone\]$match"
-				set abbrev $match
-#                regsub -all {[A-Z]} $abbrev {&[*]} abbrev
-				regsub -all {[A-Z]} $abbrev {& } abbrev
-                regsub -all A $abbrev {[ey]} abbrev
-				if {[string length $abbrev_tone]} {
-					set abbrev "\[_ $abbrev_tone\]$abbrev"
-				}
-                regsub $match $element  $abbrev element
-            } else {
-                regsub $match $element "$tone[string tolower $match]"  element
-            }
-            set allcaps [regexp {[^a-zA-Z0-9]([A-Z][A-Z0-9]+)[^a-zA-Z0-9]} $element full  match ]
-        }
-#        regsub -all {[A-Z]} $element {[_<5>]&} element
-		#regsub -all {[A-Z]} $element { &} element
-#        regsub -all {([^ -_A-Z])([A-Z][a-zA-Z]* )} $element {\1[_<1>]\2[,] } element
-		regsub -all {([^ -_A-Z])([A-Z][a-zA-Z]* )} $element {\1 \2 } element
-#        regsub -all {([^ -_A-Z])([A-Z])} $element {\1[_<1>]\2} element
-		regsub -all {([^ -_A-Z])([A-Z])} $element {\1 \2} element
+        set sc_prefix \
+            {[^[:alnum:]]?([[:upper:]][[:upper:][:digit:]]+)[^[:alnum:]]}
+        #separate out each splitCaps point (no-op)
+#        while {[regexp $sc_prefix $element match ] } {
+#            regsub $match $element "$tone [string tolower $match] "  element
+#        }
+        # next line would produce a tone for capitalized words.
+        regsub -all {\y[[:upper:]][[:lower:]]+\y} $element "$tone   &" element
+        regsub -all {[[:upper:]]} $element { [_<1>]&} element
+        regsub -all {([^ -_[:upper:]])([[:upper:]][[:alpha:]]*\y)} $element\
+            {\1 [_<1>] \2 } element
+        regsub -all {([^ -_[:upper:]])([[:upper:]])} $element\
+            {\1 [_<1>] \2} element
     }
-    return "$element "
+    return $element 
 }
 
 #}}}
@@ -289,6 +267,8 @@ signal ignore {sigint}
 #initialize Dectalk 
 tts_initialize
 beep_initialize
+#beeps only on dtk
+tts_capitalize 1 
 set tts(speech_rate)  225
 set tts(say_rate) [round \
                            [expr $tts(speech_rate) * $tts(char_factor)]]
