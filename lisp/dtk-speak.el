@@ -152,13 +152,15 @@ mac for MAC TTS (default on Mac)")
 ;;{{{ sync
 
 (defsubst dtk-interp-sync ()
-  (cl-declare (special dtk-speaker-process
-                       dtk-punctuation-mode dtk-speech-rate dtk-split-caps))
+  (cl-declare (special
+               dtk-speaker-process dtk-caps
+               dtk-punctuation-mode dtk-speech-rate dtk-split-caps))
   (process-send-string
    dtk-speaker-process
-   (format "tts_sync_state %s %s %s\n"
+   (format "tts_sync_state %s %s %s %s\n"
            dtk-punctuation-mode
            (if dtk-split-caps 1 0)
+           (if dtk-caps 1 0)
            dtk-speech-rate)))
 
 ;;}}}
@@ -1026,15 +1028,13 @@ result.")
 Interactive prefix arg means
  toggle the global default value, and then set the current local
 value to the result.")
-
 (ems-generate-switcher
  'dtk-toggle-caps
  'dtk-caps
- "Toggle caps.
-when set, capitalized words are preceded by a short `cap', and
-upper-case words are preceded by a `ac' spoken in a lower voice.
-Interactive PREFIX arg means toggle the global default value, and
-then set the current local value to the result.")
+ "Toggle dtk-caps.
+Interactive PREFIX arg means toggle the global default
+value, and then set the current local value to the result.")
+
 
 (ems-generate-switcher
  'dtk-toggle-speak-nonprinting-chars

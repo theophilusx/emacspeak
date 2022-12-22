@@ -29,7 +29,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with GNU Emacs; see the file COPYING.  If not, write to
-# the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+# the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+#Boston,MA 02110-1301, USA.
 
 #}}}
 #{{{source common code 
@@ -189,7 +190,8 @@ proc r {rate} {
 
 #set langlabel(0) "American"
 
-# langalias converts a code language ("en", "en_GB",...) to its index in the langsynth array.
+# langalias converts a code language ("en", "en_GB",...)
+#to its index in the langsynth array.
 # e.g. langalias(fi)=3 could mean "fi_FI" will be used if "fi" is required. 
 
 set langsynth(0) "en_US"
@@ -382,26 +384,19 @@ synth "`vs$rate "
 proc clean {element} {
     global queue tts 
     if {[string match all $tts(punctuations)] } {
-        regsub -all --  {\*} $element \
-            { `00 star } element
-        regsub -all --  {-} $element \
-            { `00 dash } element
-        regsub -all --  {;} $element \
-            { `00 semicolen } element
-        regsub -all --  {\(} $element \
-            { `00 left `00 paren } element
-        regsub -all --  {\)} $element \
-            { `00 right `00 paren } element
-        regsub -all --  {@} $element \
-            { `00 at } element
-        regsub -all  {[.,!?;:+=/'\"@$%&_*()]} $element  \
-            { `00 \0 `p10 }   element
+        regsub -all --  {\*} $element { `00 star } element
+        regsub -all --  {-} $element { `00 dash } element
+        regsub -all --  {;} $element { `00 semicolen } element
+        regsub -all --  {\(} $element { `00 left `00 paren } element
+        regsub -all --  {\)} $element { `00 right `00 paren } element
+        regsub -all --  {@} $element { `00 at } element
+        regsub -all {[[:punct:]]} $element { `00 \0 `p10 }   element
     } else {
         regsub -all  {[*&()\"]} $element  {}   element
-        regsub -all { \-([0-9]+\.[0-9]+)} $element \
+        regsub -all { \-([[:digit:]]+\.[[:digit:]]+)} $element \
             { minus `p3 \1 } element
-        regsub -all {([a-zA-Z])([@!;/:()=\#,.\"])+([0-9a-zA-Z])} $element \
-            {\1 `p5 \3} element
+        regsub -all {([[:alpha:]])([[:punct:]])+([[:alnum:]])} $element \
+            {\1 `p1 \3} element
         regsub -all {``} $element { `ar } element
         regsub -all {''} $element { `p3 } element
         regsub -all {' }  $element { `p1  } element
@@ -409,24 +404,15 @@ proc clean {element} {
         regsub -all -- {-}  $element {dash    } element 
     }
     regsub -all {\240} $element " " element
+    regsub -all {\y[A]\y} $element {[ey]} element
+    set abbrev {\y[-_[:upper:]]{3,}\y}
     if {$tts(split_caps) } {
-        set allcaps [regexp {[^a-zA-Z0-9]?([A-Z][A-Z0-9]+)[^a-zA-Z0-9]} $element full  match ]
-        while {$allcaps } {
-            if {[string length $match] <=3} {
-                set abbrev  $match
-                regsub -all {[A-Z]} $abbrev {& `p1 } abbrev
-                regsub -all A $abbrev {[ey]} abbrev 
-                regsub $match $element  $abbrev element
-            } else {
-                regsub $match $element "[string tolower $match]"  element
-            }
-            set allcaps [regexp {[^a-zA-Z0-9]([A-Z][A-Z0-9]+)[^a-zA-Z0-9]} $element full  match ]
+        while {[regexp $abbrev  $element match    ]}  {
+            regsub $match $element "[string tolower $match]" element
         }
-        regsub -all {[A-Z]} $element { `p1 &} element
-        regsub -all {([^ -_A-Z])([A-Z][a-zA-Z]* )} $element\
+        regsub -all {[[:upper:]]} $element { &} element
+        regsub -all {([^ -_[:upper:]])([[:upper:]][[:alpha:]]* )} $element\
             {\1 `p1 \2 } element
-        regsub -all {([^ -_A-Z])([A-Z])} $element\
-            {\1 `p1 \2} element
     }
     return $element
 }

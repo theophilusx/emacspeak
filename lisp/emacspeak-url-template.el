@@ -510,42 +510,37 @@ name of the list.")
 ;;}}}
 ;;{{{ cnn
 
-(defun emacspeak-url-template-cnn-content (url)
-  "Extract CNN content."
-  (emacspeak-we-xslt-filter "//p" url 'speak))
-
-(emacspeak-url-template-define
- "CNN Content"
- "http://www.cnn.com/us"
- nil
- #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
-     (eww-display-dom-by-element 'h3)
-     (setq
-      emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
- "Filter down to CNN content area."
- #'(lambda (url)
-     (emacspeak-we-extract-by-class "column" url 'speak)))
-
 (emacspeak-url-template-define
  "CNN Headlines"
  "http://rss.cnn.com/rss/cnn_latest.rss"
- nil
- #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
-     (setq
-      emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
+ nil nil
  "News Headlines From CNN"
  #'emacspeak-feeds-rss-display)
+
+(emacspeak-url-template-define
+ "CNN Money"
+ "http://rss.cnn.com/rss/cnn_business.rss"
+ nil nil
+ "CNN Business Headlines"
+ #'emacspeak-feeds-rss-display)
+
+
+(emacspeak-url-template-define
+ "CNN World"
+ "http://rss.cnn.com/rss/cnn_world.rss"
+ nil nil
+ "CNN World"
+ #'emacspeak-feeds-rss-display)
+
 (declare-function eww-display-dom-by-element "emacspeak-eww" (tag))
 
 (emacspeak-url-template-define
- "Money Headlines From CNN"
+ "Business Headlines From CNN"
  "https://cnn.com/business"
  nil
  #'(lambda nil
      (cl-declare (special emacspeak-we-url-executor))
-     (eww-display-dom-by-element 'h3)
+     (eww-display-dom-by-element 'h2)
      (setq
       emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
  "Money Headlines From CNN")
@@ -562,20 +557,6 @@ name of the list.")
  "Filter down to CNN content area."
  #'(lambda (url)
      (emacspeak-we-extract-by-class "column" url 'speak)))
-
-(emacspeak-url-template-define
- "CNN Market Data "
- "https://money.cnn.com/data/markets/"
- nil
- #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
-     (setq
-      emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
- "Market data filtered from CNN Money"
- #'(lambda (url)
-     (emacspeak-we-extract-by-role
-      "main" 
-      url 'speak)))
 
 ;;}}}
 ;;{{{ sourceforge

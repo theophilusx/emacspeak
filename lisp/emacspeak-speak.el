@@ -159,9 +159,10 @@ Speech flushes as you type."
         ((and emacspeak-word-echo
               (= (char-syntax last-command-event)32))
          (save-excursion
-          (condition-case nil
-                          (forward-word -1)
-                          (error nil))
+          (condition-case
+           nil
+           (forward-word -1)
+           (error nil))
           (emacspeak-speak-word)))
         (emacspeak-character-echo
          (emacspeak-speak-this-char (preceding-char)))))))
@@ -546,7 +547,9 @@ emacspeak-speak-filter-table)\n" k v)))
   "Lookup a filter setting we may have persisted."
   (cl-declare (special emacspeak-speak-filter-table))
   (or
-   (gethash (intern key) emacspeak-speak-filter-table)
+   (gethash
+    (if (symbolp key) key (intern key))
+    emacspeak-speak-filter-table)
    (list (list 0 (current-column)))))
 
 (defun emacspeak-speak-set-persistent-filter (key value)
@@ -597,14 +600,11 @@ the sense of the filter. "
       (read-minibuffer
        (format
         "Specify columns to %s: "
-        (if emacspeak-speak-line-invert-filter
-            " speak"
-            "filter out"))
-       (format "%s"
-               (if (buffer-file-name)
-                   (emacspeak-speak-lookup-persistent-filter
-                    (buffer-file-name))
-                   ""))))))
+        (if emacspeak-speak-line-invert-filter " speak" "filter out"))
+       (format
+        "%s"
+        (emacspeak-speak-lookup-persistent-filter
+         (or (buffer-file-name) (symbol-name major-mode))))))))
   (cond
     ((and (listp filter)
           (cl-every
@@ -613,8 +613,10 @@ the sense of the filter. "
                     (= 2 (length l))))
            filter))
      (setq emacspeak-speak-line-column-filter filter)
-     (when (buffer-file-name)
-       (emacspeak-speak-set-persistent-filter (buffer-file-name) filter)))
+     (when (or (buffer-file-name) major-mode)
+       (emacspeak-speak-set-persistent-filter
+        (or (buffer-file-name) (symbol-name major-mode))
+        filter)))
     (t
      (setq emacspeak-speak-line-column-filter nil))))
 
@@ -858,15 +860,21 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
         (result nil))
     (setq result
           (concat
-           (when (stringp display) display)
            (when (stringp before) before)
+           (when (stringp display) display)
            (when (stringp after) after)))
     result))
 
 (defun emacspeak-speak-overlay-properties ()
   "Speak display, before-string or after-string property if any."
   (interactive)
-  (let ((icon
+  (let (
+        (disp
+          (if-let
+           ((disp (get-char-property (point) 'display)))
+           (prin1-to-string disp)
+           "No display properties here"))
+        (icon
           (cond
             ((get-char-property (point) 'before-string) 'left)
             ((get-char-property (point) 'after-string) 'right)
@@ -874,8 +882,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
         (result (ems--display-props-get)))
     (cond
       ((or (null result) (= 0 (length result)))
-       (emacspeak-auditory-icon 'warn-user)
-       (message "No speakable overlay properties here."))
+       (message disp))
       (t
        (emacspeak-auditory-icon icon)
        (dtk-speak result)))))
@@ -1671,7 +1678,7 @@ offset. Default  is to speak the previous word. "
 ;;{{{  Speak misc information e.g. time, version, current-kill  etc
 
 (defcustom emacspeak-speak-time-format-string
-  "%H:%M   on %A, %B %_e, %Y "
+  "%k %M   on %A, %B %_e, %Y "
   "Format string that specifies how the time should be spoken.
 See the documentation for function
 `format-time-string'"
