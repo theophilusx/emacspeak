@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1172 commands and 148 options.
+This chapter documents a total of 1171 commands and 148 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -123,7 +123,7 @@ This chapter documents a total of 1172 commands and 148 options.
 * emacspeak-librivox::LIBRIVOX API client.
 * emacspeak-lispy::Speech-enable LISPY.
 * emacspeak-lua::Speech-enable LUA.
-* emacspeak-m-player::mplayer Interaction.
+* emacspeak-m-player::Media Player.
 * emacspeak-magit::Speech-enable MAGIT.
 * emacspeak-make-mode::Speech enable make.
 * emacspeak-man::Speech enable Man.
@@ -1329,7 +1329,7 @@ name: Bookmark tag
 Position: time offset from start
 
  This library will be used from emacspeak-m-player to set and jump
-to bookmarks. Amarks are stored in a .amarks.el file in the working
+to bookmarks. Amarks are stored in a .amarks file in the working
 directory.  It also provides a simple AMark Browser to use from a
 directory containing mp3 files where Amarks have been created.
 
@@ -1345,6 +1345,24 @@ bookmarks in audio content. If there is an existing amark of the
 given name, it is updated with path and position.
 
 (fn PATH NAME POSITION)
+@end format
+@end deffn
+
+@subsubsection emacspeak-amark-bookshelf
+@deffn {Command} emacspeak-amark-bookshelf   
+@table @kbd
+@item C-; C-;
+@kindex C-; C-;
+@item C-x @@ h C-;
+@kindex C-x @@ h C-;
+@end table
+
+@findex emacspeak-amark-bookshelf
+
+@format
+Open a locate buffer with all .amarks.am files.
+Use M-x emacspeak-dired-open-this-file to open the AMark Browser on
+current file.
 @end format
 @end deffn
 
@@ -1364,6 +1382,15 @@ Browse   amarks  in current directory using ‘emacspeak-amark-mode’.
 @end format
 @end deffn
 
+@subsubsection emacspeak-amark-file-load
+@deffn {Command} emacspeak-amark-file-load   
+@findex emacspeak-amark-file-load
+
+@format
+Open .amark.el on current line in AMark Browser
+@end format
+@end deffn
+
 @subsubsection emacspeak-amark-find
 @deffn {Command} emacspeak-amark-find  (name)
 @findex emacspeak-amark-find
@@ -1372,6 +1399,15 @@ Browse   amarks  in current directory using ‘emacspeak-amark-mode’.
 Return matching AMark if found in buffer-local AMark list.
 
 (fn NAME)
+@end format
+@end deffn
+
+@subsubsection emacspeak-amark-list-play
+@deffn {Command} emacspeak-amark-list-play   
+@findex emacspeak-amark-list-play
+
+@format
+Play amark list as a playlist
 @end format
 @end deffn
 
@@ -5726,8 +5762,7 @@ arg ‘delete’, delete that mark instead.
 @format
 Play media url under point.
 Interprets url-fragment identifier #nnn as time-offset in
-seconds.  Use command ‘emacspeak-m-player-jump-action’ bound to
-’J’ in m-player interaction to move to that offset.  Optional
+seconds.   Optional
 interactive prefix arg ‘playlist-p’ treats link as a playlist.  A
 second interactive prefix arg adds mplayer option
 -allow-dangerous-playlist-parsing
@@ -6042,13 +6077,11 @@ Save our smart tabs to a file for reloading.
 @end deffn
 
 @subsubsection emacspeak-eww-speak-this-element
-@deffn {Command} emacspeak-eww-speak-this-element  (element)
+@deffn {Command} emacspeak-eww-speak-this-element   
 @findex emacspeak-eww-speak-this-element
 
 @format
-Speaks  to next element like current. 
-
-(fn ELEMENT)
+Speak current .
 @end format
 @end deffn
 
@@ -7842,7 +7875,7 @@ Note that the <fn> key found on laptops is denoted <fn>
 @defvar {User Option} emacspeak-alt-keys
 Alt key bindings. 
 
-Default Value: @code{@verb{|((, eldoc) (SPC emacspeak-eww-smart-tabs) (a emacspeak-feeds-atom-display) (b sox-binaural) (d sdcv-search-input) (e eww) (f ffap) (g rg) (l eww-open-file) (o emacspeak-feeds-opml-display) (p emacspeak-wizards-pdf-open) (q emacspeak-wizards-iex-show-price) (r emacspeak-feeds-rss-display) (s emacspeak-wizards-tune-in-radio-search) (t emacspeak-wizards-tune-in-radio-browse) (u emacspeak-m-player-url) (v visual-line-mode) (w define-word) (y emacspeak-m-player-youtube-player))|}}
+Default Value: @code{@verb{|((, eldoc) (SPC emacspeak-eww-smart-tabs) (a emacspeak-feeds-atom-display) (b sox-binaural) (d deadgrep) (e eww) (f ffap) (g rg) (l eww-open-file) (o emacspeak-feeds-opml-display) (p emacspeak-wizards-pdf-open) (q emacspeak-wizards-iex-show-price) (r emacspeak-feeds-rss-display) (s emacspeak-wizards-tune-in-radio-search) (t emacspeak-wizards-tune-in-radio-browse) (u emacspeak-m-player-url) (v visual-line-mode) (w define-word) (y emacspeak-m-player-youtube-player))|}}
 
 @end defvar
 
@@ -7856,14 +7889,14 @@ Default Value: @code{@verb{|((SPC flyspell-mode) (b emacspeak-wizards-view-buffe
 @defvar {User Option} emacspeak-hyper-keys
 Hyper-Key bindings. 
 
-Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-m-player-using-openal) (; emacspeak-multimedia) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (i ibuffer) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
+Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-m-player-using-openal) (; emacspeak-multimedia) (C-; emacspeak-amark-bookshelf) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (i ibuffer) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
 
 @end defvar
 
 @defvar {User Option} emacspeak-multi-keys
 Multi key bindings. 
 
-Default Value: @code{@verb{|((h emacspeak-m-player-browse-history) (l emacspeak-m-player-locate-media) (y emacspeak-google-yt-feed))|}}
+Default Value: @code{@verb{|((d sdcv-search-input) (h emacspeak-m-player-browse-history) (l emacspeak-m-player-locate-media) (o org-mode) (y emacspeak-google-yt-feed))|}}
 
 @end defvar
 
@@ -7884,7 +7917,7 @@ Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacsp
 @defvar {User Option} emacspeak-super-keys
 Super key bindings. 
 
-Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (o org-mode) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood) (y emacspeak-mpv-play-url))|}}
+Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood) (y emacspeak-mpv-play-url))|}}
 
 @end defvar
 
@@ -8183,9 +8216,9 @@ Save amarks.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-apply-reverb-preset
-@deffn {Command} emacspeak-m-player-apply-reverb-preset  (preset)
-@findex emacspeak-m-player-apply-reverb-preset
+@subsubsection emacspeak-m-player-apply-reverb
+@deffn {Command} emacspeak-m-player-apply-reverb  (preset)
+@findex emacspeak-m-player-apply-reverb
 
 @format
 Prompt for and apply a reverb preset.
@@ -8232,18 +8265,9 @@ Set left/right balance.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-beginning-of-track
-@deffn {Command} emacspeak-m-player-beginning-of-track   
-@findex emacspeak-m-player-beginning-of-track
-
-@format
-Move to beginning.
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-bind-accelerator
-@deffn {Command} emacspeak-m-player-bind-accelerator  (directory key)
-@findex emacspeak-m-player-bind-accelerator
+@subsubsection emacspeak-m-player-bind-hotkey
+@deffn {Command} emacspeak-m-player-bind-hotkey  (directory key)
+@findex emacspeak-m-player-bind-hotkey
 
 @format
 Binds key to invoke m-player  on specified directory.
@@ -8286,9 +8310,9 @@ Invoke MPlayer commands.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-customize-options
-@deffn {Command} emacspeak-m-player-customize-options   
-@findex emacspeak-m-player-customize-options
+@subsubsection emacspeak-m-player-customize
+@deffn {Command} emacspeak-m-player-customize   
+@findex emacspeak-m-player-customize
 
 @format
 Use Customize to set MPlayer options.
@@ -8315,30 +8339,12 @@ Delete plugin from  running MPlayer.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-display-metadata
-@deffn {Command} emacspeak-m-player-display-metadata   
-@findex emacspeak-m-player-display-metadata
-
-@format
-Display metadata after refreshing it if needed.
-@end format
-@end deffn
-
 @subsubsection emacspeak-m-player-display-percent
 @deffn {Command} emacspeak-m-player-display-percent   
 @findex emacspeak-m-player-display-percent
 
 @format
 Display current percentage.
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-display-position
-@deffn {Command} emacspeak-m-player-display-position   
-@findex emacspeak-m-player-display-position
-
-@format
-Display current position in track.
 @end format
 @end deffn
 
@@ -8362,18 +8368,18 @@ Edit ladspa reverb filter.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-end-of-track
-@deffn {Command} emacspeak-m-player-end-of-track   
-@findex emacspeak-m-player-end-of-track
+@subsubsection emacspeak-m-player-end-track
+@deffn {Command} emacspeak-m-player-end-track   
+@findex emacspeak-m-player-end-track
 
 @format
 Move to end.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-equalizer-control
-@deffn {Command} emacspeak-m-player-equalizer-control  (v)
-@findex emacspeak-m-player-equalizer-control
+@subsubsection emacspeak-m-player-eq-controls
+@deffn {Command} emacspeak-m-player-eq-controls  (v)
+@findex emacspeak-m-player-eq-controls
 
 @format
 Manipulate values in  vector using minibuffer.
@@ -8383,9 +8389,9 @@ Applies  the resulting value at each step.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-equalizer-preset
-@deffn {Command} emacspeak-m-player-equalizer-preset  (name)
-@findex emacspeak-m-player-equalizer-preset
+@subsubsection emacspeak-m-player-eq-preset
+@deffn {Command} emacspeak-m-player-eq-preset  (name)
+@findex emacspeak-m-player-eq-preset
 
 @format
 Prompts for  and apply equalizer preset.
@@ -8481,29 +8487,6 @@ Play both channels on left.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-load
-@deffn {Command} emacspeak-m-player-load  (resource &optional append)
-@findex emacspeak-m-player-load
-
-@format
-Load specified resource into a running  m-player.
-Interactive prefix arg appends the new resource to what is playing.
-
-(fn RESOURCE &optional APPEND)
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-load-playlist
-@deffn {Command} emacspeak-m-player-load-playlist  (f)
-@findex emacspeak-m-player-load-playlist
-
-@format
-Load playlist.
-
-(fn F)
-@end format
-@end deffn
-
 @subsubsection emacspeak-m-player-locate-media
 @deffn {Command} emacspeak-m-player-locate-media  (pattern)
 @table @kbd
@@ -8551,8 +8534,8 @@ Major mode for m-player interaction.
 
 Key             Binding
 -------------------------------------------------------------------------------
+C-a		emacspeak-amark-browse
 C-l		ladspa
-RET		emacspeak-m-player-load
 SPC		emacspeak-m-player-pause
 %		emacspeak-m-player-display-percent
 (		emacspeak-m-player-left-channel
@@ -8567,16 +8550,15 @@ SPC		emacspeak-m-player-pause
 <		emacspeak-m-player-backward-1min
 =		emacspeak-m-player-volume-up
 >		emacspeak-m-player-forward-1min
-?		emacspeak-m-player-display-position
+?		emacspeak-m-player-show-pos
 A		emacspeak-m-player-amark-add
 C		emacspeak-m-player-clear-filters
 E		emacspeak-m-player-add-equalizer
 G		emacspeak-m-player-seek-percentage
-J		emacspeak-m-player-run-jump
 L		emacspeak-m-player-get-length
-M		emacspeak-m-player-display-metadata
+M		emacspeak-m-player-show-data
 O		emacspeak-m-player-reset-options
-P		emacspeak-m-player-apply-reverb-preset
+P		emacspeak-m-player-apply-reverb
 Q		emacspeak-m-player-quit
 R		emacspeak-m-player-edit-reverb
 S		emacspeak-m-player-amark-save
@@ -8586,7 +8568,7 @@ S		emacspeak-m-player-amark-save
 a		emacspeak-m-player-add-autopan
 c		emacspeak-m-player-slave-command
 d		emacspeak-m-player-delete-filter
-e		emacspeak-m-player-equalizer-preset
+e		emacspeak-m-player-eq-preset
 f		emacspeak-m-player-add-filter
 g		emacspeak-m-player-seek-absolute
 h		emacspeak-m-player-from-history
@@ -8596,12 +8578,11 @@ k		emacspeak-m-player-quit
 l		emacspeak-m-player-store-link
 m		emacspeak-m-player-mode-line
 n		emacspeak-m-player-next-track
-o		emacspeak-m-player-customize-options
+o		emacspeak-m-player-customize
 p		emacspeak-m-player-previous-track
 r		emacspeak-m-player-seek-relative
 s		emacspeak-m-player-scale-speed
-t		emacspeak-m-player-play-tracks-jump
-u		emacspeak-m-player-url
+t		emacspeak-m-player-skip-tracks
 v		emacspeak-m-player-volume-change
 w		emacspeak-m-player-write-clip
 x		emacspeak-m-player-pan
@@ -8610,8 +8591,8 @@ z		emacspeak-m-player-add-autosat
 @}		emacspeak-m-player-double-speed
 DEL		emacspeak-m-player-reset-speed
 <down>		emacspeak-m-player-forward-1min
-<end>		emacspeak-m-player-end-of-track
-<home>		emacspeak-m-player-beginning-of-track
+<end>		emacspeak-m-player-end-track
+<home>		emacspeak-m-player-start-track
 <left>		emacspeak-m-player-backward-10s
 <next>		emacspeak-m-player-forward-10min
 <prior>		emacspeak-m-player-backward-10min
@@ -8686,17 +8667,6 @@ Play an RSS stream.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-play-tracks-jump
-@deffn {Command} emacspeak-m-player-play-tracks-jump  (step)
-@findex emacspeak-m-player-play-tracks-jump
-
-@format
-Skip tracks.
-
-(fn STEP)
-@end format
-@end deffn
-
 @subsubsection emacspeak-m-player-play-tree-up
 @deffn {Command} emacspeak-m-player-play-tree-up  (step)
 @findex emacspeak-m-player-play-tree-up
@@ -8735,9 +8705,9 @@ Quit.
 @end format
 @end deffn
 
-@subsubsection emacspeak-m-player-remove-from-media-history
-@deffn {Command} emacspeak-m-player-remove-from-media-history  (url)
-@findex emacspeak-m-player-remove-from-media-history
+@subsubsection emacspeak-m-player-rem-history
+@deffn {Command} emacspeak-m-player-rem-history  (url)
+@findex emacspeak-m-player-rem-history
 
 @format
 Remove URL from media history
@@ -8780,15 +8750,6 @@ Check first if current buffer is in emacspeak-m-player-mode.
 
 @format
 Play on right channel.
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-run-jump
-@deffn {Command} emacspeak-m-player-run-jump   
-@findex emacspeak-m-player-run-jump
-
-@format
-Run buffer-local jump action.
 @end format
 @end deffn
 
@@ -8862,6 +8823,24 @@ Interactive prefix arg prompts for the timestamp.
 @end format
 @end deffn
 
+@subsubsection emacspeak-m-player-show-data
+@deffn {Command} emacspeak-m-player-show-data   
+@findex emacspeak-m-player-show-data
+
+@format
+Display metadata after refreshing it if needed.
+@end format
+@end deffn
+
+@subsubsection emacspeak-m-player-show-pos
+@deffn {Command} emacspeak-m-player-show-pos   
+@findex emacspeak-m-player-show-pos
+
+@format
+Display current position in track.
+@end format
+@end deffn
+
 @subsubsection emacspeak-m-player-shuffle
 @deffn {Command} emacspeak-m-player-shuffle   
 @table @kbd
@@ -8875,6 +8854,17 @@ Interactive prefix arg prompts for the timestamp.
 
 @format
 M-Player with shuffle turned on.
+@end format
+@end deffn
+
+@subsubsection emacspeak-m-player-skip-tracks
+@deffn {Command} emacspeak-m-player-skip-tracks  (step)
+@findex emacspeak-m-player-skip-tracks
+
+@format
+Skip tracks.
+
+(fn STEP)
 @end format
 @end deffn
 
@@ -8895,6 +8885,15 @@ Dispatch slave command.
 
 @format
 Slow down playback. 
+@end format
+@end deffn
+
+@subsubsection emacspeak-m-player-start-track
+@deffn {Command} emacspeak-m-player-start-track   
+@findex emacspeak-m-player-start-track
+
+@format
+Move to beginning.
 @end format
 @end deffn
 
@@ -8941,6 +8940,7 @@ Toggle application of extrastereo filter to all streams.
 
 @format
 Call emacspeak-m-player on  URL.
+URL fragment specifies optional start position.
 
 (fn URL &optional PLAYLIST-P)
 @end format
@@ -8964,7 +8964,7 @@ This will work if the soundcard is set to 48000.
 @end deffn
 
 @subsubsection emacspeak-m-player-using-openal
-@deffn {Command} emacspeak-m-player-using-openal  (resource &optional play-list)
+@deffn {Command} emacspeak-m-player-using-openal   
 @table @kbd
 @item C-; :
 @kindex C-; :
@@ -8976,8 +8976,6 @@ This will work if the soundcard is set to 48000.
 
 @format
 Use openal.  
-
-(fn RESOURCE &optional PLAY-LIST)
 @end format
 @end deffn
 
@@ -9088,8 +9086,8 @@ Controls media playback when already playing.
 
 Key             Binding
 -------------------------------------------------------------------------------
+C-a		emacspeak-amark-browse
 C-l		ladspa
-RET		emacspeak-m-player-load
 SPC		emacspeak-m-player-pause
 %		emacspeak-m-player-display-percent
 (		emacspeak-m-player-left-channel
@@ -9104,16 +9102,15 @@ SPC		emacspeak-m-player-pause
 <		emacspeak-m-player-backward-1min
 =		emacspeak-m-player-volume-up
 >		emacspeak-m-player-forward-1min
-?		emacspeak-m-player-display-position
+?		emacspeak-m-player-show-pos
 A		emacspeak-m-player-amark-add
 C		emacspeak-m-player-clear-filters
 E		emacspeak-m-player-add-equalizer
 G		emacspeak-m-player-seek-percentage
-J		emacspeak-m-player-run-jump
 L		emacspeak-m-player-get-length
-M		emacspeak-m-player-display-metadata
+M		emacspeak-m-player-show-data
 O		emacspeak-m-player-reset-options
-P		emacspeak-m-player-apply-reverb-preset
+P		emacspeak-m-player-apply-reverb
 Q		emacspeak-m-player-quit
 R		emacspeak-m-player-edit-reverb
 S		emacspeak-m-player-amark-save
@@ -9123,7 +9120,7 @@ S		emacspeak-m-player-amark-save
 a		emacspeak-m-player-add-autopan
 c		emacspeak-m-player-slave-command
 d		emacspeak-m-player-delete-filter
-e		emacspeak-m-player-equalizer-preset
+e		emacspeak-m-player-eq-preset
 f		emacspeak-m-player-add-filter
 g		emacspeak-m-player-seek-absolute
 h		emacspeak-m-player-from-history
@@ -9133,12 +9130,11 @@ k		emacspeak-m-player-quit
 l		emacspeak-m-player-store-link
 m		emacspeak-m-player-mode-line
 n		emacspeak-m-player-next-track
-o		emacspeak-m-player-customize-options
+o		emacspeak-m-player-customize
 p		emacspeak-m-player-previous-track
 r		emacspeak-m-player-seek-relative
 s		emacspeak-m-player-scale-speed
-t		emacspeak-m-player-play-tracks-jump
-u		emacspeak-m-player-url
+t		emacspeak-m-player-skip-tracks
 v		emacspeak-m-player-volume-change
 w		emacspeak-m-player-write-clip
 x		emacspeak-m-player-pan
@@ -9147,8 +9143,8 @@ z		emacspeak-m-player-add-autosat
 @}		emacspeak-m-player-double-speed
 DEL		emacspeak-m-player-reset-speed
 <down>		emacspeak-m-player-forward-1min
-<end>		emacspeak-m-player-end-of-track
-<home>		emacspeak-m-player-beginning-of-track
+<end>		emacspeak-m-player-end-track
+<home>		emacspeak-m-player-start-track
 <left>		emacspeak-m-player-backward-10s
 <next>		emacspeak-m-player-forward-10min
 <prior>		emacspeak-m-player-backward-10min
@@ -9887,13 +9883,9 @@ The heads for the associated hydra are:
 "C-f":    ‘(call-interactively #’folding-mode)’,
 "a":    ‘(call-interactively #’abbrev-mode)’,
 "d":    ‘(call-interactively #’toggle-debug-on-error)’,
-"F":    ‘(call-interactively #’flyspell-mode)’,
-"e":    ‘(call-interactively #’emacspeak-m-player-toggle-extrastereo)’,
-"f":    ‘(call-interactively #’auto-fill-mode)’,
 "g":    ‘(call-interactively #’toggle-debug-on-quit)’,
 "h":    ‘(setq hydra-is-helpful (not hydra-is-helpful))’,
 "p":    ‘emacspeak-muggles-lispy-or-sp’,
-"u":    ‘(call-interactively #’ido-ubiquitous-mode)’,
 "q":    nil
 
 The body can be accessed via ‘emacspeak-muggles-toggle-option/body’.
@@ -10396,6 +10388,17 @@ Homepage: http://www.astro.uva.nl/~dominik/Tools/org/
 or http://orgmode.org/
 
 @subsection Emacspeak-Org Commands
+
+@subsubsection emacspeak-org-amarks-play
+@deffn {Command} emacspeak-org-amarks-play   
+@findex emacspeak-org-amarks-play
+
+@format
+Loop through and play list of Amarks from org buffer.
+Hit C-g to break out of the loop.
+Press ‘y’ to move to next amark.
+@end format
+@end deffn
 
 @subsubsection emacspeak-org-capture-link
 @deffn {Command} emacspeak-org-capture-link  (&optional open)
@@ -11052,13 +11055,6 @@ Toggle use of pronunciation personality.
 
 @subsection emacspeak-pronounce Options
 
-@defvar {User Option} emacspeak-pronounce-common-xml-namespace-uri-pronunciations
-Namespace URIs.
-
-Default Value: @code{@verb{|((http://www.w3.org/2005/Atom .  atom ) (http://www.w3.org/1999/02/22-rdf-syntax-ns# . RDF Syntax) (http://www.w3.org/2002/06/xhtml2 .  xhtml2 ) (http://www.w3.org/2003/XInclude . XInclude) (http://www.w3.org/1999/XSL/Transform .  XSLT ) (http://www.w3.org/2002/xforms .  XForms ) (http://www.w3.org/2001/xml-events .  XEvents ) (http://www.w3.org/2001/vxml .  vxml ) (http://www.w3.org/2001/XMLSchema-instance .  XSI ) (http://www.w3.org/2001/XMLSchema .  XSD ) (http://www.w3.org/1999/xhtml .  xhtml ) (http://purl.org/dc/elements/1.1/ . DC) (http://search.yahoo.com/mrss/ . media))|}}
-
-@end defvar
-
 @defvar {User Option} emacspeak-pronounce-dictionaries-file
 File that holds  emacspeak pronunciations.
 
@@ -11070,6 +11066,13 @@ Default Value: @code{@verb{|/home/raman/.emacspeak/.dictionary|}}
 Smileys
 
 Default Value: @code{@verb{|((:-) .  smile ) (;) .  half-wink ) (:) .  grin ) (:-( .  frown ) (:( .  sigh ) (:-I .  shrug ) (:-> .  sarcastic smile ) (>:-> .  devillish smile ) (>;-> .  lewd smile ) (;-) .  wink ))|}}
+
+@end defvar
+
+@defvar {User Option} emacspeak-pronounce-xml-ns
+Namespace URIs.
+
+Default Value: @code{@verb{|((http://www.w3.org/2005/Atom .  atom ) (http://www.w3.org/1999/02/22-rdf-syntax-ns# . RDF Syntax) (http://www.w3.org/2002/06/xhtml2 .  xhtml2 ) (http://www.w3.org/2003/XInclude . XInclude) (http://www.w3.org/1999/XSL/Transform .  XSLT ) (http://www.w3.org/2002/xforms .  XForms ) (http://www.w3.org/2001/xml-events .  XEvents ) (http://www.w3.org/2001/vxml .  vxml ) (http://www.w3.org/2001/XMLSchema-instance .  XSI ) (http://www.w3.org/2001/XMLSchema .  XSD ) (http://www.w3.org/1999/xhtml .  xhtml ) (http://purl.org/dc/elements/1.1/ . DC) (http://search.yahoo.com/mrss/ . media))|}}
 
 @end defvar
 
@@ -18223,9 +18226,7 @@ The heads for the associated hydra are:
 ">":    ‘emacspeak-m-player-forward-1min’,
 "?":    ‘emacspeak-m-player-display-position’,
 "C":    ‘emacspeak-m-player-clear-filters’,
-"C-m":    ‘emacspeak-m-player-load’,
 "DEL":    ‘emacspeak-m-player-reset-speed’,
-"M-l":    ‘emacspeak-m-player-load-playlist’,
 "O":    ‘emacspeak-m-player-reset-options’,
 "P":    ‘emacspeak-m-player-apply-reverb-preset’,
 "Q":    ‘emacspeak-m-player-quit’,
@@ -18956,26 +18957,6 @@ Default Value: @code{@verb{|225|}}
 
 Implements geocoding via the Open Street Maps API
 https://nominatim.org/
-
-@subsection Omaps Commands
-
-@subsubsection omaps-locations-load
-@deffn {Command} omaps-locations-load   
-@findex omaps-locations-load
-
-@format
-Load saved Omaps locations.
-@end format
-@end deffn
-
-@subsubsection omaps-locations-save
-@deffn {Command} omaps-locations-save   
-@findex omaps-locations-save
-
-@format
-Save Omaps Locations.
-@end format
-@end deffn
 
 @node outloud-voices
 @section outloud-voices
@@ -19770,14 +19751,14 @@ Default Value: @code{@verb{|(nil nil 0 0)|}}
 @defvar {User Option} voice-monotone-medium-settings
 Settings for voice-monotone-medium
 
-Default Value: @code{@verb{|(nil nil 2 2)|}}
+Default Value: @code{@verb{|(nil nil 1 2)|}}
 
 @end defvar
 
 @defvar {User Option} voice-monotone-settings
 Settings for voice-monotone
 
-Default Value: @code{@verb{|(nil nil 4 4)|}}
+Default Value: @code{@verb{|(nil nil 2 4)|}}
 
 @end defvar
 

@@ -590,6 +590,7 @@
 (defcustom emacspeak-hyper-keys
   '(
     ("DEL" emacspeak-wizards-snarf-sexp)
+    ("C-;" emacspeak-amark-bookshelf)
     ("C-l" emacspeak-librivox)
     ("'" emacspeak-m-player-using-hrtf)
     ("," previous-buffer)
@@ -667,7 +668,6 @@
     ("m" emacspeak-wizards-view-buffers-filtered-by-this-mode)
     ("n" emacspeak-wizards-google-news)
     ("p" proced)
-    ("o" org-mode)
     ("r" soundscape-restart)
     ("s" soundscape)
     ("t" soundscape-toggle)
@@ -704,7 +704,7 @@
     ("," eldoc)
     ("a" emacspeak-feeds-atom-display)
     ("b" sox-binaural)
-    ("d" sdcv-search-input)
+    ("d" deadgrep)
     ("e" eww)
     ("f" ffap)
     ("g" rg)
@@ -747,8 +747,10 @@
 
 (defcustom emacspeak-multi-keys
   '(
-    ("l" emacspeak-m-player-locate-media)
+    ("d" sdcv-search-input)
     ("h" emacspeak-m-player-browse-history)
+    ("l" emacspeak-m-player-locate-media)
+    ("o" org-mode)
     ("y" emacspeak-google-yt-feed))
   "Multi key bindings. "
   :group 'emacspeak

@@ -2621,7 +2621,9 @@ directory."
   (cl-declare (special emacspeak-speak-directory-settings default-directory))
   (unless dir (setq dir default-directory))
   (ems-with-messages-silenced
-   (let ((res (locate-dominating-file dir emacspeak-speak-directory-settings)))
+   (let ((emacspeak-speak-messages nil)
+           (inhibit-message t)
+         (res (locate-dominating-file dir emacspeak-speak-directory-settings)))
      (when
          (and res
               (file-exists-p
@@ -2901,7 +2903,7 @@ but quickly switch to a window by name."
   "Process sentinel to disable repeat."
   (when
       (and repeat-mode
-           (memq (process-status process) '(failed signal exit)))
+           (memq (process-status process) '(failed signal exit stop nil)))
     (repeat-exit)))
 
 (defsubst emacspeak-repeat-mode-hook ()

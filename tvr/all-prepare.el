@@ -1,3 +1,36 @@
+;;; Emacs' yes-or-no-p and y-or-no-p have prompts hard-wired.
+;; The advice forms below produce more succinct speech.
+
+(defadvice yes-or-no-p (around tvr-fix pre act comp)
+  "Simplify Emacs' implementation."
+  (cond
+    (use-short-answers
+     (let* ((ask (concat (ad-get-arg 0) " y/n "))
+            (c (read-char ask)))
+       (while (not (member c '(?n ?y)))
+              (emacspeak-auditory-icon
+   (if ad-return-value 'y-answer 'n-answer))
+              (setq c  (read-char ask))
+              (emacspeak-auditory-icon  'ask-question))
+       (setq ad-return-value
+             (cl-case c
+                      (?y t)
+                      (?n nil)))))
+    (t ad-do-it))
+  ad-return-value)
+
+(defadvice y-or-n-p (around tvr-fix pre act comp)
+  "Simplify Emacs' implementation.."
+  (let* ((ask (concat (ad-get-arg 0) " y/n "))
+         (c (read-char ask)))
+    (while (not (member c '(?n ?y)))
+           (emacspeak-auditory-icon  'ask-short-question)
+           (setq c  (read-char ask)))
+    (setq ad-return-value
+          (cl-case c
+                   (?y t)
+                   (?n nil))))
+  ad-return-value)
 ;;; vm-prepare.l :  -*- lexical-binding: nil; -*-
 
 (autoload 'vm "vm" "vm mail reader" t nil)
@@ -227,9 +260,10 @@ This moves them into the Spam folder."
 
   (define-prefix-command 'org-multi-keymap)
   (define-key org-mode-map (ems-kbd "C-'") 'org-multi-keymap)
-  (define-key org-mode-map (ems-kbd "C-' n") #'org-next-link)
-  (define-key org-mode-map (ems-kbd "C-' '") #'org-open-at-point)
-  (define-key org-mode-map (ems-kbd "C-' p") #'org-previous-link)
+  (define-key org-multi-keymap "n" #'org-next-link)
+  (define-key org-multi-keymap "'" #'org-open-at-point)
+  (define-key org-multi-keymap ";" #'emacspeak-org-amarks-play)
+  (define-key org-multi-keymap "p" #'org-previous-link)
   (define-key org-mode-map (ems-kbd "C-,") 'emacspeak-alt-keymap)
   (define-key org-mode-map (ems-kbd "C-c m") 'org-md-export-as-markdown)
   (define-key global-map (ems-kbd "C-c i") 'org-insert-link)
@@ -241,7 +275,7 @@ This moves them into the Spam folder."
   (diminish 'orgalist-mode ""))
 ;;; Jump to Emacs Git Logs At HEAD:
 (defalias 'tvr-km-emacs-log
-   (kmacro "C-c 3 C-; d F u C-; d l l C-e d q M-< C-e C-q C-e d q n"))
+   (kmacro "C-c 3 g i t SPC p <return> C-; d l l C-e | <return> <escape> < C-e s"))
 (global-set-key [24 11 48] 'tvr-km-emacs-log)
 (defalias 'tvr-km-morning
    (kmacro "C-<tab> C-e g b h <tab> <return> n n e c"))

@@ -657,7 +657,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 (defadvice read-event (before emacspeak pre act comp)
   "Speak prompt."
   (when  (ad-get-arg 0)
-    (message (ad-get-arg 0))))
+    (dtk-notify-say (ad-get-arg 0))))
 
 (defadvice read-multiple-choice (before emacspeak pre act comp)
   "speak."
@@ -680,7 +680,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
     (ems--log-message
      (concat msg
              (mapconcat #'identity details "\n ")))
-    (dtk-speak msg)
+    (dtk-notify-speak msg)
     (sox-tones 2 2)
     (dtk-speak-list choices)))
 
@@ -720,7 +720,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   (ems-with-messages-silenced
    (let ((msg (ad-get-arg 0))
          (exit (ad-get-arg 2)))
-     (dtk-speak
+     (dtk-notify-speak
       (format
        "%s Press %s to exit"
        msg
@@ -776,7 +776,8 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   "speak."
   (let ((buffer-name (ad-get-arg 1)))
     (when (bufferp ad-return-value)
-      (dtk-speak (format "Displayed message in buffer  %s" buffer-name)))))
+      (dtk-notify-speak
+       (format "Displayed message in buffer  %s" buffer-name)))))
 
 (defun emacspeak-speak-eldoc (docs interactive)
   "Speak eldoc."
@@ -2088,17 +2089,20 @@ Produce an auditory icon if possible."
     (unless (memq 'emacspeak-minibuffer-exit-hook minibuffer-exit-hook)
       (add-hook 'minibuffer-exit-hook #'emacspeak-minibuffer-exit-hook))
     (emacspeak-auditory-icon 'open-object)
+    (emacspeak-pronounce-add-buffer-local-dictionary-entry
+     "(yes or no) " " y/n ")
+    (emacspeak-pronounce-toggle-use-of-dictionaries t)
     (when minibuffer-default (emacspeak-auditory-icon 'help))
     (tts-with-punctuations
-        'all
-      (emacspeak-pronounce-add-buffer-local-dictionary-entry
-        default-directory "")
-      (dtk-speak
-       (concat
-        (buffer-string)
-        (if (stringp minibuffer-default)
-            minibuffer-default
-          ""))))))
+     'all
+     (emacspeak-pronounce-add-buffer-local-dictionary-entry
+      default-directory "")
+     (dtk-notify-speak
+      (concat
+       (buffer-string)
+       (if (stringp minibuffer-default)
+           minibuffer-default
+           ""))))))
 
 (add-hook 'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook 'at-end)
 
@@ -2377,8 +2381,7 @@ Produce an auditory icon if possible."
 (defadvice push-button (after emacspeak pre act comp)
   "Produce auditory icon."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'button)
-    (emacspeak-speak-line)))
+    (emacspeak-auditory-icon 'button)))
 
 ;;}}}
 ;;{{{ silence whitespace cleanup:
@@ -2507,22 +2510,18 @@ Produce an auditory icon if possible."
 
 (defadvice yes-or-no-p (around emacspeak pre act comp)
   "Play auditory icon."
-  (cond
-   ((ems-interactive-p)
-    (emacspeak-auditory-icon 'ask-question)
+  (emacspeak-auditory-icon 'ask-question)
     ad-do-it
-    (emacspeak-auditory-icon (if ad-return-value 'yes-answer 'no-answer )))
-   (t ad-do-it))
+    (emacspeak-auditory-icon (if ad-return-value 'yes-answer 'no-answer ))
   ad-return-value)
 
 (defadvice y-or-n-p (around emacspeak pre act comp)
   "Play auditory icon."
-  (cond
-   ((ems-interactive-p)
-    (emacspeak-auditory-icon 'ask-short-question)
-    ad-do-it
-    (emacspeak-auditory-icon (if ad-return-value 'y-answer 'n-answer )))
-   (t ad-do-it)))
+  (emacspeak-auditory-icon 'ask-short-question)
+  ad-do-it
+  (emacspeak-auditory-icon (if ad-return-value 'y-answer 'n-answer
+                               ))
+  ad-return-value)
 
 (defadvice ask-user-about-lock (around emacspeak pre act comp)
   "Play auditory icon."

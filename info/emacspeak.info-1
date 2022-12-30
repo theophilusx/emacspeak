@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on December 13, 2022.
+last updated on December 30, 2022.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3187,9 +3187,6 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-super-keymap,  N
 ‘n’
      emacspeak-wizards-google-news
 
-‘o’
-     org-mode
-
 ‘p’
      proced
 
@@ -3227,7 +3224,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-alt-keymap,  Nex
      sox-binaural
 
 ‘d’
-     sdcv-search-input
+     deadgrep
 
 ‘e’
      eww
@@ -3397,11 +3394,17 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-multi-keymap,  P
 11.8 Emacspeak Keybindings On emacspeak-multi-keymap
 ====================================================
 
+‘d’
+     sdcv-search-input
+
 ‘h’
      emacspeak-m-player-browse-history
 
 ‘l’
      emacspeak-m-player-locate-media
+
+‘o’
+     org-mode
 
 ‘y’
      emacspeak-google-yt-feed
@@ -3441,7 +3444,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the EWW
 documentation, then read *Note emacspeak-eww::.
 
-   This chapter documents a total of 1172 commands and 148 options.
+   This chapter documents a total of 1171 commands and 148 options.
 
 * Menu:
 
@@ -3561,7 +3564,7 @@ documentation, then read *Note emacspeak-eww::.
 * emacspeak-librivox::LIBRIVOX API client.
 * emacspeak-lispy::Speech-enable LISPY.
 * emacspeak-lua::Speech-enable LUA.
-* emacspeak-m-player::mplayer Interaction.
+* emacspeak-m-player::Media Player.
 * emacspeak-magit::Speech-enable MAGIT.
 * emacspeak-make-mode::Speech enable make.
 * emacspeak-man::Speech enable Man.
@@ -4495,7 +4498,7 @@ filename containing marked name: Bookmark tag Position: time offset from
 start
 
    This library will be used from emacspeak-m-player to set and jump to
-bookmarks.  Amarks are stored in a .amarks.el file in the working
+bookmarks.  Amarks are stored in a .amarks file in the working
 directory.  It also provides a simple AMark Browser to use from a
 directory containing mp3 files where Amarks have been created.
 
@@ -4513,7 +4516,18 @@ directory containing mp3 files where Amarks have been created.
 
      (fn PATH NAME POSITION)
 
-12.12.1.2 emacspeak-amark-browse
+12.12.1.2 emacspeak-amark-bookshelf
+...................................
+
+ -- Command: emacspeak-amark-bookshelf
+     ‘C-; C-;’
+     ‘C-x @ h C-;’
+
+     Open a locate buffer with all .amarks.am files.
+     Use M-x emacspeak-dired-open-this-file to open the AMark Browser on
+     current file.
+
+12.12.1.3 emacspeak-amark-browse
 ................................
 
  -- Command: emacspeak-amark-browse
@@ -4522,7 +4536,14 @@ directory containing mp3 files where Amarks have been created.
 
      Browse   amarks  in current directory using ‘emacspeak-amark-mode’.
 
-12.12.1.3 emacspeak-amark-find
+12.12.1.4 emacspeak-amark-file-load
+...................................
+
+ -- Command: emacspeak-amark-file-load
+
+     Open .amark.el on current line in AMark Browser
+
+12.12.1.5 emacspeak-amark-find
 ..............................
 
  -- Command: emacspeak-amark-find (name)
@@ -4531,7 +4552,14 @@ directory containing mp3 files where Amarks have been created.
 
      (fn NAME)
 
-12.12.1.4 emacspeak-amark-mode
+12.12.1.6 emacspeak-amark-list-play
+...................................
+
+ -- Command: emacspeak-amark-list-play
+
+     Play amark list as a playlist
+
+12.12.1.7 emacspeak-amark-mode
 ..............................
 
  -- Command: emacspeak-amark-mode
@@ -4547,7 +4575,7 @@ directory containing mp3 files where Amarks have been created.
      run, this mode runs the hook ‘emacspeak-amark-mode-hook’, as the final
      or penultimate step during initialization.
 
-12.12.1.5 emacspeak-amark-save
+12.12.1.8 emacspeak-amark-save
 ..............................
 
  -- Command: emacspeak-amark-save
@@ -8355,8 +8383,7 @@ prefix arg to delete a previously created eww-mark.
 
      Play media url under point.
      Interprets url-fragment identifier #nnn as time-offset in
-     seconds.  Use command ‘emacspeak-m-player-jump-action’ bound to
-     ’J’ in m-player interaction to move to that offset.  Optional
+     seconds.   Optional
      interactive prefix arg ‘playlist-p’ treats link as a playlist.  A
      second interactive prefix arg adds mplayer option
      -allow-dangerous-playlist-parsing
@@ -8616,11 +8643,9 @@ prefix arg to delete a previously created eww-mark.
 12.74.9.60 emacspeak-eww-speak-this-element
 ...........................................
 
- -- Command: emacspeak-eww-speak-this-element (element)
+ -- Command: emacspeak-eww-speak-this-element
 
-     Speaks  to next element like current.
-
-     (fn ELEMENT)
+     Speak current .
 
 12.74.9.61 emacspeak-eww-table-data
 ...................................
@@ -9096,15 +9121,4 @@ popup and helm.
      Correction style to use with flyspell.
 
      Default Value: ‘flyspell-correct-ido’
-
-
-File: emacspeak.info,  Node: emacspeak-folding,  Next: emacspeak-forge,  Prev: emacspeak-flyspell,  Up: Emacspeak Commands And Options
-
-12.82 emacspeak-folding
-=======================
-
-Folding mode turns emacs into a folding editor.  Folding mode is what I
-use: emacs 19 comes with similar packages, e.g.  allout.el This module
-defines some advice forms for folding mode Think of a fold as a
-container.
 

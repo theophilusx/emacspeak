@@ -576,11 +576,11 @@ Safari/537.36"
   (cl-declare (special
                eww-mode-map eww-link-keymap eww-text-map
                shr-inhibit-images emacspeak-eww-inhibit-images
-               emacspeak-pronounce-common-xml-namespace-uri-pronunciations
+               emacspeak-pronounce-xml-ns
                emacspeak-eww-masquerade))
   (ems--fastload "emacspeak-pronounce")
   (emacspeak-pronounce-augment-pronunciations
-   'eww-mode emacspeak-pronounce-common-xml-namespace-uri-pronunciations)
+   'eww-mode emacspeak-pronounce-xml-ns)
   (emacspeak-pronounce-add-dictionary-entry
    'eww-mode
    emacspeak-pronounce-rfc-3339-datetime-pattern
@@ -682,8 +682,7 @@ Safari/537.36"
 (defun emacspeak-eww-play-media-at-point (&optional  playlist-p)
   "Play media url under point.
 Interprets url-fragment identifier #nnn as time-offset in
-seconds.  Use command `emacspeak-m-player-jump-action' bound to
-'J' in m-player interaction to move to that offset.  Optional
+seconds.   Optional
 interactive prefix arg `playlist-p' treats link as a playlist.  A
 second interactive prefix arg adds mplayer option
 -allow-dangerous-playlist-parsing"
@@ -691,16 +690,13 @@ second interactive prefix arg adds mplayer option
   (cl-declare (special
                emacspeak-m-player-media-history
                emacspeak-eww-url-at-point))
-  (let ((url
-          (browse-url-url-at-point)))
+  (let ((url (browse-url-url-at-point)))
     (cl-assert (stringp url) t "No URL under point." )
     (kill-new url)
     (cl-pushnew                         ; strip #target
      (cl-first (split-string url "#"))
      emacspeak-m-player-media-history :test #'string=)
-    (message "%s Playing url under point"
-             (if (string-match "#" url)
-                 "Press J to resume where you left off"))
+    (message " Playing url under point")
     (emacspeak-m-player url playlist-p)))
 
 (defun emacspeak-eww-curl-play-media-at-point ()

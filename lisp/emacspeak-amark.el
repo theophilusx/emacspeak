@@ -49,7 +49,7 @@
 ;; Position: time offset from start
 
 ;;  This library will be used from emacspeak-m-player to set and jump
-;; to bookmarks. Amarks are stored in a .amarks.el file in the working
+;; to bookmarks. Amarks are stored in a .amarks file in the working
 ;; directory.  It also provides a simple AMark Browser to use from a
 ;; directory containing mp3 files where Amarks have been created.
 
@@ -60,15 +60,17 @@
 
 (require 'cl-lib)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
+(require 'dired)
 ;;}}}
 ;;{{{ Structure:
 
-(cl-defstruct emacspeak-amark
-  "AMark: A structure that holds a name, a file, and a time-position."
-  path                                  ; filename
-  name                                  ; Bookmark name
-  position                              ; Offset in ms from start
-  )
+(cl-defstruct
+ emacspeak-amark
+ "AMark: Holds name,  a file, and a time-position."
+ path                                   ; filename
+ name                                   ; Bookmark name
+ position                               ; Offset in ms from start
+ )
 
 ;;}}}
 ;;{{{ AMark List:
@@ -108,7 +110,7 @@ given name, it is updated with path and position."
          (make-emacspeak-amark :path path :name name :position position)
          emacspeak-amark-list))))))
 
-(defvar emacspeak-amark-file ".amarks.el"
+(defvar emacspeak-amark-file ".amarks.am"
   "Name of file used to save AMarks.")
 
 ;;;###autoload
@@ -133,18 +135,19 @@ given name, it is updated with path and position."
   "Load AMarks file from  current  media directory."
   (cl-declare (special emacspeak-amark-list emacspeak-amark-file
                        emacspeak-m-player-process))
-  (let ((buff nil)
-        (find-file-hook nil)
-        (file
-         (expand-file-name
-          emacspeak-amark-file
-          (or
+  (let* ((buff nil)
+         (find-file-hook nil)
+         (def default-directory)
+         (dir
            (when (process-live-p emacspeak-m-player-process)
              (with-current-buffer
-                 (process-buffer emacspeak-m-player-process)
-               default-directory))
-           default-directory)))
-        (l nil ))
+                 (process-buffer emacspeak-m-player-process) def)))
+         (file
+           (cond 
+             ((file-exists-p (expand-file-name emacspeak-amark-file def))
+              (expand-file-name emacspeak-amark-file def))
+             (t  (expand-file-name emacspeak-amark-file dir))))
+         (l nil ))
     (when (file-exists-p file)
       (setq buff (find-file-noselect file))
       (with-current-buffer buff
@@ -165,6 +168,13 @@ given name, it is updated with path and position."
           (string-lessp
            (emacspeak-amark-name a) (emacspeak-amark-name b )))))))
 
+
+(defun emacspeak-amark-file-load ()
+  "Open .amark.el on current line in AMark Browser"
+  (interactive)
+  (cd (file-name-directory (dired-get-filename)))
+  (funcall-interactively #'emacspeak-amark-browse))
+
 (defun emacspeak-amark-delete (amark)
   "Delete Amark and save."
   (cl-declare (special emacspeak-amark-list))
@@ -178,10 +188,13 @@ given name, it is updated with path and position."
 
 (defun emacspeak-amark-play (amark)
   "Play amark using m-player."
-  (emacspeak-m-player
-   (expand-file-name (emacspeak-amark-path  amark) default-directory))
-  (sit-for 0.3)
-  (emacspeak-m-player-seek-absolute (emacspeak-amark-position amark)))
+  (cl-declare (special emacspeak-m-player-options))
+  (let ((emacspeak-m-player-options
+          (append
+           emacspeak-m-player-options
+           `("-ss" ,(emacspeak-amark-position amark)))))
+    (emacspeak-m-player
+     (expand-file-name (emacspeak-amark-path  amark) default-directory))))
 
 ;;}}}
 ;;{{{Amark Mode:
@@ -208,6 +221,13 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 ;;}}}
 ;;{{{Browse Amarks:
 
+(defun emacspeak-amark-list-play ()
+  "Play amark list as a playlist"
+  (interactive)
+  (cl-declare (special emacspeak-amark-list))
+  (when (and emacspeak-amark-list (listp emacspeak-amark-list))
+    (mapc #'emacspeak-amark-play emacspeak-amark-list)))
+
 ;;;###autoload
 (defun emacspeak-amark-browse ()
   "Browse   amarks  in current directory using `emacspeak-amark-mode'."
@@ -220,6 +240,7 @@ via command `org-insert-link' bound to \\[org-insert-link]."
       (emacspeak-amark-mode)
       (setq emacspeak-amark-list amarks)
       (local-set-key "p" 'backward-button)
+      (local-set-key "." 'emacspeak-amark-list-play)
       (local-set-key "n" 'forward-button)
       (erase-buffer)
       (setq buffer-undo-list t)
@@ -236,6 +257,16 @@ via command `org-insert-link' bound to \\[org-insert-link]."
       (emacspeak-speak-load-directory-settings)
       (goto-char (point-min)))
     (funcall-interactively #'switch-to-buffer buff)))
+
+;;;###autoload
+(defun emacspeak-amark-bookshelf()
+  "Open a locate buffer with all .amarks.am files.
+Use \\[emacspeak-dired-open-this-file] to open the AMark Browser on
+current file."
+  (interactive)
+  (cl-declare (special emacspeak-amark-file))
+  (funcall-interactively #'locate emacspeak-amark-file)
+  (rename-buffer "AMark Bookshelf" 'unique))
 
 ;;}}}
 (provide  'emacspeak-amark)
