@@ -305,7 +305,7 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
         (next-completion 1)
         (tts-with-punctuations
          'all
-         (dtk-speak (buffer-substring (point) (point-max))))))
+         (emacspeak-speak-windowful))))
       (t (emacspeak-speak-line)))))
 
 ;;}}}
@@ -2903,11 +2903,8 @@ but quickly switch to a window by name."
   "Process sentinel to disable repeat.
 Also kill process-buffer on process exit."
   (when (memq (process-status process) '(failed signal exit stop nil))
-    (kill-buffer (process-buffer process)))
-  (when
-      (and repeat-mode
-           (memq (process-status process) '(failed signal exit stop nil)))
-    (repeat-exit)))
+    (when repeat-mode (repeat-exit))
+    (kill-buffer (process-buffer process))))
 
 (defsubst emacspeak-repeat-mode-hook ()
   "Add or remove emacspeak-repeat-check-hook from post-command-hook"

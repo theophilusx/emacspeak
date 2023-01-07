@@ -106,7 +106,7 @@
   "URL being played in mpv.")
 
 (defadvice mpv-kill (before emacspeak pre act comp)
-  "Add org integration."
+  "Org integration"
   (when (ems-interactive-p)
     (emacspeak-auditory-icon 'close-object)
     (cl-pushnew
@@ -149,6 +149,7 @@
      for b in
      '(("SPC" mpv-pause)
        (";" emacspeak-mpv-play-url)
+       ("C-m" mpv-play)
        ("l" emacspeak-mpv-store-link)
        ("s" mpv-seek)
        ("n" mpv-playlist-next)
