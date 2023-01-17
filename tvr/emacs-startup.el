@@ -4,6 +4,8 @@
 ;; Segre March 22 1991
 ;; July 15, 2001 finally cutting over to custom.
 ;; August 12, 2007: Cleaned up for Emacs 22
+
+
 ;; September 2017: Optimized and Cleaned Up
 ;; August 2020: Limit code at top-level.
 
@@ -94,16 +96,6 @@ Produce timing information as the last step."
 (defalias 'epa--decode-coding-string 'decode-coding-string)
 
 ;;}}}
-;;{{{ tvr-tabs:
-
-(defsubst tvr-tabs ()
-  "Set up my tab-bar."
-  (tab-new)
-  (tab-rename "books")
-  (tab-next)
-  (tab-rename "home"))
-
-;;}}}
 ;;{{{ tvr-shell-bind-keys:
 
 (defsubst tvr-shell-bind-keys ()
@@ -117,6 +109,14 @@ Produce timing information as the last step."
      ("C-c k" comint-clear-buffer))
    do
    (define-key shell-mode-map (ems-kbd (cl-first b)) (cl-second b))))
+
+;;}}}
+;;{{{tvr-tabs:
+
+(defun tvr-tabs ()
+  "Set up  tab-bar"
+  (tab-bar-switch-to-tab "Books")
+  (tab-bar-switch-to-tab "Home"))
 
 ;;}}}
 ;;{{{Node/NVM Setup:
@@ -146,7 +146,8 @@ startup sound."
    (expand-file-name "highbells.au" emacspeak-sounds-directory))
   (message
    "<Emacs started for %s in %.2f  seconds with %s gcs (%.2f seconds)>"
-   user-login-name (read (emacs-init-time)) gcs-done gc-elapsed))
+   user-login-name (read (emacs-init-time)) gcs-done gc-elapsed)
+    (tvr-tabs))
 
 (defun tvr-customize ()
   "Customize my emacs.
@@ -206,7 +207,6 @@ Use Custom to customize where possible. "
   (server-start)
   (with-eval-after-load 'magit (require 'forge))
   (make-thread #'(lambda nil (load "eww")))
-  (tvr-tabs)
   (setq custom-file (expand-file-name "~/.customize-emacs"))
   (load-theme 'modus-vivendi-tinted t)
   (require 'dired-x)
@@ -226,7 +226,7 @@ Use Custom to customize where possible. "
   (cl-declare (special  tvr-libs emacspeak-soundscapes))
 ;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
-   (load "emacspeak-mpv")
+  (load "emacspeak-mpv")
   (tvr-customize) ;;; customizations
   (with-eval-after-load
     'yasnippet
