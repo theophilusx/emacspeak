@@ -50,7 +50,7 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (require 'cl-extra)
 (cl-declaim (optimize (safety 0) (speed 3)))
 (eval-when-compile
@@ -1323,11 +1323,13 @@ of the source buffer."
   (unless emacspeak-wizards-project-shells (shell))
   (cl-loop
    for pair in (reverse emacspeak-wizards-project-shells) do
-   (let* ((name (cl-first pair))
-          (dir (cl-second pair))
-          (default-directory dir))
-     (with-current-buffer (shell name)
-       (setq emacspeak-wizards--project-shell-directory dir))))
+   (ems-with-messages-silenced
+    (let* ((dtk-quiet t)
+           (name (cl-first pair))
+           (dir (cl-second pair))
+           (default-directory dir))
+      (with-current-buffer (shell name)
+        (setq emacspeak-wizards--project-shell-directory dir)))))
   (emacspeak-wizards--build-shells-table))
 
 (defun emacspeak-wizards-shell-directory-set ()

@@ -334,7 +334,10 @@ Then speak the screenful. "
     (emacspeak-auditory-icon 'open-object)
     (message "Forwarding message")
     ad-do-it
-    (emacspeak-speak-line))
+    (emacspeak-speak-line)
+    (save-excursion
+     (search-forward "--text follows this line--")
+     (insert "\n\n")))
    (t
     ad-do-it))
   ad-return-value)
@@ -353,13 +356,20 @@ Then speak the screenful. "
 (defadvice vm-reply-include-text (after emacspeak pre act comp)
   "Provide aural feedback."
   (when (ems-interactive-p)
+    ;; Insert whitespace to delimit quoted text
+    (save-excursion
+     (insert "\n\n"))
     (emacspeak-speak-mode-line)))
 
 (defadvice vm-followup-include-text (after emacspeak pre act comp)
   "Provide aural feedback."
   (when (ems-interactive-p)
+    ;; Delimit cited text
+    (save-excursion
+     (insert "\n\n"))
     (message "Following up")
     (emacspeak-speak-mode-line)))
+
 (defadvice vm-mail-send (after emacspeak pre act comp)
   "Provide auditory context"
   (when  (ems-interactive-p)

@@ -74,7 +74,7 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'dired)
@@ -1096,7 +1096,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
       (t (dtk-speak-and-echo "Waiting")))))
 
 (defconst emacspeak-m-player-filters
-  '("extrastereo" "volnorm" "surround"
+  '( "extrastereo" "extrastereo=1.5" "volnorm" "surround"
     "channels=2:2:1:0:0:1"
     "channels=1:0:0:0:1"
     "channels=1:1:0:1:1"

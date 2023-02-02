@@ -1,7 +1,7 @@
-;;; emacspeak-ffap.el --- Speech-enable FFAP  -*- lexical-binding: t; -*-
+;;; emacspeak-treesit.el --- Speech-enable TREESIT  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
-;;; Description:  Speech-enable FFAP An Emacs Interface to ffap
-;;; Keywords: Emacspeak,  Audio Desktop ffap
+;;; Description:  Speech-enable TREESIT An Emacs Interface to treesit
+;;; Keywords: Emacspeak,  Audio Desktop treesit
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -25,13 +25,12 @@
 ;;;
 ;;; GNU Emacs is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNFFAP FOR A PARTICULAR PURPOSE.  See the
+;;; MERCHANTABILITY or FITNTREESIT FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Emacs; see the file COPYING.  If not, write to
-;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
 
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -39,8 +38,8 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; FFAP ==  Find file at point and friends
-
+;;; TREESIT ==  Syntax Trees
+;; Speech-enable treesit navigation commands.
 ;;; Code:
 
 ;;}}}
@@ -49,37 +48,31 @@
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-(eval-when-compile (require 'ffap))
 
 ;;}}}
 ;;{{{ Map Faces:
 
 (voice-setup-add-map 
- '((ffap voice-bolden)))
+'(
+(treesit-explorer-anonymous-node 'voice-smoothen)
+(treesit-explorer-field-name voice-brighten)))
 
 ;;}}}
 ;;{{{ Interactive Commands:
 
 (cl-loop
  for f in 
- '(
-   ffap ffap-alternate-file ffap-alternate-file-other-window ffap-at-mouse
-   ffap-dired-other-frame ffap-dired-other-window
-   ffap-list-directory ffap-literally
-   ffap-next ffap-next-url
-   ffap-other-frame ffap-other-tab ffap-other-window
-   ffap-read-only ffap-read-only-other-frame
-   ffap-read-only-other-tab ffap-read-only-other-window)
+ '(treesit-end-of-defun treesit-beginning-of-defun treesit-forward-sexp)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'open-object)
-       (emacspeak-speak-mode-line)))))
+       (emacspeak-auditory-icon 'large-movement)
+       (emacspeak-speak-line)))))
 
 ;;}}}
-(provide 'emacspeak-ffap)
+(provide 'emacspeak-treesit)
 ;;{{{ end of file
 
 ;;; local variables:

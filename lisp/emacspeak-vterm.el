@@ -56,7 +56,7 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
@@ -183,6 +183,8 @@
   (emacspeak-vterm-snapshot))
 
 ;; speech-enable term update loop, using previously cached state.
+(defvar emacspeak-vterm-debug nil
+  "Debug flag")
 
 (defadvice vterm--redraw (after emacspeak pre act comp)
   "Speech-enable term emulation."

@@ -51,7 +51,7 @@
 ;;{{{ requires
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
 
@@ -663,6 +663,7 @@
     ("c" calculator)
     ("d" emacspeak-dired-downloads)
     ("e" elfeed)
+    ("g" emacspeak-google-tts)
     ("h" emacspeak-org-capture-link)
     ("l" emacspeak-wizards-locate-content)
     ("m" emacspeak-wizards-view-buffers-filtered-by-this-mode)

@@ -54,7 +54,7 @@
 ;;}}}
 ;;{{{  Required modules
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'derived))
 (require 'emacspeak-preamble)
@@ -670,18 +670,19 @@ current page."
 ;;}}}
 ;;{{{ TTS:
 
-(defcustom emacspeak-google-tts-default-language "en-us"
-  "Default language used for Google TTS."
-  :type 'string
-  :group 'emacspeak-google)
+(define-prefix-command 'emacspeak-google-tts)
+
+(defvar-local emacspeak-google-tts-default-language "en-us"
+  "Default language used for Google TTS.")
 
 (defvar emacspeak-google-tts-rest-uri
   "https://www.google.com/speech-api/v1/synthesize?lang=%s&text=%s"
   "REST endpoint for network speech synthesis.")
 ;;;###autoload
-(defun emacspeak-google-tts (text &optional lang)
+(defun emacspeak-google-tts-speak (text &optional lang)
   "Google Network TTS.
-Optional interactive prefix arg `lang' specifies  language identifier."
+Optional interactive prefix arg `lang' specifies  language identifier
+which becomes buffer-local."
   (interactive
    (list
     (read-from-minibuffer "Text: ")
@@ -690,8 +691,12 @@ Optional interactive prefix arg `lang' specifies  language identifier."
                emacspeak-mpv-program 
                emacspeak-google-tts-default-language
                emacspeak-google-tts-rest-uri ))
-  (or lang (setq lang "en-us"))
-  (unless (stringp lang) (setq lang (read-string  "Lang:")))
+  (when current-prefix-arg
+    (unless (stringp lang)
+      (setq lang
+            (read-string  "Lang:" nil nil
+                          emacspeak-google-tts-default-language))
+      (setq emacspeak-google-tts-default-language lang)))
   (let ((url (format emacspeak-google-tts-rest-uri
                      (or lang emacspeak-google-tts-default-language)
                      (url-hexify-string  text))))
@@ -704,7 +709,57 @@ Optional interactive prefix arg `lang' specifies  language identifier."
   "Speak region using Google Network TTS."
   (interactive
    (list (region-beginning) (region-end) current-prefix-arg))
-  (emacspeak-google-tts (buffer-substring-no-properties start end) ask-lang))
+  (emacspeak-google-tts-speak (buffer-substring-no-properties start end) ask-lang))
+
+
+;;;###autoload
+(defun emacspeak-google-tts-line ()
+  "TTS line using network TTS.
+Use default voice for buffer."
+  (interactive)
+  (dtk-notify-say (format "%d" (line-number-at-pos (point))))
+  (emacspeak-google-tts-region
+   (line-beginning-position) (line-end-position)))
+;;;###autoload
+(defun emacspeak-google-tts-next-line ()
+  "TTS next line using network TTS.
+Use default voice for buffer."
+  (interactive)
+  (forward-line 1)
+  (skip-syntax-forward "^w_")
+  (dtk-notify-say (format "%d" (line-number-at-pos (point))))
+  (emacspeak-google-tts-region
+   (line-beginning-position) (line-end-position)))
+
+;;;###autoload
+(defun emacspeak-google-tts-previous-line ()
+  "TTS previous line using network TTS.
+Use default voice for buffer."
+  (interactive)
+  (forward-line -1)
+  (skip-syntax-backward "^w_")
+  (goto-char (line-beginning-position))
+  (dtk-notify-say (format "%d" (line-number-at-pos (point))))
+  (emacspeak-google-tts-region
+   (line-beginning-position) (line-end-position)))
+
+(cl-declaim (special emacspeak-google-tts))
+(cl-loop
+ for b in 
+ '(("l" emacspeak-google-tts-line)
+   ("p" emacspeak-google-tts-previous-line)
+   ("n" emacspeak-google-tts-next-line)
+   ("r" emacspeak-google-tts-region)
+   ("s" emacspeak-google-tts-speak))
+ do
+ (emacspeak-keymap-update  emacspeak-google-tts b))
+
+;;; repeat-mode
+(map-keymap
+ (lambda (_key cmd)
+   (when (symbolp cmd)
+     (put cmd 'repeat-map 'emacspeak-google-tts)))
+ emacspeak-google-tts)
 
 ;;}}}
 ;;{{{ What Is My IP:

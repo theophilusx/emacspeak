@@ -132,6 +132,7 @@ emacspeak-elpher.elc \
 emacspeak-elpy.elc \
 emacspeak-elscreen.elc \
 emacspeak-emms.elc \
+emacspeak-empv.elc \
 emacspeak-enriched.elc \
 emacspeak-entertain.elc \
 emacspeak-epa.elc \
@@ -253,6 +254,7 @@ emacspeak-tab-bar.elc \
 emacspeak-table-ui.elc \
 emacspeak-table.elc \
 emacspeak-tabulate.elc \
+emacspeak-tabulated-list.elc \
 emacspeak-tar.elc \
 emacspeak-tcl.elc \
 emacspeak-tempo.elc \
@@ -262,6 +264,7 @@ emacspeak-threes.elc \
 emacspeak-tide.elc \
 emacspeak-todo-mode.elc \
 emacspeak-transient.elc \
+emacspeak-treesit.elc \
 emacspeak-twittering.elc \
 emacspeak-typo.elc \
 emacspeak-url-template.elc \

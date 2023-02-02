@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1174 commands and 148 options.
+This chapter documents a total of 1179 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -68,6 +68,7 @@ This chapter documents a total of 1174 commands and 148 options.
 * emacspeak-elpy::Speech-enable ELPY.
 * emacspeak-elscreen::ELSCREEN.
 * emacspeak-emms::Speech-enable EMMS.
+* emacspeak-empv::Speech-enable EMPV.
 * emacspeak-enriched::Audio FormatRichtext.
 * emacspeak-entertain::Speech enable games.
 * emacspeak-epa::Speech-enable GPG Helper.
@@ -202,6 +203,7 @@ This chapter documents a total of 1174 commands and 148 options.
 * emacspeak-tide::Speech-enable TIDE.
 * emacspeak-todo-mode::speech-enable todo.
 * emacspeak-transient::TRANSIENT.
+* emacspeak-treesit::Speech-enable TREESIT.
 * emacspeak-twittering::
 * emacspeak-typo::Speech-enable TYPO.
 * emacspeak-url-template::URI templates.
@@ -3648,6 +3650,23 @@ Speak current track.
 @end format
 @end deffn
 
+@node emacspeak-empv
+@section emacspeak-empv
+
+EMPV ==  Another Emacs Media Player
+Provides better Youtube integration
+
+@subsection Emacspeak-Empv Commands
+
+@subsubsection emacspeak-empv-this-title
+@deffn {Command} emacspeak-empv-this-title   
+@findex emacspeak-empv-this-title
+
+@format
+Speak title of current item
+@end format
+@end deffn
+
 @node emacspeak-enriched
 @section emacspeak-enriched
 
@@ -6426,6 +6445,31 @@ EXWM ==  Emacs X Window Manager
 This module speech-enables and integrates EXWM on the Emacspeak
 Audio Desktop
 
+@subsection Emacspeak-Exwm Commands
+
+@subsubsection emacspeak-exwm-orca-toggle
+@deffn {Command} emacspeak-exwm-orca-toggle   
+@table @kbd
+@item s-o
+@kindex s-o
+@end table
+
+@findex emacspeak-exwm-orca-toggle
+
+@format
+Toggle state of orca.
+@end format
+@end deffn
+
+@subsubsection emacspeak-exwm-workspace-cycle
+@deffn {Command} emacspeak-exwm-workspace-cycle   
+@findex emacspeak-exwm-workspace-cycle
+
+@format
+Cycle to next workspace, with wrap-around
+@end format
+@end deffn
+
 @node emacspeak-feeds
 @section emacspeak-feeds
 
@@ -7361,26 +7405,92 @@ Change  web-history-visited in the currently active toolbelt.
 @end format
 @end deffn
 
-@subsubsection emacspeak-google-tts
-@deffn {Command} emacspeak-google-tts  (text &optional lang)
-@findex emacspeak-google-tts
+@subsubsection emacspeak-google-tts-line
+@deffn {Command} emacspeak-google-tts-line   
+@table @kbd
+@item C-. g l
+@kindex C-. g l
+@item C-x @@ s g l
+@kindex C-x @@ s g l
+@end table
+
+@findex emacspeak-google-tts-line
 
 @format
-Google Network TTS.
-Optional interactive prefix arg ‘lang’ specifies  language identifier.
+TTS line using network TTS.
+Use default voice for buffer.
+@end format
+@end deffn
 
-(fn TEXT &optional LANG)
+@subsubsection emacspeak-google-tts-next-line
+@deffn {Command} emacspeak-google-tts-next-line   
+@table @kbd
+@item C-. g n
+@kindex C-. g n
+@item C-x @@ s g n
+@kindex C-x @@ s g n
+@end table
+
+@findex emacspeak-google-tts-next-line
+
+@format
+TTS next line using network TTS.
+Use default voice for buffer.
+@end format
+@end deffn
+
+@subsubsection emacspeak-google-tts-previous-line
+@deffn {Command} emacspeak-google-tts-previous-line   
+@table @kbd
+@item C-. g p
+@kindex C-. g p
+@item C-x @@ s g p
+@kindex C-x @@ s g p
+@end table
+
+@findex emacspeak-google-tts-previous-line
+
+@format
+TTS previous line using network TTS.
+Use default voice for buffer.
 @end format
 @end deffn
 
 @subsubsection emacspeak-google-tts-region
 @deffn {Command} emacspeak-google-tts-region  (start end &optional ask-lang)
+@table @kbd
+@item C-. g r
+@kindex C-. g r
+@item C-x @@ s g r
+@kindex C-x @@ s g r
+@end table
+
 @findex emacspeak-google-tts-region
 
 @format
 Speak region using Google Network TTS.
 
 (fn START END &optional ASK-LANG)
+@end format
+@end deffn
+
+@subsubsection emacspeak-google-tts-speak
+@deffn {Command} emacspeak-google-tts-speak  (text &optional lang)
+@table @kbd
+@item C-. g s
+@kindex C-. g s
+@item C-x @@ s g s
+@kindex C-x @@ s g s
+@end table
+
+@findex emacspeak-google-tts-speak
+
+@format
+Google Network TTS.
+Optional interactive prefix arg ‘lang’ specifies  language identifier
+which becomes buffer-local.
+
+(fn TEXT &optional LANG)
 @end format
 @end deffn
 
@@ -7425,13 +7535,6 @@ Turn YT Channel or Playlist url into an RSS feed and open it.
 API Key for Google Knowledge Graph.
 
 Default Value: @code{@verb{|nil|}}
-
-@end defvar
-
-@defvar {User Option} emacspeak-google-tts-default-language
-Default language used for Google TTS.
-
-Default Value: @code{@verb{|en-us|}}
 
 @end defvar
 
@@ -7925,7 +8028,7 @@ Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacsp
 @defvar {User Option} emacspeak-super-keys
 Super key bindings. 
 
-Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood) (y emacspeak-mpv-play-url))|}}
+Default Value: @code{@verb{|((. emacspeak-wizards-shell-directory-reset) (C-n emacspeak-wizards-google-headlines) (R emacspeak-webspace-feed-reader) (SPC scratch-buffer) (c calculator) (d emacspeak-dired-downloads) (e elfeed) (g emacspeak-google-tts) (h emacspeak-org-capture-link) (l emacspeak-wizards-locate-content) (m emacspeak-wizards-view-buffers-filtered-by-this-mode) (n emacspeak-wizards-google-news) (p proced) (r soundscape-restart) (s soundscape) (t soundscape-toggle) (u soundscape-update-mood) (y emacspeak-mpv-play-url))|}}
 
 @end defvar
 
@@ -14728,6 +14831,12 @@ Previous transient section.
 @end format
 @end deffn
 
+@node emacspeak-treesit
+@section emacspeak-treesit
+
+TREESIT ==  Syntax Trees
+Speech-enable treesit navigation commands.
+
 @node emacspeak-twittering
 @section emacspeak-twittering
 
@@ -17653,17 +17762,6 @@ Show  properties of  face.
 
 @format
 Convenience command to view state of memory used in this session so far.
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-show-value
-@deffn {Command} emacspeak-wizards-show-value  [Arg list not available until function definition is loaded.]
-@findex emacspeak-wizards-show-value
-
-@format
-Pretty-print and view var value.
-
-(fn VAR)
 @end format
 @end deffn
 
