@@ -1,10 +1,7 @@
 #    -*- mode: org -*-
+  To express oneself well is impactful, but only when one has
+  something impactful to express!  (TVR on Conversational Interfaces)
 
-Easy things are often amusing and relaxing, but their value soon
-fades. Greater pleasure, deeper satisfaction, and higher wages are
-associated with genuine accomplishments, with the successful
-fulfillment of a challenging task.
-– Donald Knuth
 
 Emacspeak News --History Of User-Visible Changes
 
@@ -28,6 +25,14 @@ supported.
 
 Module ~emacspeak-tabulated-list~ speech-enables
 ~tabulated-list-mode~.
+* Speech-Enable Tree-Sitter Navigation
+
+Speech-enable =combobulate=, a package that enables consistent
+tree-sitter based code navigation. See https://github.com/mickeynp/combobulate.git (push)
+
+** Speech-Enable FFIP
+
+Speech-enable package ~find-file-in-project~.
 
 ** Speech-Enable EXWM
 

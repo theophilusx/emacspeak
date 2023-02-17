@@ -106,6 +106,7 @@ emacspeak-cider.elc \
 emacspeak-ciel.elc \
 emacspeak-clojure.elc \
 emacspeak-cmuscheme.elc \
+emacspeak-combobulate.elc \
 emacspeak-comint.elc \
 emacspeak-company.elc \
 emacspeak-compile.elc \
@@ -150,6 +151,7 @@ emacspeak-exwm.elc \
 emacspeak-extras.elc \
 emacspeak-feeds.elc \
 emacspeak-ffap.elc \
+emacspeak-ffip.elc \
 emacspeak-filtertext.elc \
 emacspeak-flycheck.elc \
 emacspeak-flymake.elc \

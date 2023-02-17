@@ -117,50 +117,54 @@
 (global-set-key
  (ems-kbd "<print>")
  (defhydra
-  emacspeak-muggles-brightness
-  (:body-pre
-   (progn
-     (when hydra-is-helpful (emacspeak-hydra-toggle-talkative))
-     (emacspeak-hydra-body-pre "brightness"))
-   :hint nil
-   :pre emacspeak-hydra-pre
-   :post emacspeak-hydra-post)
-  "Brightness "
-  ("?" (emacspeak-hydra-self-help "emacspeak-muggles-brightness") "Help")
-  ("b" emacspeak-brightness-alert-toggle "Alert" )
-  ("B" emacspeak-brightness-autoblack-toggle "Autoblack" )
-  ("s" light-set "set")
-  ("g" light-get "Get")
-  ("t" emacspeak-hydra-toggle-talkative)
-  ("<print>" light-black "black")
-  ("0" light-black "black")
-  ("1" light-white  "white")
-  ("d" light-decrement "dimmer")
-  ("i" light-increment "brighter")
-  ("SPC" light-increment "brighter")))
+     emacspeak-muggles-brightness
+     (:body-pre
+      (progn
+        (when hydra-is-helpful (emacspeak-hydra-toggle-talkative))
+        (emacspeak-hydra-body-pre "brightness"))
+      :hint nil
+      :pre emacspeak-hydra-pre
+      :post emacspeak-hydra-post)
+   "Brightness "
+   ("?" (emacspeak-hydra-self-help "emacspeak-muggles-brightness") "Help")
+   ("b" emacspeak-brightness-alert-toggle "Alert" )
+   ("B" emacspeak-brightness-autoblack-toggle "Autoblack" )
+   ("s" light-set "set")
+   ("g" light-get "Get")
+   ("t" emacspeak-hydra-toggle-talkative)
+   ("<print>" light-black "black" :color blue)
+   ("s-." light-black "black" :color blue)
+   ("." light-black "black" :color blue)
+   ("0" light-black "black" :color blue)
+   ("1" light-white  "white" :color blue)
+   ("d" light-decrement "dimmer")
+   ("i" light-increment "brighter")
+   ("SPC" light-increment "brighter")))
+
+(global-set-key (ems-kbd "s-.") 'emacspeak-muggles-brightness/body)
 
 ;;}}}
 ;;{{{ Org-Mode Table Navigation:
 (with-eval-after-load "org"
   (define-key
-   org-mode-map (ems-kbd "C-c t")
-   (defhydra emacspeak-muggles-org-table
-             (:body-pre
-              (progn
-                (emacspeak-hydra-body-pre "Org Table UI")
-                (when hydra-is-helpful (emacspeak-hydra-toggle-talkative)))
-              :pre emacspeak-hydra-pre :post emacspeak-hydra-post)
-             "Org Table UI"
-             ("?"(emacspeak-hydra-self-help "emacspeak-muggles-org-table"))
-             ("j" org-table-next-row)
-             ("k" org-table-previous-row)
-             ("h" org-table-previous-field)
-             ("l" org-table-next-field)
-             ("SPC"emacspeak-org-table-speak-current-element)
-             ("."emacspeak-org-table-speak-coordinates)
-             ("b"emacspeak-org-table-speak-both-headers-and-element)
-             ("r"emacspeak-org-table-speak-row-header-and-element)
-             ("c"emacspeak-org-table-speak-column-header-and-element))))
+      org-mode-map (ems-kbd "C-c t")
+    (defhydra emacspeak-muggles-org-table
+        (:body-pre
+         (progn
+           (emacspeak-hydra-body-pre "Org Table UI")
+           (when hydra-is-helpful (emacspeak-hydra-toggle-talkative)))
+         :pre emacspeak-hydra-pre :post emacspeak-hydra-post)
+      "Org Table UI"
+      ("?"(emacspeak-hydra-self-help "emacspeak-muggles-org-table"))
+      ("j" org-table-next-row)
+      ("k" org-table-previous-row)
+      ("h" org-table-previous-field)
+      ("l" org-table-next-field)
+      ("SPC"emacspeak-org-table-speak-current-element)
+      ("."emacspeak-org-table-speak-coordinates)
+      ("b"emacspeak-org-table-speak-both-headers-and-element)
+      ("r"emacspeak-org-table-speak-row-header-and-element)
+      ("c"emacspeak-org-table-speak-column-header-and-element))))
 
 ;;}}}
 ;;{{{ HideShow:

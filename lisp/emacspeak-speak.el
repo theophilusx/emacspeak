@@ -1629,7 +1629,11 @@ Displays name of current buffer.")
        (emacspeak-auditory-icon 'item)
        (when (> window-count 1) (emacspeak--sox-multiwindow))
        (dtk-speak (format-mode-line header-line-format))))
-    (t (dtk-speak "No header line."))))
+    (t
+     (dtk-speak
+      (concat
+       (propertize (buffer-name) 'personality voice-smoothen)
+       (format-time-string " %H:%M "))))))
 
 (defun emacspeak-toggle-header-line ()
   "Toggle Emacspeak's default header line."
@@ -2185,6 +2189,23 @@ Numeric prefix arg COUNT specifies number of lines to move."
    (goto-char (window-point))
    (emacspeak-speak-line)))
 
+(defun emacspeak-speak-this-window ()
+  "Speak current window."
+  (interactive )
+  (emacspeak-speak-region
+   (window-start (selected-window))
+   (window-end  (selected-window) 'update)))
+
+(defun emacspeak-speak-other-window ()
+  "Speak other window"
+  (interactive )
+    (save-window-excursion
+     (other-window 1)
+     (emacspeak-speak-region
+      (window-start (selected-window))
+      (window-end  (selected-window) 'update))))
+
+
 (defun emacspeak-speak-predefined-window (&optional arg)
   "Speak one of the first 10 windows on the screen, 0 is current window.
 Speaks entire window irrespective of point.  Semantics of `other'
@@ -2192,18 +2213,18 @@ is the same as for the Emacs builtin `other-window'."
   (interactive "P")
   (cl-declare (special last-input-event))
   (let* ((window
-           (cond
-             ((not (called-interactively-p 'interactive)) arg)
-             (t
-              (read (format "%c" last-input-event))))))
+          (cond
+           ((not (called-interactively-p 'interactive)) arg)
+           (t
+            (read (format "%c" last-input-event))))))
     (or (numberp window)
         (setq window  (read-number "Window   between 1 and 9:" 1)))
     (save-window-excursion
-     (other-window window)
-     (emacspeak-speak-region
-      (window-start (selected-window))
-      (window-end  (selected-window) 'update)))))
-
+      (other-window window)
+      (emacspeak-speak-region
+       (window-start (selected-window))
+       
+       (window-end  (selected-window) 'update)))))
 ;;}}}
 ;;{{{  Intelligent interactive commands for reading:
 
@@ -2925,6 +2946,17 @@ Also kill process-buffer on process exit."
 (add-hook 'repeat-mode-hook 'emacspeak-repeat-mode-hook )
 
 ;;}}}
+;;{{{go top or bottom
+(defun emacspeak-beginning-or-end ()
+  "Move to start or end of buffer."
+  (interactive)
+  (cond
+    ((= (point) (point-min)) (call-interactively 'end-of-buffer))
+    ((= (point) (point-max)) (call-interactively 'beginning-of-buffer))
+    (t (call-interactively 'beginning-of-buffer))))
+
+;;}}}
+
 (provide 'emacspeak-speak)
 ;;{{{ end of file
 

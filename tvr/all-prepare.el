@@ -53,8 +53,6 @@
                    (?y t)
                    (?n nil))))
   ad-return-value)
-(with-eval-after-load  "empv"
-  (global-set-key (ems-kbd "C-' m") empv-map))
 ;;; vm-prepare.l :  -*- lexical-binding: nil; -*-
 
 (autoload 'vm "vm" "vm mail reader" t nil)
@@ -176,9 +174,8 @@ This moves them into the Spam folder."
   (cl-declare (special file-xoauth2-creds-location))
   (kill-buffer (find-file-noselect file-xoauth2-creds-location))
   (emacspeak-auditory-icon 'task-done))
-
+(global-set-key (ems-kbd "C-c u") 'tvr-unlock-xoauth)
 (when (keymapp emacspeak-ctl-z-keymap )
-  
   (define-key emacspeak-ctl-z-keymap "u" 'tvr-unlock-xoauth))
 (setq mm-file-name-rewrite-functions
                 '(mm-file-name-trim-whitespace
@@ -236,6 +233,8 @@ This moves them into the Spam folder."
     (lispy-mode 1)))
 (with-eval-after-load "lispy"
   (cl-declare (special lispy-mode-map lispy-mode-map-lispy))
+  (define-key lispy-mode-map (ems-kbd "C-a") 'move-beginning-of-line)
+  ;(define-key lispy-mode-map (concat emacspeak-prefix emacspeak-prefix) 'move-end-of-line)
   (define-key lispy-mode-map (ems-kbd "C-,") nil)
   (define-key lispy-mode-map-lispy (ems-kbd "C-,") nil)
   (define-key lispy-mode-map (ems-kbd "C-<return>") 'complete)

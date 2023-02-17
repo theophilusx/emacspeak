@@ -115,6 +115,7 @@ Produce timing information as the last step."
 
 (defun tvr-tabs ()
   "Set up  tab-bar"
+  (tab-bar-rename-tab "Home")
   (tab-bar-switch-to-tab "Books")
   (tab-bar-switch-to-tab "Home"))
 
@@ -217,8 +218,7 @@ Use Custom to customize where possible. "
   (diminish 'voice-lock-mode "")
   (diminish 'auto-fill-function "")
   (diminish 'abbrev-mode "")
-  (diminish 'auto-correct-mode "")
-  (load-library "yes-prepare"))
+  (diminish 'auto-correct-mode ""))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
@@ -226,7 +226,8 @@ Use Custom to customize where possible. "
   (cl-declare (special  tvr-libs emacspeak-soundscapes))
 ;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
-  (load "emacspeak-mpv")
+  (load "mpv")
+  (load "empv")
   (tvr-customize) ;;; customizations
   (with-eval-after-load
     'yasnippet
@@ -280,7 +281,7 @@ configuration happens via the after-init-hook. "
   (cl-declare (special emacspeak-directory))
   (setenv "PULSE_SINK" "binaural")
   (unless (featurep 'emacspeak)
-    (tvr-time-load ;;; load emacspeak:
+    (tvr-time-load ; load emacspeak:
      (load ;; setenv EMACSPEAK_DIR if you want to load a different version
       (expand-file-name
        "lisp/emacspeak-setup"

@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1179 commands and 147 options.
+This chapter documents a total of 1183 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -42,6 +42,7 @@ This chapter documents a total of 1179 commands and 147 options.
 * emacspeak-ciel::Speech-enable CIEL.
 * emacspeak-clojure::Speech-enable CLOJURE.
 * emacspeak-cmuscheme::CMUScheme.
+* emacspeak-combobulate::Speech-enable COMBOBULATE.
 * emacspeak-comint::Speech-enable COMINT.
 * emacspeak-company::Speech-enable COMPANY.
 * emacspeak-compile::Speech enable compile.
@@ -86,6 +87,7 @@ This chapter documents a total of 1179 commands and 147 options.
 * emacspeak-exwm::Speech-enable EXWM.
 * emacspeak-feeds::Atom, RSS.
 * emacspeak-ffap::Speech-enable FFAP.
+* emacspeak-ffip::Speech-enable FFIP.
 * emacspeak-filtertext::filter text.
 * emacspeak-flycheck::Speech-enable FLYCHECK.
 * emacspeak-flymake::Speech-enable FLYMAKE.
@@ -194,6 +196,7 @@ This chapter documents a total of 1179 commands and 147 options.
 * emacspeak-table::Table data model.
 * emacspeak-table-ui::Table Navigation UI.
 * emacspeak-tabulate::Handle table data.
+* emacspeak-tabulated-list::Speech-enable TABULATED-LIST.
 * emacspeak-tar::Speech enable Tar Mode.
 * emacspeak-tcl::Speech enable TCL.
 * emacspeak-tempo::Speech enable tempo.
@@ -312,6 +315,10 @@ Persist  amixer.
 @kindex <XF86AudioLowerVolume>
 @item C-<f1>
 @kindex C-<f1>
+@item C-e 3
+@kindex C-e 3
+@item <fn> 3
+@kindex <fn> 3
 @end table
 
 @findex amixer-volume-down
@@ -331,6 +338,10 @@ Interactive prefix arg ‘PROMPT’ reads percentage as a number
 @kindex <XF86AudioRaiseVolume>
 @item C-<f2>
 @kindex C-<f2>
+@item C-e 4
+@kindex C-e 4
+@item <fn> 4
+@kindex <fn> 4
 @end table
 
 @findex amixer-volume-up
@@ -2769,6 +2780,13 @@ CLOJURE-mode: Specialized mode for Clojure programming.
 
 speech-enable scheme support
 
+@node emacspeak-combobulate
+@section emacspeak-combobulate
+
+COMBOBULATE: Navigate, Manipulate code with  tree-sitter's
+concrete-tree;
+https://github.com/mickeynp/combobulate.git (push)
+
 @node emacspeak-comint
 @section emacspeak-comint
 
@@ -2792,10 +2810,10 @@ Interactive PREFIX arg means toggle  global default value.
 @subsubsection emacspeak-toggle-comint-output-monitor
 @deffn {Command} emacspeak-toggle-comint-output-monitor  (&optional prefix)
 @table @kbd
-@item C-e o
-@kindex C-e o
-@item <fn> o
-@kindex <fn> o
+@item C-e M-o
+@kindex C-e M-o
+@item <fn> M-o
+@kindex <fn> M-o
 @end table
 
 @findex emacspeak-toggle-comint-output-monitor
@@ -6631,6 +6649,11 @@ Default Value: @code{@verb{|/home/raman/sourceforge/awesome-rss-feeds/|}}
 
 FFAP ==  Find file at point and friends
 
+@node emacspeak-ffip
+@section emacspeak-ffip
+
+FFIP ==  find-file-in-project
+
 @node emacspeak-filtertext
 @section emacspeak-filtertext
 
@@ -7406,7 +7429,7 @@ Change  web-history-visited in the currently active toolbelt.
 @end deffn
 
 @subsubsection emacspeak-google-tts-line
-@deffn {Command} emacspeak-google-tts-line   
+@deffn {Command} emacspeak-google-tts-line  (&optional lang)
 @table @kbd
 @item C-. g l
 @kindex C-. g l
@@ -7419,6 +7442,8 @@ Change  web-history-visited in the currently active toolbelt.
 @format
 TTS line using network TTS.
 Use default voice for buffer.
+
+(fn &optional LANG)
 @end format
 @end deffn
 
@@ -7916,13 +7941,6 @@ the kill ring as well.
 
 @subsubsection emacspeak-jabber-popup-roster
 @deffn {Command} emacspeak-jabber-popup-roster   
-@table @kbd
-@item C-e x j
-@kindex C-e x j
-@item <fn> x j
-@kindex <fn> x j
-@end table
-
 @findex emacspeak-jabber-popup-roster
 
 @format
@@ -7932,13 +7950,6 @@ Pop to Jabber roster.
 
 @subsubsection emacspeak-jabber-speak-recent-message
 @deffn {Command} emacspeak-jabber-speak-recent-message   
-@table @kbd
-@item C-e x SPC
-@kindex C-e x SPC
-@item <fn> x SPC
-@kindex <fn> x SPC
-@end table
-
 @findex emacspeak-jabber-speak-recent-message
 
 @format
@@ -7986,7 +7997,7 @@ Note that the <fn> key found on laptops is denoted <fn>
 @defvar {User Option} emacspeak-alt-keys
 Alt key bindings. 
 
-Default Value: @code{@verb{|((, eldoc) (SPC emacspeak-eww-smart-tabs) (a emacspeak-feeds-atom-display) (b sox-binaural) (d deadgrep) (e eww) (f ffap) (g rg) (l eww-open-file) (o emacspeak-feeds-opml-display) (p emacspeak-wizards-pdf-open) (q emacspeak-wizards-iex-show-price) (r emacspeak-feeds-rss-display) (s emacspeak-wizards-tune-in-radio-search) (t emacspeak-wizards-tune-in-radio-browse) (u emacspeak-m-player-url) (v visual-line-mode) (w define-word) (y emacspeak-m-player-youtube-player))|}}
+Default Value: @code{@verb{|((, eldoc) (SPC emacspeak-eww-smart-tabs) (a emacspeak-feeds-atom-display) (b sox-binaural) (d deadgrep) (e eww) (f ffip) (g rg) (l eww-open-file) (o emacspeak-feeds-opml-display) (p emacspeak-wizards-pdf-open) (q emacspeak-wizards-iex-show-price) (r emacspeak-feeds-rss-display) (s emacspeak-wizards-tune-in-radio-search) (t emacspeak-wizards-tune-in-radio-browse) (u emacspeak-m-player-url) (v visual-line-mode) (w define-word) (y emacspeak-m-player-youtube-player))|}}
 
 @end defvar
 
@@ -8000,7 +8011,7 @@ Default Value: @code{@verb{|((SPC flyspell-mode) (b emacspeak-wizards-view-buffe
 @defvar {User Option} emacspeak-hyper-keys
 Hyper-Key bindings. 
 
-Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-m-player-using-openal) (; emacspeak-multimedia) (C-; emacspeak-amark-bookshelf) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-o eaf-open-browser) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (i ibuffer) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
+Default Value: @code{@verb{|((' emacspeak-m-player-using-hrtf) (, previous-buffer) (. next-buffer) (/ emacspeak-websearch-google-with-toolbelt) (: emacspeak-m-player-using-openal) (; emacspeak-multimedia) (C-; emacspeak-amark-bookshelf) (C-a emacspeak-wizards-term) (C-b eww-list-bookmarks) (C-d dictionary-search) (C-e eshell) (C-j emacspeak-wizards-shell-toggle) (C-l emacspeak-librivox) (C-t emacspeak-wizards-tramp-open-location) (DEL emacspeak-wizards-snarf-sexp) (TAB hippie-expand) (a emacspeak-amark-browse) (b eww-list-buffers) (c browse-url-chrome) (d magit-dispatch) (e gmaps) (f magit-file-dispatch) (g gnus) (h emacspeak-m-player-from-history) (i ibuffer) (k emacspeak-google-knowledge-search) (l locate) (m vm) (n emacspeak-wizards-cycle-to-next-buffer) (o find-file) (p emacspeak-wizards-cycle-to-previous-buffer) (r emacspeak-wizards-find-file-as-root) (s magit-status) (t twit) (u list-unicode-display) (w emacspeak-wizards-noaa-weather) (y yas-expand))|}}
 
 @end defvar
 
@@ -8021,7 +8032,7 @@ Default Value: @code{@verb{|nil|}}
 @defvar {User Option} emacspeak-personal-keys
 Key bindings for  C-e x. 
 
-Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacspeak-wizards-shell-directory-reset) (0 emacspeak-wizards-shell-by-key) (1 emacspeak-wizards-shell-by-key) (2 emacspeak-wizards-shell-by-key) (3 emacspeak-wizards-shell-by-key) (4 emacspeak-wizards-shell-by-key) (5 emacspeak-wizards-shell-by-key) (6 emacspeak-wizards-shell-by-key) (7 emacspeak-wizards-shell-by-key) (8 emacspeak-wizards-shell-by-key) (9 emacspeak-wizards-shell-by-key) (; emacspeak-m-player-loop) (= emacspeak-wizards-find-longest-line-in-region) (C emacspeak-wizards-colors) (SPC emacspeak-jabber-speak-recent-message) (a emacspeak-wizards-alpha-vantage-quotes) (b battery) (c emacspeak-wizards-color-wheel) (d emacspeak-speak-load-directory-settings) (e emacspeak-we-xsl-map) (f emacspeak-wizards-remote-frame) (h emacspeak-wizards-how-many-matches) (i ibuffer) (j emacspeak-jabber-popup-roster) (l emacspeak-m-player-youtube-live) (m mspools-show) (o emacspeak-wizards-occur-header-lines) (p paradox-list-packages) (q emacspeak-wizards-quote) (r jabber-activity-switch-to) (t emacspeak-speak-telephone-directory) (u emacspeak-wizards-units) (v emacspeak-wizards-vc-viewer) (w emacspeak-wizards-noaa-weather) (| emacspeak-wizards-squeeze-blanks) ( desktop-clear))|}}
+Default Value: @code{@verb{|((, emacspeak-wizards-shell-directory-set) (. emacspeak-wizards-shell-directory-reset) (0 emacspeak-wizards-shell-by-key) (1 emacspeak-wizards-shell-by-key) (2 emacspeak-wizards-shell-by-key) (3 emacspeak-wizards-shell-by-key) (4 emacspeak-wizards-shell-by-key) (5 emacspeak-wizards-shell-by-key) (6 emacspeak-wizards-shell-by-key) (7 emacspeak-wizards-shell-by-key) (8 emacspeak-wizards-shell-by-key) (9 emacspeak-wizards-shell-by-key) (; emacspeak-m-player-loop) (= emacspeak-wizards-find-longest-line-in-region) (C emacspeak-wizards-colors) (b battery) (c emacspeak-wizards-color-wheel) (d emacspeak-speak-load-directory-settings) (e emacspeak-we-xsl-map) (f emacspeak-wizards-remote-frame) (h emacspeak-wizards-how-many-matches) (i ibuffer) (l emacspeak-m-player-youtube-live) (m mspools-show) (o emacspeak-wizards-occur-header-lines) (p paradox-list-packages) (q emacspeak-wizards-quote) (t emacspeak-speak-telephone-directory) (u emacspeak-wizards-units) (v emacspeak-wizards-vc-viewer) (w emacspeak-wizards-noaa-weather) (| emacspeak-wizards-squeeze-blanks) ( desktop-clear))|}}
 
 @end defvar
 
@@ -9820,6 +9831,8 @@ example, Muggle @samp{ViewMode} binds @code{s} to this command.
 @subsubsection emacspeak-muggles-brightness/body
 @deffn {Command} emacspeak-muggles-brightness/body   
 @table @kbd
+@item s-.
+@kindex s-.
 @item <print>
 @kindex <print>
 @end table
@@ -9838,6 +9851,8 @@ The heads for the associated hydra are:
 "g":    ‘light-get’,
 "t":    ‘emacspeak-hydra-toggle-talkative’,
 "<print>":    ‘light-black’,
+"s-.":    ‘light-black’,
+".":    ‘light-black’,
 "0":    ‘light-black’,
 "1":    ‘light-white’,
 "d":    ‘light-decrement’,
@@ -11558,7 +11573,7 @@ custom option @code{emacspeak-play-program}.
 @subsection Emacspeak-Sounds Commands
 
 @subsubsection emacspeak-sounds-select-theme
-@deffn {Command} emacspeak-sounds-select-theme  (theme)
+@deffn {Command} emacspeak-sounds-select-theme  (&optional theme)
 @table @kbd
 @item C-e )
 @kindex C-e )
@@ -11571,7 +11586,7 @@ custom option @code{emacspeak-play-program}.
 @format
 Select theme for auditory icons.
 
-(fn THEME)
+(fn &optional THEME)
 @end format
 @end deffn
 
@@ -11631,6 +11646,22 @@ Persist variable  ‘var’ to file ‘FILE’.
 Arranges for ‘VAR’ to be restored when ‘file’ is loaded.
 
 (fn VAR FILE)
+@end format
+@end deffn
+
+@subsubsection emacspeak-beginning-or-end
+@deffn {Command} emacspeak-beginning-or-end   
+@table @kbd
+@item C-e ,
+@kindex C-e ,
+@item <fn> ,
+@kindex <fn> ,
+@end table
+
+@findex emacspeak-beginning-or-end
+
+@format
+Move to start or end of buffer.
 @end format
 @end deffn
 
@@ -12028,10 +12059,10 @@ Speak completions if available.
 @subsubsection emacspeak-speak-continuously
 @deffn {Command} emacspeak-speak-continuously   
 @table @kbd
-@item C-e RET
-@kindex C-e RET
-@item <fn> RET
-@kindex <fn> RET
+@item C-e C-<return>
+@kindex C-e C-<return>
+@item <fn> C-<return>
+@kindex <fn> C-<return>
 @end table
 
 @findex emacspeak-speak-continuously
@@ -12480,6 +12511,22 @@ Useful to listen to a buffer without switching  contexts.
 @end format
 @end deffn
 
+@subsubsection emacspeak-speak-other-window
+@deffn {Command} emacspeak-speak-other-window   
+@table @kbd
+@item C-e 2
+@kindex C-e 2
+@item <fn> 2
+@kindex <fn> 2
+@end table
+
+@findex emacspeak-speak-other-window
+
+@format
+Speak other window
+@end format
+@end deffn
+
 @subsubsection emacspeak-speak-overlay-properties
 @deffn {Command} emacspeak-speak-overlay-properties   
 @table @kbd
@@ -12594,49 +12641,6 @@ Speak character before point.
 
 @subsubsection emacspeak-speak-predefined-window
 @deffn {Command} emacspeak-speak-predefined-window  (&optional arg)
-@table @kbd
-@item C-e 9
-@kindex C-e 9
-@item C-e 8
-@kindex C-e 8
-@item C-e 7
-@kindex C-e 7
-@item C-e 6
-@kindex C-e 6
-@item C-e 5
-@kindex C-e 5
-@item C-e 4
-@kindex C-e 4
-@item C-e 3
-@kindex C-e 3
-@item C-e 2
-@kindex C-e 2
-@item C-e 1
-@kindex C-e 1
-@item C-e 0
-@kindex C-e 0
-@item <fn> 9
-@kindex <fn> 9
-@item <fn> 8
-@kindex <fn> 8
-@item <fn> 7
-@kindex <fn> 7
-@item <fn> 6
-@kindex <fn> 6
-@item <fn> 5
-@kindex <fn> 5
-@item <fn> 4
-@kindex <fn> 4
-@item <fn> 3
-@kindex <fn> 3
-@item <fn> 2
-@kindex <fn> 2
-@item <fn> 1
-@kindex <fn> 1
-@item <fn> 0
-@kindex <fn> 0
-@end table
-
 @findex emacspeak-speak-predefined-window
 
 @format
@@ -12806,13 +12810,6 @@ any other key to speak entire sexp.
 
 @subsubsection emacspeak-speak-skim-buffer
 @deffn {Command} emacspeak-speak-skim-buffer   
-@table @kbd
-@item C-e C-<return>
-@kindex C-e C-<return>
-@item <fn> C-<return>
-@kindex <fn> C-<return>
-@end table
-
 @findex emacspeak-speak-skim-buffer
 
 @format
@@ -12846,6 +12843,22 @@ Speak the white space at point.
 
 @format
 Spell word at  point.
+@end format
+@end deffn
+
+@subsubsection emacspeak-speak-this-window
+@deffn {Command} emacspeak-speak-this-window   
+@table @kbd
+@item C-e 1
+@kindex C-e 1
+@item <fn> 1
+@kindex <fn> 1
+@end table
+
+@findex emacspeak-speak-this-window
+
+@format
+Speak current window.
 @end format
 @end deffn
 
@@ -14405,6 +14418,24 @@ The processed  data is  presented using emacspeak table navigation.
 This module is a simple table recognizer.
 Can recognize the columns in tabulated output, e.g. ps, ls output
 
+@node emacspeak-tabulated-list
+@section emacspeak-tabulated-list
+
+TABULATED-LIST ==  tabulated list mode
+Speech-enable tabulated lists and provide commands for intelligent
+spoken output
+
+@subsection Emacspeak-Tabulated-List Commands
+
+@subsubsection emacspeak-tabulated-list-speak-cell
+@deffn {Command} emacspeak-tabulated-list-speak-cell   
+@findex emacspeak-tabulated-list-speak-cell
+
+@format
+Speak current cell.
+@end format
+@end deffn
+
 @node emacspeak-tar
 @section emacspeak-tar
 
@@ -15932,8 +15963,12 @@ Perform a CiteSeer search.
 @table @kbd
 @item C-e ?
 @kindex C-e ?
+@item C-e /
+@kindex C-e /
 @item <fn> ?
 @kindex <fn> ?
+@item <fn> /
+@kindex <fn> /
 @end table
 
 @findex emacspeak-websearch-dispatch
@@ -15958,6 +15993,13 @@ Perform a FolDoc search.
 
 @subsubsection emacspeak-websearch-google
 @deffn {Command} emacspeak-websearch-google  (query &optional flag)
+@table @kbd
+@item C-e RET
+@kindex C-e RET
+@item <fn> RET
+@kindex <fn> RET
+@end table
+
 @findex emacspeak-websearch-google
 
 @format
@@ -16647,10 +16689,10 @@ meaning of ‘next’.
 @subsubsection emacspeak-speak-this-buffer-other-window-display
 @deffn {Command} emacspeak-speak-this-buffer-other-window-display  (window)
 @table @kbd
-@item C-e /
-@kindex C-e /
-@item <fn> /
-@kindex <fn> /
+@item C-e C-/
+@kindex C-e C-/
+@item <fn> C-/
+@kindex <fn> C-/
 @end table
 
 @findex emacspeak-speak-this-buffer-other-window-display
@@ -16741,13 +16783,6 @@ Browse  Emacspeak productivity tips.
 
 @subsubsection emacspeak-wizards-alpha-vantage-quotes
 @deffn {Command} emacspeak-wizards-alpha-vantage-quotes  (ticker &optional custom)
-@table @kbd
-@item C-e x a
-@kindex C-e x a
-@item <fn> x a
-@kindex <fn> x a
-@end table
-
 @findex emacspeak-wizards-alpha-vantage-quotes
 
 @format

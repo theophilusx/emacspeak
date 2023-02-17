@@ -6,71 +6,8 @@
  @section Emacspeak Keybindings On emacspeak-keymap
 
 @table @kbd
-@item !
- emacspeak-speak-run-shell-command
-
 @item "
  emacspeak-speak-sexp
-
-@item $
- flyspell-mode
-
-@item %
- emacspeak-speak-current-percentage
-
-@item &
- emacspeak-wizards-shell-command-on-current-file
-
-@item '
- emacspeak-pianobar
-
-@item (
- amixer
-
-@item )
- emacspeak-sounds-select-theme
-
-@item .
- emacspeak-speak-windowful
-
-@item /
- emacspeak-speak-this-buffer-other-window-display
-
-@item 0
- emacspeak-speak-predefined-window
-
-@item 1
- emacspeak-speak-predefined-window
-
-@item 2
- emacspeak-speak-predefined-window
-
-@item 3
- emacspeak-speak-predefined-window
-
-@item 4
- emacspeak-speak-predefined-window
-
-@item 5
- emacspeak-speak-predefined-window
-
-@item 6
- emacspeak-speak-predefined-window
-
-@item 7
- emacspeak-speak-predefined-window
-
-@item 8
- emacspeak-speak-predefined-window
-
-@item 9
- emacspeak-speak-predefined-window
-
-@item :
- emacspeak-m-player-shuffle
-
-@item ;
- emacspeak-multimedia
 
 @item =
  emacspeak-speak-current-column
@@ -106,7 +43,7 @@
  emacspeak-toggle-show-point
 
 @item C-e
- end-of-line
+ move-end-of-line
 
 @item C-f
  emacspeak-find-dired
@@ -125,6 +62,9 @@
 
 @item C-q
  emacspeak-toggle-inaudible-or-comint-autospeak
+
+@item C-r
+ restart-emacs
 
 @item C-s
  tts-restart
@@ -160,7 +100,7 @@
  emacspeak-speak-rectangle
 
 @item RET
- emacspeak-speak-continuously
+ emacspeak-websearch-google
 
 @item SPC
  emacspeak-speak-header-line
@@ -199,7 +139,7 @@
  emacspeak-speak-char
 
 @item e
- end-of-line
+ move-end-of-line
 
 @item f
  emacspeak-speak-buffer-filename
@@ -224,9 +164,6 @@
 
 @item n
  emacspeak-speak-rest-of-buffer
-
-@item o
- emacspeak-toggle-comint-output-monitor
 
 @item p
  emacspeak-speak-paragraph
@@ -254,6 +191,54 @@
 
 @item |
  emacspeak-speak-line-set-column-filter
+
+@item !
+ emacspeak-speak-run-shell-command
+
+@item $
+ flyspell-mode
+
+@item %
+ emacspeak-speak-current-percentage
+
+@item &
+ emacspeak-wizards-shell-command-on-current-file
+
+@item '
+ emacspeak-pianobar
+
+@item (
+ amixer
+
+@item )
+ emacspeak-sounds-select-theme
+
+@item ,
+ emacspeak-beginning-or-end
+
+@item .
+ emacspeak-speak-windowful
+
+@item /
+ emacspeak-websearch-dispatch
+
+@item 1
+ emacspeak-speak-this-window
+
+@item 2
+ emacspeak-speak-other-window
+
+@item 3
+ amixer-volume-down
+
+@item 4
+ amixer-volume-up
+
+@item :
+ emacspeak-m-player-shuffle
+
+@item ;
+ emacspeak-multimedia
 
 @end table
 
@@ -432,9 +417,6 @@
 @item C-l
  emacspeak-librivox
 
-@item C-o
- eaf-open-browser
-
 @item C-t
  emacspeak-wizards-tramp-open-location
 
@@ -592,7 +574,7 @@
  eww
 
 @item f
- ffap
+ ffip
 
 @item g
  rg
@@ -684,12 +666,6 @@
 @item DEL
  desktop-clear
 
-@item SPC
- emacspeak-jabber-speak-recent-message
-
-@item a
- emacspeak-wizards-alpha-vantage-quotes
-
 @item b
  battery
 
@@ -708,9 +684,6 @@
 @item i
  ibuffer
 
-@item j
- emacspeak-jabber-popup-roster
-
 @item l
  emacspeak-m-player-youtube-live
 
@@ -725,9 +698,6 @@
 
 @item q
  emacspeak-wizards-quote
-
-@item r
- jabber-activity-switch-to
 
 @item t
  emacspeak-speak-telephone-directory

@@ -105,8 +105,10 @@ Use Serve when working with remote speech servers.")
   "Name of current theme for auditory icons.
 Do not set this by hand;
 --use command \\[emacspeak-sounds-select-theme].")
+
 (cl-declaim (special emacspeak-sounds-directory))
-(defvar emacspeak-default-sound
+
+(defvar emacspeak-sounds-default
   (expand-file-name "button.wav" emacspeak-sounds-current-theme)
   "Fallback icon.")
 
@@ -118,8 +120,8 @@ Do not set this by hand;
   "Define a sounds theme for auditory icons. "
   (cl-declare (special emacspeak-sounds-themes-table))
   (setq theme-name (intern theme-name))
-  (setf (gethash  theme-name emacspeak-sounds-themes-table)
-        file-ext))
+  (setf (gethash  theme-name emacspeak-sounds-themes-table) file-ext))
+
 (defun emacspeak-sounds-theme-get-ext (theme-name)
   "Retrieve filename extension for specified theme. "
   (cl-declare (special emacspeak-sounds-themes-table))
@@ -127,33 +129,21 @@ Do not set this by hand;
    (intern theme-name)
    emacspeak-sounds-themes-table))
 
-(defun emacspeak-get-sound-filename (sound-name)
-  "Get name of  file that produces  auditory icon SOUND-NAME."
-  (cl-declare (special emacspeak-sounds-themes-table
-                       emacspeak-sounds-current-theme))
+(defun emacspeak-sounds-get-file (sound-name)
+  "Get play arg  that produces  auditory icon SOUND-NAME.
+Fully qualified filename if using Alsa; basename if using pactl. "
+  (cl-declare (special emacspeak-sounds-current-theme))
   (let ((f
-         (expand-file-name
-          (format
-           "%s%s"
-           sound-name
-           (emacspeak-sounds-theme-get-ext emacspeak-sounds-current-theme))
-          emacspeak-sounds-current-theme)))
-    (cond
-     ((and
-       (string= emacspeak-play-program (executable-find "pactl"))
-       (or
-        (string=
-         emacspeak-sounds-current-theme
-         (expand-file-name "ogg-chimes/" emacspeak-sounds-directory))
-        (string=
-         emacspeak-sounds-current-theme
-         (expand-file-name "ogg-3d/" emacspeak-sounds-directory))))
-      (file-name-nondirectory f))
-     ((file-exists-p f) f)
-     (t
-      (let ((emacspeak-use-auditory-icons nil))
-        (message "Icon %s not defined." sound-name))
-      emacspeak-default-sound))))
+          (expand-file-name
+           (format
+            "%s%s"
+            sound-name
+            (emacspeak-sounds-theme-get-ext emacspeak-sounds-current-theme))
+           emacspeak-sounds-current-theme)))
+    (if (file-exists-p f)
+        (if (string= emacspeak-play-program (executable-find "pactl"))
+            (file-name-nondirectory f) f)
+        emacspeak-sounds-default)))
 
 (defun emacspeak-sounds-define-theme-if-necessary (theme-name)
   "Define selected theme if necessary."
@@ -161,18 +151,20 @@ Do not set this by hand;
    ((emacspeak-sounds-theme-get-ext theme-name) t)
    ((file-exists-p (expand-file-name "define-theme.el" theme-name))
     (load (expand-file-name "define-theme.el" theme-name)))
-   (t (error "Theme %s is missing its configuration file. "
-             theme-name))))
+   (t (error "Theme %s is missing its configuration file. " theme-name))))
 
 ;;;###autoload
-(defun emacspeak-sounds-select-theme  (theme)
+(defun emacspeak-sounds-select-theme  (&optional theme)
   "Select theme for auditory icons."
   (interactive
    (list
     (read-directory-name "Theme: " emacspeak-sounds-directory)))
   (cl-declare (special emacspeak-sounds-current-theme
                        emacspeak-sounds-themes-table
-                       emacspeak-play-program emacspeak-sounds-directory))
+                       emacspeak-play-program
+                       emacspeak-sounds-directory))
+  (or theme (setq theme emacspeak-sounds-current-theme))
+  (emacspeak-sounds-define-theme-if-necessary theme)
   (unless (file-directory-p theme)
     (setq theme  (file-name-directory theme)))
   (unless (file-exists-p theme)
@@ -237,7 +229,7 @@ Do not set this by hand;
   (cl-declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process
                        (format "a %s\n"
-                               (emacspeak-get-sound-filename sound-name))))
+                               (emacspeak-sounds-get-file sound-name))))
 
 ;;}}}
 ;;{{{  serve an auditory icon
@@ -247,7 +239,7 @@ Do not set this by hand;
   (cl-declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process
                        (format "p %s\n"
-                               (emacspeak-get-sound-filename sound-name))))
+                               (emacspeak-sounds-get-file sound-name))))
 
 ;;}}}
 ;;{{{  Play an icon
@@ -266,10 +258,10 @@ Automatically set to `play-sample' if using pactl.")
         (start-process
          emacspeak-play-program nil emacspeak-play-program
          emacspeak-play-args
-         (emacspeak-get-sound-filename sound-name))
+         (emacspeak-sounds-get-file sound-name))
       (start-process
        emacspeak-play-program nil emacspeak-play-program
-       (emacspeak-get-sound-filename sound-name)))))
+       (emacspeak-sounds-get-file sound-name)))))
 
 (defvar emacspeak-sox (executable-find "sox")
   
