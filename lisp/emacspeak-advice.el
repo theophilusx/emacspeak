@@ -246,7 +246,8 @@ beginning or end of a physical line produces an  auditory icon."
   `(defadvice ,f (after emacspeak pre act comp)
      "Speak line."
      (when (ems-interactive-p)
-       (emacspeak-speak-line)))))
+       (let ((emacspeak-show-point t))
+         (emacspeak-speak-line))))))
 
 (cl-loop
  for f in
@@ -319,10 +320,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      "Speak the line."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'large-movement)
-       (dtk-notify-speak
-        (propertize
-         (format "%s " (emacspeak-get-current-percentage-into-buffer))
-         'personality voice-smoothen))
+       (dtk-notify-speak (emacspeak-get-current-percentage-verbously))
        (emacspeak-speak-line)))))
 
 (cl-loop
@@ -536,9 +534,9 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   "Speak word beingkilled."
   (when (ems-interactive-p)
     (save-excursion
-     (skip-syntax-forward " ")
-     (dtk-tone-deletion)
-     (emacspeak-speak-word 1))))
+      (skip-syntax-forward " ")
+      (dtk-tone-deletion)
+      (emacspeak-speak-word 1))))
 
 (defadvice backward-kill-word (before emacspeak pre act comp)
   "Speak word beingkilled."
@@ -716,13 +714,14 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   "Time message was spoken")
 
 (defcustom emacspeak-speak-messages-filter
-  '("psession")
+  '("psession" " ")
   "List of strings used to filter spoken messages."
   :type '(repeat :tag "Filtered Strings"
-                 (string :tag "String" ))
-  :set #'(lambda (sym val)
-           (set-default sym val )
-           (setq ems--message-filter-pattern (apply #'regexp-quote val)))
+          (string :tag "String" ))
+  :set
+  #'(lambda (sym val)
+      (set-default sym val ) ; turn list into a pattern to use 
+      (setq ems--message-filter-pattern (regexp-opt val)))
   :group 'emacspeak-speak)
 
 (defadvice momentary-string-display (around emacspeak pre act comp)
@@ -750,7 +749,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (cl-loop
  for f in
- '( minibuffer-message set-minibuffer-message
+ '( minibuffer-message
     message display-message-or-buffer) do
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
@@ -764,12 +763,13 @@ When on a close delimiter, speak matching delimiter after a small delay. "
        (setq m
              (or
               (current-message)
-              (if (bound-and-true-p minibuffer-message-overlay)
+              (when (bound-and-true-p minibuffer-message-overlay)
                   (overlay-get minibuffer-message-overlay 'after-string))))
        (when
            (and
             (null inhibit-message)
             m                           ; our message
+            (not (zerop (length m)))
             emacspeak-speak-messages    ; speaking messages
             (not (string-match ems--message-filter-pattern m))
             (< 1.0
@@ -781,8 +781,16 @@ When on a close delimiter, speak matching delimiter after a small delay. "
          (tts-with-punctuations 'all (dtk-notify-speak m 'dont-log)))
        ad-return-value))))
 
+
+;; xcae training wheel:
+(defadvice set-minibuffer-message (after emacspeak pre act comp)
+  "Icon."
+  (unless (zerop (length (ad-get-arg 0)))
+    (dtk-notify-speak (ad-get-arg 0))
+    (emacspeak-auditory-icon 'key)))
+
 (defadvice display-message-or-buffer (after emacspeak pre act comp)
-  "speak."
+  "Icon"
   (let ((buffer-name (ad-get-arg 1)))
     (when (bufferp ad-return-value)
       (dtk-notify-speak
@@ -917,7 +925,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
           (if (> (point) prior)
               (tts-with-punctuations
                'all (dtk-speak (buffer-substring (point) prior)))
-              (emacspeak-speak-completions-if-available)))))
+            (emacspeak-speak-completions-if-available)))))
       (t ad-do-it))
      ad-return-value)))
 
@@ -1335,7 +1343,6 @@ Indicate change of selection with an auditory icon
     (emacspeak-auditory-icon 'tick-tick)
     (emacspeak-speak-mode-line)))
 
-
 (defadvice display-buffer (after emacspeak pre act comp)
   "Provide auditory icon."
   (when (ems-interactive-p)
@@ -1703,11 +1710,9 @@ Provide an auditory icon if possible."
      "speak."
      (ems-with-messages-silenced ad-do-it)
      (cond
-       (emacspeak-speak-tooltips
-        (let ((msg (ad-get-arg 0)))
-          (when msg (dtk-speak msg))))))))
-
-
+      (emacspeak-speak-tooltips
+       (let ((msg (ad-get-arg 0)))
+         (when msg (dtk-speak msg))))))))
 
 (cl-loop
  for f in
@@ -1802,7 +1807,6 @@ Produce an auditory icon if possible."
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'left)))))
 
-
 (cl-loop
  for f in 
  '(end-of-line move-end-of-line)
@@ -1813,7 +1817,6 @@ Produce an auditory icon if possible."
      (when (ems-interactive-p)
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'right)))))
-
 
 ;;}}}
 ;;{{{ yanking and popping
@@ -1977,8 +1980,7 @@ Produce an auditory icon if possible."
   (when (ems-interactive-p)
     (let ((emacspeak-show-point t))
       (emacspeak-speak-line))
-    (when (process-live-p dtk-notify-process)
-      (dtk-notify-speak (buffer-name)))))
+    (dtk-notify-speak (buffer-name))))
 
 (defadvice mark-defun (after emacspeak pre act comp)
   "Produce an auditory icon if possible."
@@ -2058,10 +2060,13 @@ Produce an auditory icon if possible."
       (setq lines (count-lines start end)
             chars (abs (- start end)))
       (if (> lines 1)
-          (message "Copied %s lines to register %c"
-                   lines register)
-        (message "Copied %s characters to register %c"
-                 chars register)))))
+          (dtk-notify-speak
+           (format "Copied %s lines to register %c"
+                   lines register))
+          (dtk-notify-speak
+           (format "Copied %s characters to register %c"
+                   chars register))))))
+
 (defadvice view-register (after emacspeak pre act comp)
   "Speak displayed contents."
   (when (ems-interactive-p)
@@ -2122,7 +2127,7 @@ Produce an auditory icon if possible."
     (emacspeak-pronounce-toggle-use-of-dictionaries t)
     (when minibuffer-default (emacspeak-auditory-icon 'help))
     (emacspeak-pronounce-add-buffer-local-dictionary-entry
-      default-directory "")
+     default-directory "")
     (tts-with-punctuations
      'all
      (dtk-notify-speak
@@ -2130,14 +2135,14 @@ Produce an auditory icon if possible."
        (buffer-string)
        (if (stringp minibuffer-default)
            minibuffer-default
-           ""))))))
+         ""))))))
 
 (add-hook 'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook 'at-end)
 
 (defun emacspeak-minibuffer-exit-hook ()
   "Actions performed when exiting the minibuffer with Emacspeak loaded."
-  (dtk-stop)
-  (emacspeak-auditory-icon 'close-object))
+  (emacspeak-auditory-icon 'close-object)
+  (dtk-stop))
 
 (add-hook 'minibuffer-exit-hook #'emacspeak-minibuffer-exit-hook)
 ;;}}}
@@ -2539,16 +2544,15 @@ Produce an auditory icon if possible."
 (defadvice yes-or-no-p (around emacspeak pre act comp)
   "Play auditory icon."
   (emacspeak-auditory-icon 'ask-question)
-    ad-do-it
-    (emacspeak-auditory-icon (if ad-return-value 'yes-answer 'no-answer ))
+  ad-do-it
+  (emacspeak-auditory-icon (if ad-return-value 'yes-answer 'no-answer ))
   ad-return-value)
 
 (defadvice y-or-n-p (around emacspeak pre act comp)
   "Play auditory icon."
   (emacspeak-auditory-icon 'ask-short-question)
   ad-do-it
-  (emacspeak-auditory-icon (if ad-return-value 'y-answer 'n-answer
-                               ))
+  (emacspeak-auditory-icon (if ad-return-value 'y-answer 'n-answer))
   ad-return-value)
 
 (defadvice ask-user-about-lock (around emacspeak pre act comp)
@@ -2716,13 +2720,12 @@ Produce an auditory icon if possible."
 (defadvice battery (around emacspeak pre act comp)
   "speak."
   (cond
-    ((ems-interactive-p)
-     (ems-with-messages-silenced
-      ad-do-it
-      (tts-with-punctuations 'some (dtk-speak ad-return-value))))
-    (t ad-do-it))
+   ((ems-interactive-p)
+    (ems-with-messages-silenced
+     ad-do-it
+     (tts-with-punctuations 'some (dtk-speak ad-return-value))))
+   (t ad-do-it))
   ad-return-value)
-
 
 ;;}}}
 ;;{{{emacs lisp mode:
@@ -2730,18 +2733,21 @@ Produce an auditory icon if possible."
 (add-hook
  'emacs-lisp-mode-hook
  #'(lambda ()
-     (setq mode-name
-           '("ELisp"
-             (lexical-binding
-              (:propertize ":l"
-               'personality voice-smoothen help-echo "Using lexical-binding mode")
-              (:propertize ":d"
-               'personality voice-smoothen
-               help-echo "Using old dynamic scoping mode
-mouse-1: Enable lexical-binding mode"
-               face warning mouse-face mode-line-highlight
-               local-map
-               (keymap (mode-line keymap (mouse-1 . elisp-enable-lexical-binding)))))))))
+     (setq
+      mode-name
+      '("ELisp"
+        (lexical-binding
+         (:propertize ":l"
+          'personality voice-smoothen
+          help-echo "Using lexical-binding mode")
+         (:propertize ":d"
+                      'personality voice-smoothen
+                      help-echo "Using old dynamic scoping mode "
+                      face warning mouse-face mode-line-highlight
+                      local-map
+                      (keymap
+                       (mode-line keymap
+                        (mouse-1 . elisp-enable-lexical-binding)))))))))
 
 ;;}}}
 (provide 'emacspeak-advice)

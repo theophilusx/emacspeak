@@ -248,7 +248,7 @@
     (insert (format "%s\n"
                     (or doc
                         (format "###%s: Not Documented\n" o))))
-    (insert (format "\nDefault Value: @code{@verb{|%s|}}\n" value))
+    (insert (format "\nDefault Value: @verb{|%s|}\n" value))
     (insert "\n@end defvar\n\n")))
 
 (defun self-document-module-options (self)
@@ -429,7 +429,8 @@ This chapter documents a total of %d commands and %d options.\n\n"
   '(
     emacspeak-keymap emacspeak-dtk-submap
     emacspeak-hyper-keymap emacspeak-super-keymap emacspeak-alt-keymap
-    emacspeak-personal-keymap emacspeak-personal-ctlx-keymap
+    emacspeak-personal-x-keymap emacspeak-personal-v-keymap
+    emacspeak-personal-y-keymap
     emacspeak-multi-keymap)
 "List of keymaps that we document.")
 

@@ -13,24 +13,27 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, 2019, T. V. Raman
-;;; All Rights Reserved.
-;;;
-;;; This file is not part of GNU Emacs, but the same permissions apply.
-;;;
-;;; GNU Emacs is free software; you can redistribute it and/or modify
-;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation; either version 2, or (at your option)
-;;; any later version.
-;;;
-;;; GNU Emacs is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNEXWM FOR A PARTICULAR PURPOSE.  See the
-;;; GNU General Public License for more details.
-;;;
-;;; You should have received a copy of the GNU General Public License
-;;; along with GNU Emacs; see the file COPYING.  If not, write to
-;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,MA 02110-1301, USA.
+
+;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
+;; All Rights Reserved.
+;; 
+;; This file is not part of GNU Emacs, but the same permissions apply.
+;; 
+;; GNU Emacs is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+;; 
+;; GNU Emacs is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +70,6 @@
     (emacspeak-auditory-icon 'close-object)
     (dtk-speak "Hid floating window")))
 
-
 (defadvice exwm-floating-toggle-floating (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
@@ -75,7 +77,7 @@
      (format "Turned %s floating"
              (if exwm--floating-frame "on" "off")))
     (emacspeak-auditory-icon
-      (if  exwm--floating-frame 'on 'off))))
+     (if  exwm--floating-frame 'on 'off))))
 
 (defadvice exwm-input-grab-keyboard (after emacspeak pre act comp)
   "speak."
@@ -83,25 +85,22 @@
     (dtk-speak "line mode")
     (emacspeak-auditory-icon 'off)))
 
-
 (defadvice exwm-input-release-keyboard (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (dtk-speak "Char mode")
     (emacspeak-auditory-icon 'oon)))
 
-
 (defadvice exwm-input-toggle-keyboard (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (cl-case exwm--input-mode
-        (line-mode
-         (dtk-speak "Line mode")
-         (emacspeak-auditory-icon 'off))
-        (char-mode
-         (dtk-speak "Char mode")
-         (emacspeak-auditory-icon 'on)))))
-
+      (line-mode
+       (dtk-speak "Line mode")
+       (emacspeak-auditory-icon 'off))
+      (char-mode
+       (dtk-speak "Char mode")
+       (emacspeak-auditory-icon 'on)))))
 
 (defadvice exwm-layout-show-mode-line (after emacspeak pre act comp)
   "speak."
@@ -113,8 +112,7 @@
   "speak."
   (when (ems-interactive-p)
     (dtk-speak "Full screen")
-  (emacspeak-auditory-icon 'window-resize)))
-
+    (emacspeak-auditory-icon 'window-resize)))
 
 (defadvice exwm-layout-hide-mode-line (after emacspeak pre act comp)
   "speak."
@@ -143,7 +141,6 @@
   (when (ems-interactive-p)
     (emacspeak-speak-frame-title)))
 
-
 ;;}}}
 ;;{{{Additional Interactive Commands:
 ;; I bind this to s-/ via custom:
@@ -170,18 +167,15 @@
   (interactive)
   (cl-declare (special emacspeak-exwm-orca-handle))
   (cond
-    (emacspeak-exwm-orca-handle (delete-process emacspeak-exwm-orca-handle)
-                  (setq emacspeak-exwm-orca-handle  nil))
-    (t (setq emacspeak-exwm-orca-handle (start-process "Orca"nil "orca")))))
+   (emacspeak-exwm-orca-handle (delete-process emacspeak-exwm-orca-handle)
+                               (setq emacspeak-exwm-orca-handle  nil))
+   (t (setq emacspeak-exwm-orca-handle (start-process "Orca"nil "orca")))))
 
 (global-set-key (kbd "s-o") 'emacspeak-exwm-orca-toggle)
 
-
 ;;}}}
 
-
 ;;{{{Configure Hooks:
-
 
 (defun emacspeak-exwm-mode-hook ()
   "EXWM Setup For Emacspeak"
@@ -189,11 +183,11 @@
   (define-key exwm-mode-map emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map  emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map
-      (concat emacspeak-prefix "e")
-    'exwm-input-send-simulation-key)
+              (concat emacspeak-prefix "e")
+              'exwm-input-send-simulation-key)
   (define-key exwm-mode-map
-      (concat emacspeak-prefix emacspeak-prefix)
-    'exwm-input-send-simulation-key)
+              (concat emacspeak-prefix emacspeak-prefix)
+              'exwm-input-send-simulation-key)
   (emacspeak-speak-frame-title))
 
 (cl-declaim (special exwm-mode-hook))

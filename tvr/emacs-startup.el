@@ -171,14 +171,16 @@ Use Custom to customize where possible. "
    '(list-threads narrow-to-page list-timers upcase-region
      downcase-region  narrow-to-region eval-expression ))
   (prefer-coding-system 'utf-8-emacs)
+  (global-set-key (ems-kbd "C-x v .") 'magit-commit-create)
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
-  (cl-loop ;;; global key-bindings
+  (cl-loop ;; global key-bindings
    for key in
    '(
+     ("C-x <tab>"  previous-buffer)
+     ("C-c <tab>"  next-buffer)
      ("<f3>" bury-buffer)
      ("<f4>" emacspeak-kill-buffer-quietly)
      ("<f5>" find-file)
-     ("C-c <tab>"  hs-toggle-hiding)
      ("M--" undo-only)
      ("M-/" dabbrev-expand)
      ("M-C-c" calendar)

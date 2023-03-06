@@ -130,26 +130,24 @@ Indicate  no movement if we did not move."
            (dtk-notify-speak "Did not move")
            (emacspeak-auditory-icon 'tick-tick))
           ((= ?\) (char-syntax (preceding-char)))
-           (emacspeak-auditory-icon 'large-movement)
+           (emacspeak-auditory-icon 'select-object)
            (emacspeak-speak-line))
-          (t (emacspeak-auditory-icon 'large-movement)
+          (t (emacspeak-auditory-icon 'select-object)
              (emacspeak-speak-sexp)))))
       (t ad-do-it))
      ad-return-value)))
 
-
- 
 (defadvice lispy-move-beginning-of-line (after emacspeak pre act comp)
-     "speak."
-     (when (ems-interactive-p)
-       (emacspeak-speak-line)
-       (emacspeak-auditory-icon 'left)))
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'left)))
 
 (defadvice lispy-move-beginning-of-line (after emacspeak pre act comp)
-     "speak."
-     (when (ems-interactive-p)
-       (emacspeak-speak-line)
-       (emacspeak-auditory-icon 'right)))
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'right)))
 ;;}}}
 ;;{{{Advice Insertions:
 

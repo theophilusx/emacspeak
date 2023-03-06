@@ -59,7 +59,7 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
 (require 'emacspeak-preamble)
-                                        ;(require 'eww)
+(require 'eww)
 (require 'dom-addons)
 (require 'gweb)
 (require 'g-utils)
@@ -257,35 +257,7 @@ dont-url-encode if true then url arguments are not url-encoded "
   (setq emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
 
 ;;}}}
-;;{{{ Anonimize google search
-(emacspeak-url-template-define
- "Sign in to Google"
- (concat  "https://accounts.google.com/ServiceLogin"
-          "?hl=en&continue=https://www.google.com/")
- nil
- nil
- "Login to Google.")
-
-(emacspeak-url-template-define
- "Anonymize Google Search"
- "https://www.google.com/accounts/Logout"
- nil
- nil
- "Logout from Google to do an anonymous search.")
-
-;;}}}
 ;;{{{Basic Google:
-
-(emacspeak-url-template-define
- "Google Basic"
- "https://www.google.com/search?num=25&gbv=1&q=%s"
- (list #'gweb-google-autocomplete)
- #'(lambda nil
-     (search-forward "Search Tools")
-     (forward-line 1)
-     (emacspeak-auditory-icon 'open-object)
-     (emacspeak-speak-windowful))
- "Light-weight Google search.")
 
 ;; forward declaration:
 (defvar gmaps-my-zip nil)
@@ -516,14 +488,6 @@ name of the list.")
  nil nil
  "News Headlines From CNN"
  #'emacspeak-feeds-rss-display)
-
-(emacspeak-url-template-define
- "CNN Money"
- "http://rss.cnn.com/rss/cnn_business.rss"
- nil nil
- "CNN Business Headlines"
- #'emacspeak-feeds-rss-display)
-
 
 (emacspeak-url-template-define
  "CNN World"
@@ -883,19 +847,6 @@ Format is stationid+AM/FM."
  #'emacspeak-feeds-rss-display)
 
 ;;}}}
-;;{{{ GitHub Search
-
-(declare-function emacspeak-eww-next-h "emacspeak-eww" (&optional speak))
-(emacspeak-url-template-define
- "GitHub Search"
- "https://github.com/search?q=%s"
- (list "Query: ")
- #'(lambda ()
-     (search-forward  "repository results" nil t)
-     (emacspeak-speak-line))
- "Perform a GitHub Search.")
-
-;;}}}
 ;;{{{ TuneIn: streamId->URL
 ;; wget -O t    "http://stream.radiotime.com/listen.stream?streamIds=4299203"
 (emacspeak-url-template-define
@@ -952,33 +903,6 @@ Format is stationid+AM/FM."
  (list "Query: ")
  nil
  "Open Library Search")
-
-;;}}}
-;;{{{ GoLang.org:
-(defvar emacspeak-url-template-go-base
-  "http://golang.org/"
-  "Base REST end-point for Golang.org")
-
-(emacspeak-url-template-define
- "GoLang Browse"
- (concat emacspeak-url-template-go-base "pkg")
- nil
- 'emacspeak-speak-buffer
- "Browse GoLang package documentation.")
-
-(emacspeak-url-template-define
- "GoLang Lookup"
- (concat emacspeak-url-template-go-base "pkg/%s")
- (list "Go Package: ")
- 'emacspeak-speak-buffer
- "Lookup GoLang package documentation.")
-
-(emacspeak-url-template-define
- "GoLang Search"
- (concat emacspeak-url-template-go-base "search?q=%s")
- (list "Go Package: ")
- 'emacspeak-speak-buffer
- "Search GoLang package documentation.")
 
 ;;}}}
 ;;{{{ FreeSound.org:
@@ -1211,16 +1135,8 @@ template."
        (eww-browse-url url))))
 
 ;;}}}
-;;{{{ Bloomberg:
-(emacspeak-url-template-define
- "Bloomberg Stock  Lookup"
- "http://www.bloomberg.com/quote/%s"
- (list "Lookup Ticker:Country")
- nil
- "Lookup Stock Quote information on Bloomberg. Ticker is of the form goog:us")
-
-;;}}}
 ;;{{{ Washington Post
+(declare-function emacspeak-eww-next-h "emacspeak-eww" (&optional speak))
 
 (emacspeak-url-template-define
  "Washington Post"

@@ -83,13 +83,13 @@
          (desc (aref entry 5))
          (state (aref entry 2)))
     (cond
-      ((string= state "installed") (emacspeak-auditory-icon 'mark-object))
-      ((string= state "built-in") (emacspeak-auditory-icon 'select-object))
-      ((string= state "dependency") (emacspeak-auditory-icon 'close-object))
-      ((string= state "obsolete") (emacspeak-auditory-icon 'deselect-object))
-      ((string= state "incompat") (emacspeak-auditory-icon
-                                   'alert-user))
-      (t (emacspeak-auditory-icon 'doc)))
+     ((string= state "installed") (emacspeak-auditory-icon 'mark-object))
+     ((string= state "built-in") (emacspeak-auditory-icon 'select-object))
+     ((string= state "dependency") (emacspeak-auditory-icon 'close-object))
+     ((string= state "obsolete") (emacspeak-auditory-icon 'deselect-object))
+     ((string= state "incompat") (emacspeak-auditory-icon
+                                  'alert-user))
+     (t (emacspeak-auditory-icon 'doc)))
     (dtk-speak
      (concat
       (propertize name 'personality voice-animate) "  "desc))))
@@ -97,10 +97,6 @@
 (defun emacspeak-paradox-mode-hook ()
   "Emacspeak setup hook for paradox-mode."
   (cl-declare (special paradox-menu-mode-map))
-  (define-key paradox-menu-mode-map
-              (ems-kbd "<left>") 'emacspeak-speak-previous-field)
-  (define-key paradox-menu-mode-map
-              (ems-kbd "<right>") 'emacspeak-speak-next-field)
   (define-key paradox-menu-mode-map " " 'emacspeak-paradox-summarize-line)
   (emacspeak-pronounce-add-buffer-local-dictionary-entry
    emacspeak-pronounce-date-yyyymmdd-pattern
@@ -148,6 +144,32 @@
      (when (ems-interactive-p)
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'task-done)))))
+
+;;}}}
+;;{{{ Commit Navigation:
+(cl-loop
+ for f in 
+ '(paradox-next-commit paradox-previous-commit)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-tabulated-list-speak-cell)))))
+
+(defadvice paradox-menu-view-commit-list (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+(defadvice fparadox-commit-list-visit-commit (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
+
 
 ;;}}}
 (provide 'emacspeak-paradox)

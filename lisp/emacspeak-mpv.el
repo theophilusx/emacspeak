@@ -13,24 +13,26 @@
 
 ;;}}}
 ;;{{{  Copyright:
-;;;Copyright (C) 1995 -- 2007, 2019, T. V. Raman
-;;; All Rights Reserved.
-;;;
-;;; This file is not part of GNU Emacs, but the same permissions apply.
-;;;
-;;; GNU Emacs is free software; you can redistribute it and/or modify
-;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation; either version 2, or (at your option)
-;;; any later version.
-;;;
-;;; GNU Emacs is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNMPV FOR A PARTICULAR PURPOSE.  See the
-;;; GNU General Public License for more details.
-;;;
-;;; You should have received a copy of the GNU General Public License
-;;; along with GNU Emacs; see the file COPYING.  If not, write to
-;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
+
+;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
+;; All Rights Reserved.
+;; 
+;; This file is not part of GNU Emacs, but the same permissions apply.
+;; 
+;; GNU Emacs is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+;; 
+;; GNU Emacs is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to
+;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
 ;;}}}
@@ -61,8 +63,6 @@
 ;;{{{MPV Program:
 
 ;;;###autoload
-(defvar emacspeak-mpv-program (executable-find "mpv")
-  "Name of MPV executable.")
 
 ;;}}}
 ;;{{{Helper: yt-url->time-offset:
@@ -91,12 +91,10 @@
   (when (and repeat-mode mpv--process)
     (set-process-sentinel mpv--process #'ems--repeat-sentinel)))
 
-
-
 (cl-loop
  for f in 
  '(
-    mpv-pause mpv-play
+   mpv-pause mpv-play
    mpv-playlist-next mpv-playlist-prev
    mpv-revert-seek mpv-seek mpv-seek-backward mpv-seek-forward
    mpv-seek-to-position-at-point
@@ -172,9 +170,8 @@
     map)
   "MPV Keymap")
 
-
 (define-key emacspeak-keymap (ems-kbd "C-;")  emacspeak-mpv-keymap)
-(global-set-key  (ems-kbd "s-;")  emacspeak-mpv-keymap)
+
 (declare-function emacspeak-eww-read-url "emacspeak-eww" nil)
 
 (defun emacspeak-mpv-store-link ()

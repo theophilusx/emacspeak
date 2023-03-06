@@ -111,7 +111,8 @@
            (cond ;;; apply modifiers
             ((= bits 0) (setq key word)) ;;; no modifier bits
             ((/= (length word) 1)
-             (error "%s: Prefix must precede a character, not %s" string word))
+             (error "%s: Prefix must precede a character, not %s"
+                    string word))
             ((and
               (/= (logand bits ?\C-\^@) 0)
               (string-match "^[@-_a-z]" word)) ;;; ascii control char
@@ -250,9 +251,11 @@
    ("$" flyspell-mode)
    ("%" emacspeak-speak-current-percentage)
    ("&" emacspeak-wizards-shell-command-on-current-file)
-   ("'" emacspeak-pianobar)
+   ("C-'" emacspeak-pianobar)
    ("(" amixer)
+   ("9" amixer)
    (")" emacspeak-sounds-select-theme)
+   ("0" emacspeak-sounds-select-theme)
    ("," emacspeak-beginning-or-end)
    ("." emacspeak-speak-windowful)
    ("/" emacspeak-websearch-dispatch)
@@ -260,6 +263,7 @@
    ("2" emacspeak-speak-other-window)
    ("3" amixer-volume-down)
    ("4" amixer-volume-up)
+   ("5" emacspeak-speak-current-percentage)
    (":" emacspeak-m-player-shuffle)
    (";" emacspeak-multimedia)
    ("<XF86WakeUp>" keyboard-quit)
@@ -286,7 +290,7 @@
    ("C-SPC" emacspeak-speak-current-mark)
    ("C-a" emacspeak-toggle-auditory-icons)
    ("C-b" emacspeak-bookshare)
-   ("C-c" emacspeak-clipboard-copy)
+   ("C-M-c" emacspeak-clipfile-copy)
    ("C-d" emacspeak-toggle-show-point)
    ("C-e" move-end-of-line)
    ("C-f" emacspeak-find-dired)
@@ -302,7 +306,8 @@
    ("C-u" emacspeak-feeds-browse)
    ("C-v" view-mode)
    ("C-w" emacspeak-speak-window-information)
-   ("C-y" emacspeak-clipboard-paste)
+   ("C-x" dtk-toggle-punctuation-mode)
+   ("C-M-y" emacspeak-clipboard-paste)
    ("I"  emacspeak-speak-show-active-network-interfaces)
    ("L" emacspeak-speak-line-interactively)
    ("M" emacspeak-speak-minor-mode-line)
@@ -322,6 +327,7 @@
    ("M-o" emacspeak-toggle-comint-output-monitor)
    ("M-p" emacspeak-show-property-at-point)
    ("M-q" voice-setup-toggle-silence-personality)
+   ("C-M-q" emacspeak-toggle-speak-messages)
    ("M-s" emacspeak-symlink-current-file)
    ("M-t" emacspeak-describe-tapestry)
    ("M-u" emacspeak-feeds-add-feed)
@@ -351,13 +357,12 @@
    ("l" emacspeak-speak-line)
    ("m" emacspeak-speak-mode-line)
    ("n" emacspeak-speak-rest-of-buffer)
+   ("o" delete-blank-lines)
    ("p" emacspeak-speak-paragraph)
-   ("q" emacspeak-toggle-speak-messages)
    ("r" emacspeak-speak-region)
    ("s" dtk-stop)
    ("t" emacspeak-speak-time)
    ("u" emacspeak-url-template-fetch)
-   ("v" view-register)
    ("w" emacspeak-speak-word)
    ("|" emacspeak-speak-line-set-column-filter)
    )
@@ -440,6 +445,7 @@
 (global-set-key  (ems-kbd "C-.") 'emacspeak-super-keymap)
 (global-set-key  (ems-kbd "C-;") 'emacspeak-hyper-keymap)
 (global-set-key  (ems-kbd "C-'") 'emacspeak-multi-keymap)
+(define-key emacspeak-keymap   (ems-kbd "'") 'emacspeak-multi-keymap)
 
 ;; Our very own silence key on the console
 (global-set-key '[silence] 'emacspeak-silence)
@@ -448,10 +454,10 @@
 ;;{{{ Create a personal keymap for c-e x
 
 ;; Adding keys using custom:
-(defvar  emacspeak-personal-keymap nil
+(defvar  emacspeak-personal-x-keymap nil
   "Emacspeak personal keymap")
 
-(define-prefix-command 'emacspeak-personal-keymap)
+(define-prefix-command 'emacspeak-personal-x-keymap)
 
 (defcustom emacspeak-personal-keys
   '(
@@ -461,17 +467,17 @@
     ("1" emacspeak-wizards-shell-by-key)
     ("2" emacspeak-wizards-shell-by-key)
     ("3" emacspeak-wizards-shell-by-key)
-    ("4" emacspeak-wizards-shell-by-key)
+    ("4" emacspeak-wizards-shell-by-key )
     ("5" emacspeak-wizards-shell-by-key)
-    ("6" emacspeak-wizards-shell-by-key)
-    ("7" emacspeak-wizards-shell-by-key)
-    ("8" emacspeak-wizards-shell-by-key)
-    ("9" emacspeak-wizards-shell-by-key)
+                                        ;("6" emacspeak-speak-message-at-time)
+    ("7" emacspeak-wizards-shell-command-on-current-file)
+    ("8" calc)
+                                        ;("9" emacspeak-wizards-shell-by-key)
     ("=" emacspeak-wizards-find-longest-line-in-region)
-    ("C" emacspeak-wizards-colors)
+    ("M-c" emacspeak-wizards-colors)
     (";" emacspeak-m-player-loop)
     ("b" battery)
-    ("c" emacspeak-wizards-color-wheel)
+    ("C-c" emacspeak-wizards-color-wheel)
     ("d" emacspeak-speak-load-directory-settings)
     ("e" emacspeak-we-xsl-map)
     ("f" emacspeak-wizards-remote-frame)
@@ -482,7 +488,7 @@
     ("o" emacspeak-wizards-occur-header-lines)
     ("p" paradox-list-packages)
     ("q" emacspeak-wizards-quote)
-    
+
     ("t" emacspeak-speak-telephone-directory)
     ("u" emacspeak-wizards-units)
     ("v" emacspeak-wizards-vc-viewer)
@@ -501,41 +507,72 @@
            (ems-interactive-command :tag "Command")))
   :set
   #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-keymap val)
+      (emacspeak-keymap-bindings-update emacspeak-personal-x-keymap val)
       (set-default
        sym
        (sort
         val
         #'(lambda (a b) (string-lessp (car a) (car b)))))))
-
-(define-key  emacspeak-keymap "x" 'emacspeak-personal-keymap)
+(define-key emacspeak-keymap "v" 'emacspeak-personal-v-keymap)
+(define-key  emacspeak-keymap "x" 'emacspeak-personal-x-keymap)
+(define-key  emacspeak-keymap "y" 'emacspeak-personal-y-keymap)
 
 ;;}}}
-;;{{{ Create personal ctl-x map
+;;{{{ Create personal c-e v map
 
-(defvar  emacspeak-personal-ctlx-keymap nil
-  "Emacspeak personal-ctlx keymap")
+(defvar  emacspeak-personal-v-keymap nil
+  "Emacspeak personal-v keymap")
 
-(define-prefix-command 'emacspeak-personal-ctlx-keymap)
+(define-prefix-command 'emacspeak-personal-v-keymap)
 
-(defcustom emacspeak-personal-ctlx-keys nil
+(defcustom emacspeak-personal-v-keys
+  '(
+    ("v" view-register)
+    )
+  "Key bindings for use with C-e v. "
+  :group 'emacspeak
+  :type
+  '(repeat
+    :tag "Emacspeak Personal-V Keymap"
+    (list
+     :tag "Key Binding"
+     (key-sequence :tag "Key")
+     (ems-interactive-command :tag "Command")))
+  :set
+  #'(lambda (sym val)
+      (emacspeak-keymap-bindings-update emacspeak-personal-v-keymap val)
+      (set-default sym
+                   (sort
+                    val
+                    #'(lambda (a b) (string-lessp (car a) (car b)))))))
+
+;;}}}
+;;{{{ Create personal y map
+
+(defvar  emacspeak-personal-y-keymap nil
+  "Emacspeak personal-y keymap")
+
+(define-prefix-command 'emacspeak-personal-y-keymap)
+
+(defcustom emacspeak-personal-y-keys
+  '(
+    ("y" emacspeak-empv-play-url)
+    )
   "Key bindings for use with C-e C-x. "
   :group 'emacspeak
   :type '(repeat
-          :tag "Emacspeak Personal-Ctlx Keymap"
+          :tag "Emacspeak Personal-Y Keymap"
           (list
            :tag "Key Binding"
            (key-sequence :tag "Key")
            (ems-interactive-command :tag "Command")))
   :set
   #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-ctlx-keymap val)
+      (emacspeak-keymap-bindings-update emacspeak-personal-y-keymap val)
       (set-default sym
                    (sort
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
-
-(define-key  emacspeak-keymap "\C-x" 'emacspeak-personal-ctlx-keymap)
 
 ;;}}}
 ;;{{{ Create a C-z keymap that is customizable
@@ -580,7 +617,7 @@
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-(global-set-key (ems-kbd "C-z") 'emacspeak-ctl-z-keymap)
+(define-key emacspeak-keymap  "z" 'emacspeak-ctl-z-keymap)
 
 ;;}}}
 ;;{{{ Create a hyper keymap that users can put personal commands
@@ -675,8 +712,7 @@
     ("s" soundscape)
     ("t" soundscape-toggle)
     ("u" soundscape-update-mood)
-    ("y" emacspeak-mpv-play-url)
-    )
+    ("y" emacspeak-empv-play))
   "Super key bindings. "
   :group 'emacspeak
   :type '(repeat

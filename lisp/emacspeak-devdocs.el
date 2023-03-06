@@ -1,7 +1,7 @@
-;;; emacspeak-ffip.el --- Speech-enable FFIP  -*- lexical-binding: t; -*-
+;;; emacspeak-devdocs.el --- Speech-enable DEVDOCS  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
-;;; Description:  Speech-enable FFIP An Emacs Interface to ffip
-;;; Keywords: Emacspeak,  Audio Desktop ffip
+;;; Description:  Speech-enable DEVDOCS An Emacs Interface to devdocs
+;;; Keywords: Emacspeak,  Audio Desktop devdocs
 ;;{{{  LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -41,7 +41,7 @@
 ;;{{{  introduction
 
 ;;; Commentary:
-;;; FFIP ==  find-file-in-project
+;;; DEVDOCS == Browse DevDocs
 
 ;;; Code:
 
@@ -53,23 +53,41 @@
 (require 'emacspeak-preamble)
 
 ;;}}}
+;;{{{ Map Faces:
+
+(voice-setup-add-map 
+ '(
+   (devdocs-code-block voice-monotone)))
+
+;;}}}
 ;;{{{ Interactive Commands:
 
+'(
+  devdocs-delete
+
+  devdocs-peruse
+
+  devdocs-update-all
+  )
+
 (cl-loop
- for f in
- '(find-file-in-project ffip
-                        find-file-in-project-at-point
-                        find-file-in-project-by-selected)
+ for f in 
+ '(devdocs-first-page
+   devdocs-go-back devdocs-go-forward
+   devdocs-goto-page devdocs-goto-target
+   devdocs-last-page devdocs-lookup devdocs-peruse
+   devdocs-next-entry devdocs-next-page
+   devdocs-previous-entry devdocs-previous-page devdocs-search)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'open-object)
-       (emacspeak-speak-mode-line)))))
+       (emacspeak-speak-line)))))
 
 ;;}}}
-(provide 'emacspeak-ffip)
+(provide 'emacspeak-devdocs)
 ;;{{{ end of file
 
 ;;; local variables:

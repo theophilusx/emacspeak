@@ -2,9 +2,8 @@
  keycode 49 = Escape asciitilde
 keycode 9=grave asciitilde
 ! was <print>
- keycode 107 = Super_L Super_R Super_L Super_R
+ keycode 107 = Super_L Super_L Super_L Super_L
 
 !  Hyper_R on <Insert>
-!remove mod3 = Super_R
 !add mod3 = Hyper_R
 !keycode 118 = Hyper_R

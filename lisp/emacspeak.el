@@ -132,6 +132,7 @@ the Emacspeak desktop.")
     ("deadgrep" emacspeak-deadgrep)
     ("debugger" emacspeak-debugger)
     ("desktop" emacspeak-desktop)
+    ("devdocs" emacspeak-devdocs)
     ("dictionary" emacspeak-dictionary)
     ("diff-mode" emacspeak-diff-mode)
     ("dired" emacspeak-dired)
@@ -429,8 +430,8 @@ commands and options for details."
   (make-thread #'emacspeak-prepare-emacs)
   (global-visual-line-mode -1)
   (add-to-list 
- 'minor-mode-alist
- '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
+   'minor-mode-alist
+   '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
   (transient-mark-mode -1)
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (message emacspeak-startup-message)

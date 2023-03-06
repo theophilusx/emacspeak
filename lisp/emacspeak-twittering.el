@@ -83,7 +83,7 @@
 (defadvice twit (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-speak-mode-line)
+    (emacspeak-twittering-speak-this-tweet)
     (emacspeak-auditory-icon 'open-object)))
 
 (cl-loop for command in
@@ -158,7 +158,7 @@ With interactive prefix arg `copy-as-kill', copy it to kill ring as well."
              "Provide spoken and auditory feedback."
              (when (ems-interactive-p)
                (emacspeak-auditory-icon 'news)
-               (emacspeak-speak-mode-line)))))
+               (emacspeak-twittering-speak-this-tweet)))))
 (defadvice twittering-kill-buffer (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
@@ -210,10 +210,11 @@ With interactive prefix arg `copy-as-kill', copy it to kill ring as well."
 
 (when (boundp 'twittering-mode-map)
   (cl-declaim (special twittering-mode-map))
-  (define-key twittering-mode-map
-              "." 'emacspeak-twittering-jump-to-following-url)
+  (define-key twittering-mode-map "/" 'twittering-search)
+  (define-key
+   twittering-mode-map "." 'emacspeak-twittering-jump-to-following-url)
   (define-key twittering-mode-map "," 'emacspeak-twittering-speak-this-tweet)
-  (define-key twittering-mode-map "?" 'twittering-search))
+  )
 
 ;;}}}
 ;;{{{Download: twarc

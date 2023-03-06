@@ -36,9 +36,6 @@
 @item C-b
  emacspeak-bookshare
 
-@item C-c
- emacspeak-clipboard-copy
-
 @item C-d
  emacspeak-toggle-show-point
 
@@ -78,8 +75,8 @@
 @item C-w
  emacspeak-speak-window-information
 
-@item C-y
- emacspeak-clipboard-paste
+@item C-x
+ dtk-toggle-punctuation-mode
 
 @item I
  emacspeak-speak-show-active-network-interfaces
@@ -165,11 +162,11 @@
 @item n
  emacspeak-speak-rest-of-buffer
 
+@item o
+ delete-blank-lines
+
 @item p
  emacspeak-speak-paragraph
-
-@item q
- emacspeak-toggle-speak-messages
 
 @item r
  emacspeak-speak-region
@@ -182,9 +179,6 @@
 
 @item u
  emacspeak-url-template-fetch
-
-@item v
- view-register
 
 @item w
  emacspeak-speak-word
@@ -204,9 +198,6 @@
 @item &
  emacspeak-wizards-shell-command-on-current-file
 
-@item '
- emacspeak-pianobar
-
 @item (
  amixer
 
@@ -222,6 +213,9 @@
 @item /
  emacspeak-websearch-dispatch
 
+@item 0
+ emacspeak-sounds-select-theme
+
 @item 1
  emacspeak-speak-this-window
 
@@ -233,6 +227,12 @@
 
 @item 4
  amixer-volume-up
+
+@item 5
+ emacspeak-speak-current-percentage
+
+@item 9
+ amixer
 
 @item :
  emacspeak-m-player-shuffle
@@ -547,7 +547,7 @@
  soundscape-update-mood
 
 @item y
- emacspeak-mpv-play-url
+ emacspeak-empv-play
 
 @end table
 
@@ -614,8 +614,8 @@
 
 @end table
 
-@node Emacspeak Keybindings On emacspeak-personal-keymap
- @section Emacspeak Keybindings On emacspeak-personal-keymap
+@node Emacspeak Keybindings On emacspeak-personal-x-keymap
+ @section Emacspeak Keybindings On emacspeak-personal-x-keymap
 
 @table @kbd
 @item ,
@@ -642,17 +642,11 @@
 @item 5
  emacspeak-wizards-shell-by-key
 
-@item 6
- emacspeak-wizards-shell-by-key
-
 @item 7
- emacspeak-wizards-shell-by-key
+ emacspeak-wizards-shell-command-on-current-file
 
 @item 8
- emacspeak-wizards-shell-by-key
-
-@item 9
- emacspeak-wizards-shell-by-key
+ calc
 
 @item ;
  emacspeak-m-player-loop
@@ -660,17 +654,14 @@
 @item =
  emacspeak-wizards-find-longest-line-in-region
 
-@item C
- emacspeak-wizards-colors
+@item C-c
+ emacspeak-wizards-color-wheel
 
 @item DEL
  desktop-clear
 
 @item b
  battery
-
-@item c
- emacspeak-wizards-color-wheel
 
 @item d
  emacspeak-speak-load-directory-settings
@@ -716,10 +707,22 @@
 
 @end table
 
-@node Emacspeak Keybindings On emacspeak-personal-ctlx-keymap
- @section Emacspeak Keybindings On emacspeak-personal-ctlx-keymap
+@node Emacspeak Keybindings On emacspeak-personal-v-keymap
+ @section Emacspeak Keybindings On emacspeak-personal-v-keymap
 
 @table @kbd
+@item v
+ view-register
+
+@end table
+
+@node Emacspeak Keybindings On emacspeak-personal-y-keymap
+ @section Emacspeak Keybindings On emacspeak-personal-y-keymap
+
+@table @kbd
+@item y
+ emacspeak-empv-play-url
+
 @end table
 
 @node Emacspeak Keybindings On emacspeak-multi-keymap
