@@ -353,7 +353,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
  do
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
-     "Speak sexp."
+     "Speak sexp or line."
      (if (ems-interactive-p)
          (let ((start (point))
                (end (line-end-position))
@@ -714,7 +714,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   "Time message was spoken")
 
 (defcustom emacspeak-speak-messages-filter
-  '("psession" " ")
+  '("Decrypting" "psession"  "auto saving")
   "List of strings used to filter spoken messages."
   :type '(repeat :tag "Filtered Strings"
           (string :tag "String" ))
@@ -749,45 +749,40 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (cl-loop
  for f in
- '( minibuffer-message
+ '( minibuffer-message set-minibuffer-message
     message display-message-or-buffer) do
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
      "Speak message."
      (cl-declare (special emacspeak-last-message inhibit-message
                           ems--message-filter-pattern
-                          emacspeak-speak-messages emacspeak-lazy-message-time))
-     (let ((inhibit-read-only t)
-           (m nil))
-       ad-do-it
-       (setq m
-             (or
-              (current-message)
-              (when (bound-and-true-p minibuffer-message-overlay)
+                          emacspeak-speak-messages
+                          emacspeak-lazy-message-time))
+     (when (process-live-p dtk-speaker-process)
+       (let ((inhibit-read-only t)
+             (m nil))
+         ad-do-it
+         (setq m
+               (or
+                (current-message)
+                (when (bound-and-true-p minibuffer-message-overlay)
                   (overlay-get minibuffer-message-overlay 'after-string))))
-       (when
-           (and
-            (null inhibit-message)
-            m                           ; our message
-            (not (zerop (length m)))
-            emacspeak-speak-messages    ; speaking messages
-            (not (string-match ems--message-filter-pattern m))
-            (< 1.0
-               (float-time
-                (time-subtract (current-time) emacspeak-lazy-message-time))))
-         (setq emacspeak-lazy-message-time (current-time)
-               emacspeak-last-message  m)
-         ;;; so we really need to speak it
-         (tts-with-punctuations 'all (dtk-notify-speak m 'dont-log)))
-       ad-return-value))))
+         (when
+             (and
+              (null inhibit-message)
+              m                         ; our message
+              (not (zerop (length m)))
+              emacspeak-speak-messages  ; speaking messages
+              (not (string-match ems--message-filter-pattern m))
+              (not (string= m emacspeak-last-message))
+              )
+           (setq emacspeak-lazy-message-time (current-time)
+                 emacspeak-last-message  m)
+;;; so we really need to speak it
+                    (emacspeak-auditory-icon 'key)
+           (tts-with-punctuations 'all (dtk-notify-speak m 'dont-log)))
+         ad-return-value)))))
 
-
-;; xcae training wheel:
-(defadvice set-minibuffer-message (after emacspeak pre act comp)
-  "Icon."
-  (unless (zerop (length (ad-get-arg 0)))
-    (dtk-notify-speak (ad-get-arg 0))
-    (emacspeak-auditory-icon 'key)))
 
 (defadvice display-message-or-buffer (after emacspeak pre act comp)
   "Icon"
@@ -824,12 +819,13 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 (setq command-error-function 'emacspeak-error-handler)
 
 (defun emacspeak-error-handler (data context _calling-function)
-  "Emacspeak custom error handler."
-  (dtk-stop)
-  (emacspeak-auditory-icon 'warn-user)
-  (message "%s %s"
-           (or context "")
-           (error-message-string data)))
+  "Custom error handler."
+  (cl-declare (special emacspeak-last-message))
+  (let ((m (error-message-string data)))
+    (unless (string= m emacspeak-last-message)
+      (setq emacspeak-last-message m)
+      (emacspeak-auditory-icon 'warn-user)
+      (message "%s %s" (or context "") m))))
 
 ;; Silence messages from async handlers:
 (defadvice timer-event-handler (around emacspeak pre act comp)

@@ -642,9 +642,10 @@ specifies the current pronunciation mode --- See
   (let* ((inhibit-read-only t)
          (len (length string))
          (pattern (regexp-quote string))
-         (reg (concat
-               pattern pattern
-               "\\(" pattern "\\)+"))
+         (reg
+           (concat
+            pattern pattern
+            "\\(" pattern "\\)+"))
          (start nil)
          (personality nil)
          (replacement nil))
@@ -666,11 +667,12 @@ specifies the current pronunciation mode --- See
 (defun dtk-handle-repeating-patterns (mode)
   "Handle repeating patterns by replacing them with  `aw <length> char-names'"
   (cl-declare (special dtk-cleanup-repeats))
-  (goto-char (point-min))
-  (mapc
-   #'(lambda (str)
-       (dtk-replace-duplicates str mode))
-   dtk-cleanup-repeats))
+  (when dtk-cleanup-repeats
+    (goto-char (point-min))
+    (mapc
+     #'(lambda (str)
+         (dtk-replace-duplicates str mode))
+     dtk-cleanup-repeats)))
 
 (defun dtk-quote (mode)
   "Clean-up text."
@@ -1944,15 +1946,14 @@ Designed to work with ALSA and Pulseaudio."
 (defun dtk-notify-initialize ()
   "Initialize notification TTS stream."
   (interactive)
-  (cl-declare (special dtk-notify-process))
+  (cl-declare (special dtk-notify-process
+                       tts-notification-device))
   (let ((dtk-program
          (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program))
-        (new-process nil)
-        (pulse-tts-right-p
-         (shell-command-to-string "pacmd list-sinks | grep tts_right")))
-    (unless (zerop (length pulse-tts-right-p))
+        (new-process nil))
+    (unless (zerop (length tts-notification-device))
       (with-environment-variables
-          (("PULSE_SINK" "tts_right"))
+          (("PULSE_SINK" tts-notification-device))
         (setq  new-process (dtk-make-process "Notify")))
       (when
           (memq (process-status new-process) '(run open))
