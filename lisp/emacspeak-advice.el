@@ -710,7 +710,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 (defvar emacspeak-last-message nil
   "Last output from `message'.")
 
-(defvar emacspeak-lazy-message-time (current-time)
+(defvar ems--lazy-msg-time (current-time)
   "Time message was spoken")
 
 (defcustom emacspeak-speak-messages-filter
@@ -757,7 +757,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      (cl-declare (special emacspeak-last-message inhibit-message
                           ems--message-filter-pattern
                           emacspeak-speak-messages
-                          emacspeak-lazy-message-time))
+                          ems--lazy-msg-time))
      (when (process-live-p dtk-speaker-process)
        (let ((inhibit-read-only t)
              (m nil))
@@ -770,13 +770,17 @@ When on a close delimiter, speak matching delimiter after a small delay. "
          (when
              (and
               (null inhibit-message)
+              emacspeak-speak-messages  ; speaking messages
               m                         ; our message
               (not (zerop (length m)))
-              emacspeak-speak-messages  ; speaking messages
-              (not (string-match ems--message-filter-pattern m))
               (not (string= m emacspeak-last-message))
-              )
-           (setq emacspeak-lazy-message-time (current-time)
+              (not (string-match ems--message-filter-pattern m))
+              (and
+               (not (zerop echo-keystrokes))
+               (<  (/ echo-keystrokes 20)
+                   (float-time
+                    (time-subtract (current-time) ems--lazy-msg-time)))))
+           (setq ems--lazy-msg-time (current-time)
                  emacspeak-last-message  m)
 ;;; so we really need to speak it
                     (emacspeak-auditory-icon 'key)
@@ -817,15 +821,32 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (cl-declaim (special command-error-function))
 (setq command-error-function 'emacspeak-error-handler)
+(defvar ems--last-error-msg nil
+  "Cache last error message.")
+(defvar ems--lazy-error-time (current-time)
+  "Time error was spoken")
 
-(defun emacspeak-error-handler (data context _calling-function)
+(defun emacspeak-error-handler (data context calling-function)
   "Custom error handler."
-  (cl-declare (special emacspeak-last-message))
+  (cl-declare (special ems--last-error-msg
+                       ems--lazy-error-time))
   (let ((m (error-message-string data)))
-    (unless (string= m emacspeak-last-message)
-      (setq emacspeak-last-message m)
+    (when
+         (and
+          (<  (/ echo-keystrokes 20)
+              (float-time
+               (time-subtract (current-time) ems--lazy-msg-time))))
+      (setq ems--last-error-msg m
+            ems--lazy-error-time (current-time) )
       (emacspeak-auditory-icon 'warn-user)
-      (message "%s %s" (or context "") m))))
+      (dtk-speak-and-echo
+       (concat 
+        (if calling-function
+            (propertize
+             (format "%s: " calling-function)
+             'personality voice-lighten)
+            "")
+        m (or context ""))))))
 
 ;; Silence messages from async handlers:
 (defadvice timer-event-handler (around emacspeak pre act comp)
