@@ -80,7 +80,6 @@ CORE_OBJECTS =  \
 amixer.elc \
 emacspeak-2048.elc \
 emacspeak-abc-mode.elc \
-emacspeak-actions.elc \
 emacspeak-add-log.elc \
 emacspeak-amark.elc \
 emacspeak-analog.elc \
@@ -192,7 +191,6 @@ emacspeak-librivox.elc \
 emacspeak-lispy.elc \
 emacspeak-lua.elc \
 emacspeak-m-player.elc \
-emacspeak-mpv.elc \
 emacspeak-magit.elc \
 emacspeak-make-mode.elc \
 emacspeak-man.elc \
@@ -298,7 +296,7 @@ sox.elc
 
 ADDON_OBJECTS = \
 emacspeak-nm.elc  dom-addons.elc light.elc  \
-xbacklight.elc  toy-braille.elc tetris.elc cd-tool.elc  \
+xbacklight.elc  toy-braille.elc tetris.elc   \
 omaps.elc g-utils.elc gweb.elc gmaps.elc gm-nnir.elc 
 
 

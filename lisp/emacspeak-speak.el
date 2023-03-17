@@ -629,65 +629,33 @@ the sense of the filter. "
     (setq emacspeak-speak-line-column-filter nil))))
 
 ;;}}}
-;;{{{  Actions
-
-;; Setting value of property 'emacspeak-action to a list
-;; of the form (before | after function)
-;; function to be executed before or after the unit of text at that
-;; point is spoken.
-(defvar-local emacspeak-action-mode nil
-  "Determines if action mode is active.
-Non-nil value means that any function that is set as the
-value of property action is executed when the text at that
-point is spoken.")
-
-;; Record in the mode line
-(or
- (assq 'emacspeak-action-mode minor-mode-alist)
- (setq minor-mode-alist
-       (append minor-mode-alist
-               '((emacspeak-action-mode " Action")))))
-
-;; Return the appropriate action hook variable that defines actions
-;; for this mode.
-
-(defun emacspeak-action-get-action-hook (mode)
-  "Retrieve action hook.
-Argument MODE defines action mode."
-  (intern (format "emacspeak-%s-actions-hook" mode)))
-
-;; Execute action at point
-(defun emacspeak-handle-action-at-point (&optional pos)
-  "Execute action specified at point."
-  (cl-declare (special emacspeak-action-mode))
-  (setq pos (or pos (point)))
-  (let ((action-spec (get-text-property (point) 'emacspeak-action)))
-    (when (and emacspeak-action-mode action-spec)
-      (condition-case nil
-          (funcall action-spec)
-        (error (message "Invalid actionat %s" (point)))))))
-
-(ems-generate-switcher 'emacspeak-toggle-action-mode
-                       'emacspeak-action-mode
-                       "Toggle state of  Emacspeak  action mode.
-Interactive PREFIX arg means toggle  the global default value, and then set the
-current local  value to the result.")
+;;{{{Match Parens:
+(defun emacspeak-speak-matching-paren ()
+  "Show matched paren with context."
+  (interactive)
+  (let ((data (show-paren--default)))
+    (when data 
+      (save-excursion
+       (goto-char (cl-third  data))
+       (dtk-speak
+        (buffer-substring (point)
+                          (max (cl-fourth data)
+                               (line-end-position))))))))
 
 ;;}}}
+ 
 ;;{{{  Speak units of text
 
 (defun emacspeak-speak-region (start end)
   "Speak region bounded by start and end. "
   (interactive "r")
-  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs
-                       emacspeak-action-mode))
+  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs))
   (let ((inhibit-modification-hooks t)
         (deactivate-mark nil))
     (when (not emacspeak-speak-voice-annotated-paragraphs)
       (save-restriction
         (narrow-to-region start end)
         (emacspeak-speak-voice-annotate-paragraphs)))
-    (when emacspeak-action-mode  (emacspeak-handle-action-at-point))
     (dtk-speak (buffer-substring start end))))
 
 (defconst emacspeak-horizontal-rule "^\\([=_-]\\)\\1+$"
@@ -953,10 +921,8 @@ Negative prefix arg speaks from start of word to point.
 If executed  on the same buffer position a second time, the word is
 spelled out  instead of being spoken."
   (interactive "P")
-  (cl-declare (special emacspeak-speak-last-spoken-word-position
-                       emacspeak-action-mode))
+  (cl-declare (special emacspeak-speak-last-spoken-word-position))
   (when (listp arg) (setq arg (car arg)))
-  (when emacspeak-action-mode  (emacspeak-handle-action-at-point))
   (save-excursion
     (let ((orig (point))
           (inhibit-modification-hooks t)
@@ -1116,7 +1082,6 @@ Pronounces character phonetically unless  called with a PREFIX arg."
 With prefix ARG, speaks the rest of the sentence  from point.
 Negative prefix arg speaks from start of sentence to point."
   (interactive "P")
-  (cl-declare (special emacspeak-action-mode))
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
     (let ((orig (point))
@@ -1127,7 +1092,6 @@ Negative prefix arg speaks from start of sentence to point."
       (setq end (point))
       (backward-sentence 1)
       (setq start (point))
-      (when emacspeak-action-mode  (emacspeak-handle-action-at-point))
       (cond
        ((null arg))
        ((> arg 0) (setq start orig))
@@ -1165,7 +1129,6 @@ Negative prefix arg speaks from start of sexp to point. "
 With prefix ARG, speaks rest of current page.
 Negative prefix arg will read from start of current page to point. "
   (interactive "P")
-  (cl-declare (special emacspeak-action-mode))
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
     (let ((orig (point))
@@ -1173,7 +1136,6 @@ Negative prefix arg will read from start of current page to point. "
           (end nil))
       (mark-page)
       (setq start (point))
-      (when emacspeak-action-mode  (emacspeak-handle-action-at-point))
       (setq end (mark))
       (cond
        ((null arg))
@@ -1186,7 +1148,6 @@ Negative prefix arg will read from start of current page to point. "
 With prefix arg, speaks rest of current paragraph.
 Negative prefix arg will read from start of current paragraph to point. "
   (interactive "P")
-  (cl-declare (special emacspeak-action-mode))
   (when (listp arg) (setq arg (car arg)))
   (save-excursion
     (let ((orig (point))
@@ -1196,7 +1157,6 @@ Negative prefix arg will read from start of current paragraph to point. "
       (setq end (point))
       (backward-paragraph 1)
       (setq start (point))
-      (when emacspeak-action-mode  (emacspeak-handle-action-at-point))
       (cond
        ((null arg))
        ((> arg 0) (setq start orig))
@@ -1618,7 +1578,8 @@ Displays name of current buffer.")
 (defun emacspeak-speak-header-line ()
   "Speak header line if set."
   (interactive)
-  (cl-declare (special header-line-format))
+  (cl-declare (special header-line-format
+                       emacspeak-speak-time-brief-format))
   (cond
    (header-line-format
     (let ((window-count (length (window-list))))
@@ -1629,7 +1590,7 @@ Displays name of current buffer.")
     (dtk-speak
      (concat
       (propertize (buffer-name) 'personality voice-smoothen)
-      (format-time-string " %H:%M "))))))
+      (format-time-string emacspeak-speak-time-brief-format))))))
 
 (defun emacspeak-toggle-header-line ()
   "Toggle Emacspeak's default header line."
@@ -1685,14 +1646,20 @@ offset. Default  is to speak the previous word. "
 ;;}}}
 ;;{{{  Speak misc information e.g. time, version, current-kill  etc
 
-(defcustom emacspeak-speak-time-format-string
-  "%k %M   on %A, %B %_e, %Y "
+(defcustom emacspeak-speak-time-format
+  "%l %M%p   on %A, %B %_e, %Y "
   "Format string that specifies how the time should be spoken.
 See the documentation for function
 `format-time-string'"
   :group 'emacspeak
   :type 'string)
 
+(defcustom emacspeak-speak-time-brief-format
+  "%l %M%p"
+  "Format for time in brief."
+  :group 'emacspeak
+  :type 'string)
+ 
 (defcustom emacspeak-speak-zoneinfo-directory
   "/usr/share/zoneinfo/"
   "Directory containing timezone data."
@@ -1709,7 +1676,7 @@ Optional second arg `set' sets the TZ environment variable as well."
           (read-file-name-completion-ignore-case t))
       (read-file-name "Timezone: " emacspeak-speak-zoneinfo-directory))
     current-prefix-arg))
-  (cl-declare (special emacspeak-speak-time-format-string
+  (cl-declare (special emacspeak-speak-time-format
                        ido-case-fold emacspeak-speak-zoneinfo-directory))
   (when (and set
              (= 16 (car set)))
@@ -1718,12 +1685,20 @@ Optional second arg `set' sets the TZ environment variable as well."
   (emacspeak-shell-command
    (format "export TZ=%s; date +\"%s\""
            zone
-           (concat emacspeak-speak-time-format-string
+           (concat emacspeak-speak-time-format
                    (format
                     " in %s, %%Z, %%z "
                     (substring
                      zone
                      (length emacspeak-speak-zoneinfo-directory)))))))
+
+
+(defun emacspeak-speak-brief-time ()
+  "Time in brief"
+  (interactive)
+  (cl-declare (special emacspeak-speak-time-brief-format))
+  (dtk-say
+   (format-time-string emacspeak-speak-time-brief-format)))
 
 (defun emacspeak-speak-time (&optional world)
   "Speak the time.
@@ -1732,24 +1707,24 @@ Optional interactive prefix arg `C-u'invokes world clock.
 Timezone is specified using minibuffer completion.
 Second interactive prefix sets clock to new timezone."
   (interactive "P")
-  (cl-declare (special emacspeak-speak-time-format-string))
+  (cl-declare (special emacspeak-speak-time-format))
   (emacspeak-auditory-icon 'time)
   (cond
-   (world (call-interactively 'emacspeak-speak-world-clock))
-   (t
-    (let ((time-string
-           (format-time-string emacspeak-speak-time-format-string
-                               (current-time) (getenv "TZ"))))
-      (tts-with-punctuations 'some (dtk-notify-speak time-string))))))
+    (world (call-interactively 'emacspeak-speak-world-clock))
+    (t
+     (let ((time-string
+             (format-time-string emacspeak-speak-time-format
+                                 (current-time) (getenv "TZ"))))
+       (tts-with-punctuations 'some (dtk-notify-say time-string))))))
 
 (defun emacspeak-speak-seconds-since-epoch (seconds)
   "Speaks time value specified as seconds  since epoch."
   (interactive
    (list (read-minibuffer "Seconds: " (word-at-point))))
-  (cl-declare (special emacspeak-speak-time-format-string))
+  (cl-declare (special emacspeak-speak-time-format))
   (message
    (format-time-string
-    emacspeak-speak-time-format-string (seconds-to-time seconds))))
+    emacspeak-speak-time-format (seconds-to-time seconds))))
 
 (defun emacspeak-speak-microseconds-since-epoch (ms)
   "Speaks time value specified as microseconds  since epoch."
@@ -2320,153 +2295,6 @@ program, arguments specify the START and END of the rectangle."
   (interactive "r")
   (require 'rect)
   (dtk-speak-list (extract-rectangle start end)))
-
-;;}}}
-;;{{{  Matching delimiters:
-
-;; A modified blink-matching-open that always displays the matching line
-;; in the minibuffer so emacspeak can speak it.
-;; Helper: emacspeak-speak-blinkpos-message
-
-(defun emacspeak-speak-blinkpos-message (blinkpos)
-  "Speak message about matching blinkpos."
-  (ems-set-pause-temporarily
-   blinkpos (1+ blinkpos) 5
-   (ems-set-personality-temporarily
-    blinkpos (1+ blinkpos) voice-animate
-    (tts-with-punctuations
-     'all
-     (dtk-speak-and-echo
-      (concat
-       "Matches "
-       (cond
-        ;; Show what precedes the open in its line, if anything.
-        ((save-excursion
-           (skip-chars-backward " \t")
-           (not (bolp)))
-         (buffer-substring (line-beginning-position) (1+ blinkpos)))
-        ;; Show what follows the open in its line, if anything.
-        ((save-excursion
-           (forward-char 1)
-           (skip-chars-forward " \t")
-           (not (eolp)))
-         (buffer-substring blinkpos (line-end-position)))
-        ;; Otherwise show the previous nonblank line.
-        (t
-         (concat
-          (buffer-substring
-           (progn
-             (backward-char 1)
-             (skip-chars-backward "\n \t")
-             (line-beginning-position))
-           (progn (end-of-line)
-                  (skip-chars-backward " \t")
-                  (point)))
-          ;; Replace the newline and other whitespace with `...'.
-          "..."
-          (buffer-substring blinkpos (1+ blinkpos)))))))))))
-
-;; The only change to emacs' default blink-matching-paren is the
-;; addition of the call to helper emacspeak-speak-blinkpos-message
-;; This matcher if from emacs 19 from memory.
-
-(defun emacspeak-blink-matching-open ()
-  "Move cursor momentarily to the beginning of the sexp before point.
-Also display match context in minibuffer."
-  (interactive)
-  (when (and (> (point) (point-min))
-             blink-matching-paren
-             ;; Verify an even number of quoting characters precede the close.
-             (= 1 (logand 1 (- (point)
-                               (save-excursion
-                                 (forward-char -1)
-                                 (skip-syntax-backward "/\\")
-                                 (point))))))
-    (let* ((oldpos (point))
-           (blink-matching-delay 5)
-           blinkpos
-           message-log-max  ; Don't log messages about paren matching.
-           matching-paren
-           open-paren-line-string)
-      (save-excursion
-        (save-restriction
-          (if blink-matching-paren-distance
-              (narrow-to-region (max (minibuffer-prompt-end)
-                                     (- (point) blink-matching-paren-distance))
-                                oldpos))
-          (condition-case
-              nil
-              (let ((parse-sexp-ignore-comments
-                     (and parse-sexp-ignore-comments
-                          (not blink-matching-paren-dont-ignore-comments))))
-                (setq blinkpos (scan-sexps oldpos -1)))
-            (error nil)))
-        (and blinkpos
-             ;; Not syntax '$'.
-             (not (eq (syntax-class (syntax-after blinkpos)) 8))
-             (setq matching-paren
-                   (let ((syntax (syntax-after blinkpos)))
-                     (and (consp syntax)
-                          (eq (syntax-class syntax) 4)
-                          (cdr syntax)))))
-        (cond
-         ((not (or (eq matching-paren (char-before oldpos))
-                   ;; The cdr might hold a new paren-class info rather than
-                   ;; a matching-char info, in which case the two CDRs
-                   ;; should match.
-                   (eq matching-paren (cdr (syntax-after (1- oldpos))))))
-          (message "Mismatched parentheses"))
-         ((not blinkpos)
-          (if (not blink-matching-paren-distance)
-              (message "Unmatched parenthesis")))
-         ((pos-visible-in-window-p blinkpos)
-          ;; Matching open within window, temporarily move to blinkpos but only
-          ;; if `blink-matching-paren-on-screen' is non-nil.
-          (and blink-matching-paren-on-screen
-               (save-excursion
-                 (goto-char blinkpos)
-                 (emacspeak-speak-blinkpos-message blinkpos)
-                 (sit-for blink-matching-delay))))
-         (t
-          (save-excursion
-            (goto-char blinkpos)
-            (setq open-paren-line-string
-                  ;; Show what precedes the open in its line, if anything.
-                  (if (save-excursion
-                        (skip-chars-backward " \t")
-                        (not (bolp)))
-                      (buffer-substring (line-beginning-position)
-                                        (1+ blinkpos))
-                    ;; Show what follows the open in its line, if anything.
-                    (if (save-excursion
-                          (forward-char 1)
-                          (skip-chars-forward " \t")
-                          (not (eolp)))
-                        (buffer-substring blinkpos
-                                          (line-end-position))
-                      ;; Otherwise show the previous nonblank line,
-                      ;; if there is one.
-                      (if (save-excursion
-                            (skip-chars-backward "\n \t")
-                            (not (bobp)))
-                          (concat
-                           (buffer-substring
-                            (progn
-                              (skip-chars-backward "\n \t")
-                              (line-beginning-position))
-                            (progn
-                              (end-of-line)
-                              (skip-chars-backward " \t")
-                              (point)))
-                           ;; Replace the newline and  whitespace with `...'.
-                           "..."
-                           (buffer-substring blinkpos (1+ blinkpos)))
-                        ;; There is nothing to show except the char itself.
-                        (buffer-substring blinkpos (1+ blinkpos)))))))
-          (message "Matches %s"
-                   (substring-no-properties
-                    open-paren-line-string))
-          (sit-for blink-matching-delay)))))))
 
 ;;}}}
 ;;{{{  Auxiliary functions:
