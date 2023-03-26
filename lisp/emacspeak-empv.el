@@ -70,6 +70,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
+       (dtk-stop)
        (emacspeak-auditory-icon 'button)))))
 
 (defadvice empv-exit (after emacspeak pre act comp)
@@ -80,7 +81,8 @@
 (defadvice empv-youtube-tabulated (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)))
+    
+    (emacspeak-speak-mode-line)))
 
 ;;}}}
 ;;{{{Additional Commands:
@@ -102,6 +104,14 @@
         (empv-play url))
       (empv-play url)))
 
+
+(defun emacspeak-empv-accumulate-to-register ()
+  "Accumulate media links to register u"
+  (interactive)
+  (emacspeak-accumulate-to-register ?u
+                                    'empv-youtube-results--current-video-url))
+
+
 ;;}}}
 ;;{{{Setup:
 
@@ -109,6 +119,7 @@
   "Emacspeak setup for empv."
   (cl-declare (special empv-map))
   (global-set-key (ems-kbd "C-; v") empv-map)
+  (define-key empv-youtube-results-mode-map "u" 'emacspeak-empv-accumulate-to-register)
   (cl-loop
    for b in
    '(

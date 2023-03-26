@@ -242,6 +242,11 @@
 ;; Play media url under point by first downloading the URL using
 ;; CURL. This is useful for sites that do multiple redirects before
 ;; returning the actual media stream URL.
+;; @item u
+;; @command{emacspeak-eww-url-to-register}
+;;Accumulate url under point to register@code{u}.
+;; Sample use-cases include building up a playlist of links in the
+;; right sort order after a YT search.
 ;; @item x
 ;; @command{emacspeak-feeds-select-feed}
 ;; Display link under point as an @code{ATOM}, @code{OPML} or @code{RSS} feed.
@@ -588,7 +593,9 @@ Safari/537.36"
    do
    (when (assoc  c eww-link-keymap)
      (delete (assoc  c eww-link-keymap) eww-link-keymap)))
-  (define-key eww-text-map  [C-return] 'emacspeak-eww-fillin-form-field)
+  (define-key eww-text-map  [C-return]
+    'emacspeak-eww-fillin-form-field)
+  (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
   (define-key eww-link-keymap ";" 'emacspeak-eww-play-media-at-point)
@@ -737,6 +744,7 @@ are available are cued by an auditory icon on the header line."
     (cond
      ((null alt) (message "No alternate links."))
      (t
+      (bury-buffer)
       (with-temp-buffer
           (insert "<ol>\n")
         (cl-loop
@@ -2503,6 +2511,14 @@ Use for large EBook buffers."
   (plist-put eww-data :dom nil)
   (when  (called-interactively-p 'interactive)
     (emacspeak-auditory-icon 'task-done)))
+
+;;}}}
+;;{{{Command: url-to-register
+
+(defun emacspeak-eww-url-to-register ()
+  "Accumulate  URL in register `u'"
+  (interactive)
+  (emacspeak-accumulate-to-register ?u #'(lambda () (shr-url-at-point nil))))
 
 ;;}}}
 (provide 'emacspeak-eww)

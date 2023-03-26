@@ -1647,7 +1647,7 @@ offset. Default  is to speak the previous word. "
 ;;{{{  Speak misc information e.g. time, version, current-kill  etc
 
 (defcustom emacspeak-speak-time-format
-  "%l %M%p   on %A, %B %_e, %Y "
+  "%l %M%p on %A %B %_e"
   "Format string that specifies how the time should be spoken.
 See the documentation for function
 `format-time-string'"
@@ -1697,7 +1697,7 @@ Optional second arg `set' sets the TZ environment variable as well."
   "Time in brief"
   (interactive)
   (cl-declare (special emacspeak-speak-time-brief-format))
-  (dtk-say
+  (dtk-notify-say
    (format-time-string emacspeak-speak-time-brief-format)))
 
 (defun emacspeak-speak-time (&optional world)
@@ -1715,7 +1715,7 @@ Second interactive prefix sets clock to new timezone."
      (let ((time-string
              (format-time-string emacspeak-speak-time-format
                                  (current-time) (getenv "TZ"))))
-       (tts-with-punctuations 'some (dtk-notify-say time-string))))))
+       (dtk-notify-say time-string)))))
 
 (defun emacspeak-speak-seconds-since-epoch (seconds)
   "Speaks time value specified as seconds  since epoch."
@@ -2776,6 +2776,18 @@ but quickly switch to a window by name."
    ((= (point) (point-min)) (call-interactively 'end-of-buffer))
    ((= (point) (point-max)) (call-interactively 'beginning-of-buffer))
    (t (call-interactively 'beginning-of-buffer))))
+
+;;}}}
+;;{{{Utility: Accumulate 
+
+
+(defun emacspeak-accumulate-to-register (reg generator)
+  "Call generator and append resulting content to specified register.
+Appended entries are separated by newlines."
+  (set-register reg
+                (concat
+                 (get-register reg) "\n" (funcall generator )))
+  (message "Accumulated %d lines" (length (split-string (get-register reg)))))
 
 ;;}}}
 

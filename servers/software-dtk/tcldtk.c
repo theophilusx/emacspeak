@@ -47,8 +47,8 @@ int Say(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 int Stop(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
 
 int Synchronize(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
-int Pause(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
-int Resume(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
+
+
 
 /* }}} */
 /* {{{global variables*/
@@ -120,7 +120,7 @@ int Tcldtk_Init(Tcl_Interp *interp) {
   }
 
   status = TextToSpeechStartup(&dtkHandle, devNo, devOptions, NULL, 0);
-  sprintf(error_buff, "TTS startup returned %d", status);
+/*  sprintf(error_buff, "TTS startup returned %d", status); */
 
   if (status != MMSYSERR_NOERROR) {
     error_msg = getErrorMsg(status);
@@ -129,7 +129,7 @@ int Tcldtk_Init(Tcl_Interp *interp) {
   }
 
   if (dtkHandle == NULL) {
-    sprintf(error_buff, "Could not open text-to-speech engine");
+    /* sprintf(error_buff, "Could not open text-to-speech engine"); */
 
     Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
     return TCL_ERROR;
@@ -140,11 +140,6 @@ int Tcldtk_Init(Tcl_Interp *interp) {
   Tcl_CreateObjCommand(interp, "synchronize", Synchronize,
                        (ClientData) dtkHandle, TclDtkFree);
   Tcl_CreateObjCommand(interp,"stop", Stop, (ClientData) dtkHandle, TclDtkFree);
-  Tcl_CreateObjCommand(interp, "pause", Pause,
-                       (ClientData) dtkHandle, TclDtkFree);
-  Tcl_CreateObjCommand(interp, "resume", Resume,
-                       (ClientData) dtkHandle, TclDtkFree);
-
   return TCL_OK;
 }
 
@@ -155,14 +150,14 @@ int Say(ClientData dtkHandle, Tcl_Interp *interp, int objc,
         Tcl_Obj *CONST objv[]) {
   int i, length;
   MMRESULT status;
-  DWORD dwFlags = TTS_NORMAL;
+  DWORD dwFlags = TTS_FORCE;
   char *txt = NULL;
 
   for (i=1; i<objc; i++) {
-    sprintf(error_buff, "For loop - %d. objc = %d", i, objc);
+    /*sprintf(error_buff, "For loop - %d. objc = %d", i, objc); */ 
     txt = Tcl_GetStringFromObj(objv[i], &length);
-    sprintf(error_buff, "String length is %d", length);
-    sprintf(error_buff, "Tcl obj %d. String = %s\n", i, txt);
+/*     sprintf(error_buff, "String length is %d", length);
+    sprintf(error_buff, "Tcl obj %d. String = %s\n", i, txt); */
     if (Tcl_StringMatch(txt, "-reset")) {
       status = TextToSpeechReset(dtkHandle, FALSE);
       if (status != MMSYSERR_NOERROR) {
@@ -222,35 +217,6 @@ int Stop(ClientData dtkHandle, Tcl_Interp *interp,
   }
   status = TextToSpeechSpeak(dtkHandle,
                              "[:phoneme arpabet speak on :say clause]", TTS_NORMAL);
-  if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-    return TCL_ERROR;
-  }
-  return TCL_OK;
-}
-
-/* }}} */
-/* {{{ pause and resume */
-
-int Pause(ClientData dtkHandle, Tcl_Interp *interp,
-          int objc, Tcl_Obj *CONST objv[]) {
-  MMRESULT status;
-
-  status = TextToSpeechPause(dtkHandle);
-  if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-    return TCL_ERROR;
-  }
-  return TCL_OK;
-}
-
-int Resume(ClientData dtkHandle, Tcl_Interp *interp,
-           int objc, Tcl_Obj *CONST objv[]) {
-  MMRESULT status;
-
-  status = TextToSpeechResume(dtkHandle);
   if (status != MMSYSERR_NOERROR) {
     error_msg = getErrorMsg(status);
     Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));

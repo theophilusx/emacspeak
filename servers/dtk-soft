@@ -71,7 +71,7 @@ proc tts_set_character_scale {factor} {
 
 proc tts_say {text} {
     global tts
-	synth "\[:sa w]$text "
+	synth "$text "
     return ""
 }
 
@@ -90,11 +90,6 @@ proc d {} {
     speech_task
 }
 
-proc tts_resume  {} {
-	resume
-    return ""
-}
-
 proc tts_repeat  {} {
     global tts 
     queue_rewind
@@ -104,11 +99,6 @@ proc tts_repeat  {} {
     } else {
         speech_task
     }
-    return ""
-}
-
-proc tts_pause {} {
-	pause
     return ""
 }
 

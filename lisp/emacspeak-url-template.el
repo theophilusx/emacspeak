@@ -61,6 +61,7 @@
 (require 'emacspeak-preamble)
 (require 'eww)
 (require 'dom-addons)
+(require 'emacspeak-eww)
 (require 'gweb)
 (require 'g-utils)
 (require 'emacspeak-we)
@@ -481,6 +482,15 @@ name of the list.")
 
 ;;}}}
 ;;{{{ cnn
+
+
+(emacspeak-url-template-define
+ "CNN Money"
+ "https://money.cnn.com"
+ nil
+ #'(lambda ()
+     (eww-display-dom-by-role "main"))
+ "CNN Money")
 
 (emacspeak-url-template-define
  "CNN Headlines"
