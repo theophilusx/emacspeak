@@ -49,6 +49,7 @@
 ;;{{{  Required modules
 
 (require 'cl-lib)
+(require 'cl-extra)
 (require 'advice)
 (require 'lisp-mnt)
 (require 'subr-x)
@@ -248,7 +249,11 @@
     (insert (format "%s\n"
                     (or doc
                         (format "###%s: Not Documented\n" o))))
-    (insert (format "\nDefault Value: @verb{|%s|}\n" value))
+    (insert
+     (format "\nDefault Value: \n\n@verbatim\n%s\n@end verbatim\n\n"
+             (with-temp-buffer
+                 (cl-prettyprint value)
+               (buffer-substring-no-properties (point-min) (point-max)))))
     (insert "\n@end defvar\n\n")))
 
 (defun self-document-module-options (self)
@@ -315,11 +320,13 @@
 
 (cl-declaim (special emacspeak-prefix))
 (defvar sd-emacspeak-prefixes
-  (list emacspeak-prefix
-        (kbd "C-;") (kbd "C-'") (kbd "C-.") (kbd "C-,")
-        (kbd "C-z") (kbd "C-e x") (kbd "C-e C-x"))
-  "Key prefixes  for which we generate a help section.")
-
+  (list
+   emacspeak-prefix
+   (kbd "C-;") (kbd "C-'") (kbd "C-.") (kbd "C-,") (kbd "C-z")
+   (kbd "C-e x") (kbd "C-e y" )   (kbd "C-e z") (kbd "C-e '"))
+  "Key prefixes  for which we generate a help section."
+  )
+;; not used:
 (defun sd-describe-keys (buffer)
   "Generate a Texinfo section in `buffer' listing commands bound
  to prefix in `sd-emacspeak-prefixes'."
@@ -333,8 +340,8 @@
      (insert
       (format "@subsection Commands on prefix %s" (key-description prefix)))
      (insert "\n\n@code{@verb{|")
-      (describe-buffer-bindings (current-buffer) prefix)
-      (insert "|}}\n")
+     (describe-buffer-bindings (current-buffer) prefix)
+     (insert "|}}\n")
      )))
 
 ;;}}}
@@ -359,22 +366,30 @@
   (while
       (search-forward self-document-fn-key (point-max) 'no-error)
     (replace-match "<fn>")))
-  
+
+
+(defun self-document-fix-bs ()
+  "Change literal backspace to <DEL>"
+  (goto-char (point-min))
+  (while
+   (search-forward (format "%c" 127) (point-max) 'no-error)
+    (replace-match "<DEL>")))
+
 (defun self-document-update-menu-entries ()
   "Locates master menu, and updates description for each node."
   (message "Adding descriptions to master menu entries.")
   (save-excursion
-    (goto-char  (point-min))
-    (goto-char (re-search-forward "^@menu"))
-    (forward-line 1)
-    (while (not (looking-at "^@end menu"))
-      (goto-char (line-beginning-position))
-      (forward-char 2)
-      (when-let* ((module (sexp-at-point))
-                 (summary (lm-summary (locate-library (format "%s.el" module)))))
-        (goto-char (line-end-position))
-        (insert (format "%s." summary)))
-      (forward-line 1))))
+   (goto-char  (point-min))
+   (goto-char (re-search-forward "^@menu"))
+   (forward-line 1)
+   (while (not (looking-at "^@end menu"))
+          (goto-char (line-beginning-position))
+          (forward-char 2)
+          (when-let* ((module (sexp-at-point))
+                      (summary (lm-summary (locate-library (format "%s.el" module)))))
+                     (goto-char (line-end-position))
+                     (insert (format "%s." summary)))
+          (forward-line 1))))
 (defun self-document-all-modules()
   "Generate documentation for all modules."
   (cl-declare (special self-document-map))
@@ -406,6 +421,7 @@ This chapter documents a total of %d commands and %d options.\n\n"
       (self-document-update-menu-entries)
       (flush-lines "^Commentary: *$" (point-min) (point-max))
       (self-document-fix-fn-key)
+      (self-document-fix-bs)
       (shell-command-on-region          ; squeeze blanks
        (point-min) (point-max)
        "cat -s" (current-buffer) 'replace)

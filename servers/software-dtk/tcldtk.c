@@ -1,4 +1,5 @@
 /* {{{copyright*/
+
 /**
  *Copyright (C) 1995 -- 2022, T. V. Raman
  *All Rights Reserved
@@ -19,13 +20,20 @@
  * along with GNU Emacs; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
 /* }}} */
 /* {{{headers*/
 
 #define __VXWORKS__
 #include <tcl.h>
-#include <dtk/ttsapi.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+
+#include <dtk/ttsapi.h>
+#include <langinfo.h>
+
+#include <iconv.h>
 
 /* }}} */
 /* {{{defines*/
@@ -33,171 +41,130 @@
 #define PACKAGENAME "tts"
 #define PACKAGEVERSION "1.0"
 
-extern int Tcldtk_Init(Tcl_Interp *interp);
-
-#define DEBUG_LEVEL 0
-
 /* }}} */
 /* {{{prototypes*/
 
-char *getErrorMsg(MMRESULT);
-
-void TclDtkFree(ClientData);
-int Say(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
-int Stop(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
-
-int Synchronize(ClientData, Tcl_Interp *, int, Tcl_Obj * CONST []);
-
-
+void TclDtkFree (ClientData);
+int Say (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
+int Stop (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
+int Synchronize (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 
 /* }}} */
-/* {{{global variables*/
+/* {{{ Global: iconv_d */
 
-char *error_msg;
-char error_buff[80];
+iconv_t conv_d;
+
+/* }}} */
+/* {{{ iso-latin1 cleanup and speak: */
+
+/* We assume emacs never sends us a malformed utf-8 string
+   *The Dectalk  may silently fail on some chars, e.g., þ 
+   * (latin small *letter thorn). 
+ */
+
+__inline int
+speak_latin1 (LPTTS_HANDLE_T dtkHandle, char *in, size_t inLen) {
+  char *out, *outP;
+  int status;
+  size_t r;
+  size_t outsize = 2 * inLen;
+
+  out = calloc (outsize + 1, sizeof (char));
+  if (out == NULL) {
+    perror ("malloc");
+    exit (EXIT_FAILURE);
+  }
+  outP = out;
+  r = iconv (conv_d, &in, &inLen, &outP, &outsize);
+  if (r == -1) {		/* conversion failed:  speak orig input */
+    status = TextToSpeechSpeak (dtkHandle, in, TTS_FORCE);
+  } else {
+    status = TextToSpeechSpeak (dtkHandle, out, TTS_FORCE);
+  }
+  free (out);
+  return status;
+}
+
 /* }}} */
 /* {{{getErrorMsg*/
 
-char *getErrorMsg(MMRESULT errno) {
-  switch (errno) {
+char *
+getErrorMsg (int errCode) {
+  switch (errCode) {
   case MMSYSERR_NOERROR:
-    return "Success - No Error";
-  case MMSYSERR_ERROR:
-    return "Error - Unspecified error";
-  case MMSYSERR_BADDEVICEID:
-    return "Error - Device ID out of range";
-  case MMSYSERR_NOTENABLED:
-    return "Error - Driver failed to be enabled";
-  case MMSYSERR_ALLOCATED:
-    return "Error - Device already allocated";
-  case MMSYSERR_INVALHANDLE:
-    return "Error - Device handle is invalid";
-  case MMSYSERR_NODRIVER:
-    return "Error - No device driver present";
-  case MMSYSERR_NOMEM:
-    return "Error - Memory allocation error";
-  case MMSYSERR_NOTSUPPORTED:
-    return "Error - Function is not supported";
-  case MMSYSERR_BADERRNUM:
-    return "Error - Error value out of range";
-  case MMSYSERR_INVALFLAG:
-    return "Error - Invalid flag passed";
-  case MMSYSERR_INVALPARAM:
-    return "Error - Invalid parameter passed";
-  case MMSYSERR_HANDLEBUSY:
-    return "Error - Handle being used in another thread";
-  case MMSYSERR_LASTERROR:
-    return "Error - Last error in range";
+    return "Success";
   default:
-    return "Error - Unrecognized error number:";
+    return "Error";
   }
-  return "Oops - shouldn't have got  here!\n";
 }
 
 /* }}} */
 /* {{{closing down*/
 
-void TclDtkFree(ClientData dtkHandle) {
-  MMRESULT status;
-  status = TextToSpeechShutdown( dtkHandle );
-  if (status != MMSYSERR_NOERROR) {
-  }
+void
+TclDtkFree (ClientData dtkHandle) {
+  TextToSpeechShutdown (dtkHandle);
+  iconv_close (conv_d);
 }
 
 /* }}} */
 /* {{{init*/
 
-int Tcldtk_Init(Tcl_Interp *interp) {
-  MMRESULT status;
+int
+Tcldtk_Init (Tcl_Interp * interp) {
+  int status;
+  char *error_msg = NULL;
   LPTTS_HANDLE_T dtkHandle;
-  unsigned int devNo = 0;
-  DWORD devOptions = 0;
-
-  devNo = WAVE_MAPPER;
-  if (Tcl_PkgProvide(interp, PACKAGENAME, PACKAGEVERSION) != TCL_OK) {
-    Tcl_AppendResult(interp, "Error loading ", PACKAGENAME, NULL);
+  if (Tcl_PkgProvide (interp, PACKAGENAME, PACKAGEVERSION) != TCL_OK) {
+    Tcl_AppendResult (interp, "Error loading ", PACKAGENAME, NULL);
     return TCL_ERROR;
   }
 
-  status = TextToSpeechStartup(&dtkHandle, devNo, devOptions, NULL, 0);
-/*  sprintf(error_buff, "TTS startup returned %d", status); */
-
-  if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
+  status = TextToSpeechStartup (&dtkHandle, WAVE_MAPPER, 0, NULL, 0);
+  if ((status != MMSYSERR_NOERROR) || (dtkHandle == NULL)) {
+    error_msg = getErrorMsg (status);
+    Tcl_SetObjResult (interp, Tcl_NewStringObj (error_msg, -1));
     return TCL_ERROR;
   }
-
-  if (dtkHandle == NULL) {
-    /* sprintf(error_buff, "Could not open text-to-speech engine"); */
-
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-    return TCL_ERROR;
-  }
-
-  Tcl_CreateObjCommand(interp, "say", Say, (ClientData) dtkHandle, TclDtkFree);
-  Tcl_CreateObjCommand(interp, "synth", Say, (ClientData) dtkHandle, NULL);
-  Tcl_CreateObjCommand(interp, "synchronize", Synchronize,
-                       (ClientData) dtkHandle, TclDtkFree);
-  Tcl_CreateObjCommand(interp,"stop", Stop, (ClientData) dtkHandle, TclDtkFree);
+  conv_d = iconv_open ("ISO-8859-1//TRANSLIT//IGNORE", nl_langinfo (CODESET));
+  Tcl_CreateObjCommand (interp, "say", Say, (ClientData) dtkHandle,
+			TclDtkFree);
+  Tcl_CreateObjCommand (interp, "synth", Say, (ClientData) dtkHandle, NULL);
+  Tcl_CreateObjCommand (interp, "synchronize", Synchronize,
+			(ClientData) dtkHandle, TclDtkFree);
+  Tcl_CreateObjCommand (interp, "stop", Stop, (ClientData) dtkHandle,
+			TclDtkFree);
   return TCL_OK;
 }
 
 /* }}} */
 /* {{{say*/
 
-int Say(ClientData dtkHandle, Tcl_Interp *interp, int objc,
-        Tcl_Obj *CONST objv[]) {
-  int i, length;
-  MMRESULT status;
-  DWORD dwFlags = TTS_FORCE;
-  char *txt = NULL;
-
-  for (i=1; i<objc; i++) {
-    /*sprintf(error_buff, "For loop - %d. objc = %d", i, objc); */ 
-    txt = Tcl_GetStringFromObj(objv[i], &length);
-/*     sprintf(error_buff, "String length is %d", length);
-    sprintf(error_buff, "Tcl obj %d. String = %s\n", i, txt); */
-    if (Tcl_StringMatch(txt, "-reset")) {
-      status = TextToSpeechReset(dtkHandle, FALSE);
-      if (status != MMSYSERR_NOERROR) {
-        error_msg = getErrorMsg(status);
-        Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-        return TCL_ERROR;
-      }
-    }else {
-      status = TextToSpeechSpeak(dtkHandle, txt, dwFlags);
-      if (status != MMSYSERR_NOERROR) {
-        error_msg = getErrorMsg(status);
-        Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-        return TCL_ERROR;
-      }
-    }
+int
+Say (ClientData dtkHandle, Tcl_Interp * interp, int objc,
+     Tcl_Obj * CONST objv[]) {
+  int length;
+  int status;
+  char *txt = Tcl_GetStringFromObj (objv[1], &length);
+  status = speak_latin1 (dtkHandle, txt, length);
+  if (status != TCL_OK) {
+    Tcl_SetObjResult (interp, Tcl_NewStringObj ("TTS Error", -1));
+    return TCL_ERROR;
   }
-  if (Tcl_StringMatch(Tcl_GetStringFromObj(objv[0],NULL), "synth")) {
-
-    status = TextToSpeechSpeak(dtkHandle, "", TTS_FORCE);
-    if (status != MMSYSERR_NOERROR) {
-      error_msg = getErrorMsg(status);
-      Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-      return TCL_ERROR;
-    }
-  }
-
   return TCL_OK;
 }
 
 /* }}} */
 /* {{{ sync*/
 
-int Synchronize(ClientData dtkHandle, Tcl_Interp *interp,
-                int objc, Tcl_Obj *CONST objv[]) {
-  MMRESULT status;
-
-  status = TextToSpeechSync(dtkHandle);
+int
+Synchronize (ClientData dtkHandle, Tcl_Interp * interp,
+	     int objc, Tcl_Obj * CONST objv[]) {
+  char *error_msg = NULL;
+  int status = TextToSpeechSync (dtkHandle);
   if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
+    error_msg = getErrorMsg (status);
+    Tcl_SetObjResult (interp, Tcl_NewStringObj (error_msg, -1));
     return TCL_ERROR;
   }
   return TCL_OK;
@@ -206,20 +173,14 @@ int Synchronize(ClientData dtkHandle, Tcl_Interp *interp,
 /* }}} */
 /* {{{stop*/
 
-int Stop(ClientData dtkHandle, Tcl_Interp *interp,
-         int objc, Tcl_Obj *CONST objv[]) {
-  MMRESULT status;
-  status = TextToSpeechReset (dtkHandle, FALSE);
+int
+Stop (ClientData dtkHandle, Tcl_Interp * interp,
+      int objc, Tcl_Obj * CONST objv[]) {
+  char *error_msg = NULL;
+  int status = TextToSpeechReset (dtkHandle, FALSE);
   if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
-    return TCL_ERROR;
-  }
-  status = TextToSpeechSpeak(dtkHandle,
-                             "[:phoneme arpabet speak on :say clause]", TTS_NORMAL);
-  if (status != MMSYSERR_NOERROR) {
-    error_msg = getErrorMsg(status);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(error_msg, -1));
+    error_msg = getErrorMsg (status);
+    Tcl_SetObjResult (interp, Tcl_NewStringObj (error_msg, -1));
     return TCL_ERROR;
   }
   return TCL_OK;
@@ -230,4 +191,5 @@ int Stop(ClientData dtkHandle, Tcl_Interp *interp,
 /* local variables: */
 /* folded-file: t */
 /* end: */
+
 /* }}} */

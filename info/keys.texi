@@ -9,6 +9,9 @@
 @item "
  emacspeak-speak-sexp
 
+@item '
+ emacspeak-pianobar
+
 @item =
  emacspeak-speak-current-column
 
@@ -35,9 +38,6 @@
 
 @item C-b
  emacspeak-bookshare
-
-@item C-c
- emacspeak-speak-brief-time
 
 @item C-d
  emacspeak-toggle-show-point
@@ -723,6 +723,18 @@
  @section Emacspeak Keybindings On emacspeak-personal-y-keymap
 
 @table @kbd
+@item a
+ emacspeak-xslt-view-atom-file
+
+@item p
+ emacspeak-pianobar
+
+@item r
+ emacspeak-xslt-view-rss-file
+
+@item x
+ emacspeak-xslt-view-file
+
 @item y
  emacspeak-empv-play-url
 

@@ -946,7 +946,7 @@ The time position can also be specified as HH:MM:SS."
                (string-match
                 emacspeak-media-shortcuts-directory
                 emacspeak-m-player-resource)
-               (minusp (emacspeak-m-player-get-length)))
+               (cl-minusp (emacspeak-m-player-get-length)))
             (emacspeak-m-player-amark-add ems--m-player-mark)
             (emacspeak-m-player-amark-save))
           (ems--mp-send "quit")
@@ -1206,8 +1206,8 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
          #'(lambda(u) (string= u url))
          emacspeak-m-player-media-history))
   (emacspeak-auditory-icon 'delete-object)
-  (message
-   "Media History Length: %d" (length emacspeak-m-player-media-history)))
+  (kill-buffer)
+  (call-interactively 'emacspeak-m-player-browse-history))
 
 ;;;###autoload
 (defun emacspeak-m-player-from-history (posn)

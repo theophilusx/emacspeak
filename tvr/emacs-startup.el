@@ -5,7 +5,6 @@
 ;; July 15, 2001 finally cutting over to custom.
 ;; August 12, 2007: Cleaned up for Emacs 22
 
-
 ;; September 2017: Optimized and Cleaned Up
 ;; August 2020: Limit code at top-level.
 
@@ -14,27 +13,26 @@
 
 ;;; Commentary:
 ;; This startup file is set up with the following goals:
-;; 1. Speed up emacs startup 
-;; 2. Customize packages via a custom file as far as possible.
+;; 1. Speed up emacs startup
+;; 2. Customize packages via a custom file where possible.
 ;; 3. Keep the  custom settings  in a separate file
 ;; Place host-specific non-customizable bits in default.el.
 ;; 3. Define package-specific settings not available via Custom in a
-;;    package-specific <package>-prepare.el file.
+;;    package-specific <package>-prepare.el file,
+;; then use Make to turn these into a single all-prepare.el..
 ;; 4. Install everything from elpa/melpa as far as possible. (vm is an
 ;;    exception at present) --- I have nearly 200 packages activated.
-;; 5. The startup file contains functions with entry-point tvr-emacs.
+;; 5. The startup file contains functions with prefix  tvr-.
 ;; 6. The only top-level call is (tvr-emacs).
 ;; 7. Function tvr-emacs starts up Emacspeak, and sets up two hooks:
 ;;    - after-init-hook to do the bulk of the work.
 ;; Set env var PULSE_SINK to binaural for using bs2b under pulseaudio
 ;;    - emacs-startup-hook to set up  initial window configuration.
-;; 8. Function tvr-after-init-hook on after-init-hook does the
+;; 8. Function tvr-after-init on after-init-hook does the
 ;; following:
-;; For efficiency, package-specific setup files are concatenated into
-;; a single file all-prepare.el by  make.
-;;    - Load package-specific prepare.el files.
+;;Loads all-prepare.el described above.
 ;;    - Load the custom settings file.
-;;    - Start up things like the emacs server.
+;;    - Starts up things like the emacs server.
 ;;    - Some of these tasks are done on a separate thread using make-thread.
 ;;   - The work of loading files etc., is done within macro tvr-time-load
 ;;   which sets up an efficient environment for loading files and
@@ -80,10 +78,6 @@ Produce timing information as the last step."
 ;;}}}
 ;;{{{ Fixups:
 
-;; Put psession startup on a separate thread:
-
-(defadvice psession--restore-objects-from-directory (around ems pre act comp)
-  ad-do-it)
 (defadvice psession--restore-some-buffers (around ems pre act comp)
   (make-thread ad-do-it))
 
@@ -123,7 +117,7 @@ Produce timing information as the last step."
 ;;{{{Node/NVM Setup:
 (defun tvr-nvm-setup ()
   "Set up NVM/NPM."
-  (when (require 'nvm)
+  (with-eval-after-load "nvm"
     (let ((v (car (sort (mapcar #'car (nvm--installed-versions)) #'string>))))
       (nvm-use v)
       (executable-find "node"))))
@@ -137,6 +131,7 @@ Produce timing information as the last step."
 
 (defun tvr-emacs-startup-hook ()
   "Emacs startup hook.
+Configure dbus and set up tabs.
 Reset gc-cons-threshold to a smaller value  and play
 startup sound."
   (cl-declare (special emacspeak-sounds-directory))
@@ -148,23 +143,17 @@ startup sound."
   (message
    "<Emacs started for %s in %.2f  seconds with %s gcs (%.2f seconds)>"
    user-login-name (read (emacs-init-time)) gcs-done gc-elapsed)
-    (tvr-tabs))
+  (tvr-tabs))
 
 (defun tvr-customize ()
   "Customize my emacs.
 Use Custom to customize where possible. "
   (cl-declare (special custom-file
-                       global-mode-string
+                       global-mode-string outline-minor-mode-prefix
                        python-mode-hook outline-mode-prefix-map
-                       completion-auto-select emacspeak-directory
-                       outline-minor-mode-prefix))
+                       completion-auto-select emacspeak-directory))
   (load-library "aster")
-  (load-library "diminish")
-  (setq completion-auto-select t)
-  (add-hook 'python-mode-hook
-            #'(lambda nil
-                (elpy-enable)))
-  (setq outline-minor-mode-prefix "\C-co")
+  (add-hook 'python-mode-hook #'elpy-enable)
   ;; basic look and feel
   (setq frame-title-format '(multiple-frames "%b" ("Emacs")))
   (mapc
@@ -172,23 +161,19 @@ Use Custom to customize where possible. "
    '(list-threads narrow-to-page list-timers upcase-region
      downcase-region  narrow-to-region eval-expression ))
   (prefer-coding-system 'utf-8-emacs)
-  ;; prepend and append to register
-
-  (global-set-key (ems-kbd "C-x r a" ) 'append-to-register)
-  (global-set-key (ems-kbd "C-x r p" ) 'prepend-to-register)
-  
-  (global-set-key (ems-kbd "C-x v .") 'magit-commit-create)
-  (global-set-key [remap dabbrev-expand] 'hippie-expand)
+  (global-set-key[remap dabbrev-expand] 'hippie-expand)
   (cl-loop ;; global key-bindings
    for key in
    '(
+     (  "C-x r a"  append-to-register)
+     ("C-x r p"  prepend-to-register)
+     ("C-x v ." magit-commit-create)
      ("C-x <tab>"  previous-buffer)
      ("C-c <tab>"  next-buffer)
      ("<f3>" bury-buffer)
      ("<f4>" emacspeak-kill-buffer-quietly)
-     ("<f5>" find-file)
      ("M--" undo-only)
-     ("M-/" dabbrev-expand)
+     ("M-/" hippie-expand)
      ("M-C-c" calendar)
      ("M-C-j" imenu)
      ("M-e" emacspeak-wizards-end-of-word)
@@ -216,36 +201,35 @@ Use Custom to customize where possible. "
   (server-start)
   (with-eval-after-load 'magit (require 'forge))
   (make-thread #'(lambda nil (load "eww")))
-  (setq custom-file (expand-file-name "~/.customize-emacs"))
-  (load-theme 'modus-vivendi-tinted t)
   (require 'dired-x)
-  (tvr-time-load (when (file-exists-p custom-file)  (load
-                                                     custom-file)))
-  (diminish 'outline-minor-mode "")
-  (diminish 'reftex-mode "")
-  (diminish 'voice-lock-mode "")
-  (diminish 'auto-fill-function "")
-  (diminish 'abbrev-mode "")
-  (diminish 'auto-correct-mode "")
-  (setq  global-mode-string '("" display-time-string
-                              battery-mode-line-string))
+  (setq custom-file (expand-file-name "~/.customize-emacs"))
+  (when (file-exists-p custom-file)
+    (tvr-time-load (load custom-file)))
+  (load-theme 'modus-vivendi-tinted t)
+
+  (mapc
+   #'(lambda (m)
+       (diminish m ""))
+   '(outline-minor-mode reftex-mode voice-lock-mode company-mode hs-minor-mode
+     yas-minor-mode  auto-fill-function abbrev-mode auto-correct-mode))
+
+  (setq  global-mode-string '("" display-time-string battery-mode-line-string))
   (bash-completion-setup))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
   ;; load  library-specific settings, customize, then start things.
-  (cl-declare (special  tvr-libs emacspeak-soundscapes))
+  (cl-declare (special  tvr-libs ))
 ;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
-  (load "empv")
   (tvr-customize) ;;; customizations
   (with-eval-after-load
     'yasnippet
     (yas-reload-all)
-    (diminish 'yas-minor-mode ""))
+    (diminish ' ""))
   (load "emacspeak-muggles")
   (emacspeak-wizards-project-shells-initialize)
-  (when emacspeak-soundscapes (soundscape-toggle)))
+  )
 
 (declare-function
  emacspeak-pronounce-toggle-use-of-dictionaries
@@ -256,7 +240,7 @@ Use Custom to customize where possible. "
   (cl-declare (special auto-correct-predicate))
   (auto-fill-mode)
   (emacspeak-pronounce-toggle-use-of-dictionaries t)
-  (setq auto-correct-predicate #'(lambda () t))
+  (setq auto-correct-predicate #'(lambda (&rest _) t))
   ;; company-wordfreq setup:
   (setq-local company-backends '(company-wordfreq))
   (setq-local company-transformers nil)
@@ -268,14 +252,11 @@ Use Custom to customize where possible. "
   (cl-declare (special dtk-caps))
   (local-set-key "\C-m" 'newline-and-indent)
   (company-mode)
-  (diminish 'company-mode "")
   (hs-minor-mode)
-  (diminish 'hs-minor-mode "")
   (auto-fill-mode)
   (cond
     ((memq major-mode '(emacs-lisp-mode lisp-mode lisp-interaction-mode))
-     (when dtk-caps
-       (setq dtk-caps nil))
+     (when dtk-caps (setq dtk-caps nil))
      (lispy-mode ))
     (t (smartparens-mode)))
   (yas-minor-mode)
@@ -286,12 +267,12 @@ Use Custom to customize where possible. "
 
 (defun tvr-emacs ()
   "Start up emacs.
-This function loads Emacspeak.  Emacs customization and library
+This function loads Emacspeak. Emacs customization and library
 configuration happens via the after-init-hook. "
   (cl-declare (special emacspeak-directory))
   (setenv "PULSE_SINK" "binaural")
   (unless (featurep 'emacspeak)
-    (tvr-time-load ; load emacspeak:
+    (tvr-time-load                      ; load emacspeak:
      (load ;; setenv EMACSPEAK_DIR if you want to load a different version
       (expand-file-name
        "lisp/emacspeak-setup"
@@ -305,11 +286,11 @@ configuration happens via the after-init-hook. "
 ;;}}}
 (tvr-emacs)
 
-
 ;;{{{ Forward Function Declarations:
+(declare-function nvm--installed-versions "emacs-startup" t)
+
 (declare-function ems-kbd "emacspeak-keymap" (string))
 (declare-function yas-reload-all "yasnippet" (&optional no-jit interactive))
-(declare-function soundscape-toggle "soundscape" nil)
 (declare-function emacspeak-dbus-setup "emacspeak-dbus" nil)
 (declare-function
  emacspeak-wizards-project-shells-initialize
@@ -317,25 +298,10 @@ configuration happens via the after-init-hook. "
 
 ;;}}}
 (provide 'emacs-startup)
-;;{{{  emacs local variables
+;;{{{ end of file
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(mpv go-complete elfeed request-deferred magit-stats sdcv latex-table-wizard chess sicp ssh-config-mode orgalist company-c-headers company-bibtex flyspell-correct-popup lispy cargo-mode tldr exec-path-from-shell posframe elisp-refs bash-completion html2org sqlite3 devdocs rust-mode wiki-summary company-statistics smartparens exwm browse-at-remote company-flx company-prescient html5-schema name-this-color deadgrep auth-source-xoauth2 flyspell-popup yasnippet-snippets company-reftex disable-mouse pydoc haskell-mode mines notmuch-addr google-translate folding diminish arxiv-mode triples ghub+ treesit-auto company-auctex go-eldoc websearch graphviz-dot-mode threes js2-mode list-unicode-display arxiv-citation 2048-game relint empv elpy noaa company-wordfreq clhs ein cdlatex clang-format free-keys flx-ido alert find-file-in-project csound-mode slime-company nvm browse-kill-ring xkcd calibredb ido-completing-read+ paradox forge stumpwm-mode company-fuzzy psession twittering-mode bbdb common-lisp-snippets rg org-translate vdiff define-word eglot go-translate auto-correct))
- '(paradox-github-token t)
- '(safe-local-variable-values '((folded-file . t))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-;;local variables:
-;;folded-file: t
-;;end:
+;; local variables:
+;; folded-file: t
+;; end:
 
 ;;}}}

@@ -277,6 +277,7 @@
    ("<up>"  emacspeak-read-previous-line)
    ("=" emacspeak-speak-current-column)
    ("?" emacspeak-websearch-dispatch)
+   ("'" emacspeak-pianobar)
    ("@" emacspeak-speak-message-at-time)
    ("A" emacspeak-appt-repeat-announcement)
    ("B" emacspeak-speak-buffer-interactively)
@@ -290,7 +291,6 @@
    ("C-SPC" emacspeak-speak-current-mark)
    ("C-a" emacspeak-toggle-auditory-icons)
    ("C-b" emacspeak-bookshare)
-   ("C-c" emacspeak-speak-brief-time)
    ("C-M-c" emacspeak-clipfile-copy)
    ("C-d" emacspeak-toggle-show-point)
    ("C-e" move-end-of-line)
@@ -446,7 +446,7 @@
 (global-set-key  (ems-kbd "C-.") 'emacspeak-super-keymap)
 (global-set-key  (ems-kbd "C-;") 'emacspeak-hyper-keymap)
 (global-set-key  (ems-kbd "C-'") 'emacspeak-multi-keymap)
-(define-key emacspeak-keymap   (ems-kbd "'") 'emacspeak-multi-keymap)
+
 
 ;; Our very own silence key on the console
 (global-set-key '[silence] 'emacspeak-silence)
@@ -460,7 +460,7 @@
 
 (define-prefix-command 'emacspeak-personal-x-keymap)
 
-(defcustom emacspeak-personal-keys
+(defcustom emacspeak-personal-x-keys
   '(
     ("," emacspeak-wizards-shell-directory-set)
     ("." emacspeak-wizards-shell-directory-reset)
@@ -519,6 +519,38 @@
 (define-key  emacspeak-keymap "y" 'emacspeak-personal-y-keymap)
 
 ;;}}}
+;;{{{ Create personal y map
+
+(defvar  emacspeak-personal-y-keymap nil
+  "Emacspeak personal-y keymap")
+
+(define-prefix-command 'emacspeak-personal-y-keymap)
+
+(defcustom emacspeak-personal-y-keys
+  '(
+    ("p" emacspeak-pianobar)
+    ("a" emacspeak-xslt-view-atom-file)
+    ("r" emacspeak-xslt-view-rss-file)
+    ("x" emacspeak-xslt-view-file)
+    ("y" emacspeak-empv-play-url)
+    )
+  "Key bindings for use with C-e y. "
+  :group 'emacspeak
+  :type '(repeat
+          :tag "Emacspeak Personal-Y Keymap"
+          (list
+           :tag "Key Binding"
+           (key-sequence :tag "Key")
+           (ems-interactive-command :tag "Command")))
+  :set
+  #'(lambda (sym val)
+      (emacspeak-keymap-bindings-update emacspeak-personal-y-keymap val)
+      (set-default sym
+                   (sort
+                    val
+                    #'(lambda (a b) (string-lessp (car a) (car b)))))))
+
+;;}}}
 ;;{{{ Create personal c-e v map
 
 (defvar  emacspeak-personal-v-keymap nil
@@ -542,34 +574,6 @@
   :set
   #'(lambda (sym val)
       (emacspeak-keymap-bindings-update emacspeak-personal-v-keymap val)
-      (set-default sym
-                   (sort
-                    val
-                    #'(lambda (a b) (string-lessp (car a) (car b)))))))
-
-;;}}}
-;;{{{ Create personal y map
-
-(defvar  emacspeak-personal-y-keymap nil
-  "Emacspeak personal-y keymap")
-
-(define-prefix-command 'emacspeak-personal-y-keymap)
-
-(defcustom emacspeak-personal-y-keys
-  '(
-    ("y" emacspeak-empv-play-url)
-    )
-  "Key bindings for use with C-e C-x. "
-  :group 'emacspeak
-  :type '(repeat
-          :tag "Emacspeak Personal-Y Keymap"
-          (list
-           :tag "Key Binding"
-           (key-sequence :tag "Key")
-           (ems-interactive-command :tag "Command")))
-  :set
-  #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-y-keymap val)
       (set-default sym
                    (sort
                     val
@@ -683,8 +687,10 @@
                    (sort
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
-
 (global-set-key "\C-x@h" 'emacspeak-hyper-keymap)
+(when (locate-library "empv")
+  (require 'empv)
+  (global-set-key (ems-kbd "C-; v") empv-map))
 
 ;;}}}
 ;;{{{ Create a super keymap that users can put personal commands

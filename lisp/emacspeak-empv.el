@@ -89,11 +89,12 @@
 
 ;;}}}
 ;;{{{Commands:
-
+;;;###autoload
 (defun emacspeak-empv-play-url (url &optional left-channel)
   "Play URL using mpv;  Prefix arg plays on left channel."
   (interactive (list (emacspeak-eww-read-url) current-prefix-arg ))
   (cl-declare (special tts-notification-device))
+  (require 'empv)
   (when
       (and url
            (stringp url)
@@ -119,11 +120,13 @@
   "Emacspeak setup for empv."
   (cl-declare (special empv-map))
   (global-set-key (ems-kbd "C-; v") empv-map)
+  (define-key empv-youtube-results-mode-map (kbd "C-j") 'empv-youtube-results-play-current)
   (define-key empv-youtube-results-mode-map "u" 'emacspeak-empv-accumulate-to-register)
   (cl-loop
    for b in
    '(
      ("/" empv-seek)
+     ("g" empv-set-volume)
      ("SPC" empv-toggle)
      ("'" empv-current-loop-on)
      ("RET" empv-youtube-tabulated))
