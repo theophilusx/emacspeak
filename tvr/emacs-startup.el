@@ -78,8 +78,10 @@ Produce timing information as the last step."
 ;;}}}
 ;;{{{ Fixups:
 
-(defadvice psession--restore-some-buffers (around ems pre act comp)
-  (make-thread ad-do-it))
+(defadvice psession-cleanup-dir (around fixup pre act comp)
+  "Overrie psession's implementation."
+  (let ((files (directory-files psession-elisp-objects-default-directory t "\\.el$")))
+    (when files (mapc #'delete-file files))))
 
 (defadvice system-users (around fix pre act comp)
   "Just return user real name."
