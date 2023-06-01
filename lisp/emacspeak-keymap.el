@@ -289,6 +289,8 @@
    ("C-<right>" emacspeak-select-this-buffer-next-display)
    ("C-@" emacspeak-speak-current-mark)
    ("C-SPC" emacspeak-speak-current-mark)
+   ("<backspace>" dtk-toggle-punctuation-mode)
+   ("<deletechar>" dtk-toggle-punctuation-mode)
    ("C-a" emacspeak-toggle-auditory-icons)
    ("C-b" emacspeak-bookshare)
    ("C-M-c" emacspeak-clipfile-copy)
@@ -719,7 +721,7 @@
     ("s" soundscape)
     ("t" soundscape-toggle)
     ("u" soundscape-update-mood)
-    ("y" emacspeak-empv-play-url))
+    ("y" empv-youtube-tabulated))
   "Super key bindings. "
   :group 'emacspeak
   :type '(repeat

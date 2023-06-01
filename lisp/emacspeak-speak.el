@@ -2775,7 +2775,9 @@ but quickly switch to a window by name."
   (cond
    ((= (point) (point-min)) (call-interactively 'end-of-buffer))
    ((= (point) (point-max)) (call-interactively 'beginning-of-buffer))
-   (t (call-interactively 'beginning-of-buffer))))
+   (t (call-interactively 'beginning-of-buffer)))
+  (when (called-interactively-p 'interactive)
+    (dtk-notify-speak (format "%s%%" (emacspeak-get-current-percentage-into-buffer)))))
 
 ;;}}}
 ;;{{{Utility: Accumulate 
@@ -2787,7 +2789,9 @@ Appended entries are separated by newlines."
   (set-register reg
                 (concat
                  (get-register reg) "\n" (funcall generator )))
-  (message "Accumulated %d lines" (length (split-string (get-register reg)))))
+  (message
+   "Accumulated %d lines"
+   (length (split-string (get-register reg) "\n"))))
 
 ;;}}}
 

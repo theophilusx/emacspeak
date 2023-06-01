@@ -157,12 +157,12 @@ Note that some badly formed mime messages  cause trouble."
       (while (not header)
         (setq header
               (cl-case (read-char "f From s Subject t To u URL")
-                (?s subject)
+                (?s (format "%s" subject))
                 (?f from)
                 (?u url)
                 (?t to))))
       (when header (kill-new header))
-      (dtk-speak-and-echo  (format  "%s" header))))
+      (dtk-speak  (format  "%s" header))))
    (t (error "No current message."))))
 
 (defvar emacspeak-vm-headers-strip-octals t

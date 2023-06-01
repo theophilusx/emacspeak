@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1187 commands and 148 options.
+This chapter documents a total of 1190 commands and 149 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -843,8 +843,16 @@ value, and then set the current local value to the result.
 @table @kbd
 @item C-e C-x
 @kindex C-e C-x
+@item C-e <deletechar>
+@kindex C-e <deletechar>
+@item C-e <backspace>
+@kindex C-e <backspace>
 @item <fn> C-x
 @kindex <fn> C-x
+@item <fn> <deletechar>
+@kindex <fn> <deletechar>
+@item <fn> <backspace>
+@kindex <fn> <backspace>
 @item C-e d ,
 @kindex C-e d ,
 @item <fn> d ,
@@ -1228,6 +1236,20 @@ t
 @defvar {User Option} tts-notification-device
 Virtual sound device to use for notifications stream.
 Set to nil to disable a separate Notification stream.
+
+Default Value: 
+
+@verbatim
+
+"tts_right"
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} tts-secondary-device
+Virtual sound device to use as a secondary display stream.
+Set to nil to disable a secondary Notification stream.
 
 Default Value: 
 
@@ -3828,6 +3850,24 @@ Provides better Youtube integration
 
 @subsection Emacspeak-Empv Commands
 
+@subsubsection emacspeak-empv-absolute-seek
+@deffn {Command} emacspeak-empv-absolute-seek  (target)
+@table @kbd
+@item C-; v s
+@kindex C-; v s
+@item C-x @@ h v s
+@kindex C-x @@ h v s
+@end table
+
+@findex emacspeak-empv-absolute-seek
+
+@format
+Absolute seek in seconds,see ‘empv-seek’
+
+(fn TARGET)
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-accumulate-to-register
 @deffn {Command} emacspeak-empv-accumulate-to-register   
 @findex emacspeak-empv-accumulate-to-register
@@ -3837,25 +3877,57 @@ Accumulate media links to register u
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-percentage-seek
+@deffn {Command} emacspeak-empv-percentage-seek  (target)
+@table @kbd
+@item C-; v %
+@kindex C-; v %
+@item C-x @@ h v %
+@kindex C-x @@ h v %
+@end table
+
+@findex emacspeak-empv-percentage-seek
+
+@format
+Percentage seek in seconds,see ‘empv-seek’
+
+(fn TARGET)
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-play-url
 @deffn {Command} emacspeak-empv-play-url  (url &optional left-channel)
 @table @kbd
-@item C-. y
-@kindex C-. y
 @item C-e y y
 @kindex C-e y y
 @item <fn> y y
 @kindex <fn> y y
-@item C-x @@ s y
-@kindex C-x @@ s y
 @end table
 
 @findex emacspeak-empv-play-url
 
 @format
-Play URL using mpv;  Prefix arg plays on left channel.
+Play URL using mpv;  Prefix arg plays on secondary device.
 
 (fn URL &optional LEFT-CHANNEL)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-relative-seek
+@deffn {Command} emacspeak-empv-relative-seek  (target)
+@table @kbd
+@item C-; v r
+@kindex C-; v r
+@item C-x @@ h v r
+@kindex C-x @@ h v r
+@end table
+
+@findex emacspeak-empv-relative-seek
+
+@format
+Relative seek in seconds,see ‘empv-seek’
+
+(fn TARGET)
 @end format
 @end deffn
 
@@ -8543,7 +8615,7 @@ Default Value:
  ("s" soundscape)
  ("t" soundscape-toggle)
  ("u" soundscape-update-mood)
- ("y" emacspeak-empv-play-url))
+ ("y" empv-youtube-tabulated))
 
 @end verbatim
 

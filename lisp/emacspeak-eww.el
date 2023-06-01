@@ -477,7 +477,7 @@
 
 ;; Return URL under point or URL read from minibuffer.
 ;;;###autoload
-(defsubst emacspeak-eww-read-url (&optional history)
+(defun emacspeak-eww-read-url (&optional history)
   (or
    (shr-url-at-point nil)
    (read-string "URL:" (browse-url-url-at-point) history)))
@@ -593,10 +593,9 @@ Safari/537.36"
   ;; remove "I" "o" from eww-link-keymap
   (cl-loop
    for c in
-   '(?I ?o)
+   '("I" "o")
    do
-   (when (assoc  c eww-link-keymap)
-     (delete (assoc  c eww-link-keymap) eww-link-keymap)))
+   (keymap-unset eww-link-keymap c 'remove))
   (define-key eww-text-map  [C-return]
     'emacspeak-eww-fillin-form-field)
   (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
@@ -674,8 +673,7 @@ Safari/537.36"
      ("s" eww-readable)
      ("t" emacspeak-eww-next-table)
      ("m" emacspeak-eww-add-mark)
-     ("/" dtk-toggle-punctuation-mode)
-     )
+     ("/" dtk-toggle-punctuation-mode))
    do
    (emacspeak-keymap-update eww-mode-map binding)))
 
