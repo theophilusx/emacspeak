@@ -1609,6 +1609,7 @@ Set to nil to disable a secondary Notification stream."
   "Make a  TTS process called name."
   (cl-declare (special dtk-program  emacspeak-servers-directory))
   (let ((process-connection-type nil)
+        (default-directory (expand-file-name "~/"))
         (program (expand-file-name dtk-program emacspeak-servers-directory))
         (process nil))
     (setq process (start-process name nil program))
@@ -1621,6 +1622,8 @@ Set to nil to disable a secondary Notification stream."
   "Initialize speech system."
   ;; `voice-setup' requires us, so we can't require it at top-level.
   (require 'voice-setup)
+  ; fallback of fallbacks
+  (unless dtk-program (setq dtk-program "espeak"))
   (voice-setup)
   (let* ((new-process (dtk-make-process "Speaker"))
          (state (process-status new-process)))
@@ -1637,8 +1640,10 @@ Set to nil to disable a secondary Notification stream."
 (defun tts-restart ()
   "Restart TTS server."
   (interactive)
+  (cl-declare (special dtk-speaker-process))
   (dtk-initialize)
-  (dtk-interp-sync))
+  (when (process-live-p dtk-speaker-process)
+    (dtk-interp-sync)))
 
 ;;}}}
 ;;{{{  interactively select how text is split:

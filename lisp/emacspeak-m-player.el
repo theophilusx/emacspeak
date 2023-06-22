@@ -398,7 +398,10 @@ plays result as a directory." directory)
     (emacspeak-auditory-icon 'select-object)))
 
 (defun emacspeak-media-guess-directory ()
-  "Guess default directory."
+     "Guess default directory.
+If default directory matches emacspeak-media-directory-regexp,
+use it.  If default directory contains media files, then use it.
+Otherwise use emacspeak-media-directory as the fallback."
   (cl-declare (special emacspeak-media-directory-regexp
                        emacspeak-m-player-hotkey-p))
   (cond
@@ -462,29 +465,15 @@ If a dynamic playlist exists, just use it."
                        emacspeak-m-player-hotkey-p))
   (unless emacspeak-m-player-dynamic-playlist
     (cond
-     (emacspeak-m-player-hotkey-p
-      (emacspeak-media-local-resource prefix))
+     (emacspeak-m-player-hotkey-p (emacspeak-media-local-resource prefix))
      (t
       (let ((completion-ignore-case t)
-            (read-file-name-function
-             (if (eq major-mode 'locate-mode)
-                 #'read-file-name-default
-               #'ido-read-file-name))
             (read-file-name-completion-ignore-case t)
-            (default-filename
-             (when
-                 (or (eq major-mode 'dired-mode)
-                     (eq major-mode 'locate-mode))
-               (dired-get-filename nil 'no-error)))
-            (dir (emacspeak-media-guess-directory))
-            (result nil))
-        (setq result
-              (expand-file-name
-               (funcall read-file-name-function
-                        "Media Resource: "
-                        dir
-                        default-filename 'must-match)))
-        result)))))
+            (filename
+             (when (memq major-mode '(dired-mode locate-mode))
+               (dired-get-filename 'local 'no-error)))
+            (dir (emacspeak-media-guess-directory)))
+        (expand-file-name  (read-file-name "Media: " dir filename t)))))))
 
 (defun emacspeak-m-player-data-refresh ()
   "Populate metadata fields from current  stream."
@@ -1447,6 +1436,7 @@ flat classical club dance full-bass full-bass-and-treble
     ("=" emacspeak-m-player-volume-up)
     (">" emacspeak-m-player-forward-1min)
     ("?" emacspeak-m-player-show-pos)
+    ("T" emacspeak-speak-brief-time)
     ("A" emacspeak-m-player-amark-add)
     ("b" emacspeak-m-player-balance-channels)
     ("C" emacspeak-m-player-clear-filters)

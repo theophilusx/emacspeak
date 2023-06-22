@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1190 commands and 149 options.
+This chapter documents a total of 1191 commands and 149 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -3870,6 +3870,13 @@ Absolute seek in seconds,see ‘empv-seek’
 
 @subsubsection emacspeak-empv-accumulate-to-register
 @deffn {Command} emacspeak-empv-accumulate-to-register   
+@table @kbd
+@item C-; v u
+@kindex C-; v u
+@item C-x @@ h v u
+@kindex C-x @@ h v u
+@end table
+
 @findex emacspeak-empv-accumulate-to-register
 
 @format
@@ -8605,6 +8612,7 @@ Default Value:
  ("c" calculator)
  ("d" emacspeak-dired-downloads)
  ("e" elfeed)
+ ("f" browse-url-firefox)
  ("g" emacspeak-google-tts)
  ("h" emacspeak-org-capture-link)
  ("l" emacspeak-wizards-locate-content)
@@ -9295,6 +9303,7 @@ P		emacspeak-m-player-apply-reverb
 Q		emacspeak-m-player-quit
 R		emacspeak-m-player-edit-reverb
 S		emacspeak-m-player-amark-save
+T		emacspeak-speak-brief-time
 [		emacspeak-m-player-slower
 \		emacspeak-m-player-persist-process
 ]		emacspeak-m-player-faster
@@ -9843,6 +9852,7 @@ P		emacspeak-m-player-apply-reverb
 Q		emacspeak-m-player-quit
 R		emacspeak-m-player-edit-reverb
 S		emacspeak-m-player-amark-save
+T		emacspeak-speak-brief-time
 [		emacspeak-m-player-slower
 \		emacspeak-m-player-persist-process
 ]		emacspeak-m-player-faster
@@ -15691,6 +15701,17 @@ Previous transient section.
 TREESIT ==  Syntax Trees
 Speech-enable treesit navigation commands.
 
+@subsection Emacspeak-Treesit Commands
+
+@subsubsection emacspeak-treesit-inspect
+@deffn {Command} emacspeak-treesit-inspect   
+@findex emacspeak-treesit-inspect
+
+@format
+If inspect-mode is on, speak current node.
+@end format
+@end deffn
+
 @node emacspeak-twittering
 @section emacspeak-twittering
 
@@ -18363,11 +18384,12 @@ Move point to the next interactive defun
 
 @format
 Display weather  using NOAA Weather API.
-Data is retrieved only once, subsequent calls switch to previously
-displayed results. Kill that buffer or use an interactive prefix
-arg (C-u) to get new data.  Optional second interactive prefix
-arg (C-u C-u) asks for location address; Default is to display
-weather for ‘gmaps-my-address’.  
+Address is a string and can include house-number, street name,
+city and zip.  Data is retrieved only once, subsequent calls
+switch to previously displayed results. Kill that buffer or use
+an interactive prefix arg (C-u) to get new data.  Optional second
+interactive prefix arg (C-u C-u) asks for location address;
+Default is to display weather for ‘gmaps-my-address’.
 
 (fn &optional ASK)
 @end format
