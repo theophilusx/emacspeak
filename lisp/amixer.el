@@ -237,7 +237,7 @@ to  ~/.emacs.d ")
     (start-process
      "AlsaCtl" nil alsactl-program
      "restore"))
-  (dtk-stop)
+  (dtk-stop 'all)
   (message "Resetting  sound to default")
   (amixer-build-db))
 
@@ -336,7 +336,7 @@ Interactive prefix arg refreshes cache."
   :group 'emacspeak)
 
 ;;;###autoload
-(defun amixer-volume-up (prompt)
+(defun amixer-volume-up (&optional prompt)
   "Raise Master volume by amixer-volume-step.
 Interactive prefix arg `PROMPT' reads percentage as a number"
   (interactive "P")
@@ -354,7 +354,7 @@ Interactive prefix arg `PROMPT' reads percentage as a number"
     (emacspeak-auditory-icon 'right)))
 
 ;;;###autoload
-(defun amixer-volume-down (prompt)
+(defun amixer-volume-down (&optional prompt)
   "Lower Master volume by amixer-volume-step.
 Interactive prefix arg `PROMPT' reads percentage as a number"
   (interactive "P")
@@ -370,8 +370,25 @@ Interactive prefix arg `PROMPT' reads percentage as a number"
     (amixer-build-db)
     (emacspeak-auditory-icon 'left)
     (dtk-notify-speak (ems--show-current-volume))))
+;;;###autoload
+(defun amixer-volume-adjust ()
+  "Adjust volume continuously.
+Press C-e 3 to lower volume; C-e 4 to increase it. Subsequent presses
+of 3 and 4 lower or raise volume."
+  (interactive )
+  (let ((key (event-basic-type last-command-event)))
+    (emacspeak-auditory-icon 'repeat-start)
+    (cl-case key
+      (?3 (call-interactively 'amixer-volume-down))
+      (?4 (call-interactively 'amixer-volume-up)))
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (dolist (key '("3" "4"))
+         (define-key map key (lambda () (interactive) (amixer-volume-adjust ))))
+       map)
+     t (lambda nil (emacspeak-auditory-icon 'repeat-end))
+     "Repeat with %k")))
 
-;;}}}
 (provide 'amixer)
 ;;{{{ end of file
 

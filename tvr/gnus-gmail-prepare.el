@@ -112,8 +112,8 @@ This moves them into the Spam folder."
   (dtk-stop)
   (emacspeak-auditory-icon 'task-done))
 
-(when (keymapp emacspeak-ctl-z-keymap )
-  (define-key emacspeak-ctl-z-keymap "u" 'tvr-unlock-xoauth))
+(when (keymapp emacspeak-z-keymap )
+  (define-key emacspeak-z-keymap "u" 'tvr-unlock-xoauth))
 (setq mm-file-name-rewrite-functions
                 '(mm-file-name-trim-whitespace
                   mm-file-name-collapse-whitespace
@@ -122,10 +122,11 @@ This moves them into the Spam folder."
 ;;{{{ Utils:
 
 (defun google-py-oauth2-cli (user app-secret)
-  "generate command-line for pasting into a shell."
+  "generate command-line for pasting into a shell.
+Uses the go oauth tool found in the xoauth git repo."
   (kill-new
    (format
-    "python oauth2.py --user %s --client_id %s --client_secret %s   --generate_oauth2_token"
+    "oauth --user %s --client_id %s --client_secret %s   --generate_oauth2_token"
     user
     (plist-get app-secret :client-id)
     (plist-get app-secret :client-secret))))

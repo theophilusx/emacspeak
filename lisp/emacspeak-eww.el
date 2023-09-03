@@ -407,7 +407,7 @@
 ;; @command{emacspeak-we-extract-table-by-match}
 ;; Extract matching table.
 ;; @item p
-;; @command{emacspeak-we-xpath-filter-and-follow}
+;; @command{emacspeak-we-xpath-follow-and-filter}
 ;; Follow link under point, and filter results by a specified XPath filter.
 ;; @item r
 ;; @command{emacspeak-we-extract-by-role}
@@ -422,7 +422,7 @@
 ;; @command{emacspeak-we-extract-matching-urls}
 ;; Display matching links on the page.
 ;; @item v
-;; @command{emacspeak-we-class-filter-and-follow-link}
+;; @command{emacspeak-we-class-follow-and-filter-link}
 ;; Follow link under point, and filter by specified class value.
 ;; @item w
 ;; @command{emacspeak-we-extract-by-property}
@@ -431,7 +431,7 @@
 ;; @command{emacspeak-we-extract-nested-table}
 ;; Extract a nested table using a match-list.
 ;; @item y
-;; @command{emacspeak-we-class-filter-and-follow}
+;; @command{emacspeak-we-class-follow-and-filter}
 ;; Follow link under point and filter by class values.
 ;; @end table
 ;; @subsection EWW And EBooks On The Emacspeak Audio Desktop
@@ -577,6 +577,7 @@ Safari/537.36"
 (defun emacspeak-eww-setup ()
   "Setup keymaps etc."
   (cl-declare (special
+               shr-external-rendering-functions emacspeak-eww-filter-renderers
                eww-mode-map eww-link-keymap eww-text-map
                shr-inhibit-images emacspeak-eww-inhibit-images
                emacspeak-pronounce-xml-ns
@@ -597,11 +598,12 @@ Safari/537.36"
    do
    (keymap-unset eww-link-keymap c 'remove))
   (define-key eww-text-map  [C-return]
-    'emacspeak-eww-fillin-form-field)
+              'emacspeak-eww-fillin-form-field)
   (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
   (define-key eww-link-keymap ";" 'emacspeak-eww-play-media-at-point)
+  (define-key eww-link-keymap ":" 'emacspeak-empv-play-url)
   (define-key eww-link-keymap "U" 'emacspeak-eww-curl-play-media-at-point)
   (define-key eww-link-keymap "x" 'emacspeak-feeds-select-feed)
   (define-key eww-link-keymap  "y" 'emacspeak-empv-play-url)
@@ -609,7 +611,7 @@ Safari/537.36"
    for binding  in
    '(
      ("M-o" org-eww-copy-for-org-mode)
-     (":" emacspeak-eww-tags-at-point)
+     ("^" emacspeak-eww-tags-at-point)
      ("\"" emacspeak-eww-reading-settings)
      ("V" eww-view-source)
      ("'" emacspeak-speak-rest-of-buffer)
@@ -662,7 +664,6 @@ Safari/537.36"
      ("[" emacspeak-eww-previous-p)
      ("DEL" emacspeak-eww-restore)
      ("]" emacspeak-eww-next-p)
-     (";" emacspeak-eww-cleanup-eww-data)
      ("b" shr-previous-link)
      ("e" emacspeak-we-xsl-map)
      ("f" shr-next-link)
@@ -675,7 +676,8 @@ Safari/537.36"
      ("m" emacspeak-eww-add-mark)
      ("/" dtk-toggle-punctuation-mode))
    do
-   (emacspeak-keymap-update eww-mode-map binding)))
+   (emacspeak-keymap-update eww-mode-map binding))
+  (setq shr-external-rendering-functions emacspeak-eww-filter-renderers))
 
 (emacspeak-eww-setup)
 
@@ -1165,21 +1167,24 @@ Note that the Web browser should reset this hook after using it.")
     (shr-generic dom)
     (put-text-property start (point) 'article 'shr-tag)))
 
-(defun emacspeak-eww-em-with-newline  (dom)
-  "render EM node but with newline after."
+(defun emacspeak-eww-em-with-space  (dom)
+  "render EM node but with space.."
+  (insert " ")
   (shr-tag-em dom)
-  (insert "  \n"))
+  (insert " "))
 
-(defun emacspeak-eww-span-with-newline  (dom)
-  "render span  node but with newline after."
+(defun emacspeak-eww-span-with-space  (dom)
+  "render span  node but with space."
+  (insert " ")
   (shr-tag-span dom)
-  (insert "  \n"))
+  (insert " "))
 
-(defun emacspeak-eww-strong-with-newline  (dom)
-  "render STRONG node but with newline after."
+(defun emacspeak-eww-strong-with-space  (dom)
+  "render STRONG node but with space."
+  (insert " ")
   (shr-tag-strong dom)
-  (insert "\n"))
-
+  (insert " "))
+;;;###autoload
 (defvar emacspeak-eww-shr-renderers
   '((article . emacspeak-eww-tag-article)
     (title . eww-tag-title)
@@ -1194,30 +1199,33 @@ Note that the Web browser should reset this hook after using it.")
     (a . eww-tag-a))
   "Customize shr rendering for EWW.")
 ;; Create a special list of renderers to use when filtering
+;;;###autoload
 (defvar emacspeak-eww-filter-renderers
   (let ((copy (copy-sequence emacspeak-eww-shr-renderers)))
-    (cl-pushnew (cons 'em 'emacspeak-eww-em-with-newline) copy)
-    (cl-pushnew (cons 'strong 'emacspeak-eww-strong-with-newline)
-                copy)
-    (cl-pushnew (cons 'span 'emacspeak-eww-span-with-newline) copy)
-    copy)
+    (cl-pushnew (cons 'em 'emacspeak-eww-em-with-space) copy)
+    (cl-pushnew (cons 'strong 'emacspeak-eww-strong-with-space) copy)
+    (cl-pushnew (cons 'span 'emacspeak-eww-span-with-space) copy) copy)
   "Renderers used when filtering.")
+
+
+    
+
 
 (defun eww-dom-keep-if (dom predicate)
   "Return filtered DOM  keeping nodes that match  predicate.
  Predicate receives the node to test."
   (cond
-    ((not (listp dom)) nil)
-    ((funcall predicate dom) dom)
-    (t
-     (let ((filtered
-             (delq nil
-                   (mapcar
-                    #'(lambda (node) (eww-dom-keep-if node predicate))
-                    (dom-children dom)))))
-       (when filtered
-         (push (dom-attributes dom) filtered)
-         (push (dom-tag dom) filtered))))))
+   ((not (listp dom)) nil)
+   ((funcall predicate dom) dom)
+   (t
+    (let ((filtered
+           (delq nil
+                 (mapcar
+                  #'(lambda (node) (eww-dom-keep-if node predicate))
+                  (dom-children dom)))))
+      (when filtered
+        (push (dom-attributes dom) filtered)
+        (push (dom-tag dom) filtered))))))
 
 (defun eww-dom-remove-if (dom predicate)
   "Return filtered DOM  dropping  nodes that match  predicate.
@@ -1247,7 +1255,9 @@ attr-value list for use as a DOM filter."
            do
            (setq attr (cl-first pair)
                  value (cl-second pair))
-           (setq found (member value (split-string (dom-attr  node attr)))))
+           (setq found
+                 (when (dom-attr  node attr)
+                   (member value (split-string (dom-attr  node attr))))))
           (when found node)))))
 
 (defun eww-attribute-tester (attr value)
@@ -1278,7 +1288,6 @@ for use as a DOM filter."
     (goto-char (point-min))
     (condition-case
      nil
-
      (shr-insert-document filtered-dom)
      (error nil))
     (emacspeak-eww-set-dom filtered-dom)
@@ -1680,7 +1689,6 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 
 (defun eww-display-dom-by-class (class)
   "Display DOM filtered by specified class."
-
   (eww-display-dom-filter-helper #'dom-by-class  class))
 
 (defun eww-display-dom-by-class-list (class-list)
@@ -1694,7 +1702,6 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 
 (defun eww-display-dom-by-element-list (tag-list)
   "Display DOM filtered by specified element-list."
-
   (eww-display-dom-filter-helper #'dom-by-tag-list  tag-list))
 
 (defun eww-display-dom-by-role (role)
@@ -1901,6 +1908,21 @@ The %s is automatically spoken if there is no user activity."
          (kill-new  (emacspeak-google-canonicalize-result-url u))))
      (emacspeak-speak-current-kill))))
 
+
+(defadvice shr-maybe-probe-and-copy-url (around emacspeak pre act comp)
+  "Canonicalize Google URLs"
+  (ems-with-messages-silenced
+   ad-do-it
+   (when (ems-interactive-p)
+     (emacspeak-auditory-icon 'delete-object)
+     (let ((u (car kill-ring)))
+       (when
+           (and u (stringp u)
+                (string-prefix-p (emacspeak-google-result-url-prefix) u))
+         (kill-new  (emacspeak-google-canonicalize-result-url u))))
+     (emacspeak-speak-current-kill))))
+
+
 ;;}}}
 ;;{{{ Speech-enable EWW buffer list:
 
@@ -1911,7 +1933,7 @@ The %s is automatically spoken if there is no user activity."
   (let ((buffer (get-text-property (line-beginning-position) 'eww-buffer)))
     (if buffer
         (dtk-speak (buffer-name buffer))
-        (message "Can't find an EWW buffer for this line. "))))
+      (message "Can't find an EWW buffer for this line. "))))
 
 (defadvice eww-list-buffers (after emacspeak pre act comp)
   "speak."
@@ -1968,6 +1990,7 @@ The %s is automatically spoken if there is no user activity."
 (defadvice eww-browse-with-external-browser(around emacspeak pre act comp)
   "Use our m-player integration."
   (let* ((url (or (ad-get-arg 0) ""))
+         (case-fold-search t)
          (media-p (string-match emacspeak-media-extensions url)))
     (cond
       (media-p (emacspeak-m-player url))

@@ -256,15 +256,16 @@
    ("9" amixer)
    (")" emacspeak-sounds-select-theme)
    ("0" emacspeak-sounds-select-theme)
-   ("," emacspeak-beginning-or-end)
-   ("." emacspeak-speak-windowful)
+   ("," emacspeak-buffer-select)
+   ("." emacspeak-buffer-select)
+   ("SPC" emacspeak-speak-windowful)
    ("/" emacspeak-websearch-dispatch)
    ("1" emacspeak-speak-this-window)
    ("2" emacspeak-speak-other-window)
-   ("3" amixer-volume-down)
-   ("4" amixer-volume-up)
+   ("3" amixer-volume-adjust)
+   ("4" amixer-volume-adjust)
    ("5" emacspeak-speak-current-percentage)
-   (":" emacspeak-m-player-shuffle)
+   ("C-;" emacspeak-empv-play-file)
    (";" emacspeak-multimedia)
    ("<XF86WakeUp>" emacspeak-speak-brief-time)
    ("<down>" emacspeak-read-next-line)
@@ -339,14 +340,14 @@
    ("N" emacspeak-view-emacspeak-news)
    ("P" emacspeak-speak-paragraph-interactively)
    ("R" emacspeak-speak-rectangle)
-   ("SPC" emacspeak-speak-header-line)
+   ("C-x" emacspeak-speak-header-line)
    ("T" emacspeak-view-emacspeak-tips)
    ("V" emacspeak-speak-version)
    ("W" emacspeak-select-window-by-name)
-   ("[" emacspeak-speak-page)
+   ("[" emacspeak-speak-paragraph)
    ("\"" emacspeak-speak-sexp)
    ("\\" emacspeak-toggle-speak-line-invert-filter)
-   ("]" emacspeak-speak-page-interactively)
+   ("]" emacspeak-speak-page)
    ("^" emacspeak-filtertext)
    ("a" emacspeak-speak-message-again)
    ("b" emacspeak-speak-buffer)
@@ -355,13 +356,14 @@
    ("f" emacspeak-speak-buffer-filename)
    ("g" emacspeak-epub)
    ("h" emacspeak-speak-help)
+   ("i" emacspeak-speak-rest-of-buffer)
    ("j" emacspeak-hide-or-expose-block)
    ("k" emacspeak-speak-current-kill)
    ("l" emacspeak-speak-line)
    ("m" emacspeak-speak-mode-line)
-   ("n" emacspeak-speak-rest-of-buffer)
+   ("n" emacspeak-buffer-select)
    ("o" delete-blank-lines)
-   ("p" emacspeak-speak-paragraph)
+   ("p" emacspeak-buffer-select)
    ("r" emacspeak-speak-region)
    ("s" dtk-stop)
    ("t" emacspeak-speak-time)
@@ -375,13 +377,16 @@
 (cl-loop
  for binding in
  '(
+   ("=" dtk-rate-adjust)
+   ("+" dtk-rate-adjust)
+   ("-" dtk-rate-adjust)
    ("," dtk-toggle-punctuation-mode)
    ("." dtk-notify-stop)
    ("C-c" dtk-cloud)
    ("C-d" dectalk)
    ("C-e" espeak)
    ("C-s" dectalk-soft)
-   ("C-m" dtk-set-chunk-separator-syntax)
+   ("C-j" dtk-set-chunk-separator-syntax)
    ("C-n" dtk-notify-initialize)
    ("C-o" outloud)
    ("C-v" global-voice-lock-mode)
@@ -454,15 +459,44 @@
 (global-set-key '[silence] 'emacspeak-silence)
 
 ;;}}}
+;;{{{ Create personal c-e v map
+
+(defvar  emacspeak-v-keymap nil
+  "Emacspeak v keymap")
+
+(define-prefix-command 'emacspeak-v-keymap)
+
+(defcustom emacspeak-v-keys
+  '(
+    ("v" view-register)
+    )
+  "Key bindings for use with C-e v. "
+  :group 'emacspeak
+  :type
+  '(repeat
+    :tag "Emacspeak V Keymap"
+    (list
+     :tag "Key Binding"
+     (key-sequence :tag "Key")
+     (ems-interactive-command :tag "Command")))
+  :set
+  #'(lambda (sym val)
+      (emacspeak-keymap-bindings-update emacspeak-v-keymap val)
+      (set-default sym
+                   (sort
+                    val
+                    #'(lambda (a b) (string-lessp (car a) (car b)))))))
+
+;;}}}
 ;;{{{ Create a personal keymap for c-e x
 
 ;; Adding keys using custom:
-(defvar  emacspeak-personal-x-keymap nil
+(defvar  emacspeak-x-keymap nil
   "Emacspeak personal keymap")
 
-(define-prefix-command 'emacspeak-personal-x-keymap)
+(define-prefix-command 'emacspeak-x-keymap)
 
-(defcustom emacspeak-personal-x-keys
+(defcustom emacspeak-x-keys
   '(
     ("," emacspeak-wizards-shell-directory-set)
     ("." emacspeak-wizards-shell-directory-reset)
@@ -490,45 +524,45 @@
     ("m" mspools-show)
     ("o" emacspeak-wizards-occur-header-lines)
     ("p" paradox-list-packages)
-    ("q" emacspeak-wizards-quote)
-
     ("t" emacspeak-speak-telephone-directory)
     ("u" emacspeak-wizards-units)
     ("v" emacspeak-wizards-vc-viewer)
     ("w" emacspeak-wizards-noaa-weather)
+    ("x" exchange-point-and-mark)
     ("|" emacspeak-wizards-squeeze-blanks)
     ("" desktop-clear)
-
     )
   "Key bindings for  C-e x. "
   :group 'emacspeak
   :type '(repeat
-          :tag "Emacspeak Personal Keymap"
+          :tag "Emacspeak x Keymap"
           (list
            :tag "Key Binding"
            (key-sequence :tag "Key")
            (ems-interactive-command :tag "Command")))
   :set
   #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-x-keymap val)
+      (emacspeak-keymap-bindings-update emacspeak-x-keymap val)
       (set-default
        sym
        (sort
         val
         #'(lambda (a b) (string-lessp (car a) (car b)))))))
-(define-key emacspeak-keymap "v" 'emacspeak-personal-v-keymap)
-(define-key  emacspeak-keymap "x" 'emacspeak-personal-x-keymap)
-(define-key  emacspeak-keymap "y" 'emacspeak-personal-y-keymap)
+
+
+(define-key emacspeak-keymap "v" 'emacspeak-v-keymap)
+(define-key  emacspeak-keymap "x" 'emacspeak-x-keymap)
+(define-key  emacspeak-keymap "y" 'emacspeak-y-keymap)
 
 ;;}}}
 ;;{{{ Create personal y map
 
-(defvar  emacspeak-personal-y-keymap nil
-  "Emacspeak personal-y keymap")
+(defvar  emacspeak-y-keymap nil
+  "Emacspeak y keymap")
 
-(define-prefix-command 'emacspeak-personal-y-keymap)
+(define-prefix-command 'emacspeak-y-keymap)
 
-(defcustom emacspeak-personal-y-keys
+(defcustom emacspeak-y-keys
   '(
     ("p" emacspeak-pianobar)
     ("a" emacspeak-xslt-view-atom-file)
@@ -546,36 +580,7 @@
            (ems-interactive-command :tag "Command")))
   :set
   #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-y-keymap val)
-      (set-default sym
-                   (sort
-                    val
-                    #'(lambda (a b) (string-lessp (car a) (car b)))))))
-
-;;}}}
-;;{{{ Create personal c-e v map
-
-(defvar  emacspeak-personal-v-keymap nil
-  "Emacspeak personal-v keymap")
-
-(define-prefix-command 'emacspeak-personal-v-keymap)
-
-(defcustom emacspeak-personal-v-keys
-  '(
-    ("v" view-register)
-    )
-  "Key bindings for use with C-e v. "
-  :group 'emacspeak
-  :type
-  '(repeat
-    :tag "Emacspeak Personal-V Keymap"
-    (list
-     :tag "Key Binding"
-     (key-sequence :tag "Key")
-     (ems-interactive-command :tag "Command")))
-  :set
-  #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-personal-v-keymap val)
+      (emacspeak-keymap-bindings-update emacspeak-y-keymap val)
       (set-default sym
                    (sort
                     val
@@ -588,10 +593,10 @@
 ;; years.
 ;; Turn it into a useful prefix key.
 
-(defvar  emacspeak-ctl-z-keymap nil
+(defvar  emacspeak-z-keymap nil
   "Emacspeak ctl-z keymap")
 
-(define-prefix-command 'emacspeak-ctl-z-keymap)
+(define-prefix-command 'emacspeak-z-keymap)
 
 (defcustom emacspeak-ctl-z-keys
   '(
@@ -601,9 +606,9 @@
     ("d" magit-dispatch)
     ("e" emacspeak-wizards-eww-buffer-list)
     ("f" magit-file-dispatch)
-    ("l" locate)
-    ("n" emacspeak-wizards-cycle-to-next-buffer)
-    ("p" emacspeak-wizards-cycle-to-previous-buffer)
+    ("l" emacspeak-m-player-locate-media)
+    ("n" emacspeak-wizards-buffer-select)
+    ("p" emacspeak-wizards-buffer-select)
     ("r" restart-emacs)
     ("s" magit-status)
     ("z" suspend-frame)
@@ -618,13 +623,13 @@
            (ems-interactive-command :tag "Command")))
   :set
   #'(lambda (sym val)
-      (emacspeak-keymap-bindings-update emacspeak-ctl-z-keymap val)
+      (emacspeak-keymap-bindings-update emacspeak-z-keymap val)
       (set-default sym
                    (sort
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-(define-key emacspeak-keymap  "z" 'emacspeak-ctl-z-keymap)
+(define-key emacspeak-keymap  "z" 'emacspeak-z-keymap)
 
 ;;}}}
 ;;{{{ Create a hyper keymap that users can put personal commands
@@ -639,12 +644,7 @@
     ("DEL" emacspeak-wizards-snarf-sexp)
     ("C-;" emacspeak-amark-bookshelf)
     ("C-l" emacspeak-librivox)
-    ("'" emacspeak-m-player-using-hrtf)
-    ("," previous-buffer)
-    ("." next-buffer)
     (";" emacspeak-multimedia)
-    (":" emacspeak-m-player-using-openal)
-    ("/" emacspeak-websearch-google-with-toolbelt)
     ("C-a" emacspeak-wizards-term)
     ("C-b" eww-list-bookmarks)
     ("C-d" dictionary-search)
@@ -653,7 +653,7 @@
     ("TAB" hippie-expand)
     ("C-t" emacspeak-wizards-tramp-open-location)
     ("a" emacspeak-amark-browse)
-    ("b" eww-list-buffers)
+    ("b" emacspeak-wizards-bbc-sounds)
     ("c" browse-url-chrome)
     ("d" magit-dispatch)
     ("e" gmaps)
@@ -661,15 +661,11 @@
     ("g" gnus)
     ("h" emacspeak-m-player-from-history)
     ("i" ibuffer)
-    ("k" emacspeak-google-knowledge-search)
-    ("l" locate)
+    ("l" emacspeak-m-player-locate-media)
     ("m" vm)
-    ("n" emacspeak-wizards-cycle-to-next-buffer)
     ("o" find-file)
-    ("p" emacspeak-wizards-cycle-to-previous-buffer)
     ("r" emacspeak-wizards-find-file-as-root)
     ("s" magit-status)
-    ("t" twit)
     ("u" list-unicode-display)
     ("w" emacspeak-wizards-noaa-weather)
     ("y" yas-expand)
@@ -708,6 +704,7 @@
     ("." emacspeak-wizards-shell-directory-reset)
     ("C-n" emacspeak-wizards-google-headlines)
     ("R" emacspeak-webspace-feed-reader)
+    ("b" eww-list-buffers)
     ("c" calculator)
     ("d" emacspeak-dired-downloads)
     ("e" elfeed)
@@ -760,7 +757,7 @@
     ("l" eww-open-file)
     ("o" emacspeak-feeds-opml-display)
     ("p" emacspeak-wizards-pdf-open)
-    ("q" emacspeak-wizards-iex-show-price)
+    ("q" emacspeak-wizards-quotes)
     ("r" emacspeak-feeds-rss-display)
     ("s" emacspeak-wizards-tune-in-radio-search)
     ("t" emacspeak-wizards-tune-in-radio-browse)
@@ -798,8 +795,7 @@
   '(
     ("'" emacspeak-pianobar)
     ("d" sdcv-search-input)
-    ("h" emacspeak-m-player-browse-history)
-    ("l" emacspeak-m-player-locate-media)
+    ("l" locate)
     ("o" org-mode)
     ("y" emacspeak-google-yt-feed))
   "Multi key bindings. "
@@ -860,6 +856,7 @@
 (global-set-key (ems-kbd "C-x r e") 'emacspeak-eww-open-mark)
 
 ;;}}}
+
 (provide 'emacspeak-keymap)
 ;;{{{  emacs local variables
 

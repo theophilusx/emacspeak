@@ -49,9 +49,12 @@
 ;; Position: time offset from start
 
 ;;  This library will be used from emacspeak-m-player to set and jump
-;; to bookmarks. Amarks are stored in a .amarks file in the working
+;; to bookmarks. Amarks are stored in a .amarks.am file in the working
 ;; directory.  It also provides a simple AMark Browser to use from a
-;; directory containing mp3 files where Amarks have been created.
+;; directory containing mp3 files where Amarks have been created --
+;; see @command{emacspeak-amarks-browse}.
+;;  @command{emacspeak-amarks-bookshelf} brings up a @emph{AmarksBookshelf}
+;; that can be used to  browse available Amark files.
 
 ;;; Code:
 
@@ -122,6 +125,7 @@ given name, it is updated with path and position."
         (print-length nil)
         (buff (find-file-noselect (expand-file-name emacspeak-amark-file))))
     (with-current-buffer buff
+      (set (make-local-variable 'backup-inhibited) t)
       (setq buffer-undo-list t)
       (erase-buffer)
       (prin1 l (current-buffer))
@@ -221,7 +225,13 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 ;;{{{Browse Amarks:
 
 (defun emacspeak-amark-list-play ()
-  "Play amark list as a playlist"
+  "Play amark list as a playlist.
+Maps command \\[emacspeak-m-player] across elements of the amarks
+  list.  Pressing `y' as the current item is playing skips to the
+  next item; this `y/n' prompt is produced by
+  \\[emacspeak-m-player] as is usual when that command is called
+  while media is already playing. Here, attempting to play the next
+  item while the current item is playing produces the prompt."
   (interactive)
   (cl-declare (special emacspeak-amark-list))
   (when (and emacspeak-amark-list (listp emacspeak-amark-list))
@@ -258,14 +268,33 @@ via command `org-insert-link' bound to \\[org-insert-link]."
     (funcall-interactively #'switch-to-buffer buff)))
 
 ;;;###autoload
-(defun emacspeak-amark-bookshelf()
+(defun emacspeak-amark-bookshelf(&optional pattern)
   "Open a locate buffer with all .amarks.am files.
-Use \\[emacspeak-dired-open-this-file] to open the AMark Browser on
+Optional interactive prefix arg prompts for a pattern that is
+used to filter the amarks files to show.  Use
+\\[emacspeak-dired-open-this-file] to open the AMark Browser on
 current file."
-  (interactive)
-  (cl-declare (special emacspeak-amark-file))
-  (funcall-interactively #'locate emacspeak-amark-file)
-  (rename-buffer "AMark Bookshelf" 'unique))
+  (interactive "P")
+  (cl-declare (special emacspeak-amark-file locate-command
+                       locate-make-command-line))
+  (when pattern (setq pattern (read-from-minibuffer "Filter Pattern:")))
+  (let ((case-fold-search t)
+        (locate-make-command-line
+         #'(lambda (s)
+             (list
+              locate-command "-i" "-e" "--regexp" s))))
+    (cond
+     (pattern 
+      (locate-with-filter
+       (mapconcat
+        #'identity
+        (split-string pattern)
+        "[ '/\"_.,-]")
+       emacspeak-amark-file))
+     (t (funcall-interactively #'locate emacspeak-amark-file))))
+  (rename-buffer "AMark Bookshelf" 'unique)
+  (emacspeak-speak-line)
+  (emacspeak-auditory-icon 'open-object))
 
 ;;}}}
 (provide  'emacspeak-amark)

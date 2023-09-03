@@ -70,7 +70,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (dtk-stop)
+       (dtk-stop 'all)
        (emacspeak-auditory-icon 'button)))))
 
 (defadvice empv-exit (after emacspeak pre act comp)
@@ -90,27 +90,52 @@
 ;;}}}
 ;;{{{Commands:
 
-(defvar emacspeak-empv-yt-history nil
+(defvar emacspeak-empv-history nil
   "Youtube history for EMpv.")
+
+(defvar emacspeak-empv-history-max 16
+  "Max number of history to preserve.")
 
 ;;;###autoload
 (defun emacspeak-empv-play-url (url &optional left-channel)
   "Play URL using mpv;  Prefix arg plays on secondary device."
-  (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-yt-history)
+  (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)
                      current-prefix-arg ))
   (cl-declare (special tts-secondary-device
-                       emacspeak-empv-yt-history))
+                       emacspeak-empv-history-max emacspeak-empv-history))
   (require 'empv)
   (when
       (and url
            (stringp url)
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
-  (cl-pushnew  url emacspeak-empv-yt-history :test #'string=)
+  (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
   (if left-channel
       (with-environment-variables (("PULSE_SINK" tts-secondary-device))
         (empv-play url))
     (empv-play url)))
+
+
+(declare-function emacspeak-media-local-resource "emacspeak-empv" t)
+
+(declare-function emacspeak-media-read-resource
+                  "emacspeak-m-player" (&optional prefix))
+
+
+;;;###autoload
+(defun emacspeak-empv-play-file (file &optional left-channel)
+  "Play file using mpv;  Prefix arg plays on secondary device."
+  (interactive
+   (list (emacspeak-media-read-resource) current-prefix-arg  ))
+  (cl-declare (special tts-secondary-device))
+  (require 'empv)
+  (if left-channel
+      (with-environment-variables (("PULSE_SINK" tts-secondary-device))
+        (empv-play file))
+    (empv-play file)))
+
+(put 'emacspeak-empv-play-file 'repeat-map 'empv-map)
+(put 'emacspeak-empv-play-url 'repeat-map 'empv-map)
 
 (defun emacspeak-empv-accumulate-to-register ()
   "Accumulate media links to register u"
@@ -170,7 +195,7 @@
      ("u" emacspeak-empv-accumulate-to-register)
      ("v" empv-set-volume)
      )
-   
+
    do
    (emacspeak-keymap-update empv-map b)
    (emacspeak-keymap-update empv-youtube-results-mode-map b))

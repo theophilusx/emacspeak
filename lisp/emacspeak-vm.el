@@ -147,7 +147,7 @@ Note that some badly formed mime messages  cause trouble."
   (cl-declare (special vm-message-pointer))
   (cond
    (vm-message-pointer
-    (dtk-stop)
+    (dtk-stop 'all)
     (let*  ((message (car vm-message-pointer))
             (from (ems--vm-from-of message))
             (subject (ems--vm-subject-of  message))
@@ -528,7 +528,7 @@ Leave point at front of decoded attachment."
  (add-hook hook 'emacspeak-pronounce-refresh-pronunciations 'append))
 
 (defvar emacspeak-speak-embedded-url-pattern
-  "<https?:[^ \t]*>"
+  "<?https?:[^ \t]*>?"
   "Pattern to recognize embedded URLs.")
 
 (cl-loop

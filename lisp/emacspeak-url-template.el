@@ -64,6 +64,7 @@
 (require 'emacspeak-eww)
 (require 'emacspeak-feeds)
 (require 'gweb)
+(require 'gmaps)
 (require 'g-utils)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
@@ -191,6 +192,32 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 ;;}}}
 ;; template resources
+
+;;{{{ Stock Tickers:
+
+;;;###autoload
+(defcustom emacspeak-stock-tickers
+  (list "goog" "aapl" "meta" "amzn")
+  "Set this to the stock tickers you want to check. Default is
+GAMA. Tickers is a list of stock symbols sorted in lexical order
+with duplicates removed when saving as a list of string."
+  :type
+  '(repeat
+    :tag "Tickers" (string :tag "Symbol"))
+  :group 'emacspeak
+  :initialize 'custom-initialize-reset
+  :set
+  #'(lambda (sym val)
+      (set-default
+       sym
+       (cl-remove-duplicates (sort val #'string-lessp) :test #'string=))))
+
+(defsubst emacspeak-stock-tickers ()
+  "Return emacspeak-stock-tickers as a CSV string."
+  (cl-declare (special emacspeak-stock-tickers))
+  (mapconcat #'identity emacspeak-stock-tickers ","))
+
+;;}}}
 ;;{{{ amazon
 
 (emacspeak-url-template-define
@@ -226,9 +253,31 @@ dont-url-encode if true then url arguments are not url-encoded "
 ;;}}}
 ;;{{{ bbc
 
+(emacspeak-url-template-define
+ "BBC Sounds"
+ "https://www.bbc.co.uk/sounds/search?q=%s"
+ (list "BBC Sounds:")
+#'emacspeak-speak-line
+ "Search BBC Sounds."
+ #'(lambda (url)
+     (let ((filter
+            (mapconcat
+             #'(lambda  (i)
+                 (format "/descendant::section[%s]" i))
+             '(  3 4 5)
+             " | ")))
+       (emacspeak-we-xslt-filter filter url))))
+
+
 (declare-function
  emacspeak-xslt-view-xml
  "emacspeak-xslt" (style url &optional unescape-charent))
+
+(emacspeak-url-template-define
+ "Player FM BBC RSS Feeds"
+ "https://player.fm/networks/uk-podcast-networks.txt"
+ nil #'emacspeak-speak-line
+ "Player FM BBC RSS Feeds")
 
 (emacspeak-url-template-define
  "BBC Podcast Directory"
@@ -261,13 +310,10 @@ dont-url-encode if true then url arguments are not url-encoded "
 ;;}}}
 ;;{{{Basic Google:
 
-;; forward declaration:
-(defvar gmaps-my-zip nil)
 (emacspeak-url-template-define
  "Google Weather"
- (format "https://www.google.com/search?num=25&gbv=1&q=weather+%s"
-         gmaps-my-zip)
- nil
+  "https://www.google.com/search?num=25&gbv=1&q=weather+%s"
+ (list #'(lambda nil gmaps-my-zip))
  #'(lambda nil
      (search-forward "Search Tools")
      (forward-line 1)
@@ -378,20 +424,6 @@ dont-url-encode if true then url arguments are not url-encoded "
       (browse-url url))))
 
 ;;}}}
-;;{{{ NY Times
-
-(emacspeak-url-template-define
- "NY Times Mobile"
- "https://mobile.nytimes.com"
- nil
- #'(lambda ()
-     (emacspeak-url-template-setup-content-filter)
-     (emacspeak-speak-buffer))
- "NYTimes Mobile Site"
- #'(lambda (url)
-     (emacspeak-we-xslt-filter "//article" url)))
-
-;;}}}
 ;;{{{ google OverviewOfNews
 
 (emacspeak-url-template-define
@@ -496,31 +528,38 @@ name of the list.")
 
 ;;}}}
 ;;{{{CNBC Quotes
-(cl-declaim (special emacspeak-wizards-personal-portfolio))
 
+(defun ems--ut-quotes-cleanup ()
+  "Clean up stock quotes buffer."
+  (let ((inhibit-read-only t))
+    (mapc
+     #'(lambda (s) (flush-lines s (point-min) (point-max)))
+     '("WATCHLIST" "^52 High" "^Last " "RT Quote " "^quote price arrow "
+       "^Volume" "^$"))
+    (goto-char (point-min))
+    (forward-line 1)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-line)))
 
 (emacspeak-url-template-define
  "CNBC Ticker"
-  "https://www.cnbc.com/quotes/%s"
-  (list "Ticker:")
- nil
+ "https://www.cnbc.com/quotes/%s"
+ (list "Ticker:")
+ #'ems--ut-quotes-cleanup
  "Stock Quote via CNBC"
  #'(lambda (u)
-     (emacspeak-we-extract-by-role "main"
-      u 'speak)))
+       (emacspeak-we-extract-by-id "MainContentContainer" u )))
 
 (emacspeak-url-template-define
  "CNBC Quotes"
-  "https://www.cnbc.com/quotes/%s"
-  (list
-   #'(lambda nil
-       (mapconcat #'identity (split-string emacspeak-wizards-personal-portfolio) ",")))
- nil
+ "https://www.cnbc.com/quotes/%s"
+ (list #'emacspeak-stock-tickers)
+ #'ems--ut-quotes-cleanup
  "Stock portfolio via CNBC"
  #'(lambda (u)
-     (emacspeak-we-extract-by-id "MainContentContainer"
-                                 u 'speak)))
+       (emacspeak-we-extract-by-id "MainContentContainer" u )))
 
+(flush-lines "^Price Quote Arrow Quote " (point-min) (point-max))
 ;;}}}
 ;;{{{ cnn
 
@@ -683,7 +722,7 @@ Format is stationid+AM/FM."
 ;;{{{ Bing RSS
 
 (emacspeak-url-template-define
- "Bing Search"
+ "Microsoft Search"
  "http://www.bing.com/search?format=rss&q=%s%s"
  (list
   "Bing Search: "
@@ -711,7 +750,7 @@ Format is stationid+AM/FM."
 ;; wget -O t    "http://stream.radiotime.com/listen.stream?streamIds=4299203"
 (emacspeak-url-template-define
  "TuneIn Radio"
- "http://opml.radiotime.com/Tune.ashx?id=%s"
+ "https://opml.radiotime.com/Tune.ashx?id=%s"
  (list "StreamId: ")
  nil
  "Translate StreamId to playable stream."
@@ -737,9 +776,8 @@ Format is stationid+AM/FM."
  #'emacspeak-feeds-opml-display)
 
 (defvar emacspeak-url-template--radiotime-categories
-  '("world" "music" "sports" "podcasts"
-    "local" "talk" "sports" "lang"
-    "podcast""popular" "best")
+  '("best" "lang" "local"
+    "location" "music" "podcast" "popular" "sports" "sports" "talk" "world")
   "Categories from Radio Time.")
 
 (emacspeak-url-template-define
@@ -821,14 +859,10 @@ before completing the request.
 Optional interactive prefix arg displays documentation for specified resource."
   (interactive "P")
   (let ((completion-ignore-case t)
-        (case-fold-search  t)
         (name nil))
     (setq name
           (completing-read
-           "Resource: "
-           (hash-table-keys  emacspeak-url-template-table)
-           nil
-           'must-match))
+           "Resource: " emacspeak-url-template-table nil 'must-match))
     (cond
      (documentation (emacspeak-url-template-help-internal name))
      (t

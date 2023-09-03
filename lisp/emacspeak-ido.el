@@ -81,19 +81,21 @@
 
 (defadvice ido-exhibit (after emacspeak pre act comp)
   "Speak ido minibuffer intelligently."
-  (when  (and ido-matches (sit-for emacspeak-ido-typing-delay))
-    (dtk-speak
-     (concat
-      (if (bound-and-true-p ido--overlay)
-          (overlay-get ido--overlay 'after-string)
-        (minibuffer-contents))
-      (format " %d choices: "  (length ido-matches))
-      (if
-          (or (null ido-current-directory)
-              (string-equal ido-current-directory emacspeak-ido-cache))
-          " "
-        (format "In directory: %s"
-                (abbreviate-file-name ido-current-directory)))))))
+  (condition-case nil
+      (when  (and ido-matches (sit-for emacspeak-ido-typing-delay))
+        (dtk-notify-speak
+         (concat
+          (if (bound-and-true-p ido--overlay)
+              (overlay-get ido--overlay 'after-string)
+            (minibuffer-contents))
+          (format " %d choices: "  (length ido-matches))
+          (if
+              (or (null ido-current-directory)
+                  (string-equal ido-current-directory emacspeak-ido-cache))
+              " "
+            (format "In directory: %s"
+                    (abbreviate-file-name ido-current-directory))))))
+    (error (dtk-initialize))))
 
 ;;}}}
 ;;{{{ speech-enable interactive commands:
@@ -212,7 +214,7 @@ The default value of 12 is too high for using ido effectively with speech. "
   (cl-declare (special ido-common-completion-map))
   (when (boundp 'ido-common-completion-map)
     (define-key  ido-common-completion-map
-                 (ems-kbd "C-z") 'emacspeak-ctl-z-keymap)
+                 (ems-kbd "C-z") 'emacspeak-z-keymap)
     (define-key ido-common-completion-map "\C-f" 'ido-enter-find-file)
     (define-key ido-common-completion-map "^" 'ido-up-directory)
     (define-key ido-common-completion-map

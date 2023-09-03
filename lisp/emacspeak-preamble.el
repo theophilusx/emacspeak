@@ -46,6 +46,7 @@
 
 (eval-when-compile (require 'subr-x))
 (require 'advice)
+(put 'defadvice 'byte-obsolete-info nil)
 (setq ad-redefinition-action 'accept)
 ;;{{{  Define locations
 
@@ -104,14 +105,12 @@
     (let
         ((ext
           '("m3u" "pls"                 ; incorporate playlist ext
-            "mov" "wma" "wmv" "flv" "m4a" "m4b"  "flac"
-            "aiff" "aac" "opus ""mkv"
-            "ogv" "oga""ogg" "mp3"  "mp4" "webm" "wav")))
+            "flac" "m4a" "m4b"  
+            "aiff" "aac" "opus" "mkv"
+            "ogv" "oga" "ogg" "mp3"  "mp4" "webm" "wav")))
       (concat
        "\\."
-       (regexp-opt
-        (append ext (mapcar #'upcase ext))
-        'parens)
+       (regexp-opt ext)
        "$")))
   "Media Extensions.")
 

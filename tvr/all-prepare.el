@@ -1,74 +1,3 @@
-;;; No-Op if Stumpwm already running:
-(when
-    (zerop  (length  (string-trim (shell-command-to-string "pidof stumpwm"))))
-    
-  ;;{{{Load and start exwm:
-
-  (require 'exwm)
-  (require 'exwm-config)
-  (exwm-config-example)
-  ;;}}}
-  ;;{{{Look and feel:
-
-  (setq exwm-workspace-number 3)
-
-  (add-hook 'exwm-update-title-hook
-            (lambda ()
-              (exwm-workspace-rename-buffer exwm-title)))
-
-  ;;}}}
-
-
-  )
-;;; Emacs' yes-or-no-p and y-or-no-p have prompts hard-wired.
-;; The advice forms below produce more succinct speech.
-
-(defadvice yes-or-no-p (around tvr-fix pre act comp)
-  "Simplify Emacs' implementation."
-  (cond
-    (use-short-answers
-     (let* ((ask (concat (ad-get-arg 0) " y/n "))
-            (c (read-char ask)))
-       (while (not (member c '(?n ?y)))
-              (emacspeak-auditory-icon
-   (if ad-return-value 'y-answer 'n-answer))
-              (setq c  (read-char ask))
-              (emacspeak-auditory-icon  'ask-question))
-       (setq ad-return-value
-             (cl-case c
-                      (?y t)
-                      (?n nil)))))
-    (t ad-do-it))
-  ad-return-value)
-
-(defadvice y-or-n-p (around tvr-fix pre act comp)
-  "Simplify Emacs' implementation.."
-  (let* ((ask (concat (ad-get-arg 0) " y/n "))
-         (c (read-char ask)))
-    (while (not (member c '(?n ?y)))
-           (emacspeak-auditory-icon  'ask-short-question)
-           (setq c  (read-char ask)))
-    (setq ad-return-value
-          (cl-case c
-                   (?y t)
-                   (?n nil))))
-  ad-return-value)
-;;; vm-prepare.l :  -*- lexical-binding: nil; -*-
-
-(autoload 'vm "vm" "vm mail reader" t nil)
-(autoload 'vm-visit-folder "vm" "Open VM folder" t nil)
-(with-eval-after-load "vm"
-  (global-set-key "\C-xm" 'vm-mail)
-  (when (require 'bbdb) (bbdb-insinuate-vm)))
-
-(defun make-local-hook (hook)
-  "compatibility"
-  (if (local-variable-p hook)
-      nil
-    (or (boundp hook) (set hook nil))
-    (make-local-variable hook)
-    (set hook (list t)))
-  hook)
 ;;;  Gnus Setup For GMail imap:  -*- lexical-binding: nil; -*-
 ;; Read GMailusing gnus  with 2-factor (Oauth2) authentication.
 ;; Uses auth-source-xoauth2:
@@ -183,8 +112,8 @@ This moves them into the Spam folder."
   (dtk-stop)
   (emacspeak-auditory-icon 'task-done))
 
-(when (keymapp emacspeak-ctl-z-keymap )
-  (define-key emacspeak-ctl-z-keymap "u" 'tvr-unlock-xoauth))
+(when (keymapp emacspeak-z-keymap )
+  (define-key emacspeak-z-keymap "u" 'tvr-unlock-xoauth))
 (setq mm-file-name-rewrite-functions
                 '(mm-file-name-trim-whitespace
                   mm-file-name-collapse-whitespace
@@ -193,10 +122,11 @@ This moves them into the Spam folder."
 ;;{{{ Utils:
 
 (defun google-py-oauth2-cli (user app-secret)
-  "generate command-line for pasting into a shell."
+  "generate command-line for pasting into a shell.
+Uses the go oauth tool found in the xoauth git repo."
   (kill-new
    (format
-    "python oauth2.py --user %s --client_id %s --client_secret %s   --generate_oauth2_token"
+    "oauth --user %s --client_id %s --client_secret %s   --generate_oauth2_token"
     user
     (plist-get app-secret :client-id)
     (plist-get app-secret :client-secret))))
@@ -222,6 +152,13 @@ This moves them into the Spam folder."
 ;; end:
 
 ;;}}}
+;;; Jump to Emacs Git Logs At HEAD:
+(defalias 'tvr-km-emacs-log
+   (kmacro "C-c 3 g i t SPC p <return> C-; d l l C-e | <return> <escape> < C-e s"))
+(define-key emacspeak-y-keymap "3" 'tvr-km-emacs-log)
+(defalias 'tvr-km-morning
+   (kmacro "C-<tab> C-e g b h <tab> <return> n n e c"))
+(define-key emacspeak-y-keymap "0" 'tvr-km-morning)
 (setq pre-redisplay-function nil
       x-wait-for-event-timeout 0
       mail-host-address "google.com"
@@ -251,7 +188,7 @@ Set by locating it via xinput list | grep -i touchpad ")
   "Open Google Calendar in Chrome"
   (interactive)
   (browse-url-chrome "calendar/"))
-(define-key emacspeak-personal-y-keymap "c" 'tvr-calendar)
+(define-key emacspeak-y-keymap "c" 'tvr-calendar)
 
 
 
@@ -260,22 +197,16 @@ Set by locating it via xinput list | grep -i touchpad ")
   (interactive)
   (browse-url-chrome "chat/"))
 
-(define-key emacspeak-personal-y-keymap " " 'tvr-chat)
+(define-key emacspeak-y-keymap " " 'tvr-chat)
 
+(defun tvr-mail ()
+  "Open Google Mail in Chrome"
+  (interactive)
+  (browse-url-chrome "chat/"))
+
+
+(define-key emacspeak-y-keymap "m" 'tvr-mail)
 (provide 'laptop-local)
-(with-eval-after-load "smartparens"
-  (require 'smartparens-config)
-  (sp-use-smartparens-bindings)
-  (define-key  smartparens-mode-map "\C-\M-a" 'beginning-of-defun)
-  (define-key  smartparens-mode-map "\C-\M-e" 'end-of-defun)
-  (define-key  smartparens-mode-map "\C-\M-k" 'kill-sexp)
-  (define-key smartparens-mode-map "\M-a" 'sp-backward-down-sexp)
-  (define-key smartparens-mode-map "\M-e" 'sp-up-sexp)
-  (define-key smartparens-mode-map "\M-k" 'sp-kill-sexp)
-  (define-key smartparens-mode-map "\C-\M-f" 'forward-sexp)
-  (define-key smartparens-mode-map "\C-\M-b" 'backward-sexp)
-  (diminish 'smartparens-mode "" )
-  )
 (define-key emacs-lisp-mode-map (ems-kbd "C-c e") 'macrostep-expand)
 (defun conditionally-enable-lispy ()
   (when (memq this-command '(eval-expression emacspeak-wizards-show-eval-result))
@@ -303,25 +234,6 @@ Set by locating it via xinput list | grep -i touchpad ")
   (diminish 'lispy-mode "")
   (diminish 'lispy-other-mode "")
   (diminish 'lispy-goto-mode ""))
-;;; slime-autoloads is broken alas:
-(load-library "slime")
-(with-eval-after-load "slime"
-  (add-hook 'slime-repl-mode-hook 'lispy-mode)
-  (define-key slime-prefix-map "d" slime-doc-map)
-  (setq inferior-lisp-program (executable-find "sbcl"))
-  (setq common-lisp-hyperspec-root
-        (if (file-exists-p "/usr/share/doc/hyperspec/")
-            "file:///usr/share/doc/hyperspec/"
-            "http://www.lispworks.com/reference/HyperSpec/"))
-  (global-set-key (ems-kbd "C-c s") 'slime-selector)
-  (setq slime-contribs '(slime-fancy slime-hyperdoc slime-quicklisp slime-asdf))
-  (slime-setup)
-  (slime-autodoc--disable)
-  (setq slime-use-autodoc-mode nil)
-  (setq
-   slime-lisp-implementations
-   `((sbcl ("sbcl" "--core"
-                   ,(expand-file-name "sbcl.core-for-slime" user-emacs-directory))))))
 ;;;$Id: org-prepare.el 6727 2011-01-14 23:22:20Z tv.raman.tv $  -*- lexical-binding: nil; -*-
 
 (with-eval-after-load "org"
@@ -346,10 +258,79 @@ Set by locating it via xinput list | grep -i touchpad ")
   )
 (with-eval-after-load "orgalist"
   (diminish 'orgalist-mode ""))
-;;; Jump to Emacs Git Logs At HEAD:
-(defalias 'tvr-km-emacs-log
-   (kmacro "C-c 3 g i t SPC p <return> C-; d l l C-e | <return> <escape> < C-e s"))
-(define-key emacspeak-personal-y-keymap "3" 'tvr-km-emacs-log)
-(defalias 'tvr-km-morning
-   (kmacro "C-<tab> C-e g b h <tab> <return> n n e c"))
-(define-key emacspeak-personal-y-keymap "0" 'tvr-km-morning)
+;;; slime-autoloads is broken alas:
+;; See https://github.com/susam/emacs4cl
+(load-library "slime")
+(with-eval-after-load "slime"
+  (add-hook 'slime-repl-mode-hook 'lispy-mode)
+  (define-key slime-prefix-map "d" slime-doc-map)
+  (setq inferior-lisp-program (executable-find "sbcl"))
+  (setq common-lisp-hyperspec-root
+        (if (file-exists-p "/usr/share/doc/hyperspec/")
+            "file:///usr/share/doc/hyperspec/"
+            "http://www.lispworks.com/reference/HyperSpec/"))
+  (global-set-key (ems-kbd "C-c s") 'slime-selector)
+  (setq slime-contribs '(slime-fancy slime-hyperdoc slime-quicklisp slime-asdf))
+  (slime-setup)
+  (slime-autodoc--disable)
+  (setq slime-use-autodoc-mode nil)
+  (setq
+   slime-lisp-implementations
+   `((sbcl ("sbcl" "--core"
+                   ,(expand-file-name "sbcl.core-for-slime" user-emacs-directory))))))
+(with-eval-after-load "smartparens"
+  (require 'smartparens-config)
+  (sp-use-smartparens-bindings)
+  (define-key  smartparens-mode-map "\C-\M-a" 'beginning-of-defun)
+  (define-key  smartparens-mode-map "\C-\M-e" 'end-of-defun)
+  (define-key  smartparens-mode-map "\C-\M-k" 'kill-sexp)
+  (define-key smartparens-mode-map "\M-a" 'sp-backward-down-sexp)
+  (define-key smartparens-mode-map "\M-e" 'sp-up-sexp)
+  (define-key smartparens-mode-map "\M-k" 'sp-kill-sexp)
+  (define-key smartparens-mode-map "\C-\M-f" 'forward-sexp)
+  (define-key smartparens-mode-map "\C-\M-b" 'backward-sexp)
+  (diminish 'smartparens-mode "" )
+  )
+;;; vm-prepare.l :  -*- lexical-binding: nil; -*-
+
+(autoload 'vm "vm" "vm mail reader" t nil)
+(autoload 'vm-visit-folder "vm" "Open VM folder" t nil)
+(with-eval-after-load "vm"
+  (global-set-key "\C-xm" 'vm-mail)
+  (when
+      (locate-library "bbdb")
+      (require 'bbdb) (bbdb-insinuate-vm)))
+
+(defun make-local-hook (hook)
+  "compatibility"
+  (if (local-variable-p hook)
+      nil
+    (or (boundp hook) (set hook nil))
+    (make-local-variable hook)
+    (set hook (list t)))
+  hook)
+(require  'cl-lib)
+;;{{{Weekday Colors:
+
+(defconst tvr-weekday-color-map
+  [("light sky blue" . "#6FBD87")       ; silver tree
+   ("royal blue" . "#FFD724")              ;RoyalBlue on pink
+   ("#F4C430" . "sea green")            ; saffron
+   ("#FFFFDA" . "royal blue")
+   ("mint cream" . "royal blue")
+   ("PowderBlue" . "gold")
+   ("#FFF3FF" . "gold")]                ; lavender blush
+  "Alist of color pairs for days of the week")
+
+(defsubst tvr-set-color-for-today ()
+  "Set color pair for today."
+  (cl-declare (special tvr-weekday-color-map))
+  (let ((pair (aref tvr-weekday-color-map (read (format-time-string "%w")))))
+    (set-background-color (car pair))
+    (set-foreground-color (cdr pair))))
+
+(defun bw ()
+  "set foreground to black"
+  (set-foreground-color "black"))
+
+;;}}}

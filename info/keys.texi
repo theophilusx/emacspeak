@@ -6,763 +6,301 @@
  @section Emacspeak Keybindings On emacspeak-keymap
 
 @table @kbd
-@item "
- emacspeak-speak-sexp
-
-@item C-@@
- emacspeak-speak-current-mark
-
-@item C-a
- emacspeak-toggle-auditory-icons
-
-@item C-b
- emacspeak-bookshare
-
-@item C-d
- emacspeak-toggle-show-point
-
-@item C-e
- move-end-of-line
-
-@item C-f
- emacspeak-find-dired
-
-@item C-j
- emacspeak-hide-speak-block-sans-prefix
-
-@item C-k
- browse-kill-ring
-
-@item C-l
- what-line
-
-@item C-o
- emacspeak-ocr
-
-@item C-q
- emacspeak-toggle-inaudible-or-comint-autospeak
-
-@item C-r
- restart-emacs
-
-@item C-s
- tts-restart
-
-@item C-u
- emacspeak-feeds-browse
-
-@item C-v
- view-mode
-
-@item C-w
- emacspeak-speak-window-information
-
-@item C-x
- dtk-toggle-punctuation-mode
-
-@item I
- emacspeak-speak-show-active-network-interfaces
-
-@item L
- emacspeak-speak-line-interactively
-
-@item M
- emacspeak-speak-minor-mode-line
-
-@item N
- emacspeak-view-emacspeak-news
-
-@item P
- emacspeak-speak-paragraph-interactively
-
-@item R
- emacspeak-speak-rectangle
-
-@item RET
- emacspeak-websearch-google
-
-@item SPC
- emacspeak-speak-header-line
-
-@item T
- emacspeak-view-emacspeak-tips
-
-@item TAB
- emacspeak-open-info
-
-@item V
- emacspeak-speak-version
-
-@item W
- emacspeak-select-window-by-name
-
-@item [
- emacspeak-speak-page
-
-@item \
- emacspeak-toggle-speak-line-invert-filter
-
-@item ]
- emacspeak-speak-page-interactively
-
-@item ^
- emacspeak-filtertext
-
-@item a
- emacspeak-speak-message-again
-
-@item b
- emacspeak-speak-buffer
-
-@item c
- emacspeak-speak-char
-
-@item e
- move-end-of-line
-
-@item f
- emacspeak-speak-buffer-filename
-
-@item g
- emacspeak-epub
-
-@item h
- emacspeak-speak-help
-
-@item j
- emacspeak-hide-or-expose-block
-
-@item k
- emacspeak-speak-current-kill
-
-@item l
- emacspeak-speak-line
-
-@item m
- emacspeak-speak-mode-line
-
-@item n
- emacspeak-speak-rest-of-buffer
-
-@item o
- delete-blank-lines
-
-@item p
- emacspeak-speak-paragraph
-
-@item r
- emacspeak-speak-region
-
-@item s
- dtk-stop
-
-@item t
- emacspeak-speak-time
-
-@item u
- emacspeak-url-template-fetch
-
-@item w
- emacspeak-speak-word
-
-@item |
- emacspeak-speak-line-set-column-filter
-
-@item !
- emacspeak-speak-run-shell-command
-
-@item $
- flyspell-mode
-
-@item %
- emacspeak-speak-current-percentage
-
-@item &
- emacspeak-wizards-shell-command-on-current-file
-
-@item '
- emacspeak-pianobar
-
-@item (
- amixer
-
-@item )
- emacspeak-sounds-select-theme
-
-@item ,
- emacspeak-beginning-or-end
-
-@item .
- emacspeak-speak-windowful
-
-@item /
- emacspeak-websearch-dispatch
-
-@item 0
- emacspeak-sounds-select-theme
-
-@item 1
- emacspeak-speak-this-window
-
-@item 2
- emacspeak-speak-other-window
-
-@item 3
- amixer-volume-down
-
-@item 4
- amixer-volume-up
-
-@item 5
- emacspeak-speak-current-percentage
-
-@item 9
- amixer
-
-@item :
- emacspeak-m-player-shuffle
-
-@item ;
- emacspeak-multimedia
-
-@item =
- emacspeak-speak-current-column
-
-@item ?
- emacspeak-websearch-dispatch
-
-@item @@
- emacspeak-speak-message-at-time
-
-@item A
- emacspeak-appt-repeat-announcement
-
-@item B
- emacspeak-speak-buffer-interactively
-
-@item C
- emacspeak-customize
-
+@item C-@@  emacspeak-speak-current-mark
+@item C-a  emacspeak-toggle-auditory-icons
+@item C-b  emacspeak-bookshare
+@item C-d  emacspeak-toggle-show-point
+@item C-e  move-end-of-line
+@item C-f  emacspeak-find-dired
+@item TAB  emacspeak-open-info
+@item C-j  emacspeak-hide-speak-block-sans-prefix
+@item C-k  browse-kill-ring
+@item C-l  what-line
+@item RET  emacspeak-websearch-google
+@item C-o  emacspeak-ocr
+@item C-q  emacspeak-toggle-inaudible-or-comint-autospeak
+@item C-r  restart-emacs
+@item C-s  tts-restart
+@item C-u  emacspeak-feeds-browse
+@item C-v  view-mode
+@item C-w  emacspeak-speak-window-information
+@item C-x  emacspeak-speak-header-line
+@item "  emacspeak-speak-sexp
+@item I  emacspeak-speak-show-active-network-interfaces
+@item L  emacspeak-speak-line-interactively
+@item M  emacspeak-speak-minor-mode-line
+@item N  emacspeak-view-emacspeak-news
+@item P  emacspeak-speak-paragraph-interactively
+@item R  emacspeak-speak-rectangle
+@item T  emacspeak-view-emacspeak-tips
+@item V  emacspeak-speak-version
+@item W  emacspeak-select-window-by-name
+@item [  emacspeak-speak-paragraph
+@item \  emacspeak-toggle-speak-line-invert-filter
+@item ]  emacspeak-speak-page
+@item ^  emacspeak-filtertext
+@item a  emacspeak-speak-message-again
+@item b  emacspeak-speak-buffer
+@item c  emacspeak-speak-char
+@item e  move-end-of-line
+@item f  emacspeak-speak-buffer-filename
+@item g  emacspeak-epub
+@item h  emacspeak-speak-help
+@item i  emacspeak-speak-rest-of-buffer
+@item j  emacspeak-hide-or-expose-block
+@item k  emacspeak-speak-current-kill
+@item l  emacspeak-speak-line
+@item m  emacspeak-speak-mode-line
+@item n  emacspeak-buffer-select
+@item o  delete-blank-lines
+@item p  emacspeak-buffer-select
+@item r  emacspeak-speak-region
+@item s  dtk-stop
+@item t  emacspeak-speak-time
+@item u  emacspeak-url-template-fetch
+@item w  emacspeak-speak-word
+@item |  emacspeak-speak-line-set-column-filter
+@item SPC  emacspeak-speak-windowful
+@item !  emacspeak-speak-run-shell-command
+@item $  flyspell-mode
+@item %  emacspeak-speak-current-percentage
+@item &  emacspeak-wizards-shell-command-on-current-file
+@item '  emacspeak-pianobar
+@item (  amixer
+@item )  emacspeak-sounds-select-theme
+@item ,  emacspeak-buffer-select
+@item .  emacspeak-buffer-select
+@item /  emacspeak-websearch-dispatch
+@item 0  emacspeak-sounds-select-theme
+@item 1  emacspeak-speak-this-window
+@item 2  emacspeak-speak-other-window
+@item 3  amixer-volume-adjust
+@item 4  amixer-volume-adjust
+@item 5  emacspeak-speak-current-percentage
+@item 9  amixer
+@item ;  emacspeak-multimedia
+@item =  emacspeak-speak-current-column
+@item ?  emacspeak-websearch-dispatch
+@item @@  emacspeak-speak-message-at-time
+@item A  emacspeak-appt-repeat-announcement
+@item B  emacspeak-speak-buffer-interactively
+@item C  emacspeak-customize
 @end table
 
 @node Emacspeak Keybindings On emacspeak-dtk-submap
  @section Emacspeak Keybindings On emacspeak-dtk-submap
 
 @table @kbd
-@item ,
- dtk-toggle-punctuation-mode
-
-@item .
- dtk-notify-stop
-
-@item 0
- dtk-set-predefined-speech-rate
-
-@item 1
- dtk-set-predefined-speech-rate
-
-@item 2
- dtk-set-predefined-speech-rate
-
-@item 3
- dtk-set-predefined-speech-rate
-
-@item 4
- dtk-set-predefined-speech-rate
-
-@item 5
- dtk-set-predefined-speech-rate
-
-@item 6
- dtk-set-predefined-speech-rate
-
-@item 7
- dtk-set-predefined-speech-rate
-
-@item 8
- dtk-set-predefined-speech-rate
-
-@item 9
- dtk-set-predefined-speech-rate
-
-@item C-c
- dtk-cloud
-
-@item C-d
- dectalk
-
-@item C-e
- espeak
-
-@item C-n
- dtk-notify-initialize
-
-@item C-o
- outloud
-
-@item C-s
- dectalk-soft
-
-@item C-v
- global-voice-lock-mode
-
-@item L
- dtk-local-server
-
-@item N
- dtk-set-next-language
-
-@item P
- dtk-set-previous-language
-
-@item R
- dtk-reset-state
-
-@item RET
- dtk-set-chunk-separator-syntax
-
-@item S
- dtk-set-language
-
-@item SPC
- dtk-toggle-splitting-on-white-space
-
-@item V
- tts-speak-version
-
-@item a
- dtk-add-cleanup-pattern
-
-@item c
- dtk-toggle-caps
-
-@item d
- dtk-select-server
-
-@item f
- dtk-set-character-scale
-
-@item i
- emacspeak-toggle-audio-indentation
-
-@item k
- emacspeak-toggle-character-echo
-
-@item l
- emacspeak-toggle-line-echo
-
-@item n
- dtk-toggle-speak-nonprinting-chars
-
-@item o
- dtk-toggle-strip-octals
-
-@item p
- dtk-set-punctuations
-
-@item q
- dtk-toggle-quiet
-
-@item r
- dtk-set-rate
-
-@item s
- dtk-toggle-split-caps
-
-@item v
- voice-lock-mode
-
-@item w
- emacspeak-toggle-word-echo
-
-@item z
- emacspeak-zap-tts
-
+@item C-c  dtk-cloud
+@item C-d  dectalk
+@item C-e  espeak
+@item C-j  dtk-set-chunk-separator-syntax
+@item C-n  dtk-notify-initialize
+@item C-o  outloud
+@item C-s  dectalk-soft
+@item C-v  global-voice-lock-mode
+@item SPC  dtk-toggle-splitting-on-white-space
+@item +  dtk-rate-adjust
+@item ,  dtk-toggle-punctuation-mode
+@item -  dtk-rate-adjust
+@item .  dtk-notify-stop
+@item 0  dtk-set-predefined-speech-rate
+@item 1  dtk-set-predefined-speech-rate
+@item 2  dtk-set-predefined-speech-rate
+@item 3  dtk-set-predefined-speech-rate
+@item 4  dtk-set-predefined-speech-rate
+@item 5  dtk-set-predefined-speech-rate
+@item 6  dtk-set-predefined-speech-rate
+@item 7  dtk-set-predefined-speech-rate
+@item 8  dtk-set-predefined-speech-rate
+@item 9  dtk-set-predefined-speech-rate
+@item =  dtk-rate-adjust
+@item L  dtk-local-server
+@item N  dtk-set-next-language
+@item P  dtk-set-previous-language
+@item R  dtk-reset-state
+@item S  dtk-set-language
+@item V  tts-speak-version
+@item a  dtk-add-cleanup-pattern
+@item c  dtk-toggle-caps
+@item d  dtk-select-server
+@item f  dtk-set-character-scale
+@item i  emacspeak-toggle-audio-indentation
+@item k  emacspeak-toggle-character-echo
+@item l  emacspeak-toggle-line-echo
+@item n  dtk-toggle-speak-nonprinting-chars
+@item o  dtk-toggle-strip-octals
+@item p  dtk-set-punctuations
+@item q  dtk-toggle-quiet
+@item r  dtk-set-rate
+@item s  dtk-toggle-split-caps
+@item v  voice-lock-mode
+@item w  emacspeak-toggle-word-echo
+@item z  emacspeak-zap-tts
 @end table
 
 @node Emacspeak Keybindings On emacspeak-hyper-keymap
  @section Emacspeak Keybindings On emacspeak-hyper-keymap
 
 @table @kbd
-@item '
- emacspeak-m-player-using-hrtf
-
-@item ,
- previous-buffer
-
-@item .
- next-buffer
-
-@item /
- emacspeak-websearch-google-with-toolbelt
-
-@item :
- emacspeak-m-player-using-openal
-
-@item ;
- emacspeak-multimedia
-
-@item C-a
- emacspeak-wizards-term
-
-@item C-b
- eww-list-bookmarks
-
-@item C-d
- dictionary-search
-
-@item C-e
- eshell
-
-@item C-j
- emacspeak-wizards-shell-toggle
-
-@item C-l
- emacspeak-librivox
-
-@item C-t
- emacspeak-wizards-tramp-open-location
-
-@item DEL
- emacspeak-wizards-snarf-sexp
-
-@item TAB
- hippie-expand
-
-@item a
- emacspeak-amark-browse
-
-@item b
- eww-list-buffers
-
-@item c
- browse-url-chrome
-
-@item d
- magit-dispatch
-
-@item e
- gmaps
-
-@item f
- magit-file-dispatch
-
-@item g
- gnus
-
-@item h
- emacspeak-m-player-from-history
-
-@item i
- ibuffer
-
-@item k
- emacspeak-google-knowledge-search
-
-@item l
- locate
-
-@item m
- vm
-
-@item n
- emacspeak-wizards-cycle-to-next-buffer
-
-@item o
- find-file
-
-@item p
- emacspeak-wizards-cycle-to-previous-buffer
-
-@item r
- emacspeak-wizards-find-file-as-root
-
-@item s
- magit-status
-
-@item t
- twit
-
-@item u
- list-unicode-display
-
-@item w
- emacspeak-wizards-noaa-weather
-
-@item y
- yas-expand
-
+@item C-a  emacspeak-wizards-term
+@item C-b  eww-list-bookmarks
+@item C-d  dictionary-search
+@item C-e  eshell
+@item TAB  hippie-expand
+@item C-j  emacspeak-wizards-shell-toggle
+@item C-l  emacspeak-librivox
+@item C-t  emacspeak-wizards-tramp-open-location
+@item ;  emacspeak-multimedia
+@item a  emacspeak-amark-browse
+@item b  emacspeak-wizards-bbc-sounds
+@item c  browse-url-chrome
+@item d  magit-dispatch
+@item e  gmaps
+@item f  magit-file-dispatch
+@item g  gnus
+@item h  emacspeak-m-player-from-history
+@item i  ibuffer
+@item l  emacspeak-m-player-locate-media
+@item m  vm
+@item o  find-file
+@item r  emacspeak-wizards-find-file-as-root
+@item s  magit-status
+@item u  list-unicode-display
+@item w  emacspeak-wizards-noaa-weather
+@item y  yas-expand
+@item DEL  emacspeak-wizards-snarf-sexp
 @end table
 
 @node Emacspeak Keybindings On emacspeak-super-keymap
  @section Emacspeak Keybindings On emacspeak-super-keymap
 
 @table @kbd
-@item .
- emacspeak-wizards-shell-directory-reset
-
-@item C-n
- emacspeak-wizards-google-headlines
-
-@item R
- emacspeak-webspace-feed-reader
-
-@item SPC
- scratch-buffer
-
-@item c
- calculator
-
-@item d
- emacspeak-dired-downloads
-
-@item e
- elfeed
-
-@item f
- browse-url-firefox
-
-@item g
- emacspeak-google-tts
-
-@item h
- emacspeak-org-capture-link
-
-@item l
- emacspeak-wizards-locate-content
-
-@item m
- emacspeak-wizards-view-buffers-filtered-by-this-mode
-
-@item n
- emacspeak-wizards-google-news
-
-@item p
- proced
-
-@item r
- soundscape-restart
-
-@item s
- soundscape
-
-@item t
- soundscape-toggle
-
-@item u
- soundscape-update-mood
-
-@item y
- empv-youtube-tabulated
-
+@item C-n  emacspeak-wizards-google-headlines
+@item SPC  scratch-buffer
+@item .  emacspeak-wizards-shell-directory-reset
+@item R  emacspeak-webspace-feed-reader
+@item b  eww-list-buffers
+@item c  calculator
+@item d  emacspeak-dired-downloads
+@item e  elfeed
+@item f  browse-url-firefox
+@item g  emacspeak-google-tts
+@item h  emacspeak-org-capture-link
+@item l  emacspeak-wizards-locate-content
+@item m  emacspeak-wizards-view-buffers-filtered-by-this-mode
+@item n  emacspeak-wizards-google-news
+@item p  proced
+@item r  soundscape-restart
+@item s  soundscape
+@item t  soundscape-toggle
+@item u  soundscape-update-mood
+@item y  empv-youtube-tabulated
 @end table
 
 @node Emacspeak Keybindings On emacspeak-alt-keymap
  @section Emacspeak Keybindings On emacspeak-alt-keymap
 
 @table @kbd
-@item ,
- eldoc
-
-@item SPC
- emacspeak-eww-smart-tabs
-
-@item a
- emacspeak-feeds-atom-display
-
-@item b
- sox-binaural
-
-@item d
- deadgrep
-
-@item e
- eww
-
-@item f
- ffip
-
-@item g
- rg
-
-@item l
- eww-open-file
-
-@item o
- emacspeak-feeds-opml-display
-
-@item p
- emacspeak-wizards-pdf-open
-
-@item q
- emacspeak-wizards-iex-show-price
-
-@item r
- emacspeak-feeds-rss-display
-
-@item s
- emacspeak-wizards-tune-in-radio-search
-
-@item t
- emacspeak-wizards-tune-in-radio-browse
-
-@item u
- emacspeak-m-player-url
-
-@item v
- visual-line-mode
-
-@item w
- define-word
-
-@item y
- emacspeak-m-player-youtube-player
-
-@end table
-
-@node Emacspeak Keybindings On emacspeak-personal-x-keymap
- @section Emacspeak Keybindings On emacspeak-personal-x-keymap
-
-@table @kbd
-@item ,
- emacspeak-wizards-shell-directory-set
-
-@item .
- emacspeak-wizards-shell-directory-reset
-
-@item 0
- emacspeak-wizards-shell-by-key
-
-@item 1
- emacspeak-wizards-shell-by-key
-
-@item 2
- emacspeak-wizards-shell-by-key
-
-@item 3
- emacspeak-wizards-shell-by-key
-
-@item 4
- emacspeak-wizards-shell-by-key
-
-@item 5
- emacspeak-wizards-shell-by-key
-
-@item 7
- emacspeak-wizards-shell-command-on-current-file
-
-@item 8
- calc
-
-@item ;
- emacspeak-m-player-loop
-
-@item =
- emacspeak-wizards-find-longest-line-in-region
-
-@item C-c
- emacspeak-wizards-color-wheel
-
-@item DEL
- desktop-clear
-
-@item b
- battery
-
-@item d
- emacspeak-speak-load-directory-settings
-
-@item f
- emacspeak-wizards-remote-frame
-
-@item h
- emacspeak-wizards-how-many-matches
-
-@item i
- ibuffer
-
-@item l
- emacspeak-m-player-youtube-live
-
-@item m
- mspools-show
-
-@item o
- emacspeak-wizards-occur-header-lines
-
-@item p
- paradox-list-packages
-
-@item q
- emacspeak-wizards-quote
-
-@item t
- emacspeak-speak-telephone-directory
-
-@item u
- emacspeak-wizards-units
-
-@item v
- emacspeak-wizards-vc-viewer
-
-@item w
- emacspeak-wizards-noaa-weather
-
-@item |
- emacspeak-wizards-squeeze-blanks
-
-@end table
-
-@node Emacspeak Keybindings On emacspeak-personal-v-keymap
- @section Emacspeak Keybindings On emacspeak-personal-v-keymap
-
-@table @kbd
-@item v
- view-register
-
-@end table
-
-@node Emacspeak Keybindings On emacspeak-personal-y-keymap
- @section Emacspeak Keybindings On emacspeak-personal-y-keymap
-
-@table @kbd
-@item a
- emacspeak-xslt-view-atom-file
-
-@item p
- emacspeak-pianobar
-
-@item r
- emacspeak-xslt-view-rss-file
-
-@item x
- emacspeak-xslt-view-file
-
-@item y
- emacspeak-empv-play-url
-
+@item SPC  emacspeak-eww-smart-tabs
+@item ,  eldoc
+@item a  emacspeak-feeds-atom-display
+@item b  sox-binaural
+@item d  deadgrep
+@item e  eww
+@item f  ffip
+@item g  rg
+@item l  eww-open-file
+@item o  emacspeak-feeds-opml-display
+@item p  emacspeak-wizards-pdf-open
+@item q  emacspeak-wizards-quotes
+@item r  emacspeak-feeds-rss-display
+@item s  emacspeak-wizards-tune-in-radio-search
+@item t  emacspeak-wizards-tune-in-radio-browse
+@item u  emacspeak-m-player-url
+@item v  visual-line-mode
+@item w  define-word
+@item y  emacspeak-m-player-youtube-player
 @end table
 
 @node Emacspeak Keybindings On emacspeak-multi-keymap
  @section Emacspeak Keybindings On emacspeak-multi-keymap
 
 @table @kbd
-@item '
- emacspeak-pianobar
+@item '  emacspeak-pianobar
+@item d  sdcv-search-input
+@item l  locate
+@item o  org-mode
+@item y  emacspeak-google-yt-feed
+@end table
 
-@item d
- sdcv-search-input
+@node Emacspeak Keybindings On emacspeak-v-keymap
+ @section Emacspeak Keybindings On emacspeak-v-keymap
 
-@item h
- emacspeak-m-player-browse-history
+@table @kbd
+@item v  view-register
+@end table
 
-@item l
- emacspeak-m-player-locate-media
+@node Emacspeak Keybindings On emacspeak-x-keymap
+ @section Emacspeak Keybindings On emacspeak-x-keymap
 
-@item o
- org-mode
+@table @kbd
+@item C-c  emacspeak-wizards-color-wheel
+@item ,  emacspeak-wizards-shell-directory-set
+@item .  emacspeak-wizards-shell-directory-reset
+@item 0  emacspeak-wizards-shell-by-key
+@item 1  emacspeak-wizards-shell-by-key
+@item 2  emacspeak-wizards-shell-by-key
+@item 3  emacspeak-wizards-shell-by-key
+@item 4  emacspeak-wizards-shell-by-key
+@item 5  emacspeak-wizards-shell-by-key
+@item 7  emacspeak-wizards-shell-command-on-current-file
+@item 8  calc
+@item ;  emacspeak-m-player-loop
+@item =  emacspeak-wizards-find-longest-line-in-region
+@item b  battery
+@item d  emacspeak-speak-load-directory-settings
+@item f  emacspeak-wizards-remote-frame
+@item h  emacspeak-wizards-how-many-matches
+@item i  ibuffer
+@item l  emacspeak-m-player-youtube-live
+@item m  mspools-show
+@item o  emacspeak-wizards-occur-header-lines
+@item p  paradox-list-packages
+@item t  emacspeak-speak-telephone-directory
+@item u  emacspeak-wizards-units
+@item v  emacspeak-wizards-vc-viewer
+@item w  emacspeak-wizards-noaa-weather
+@item x  exchange-point-and-mark
+@item |  emacspeak-wizards-squeeze-blanks
+@item DEL  desktop-clear
+@end table
 
-@item y
- emacspeak-google-yt-feed
+@node Emacspeak Keybindings On emacspeak-y-keymap
+ @section Emacspeak Keybindings On emacspeak-y-keymap
 
+@table @kbd
+@item a  emacspeak-xslt-view-atom-file
+@item p  emacspeak-pianobar
+@item r  emacspeak-xslt-view-rss-file
+@item x  emacspeak-xslt-view-file
+@item y  emacspeak-empv-play-url
+@end table
+
+@node Emacspeak Keybindings On emacspeak-z-keymap
+ @section Emacspeak Keybindings On emacspeak-z-keymap
+
+@table @kbd
+@item SPC  flyspell-mode
+@item b  emacspeak-wizards-view-buffers-filtered-by-this-mode
+@item c  calibredb
+@item d  magit-dispatch
+@item e  emacspeak-wizards-eww-buffer-list
+@item f  magit-file-dispatch
+@item l  emacspeak-m-player-locate-media
+@item n  emacspeak-wizards-buffer-select
+@item p  emacspeak-wizards-buffer-select
+@item r  restart-emacs
+@item s  magit-status
+@item z  suspend-frame
 @end table

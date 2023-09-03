@@ -180,7 +180,7 @@ emacspeak-info-select-node-speak-chunk"
   "Play an auditory icon to close info,
 and then cue the next selected buffer."
   (when (ems-interactive-p)
-    (dtk-stop)
+    (dtk-stop 'all)
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
@@ -275,6 +275,12 @@ node-spec."
    (t (save-excursion
         (goto-char (point-min))
         (emacspeak-speak-line)))))
+
+;;}}}
+;;{{{Hook:
+(add-hook
+ 'Info-mode-hook
+ 'emacspeak-pronounce-toggle-use-of-dictionaries)
 
 ;;}}}
 ;;{{{ keymaps

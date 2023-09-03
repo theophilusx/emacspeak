@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1191 commands and 149 options.
+This chapter documents a total of 1152 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -205,7 +205,6 @@ This chapter documents a total of 1191 commands and 149 options.
 * emacspeak-todo-mode::speech-enable todo.
 * emacspeak-transient::TRANSIENT.
 * emacspeak-treesit::Speech-enable TREESIT.
-* emacspeak-twittering::
 * emacspeak-typo::Speech-enable TYPO.
 * emacspeak-url-template::URI templates.
 * emacspeak-vdiff::Speech-enable VDIFF.
@@ -310,17 +309,35 @@ Persist  amixer.
 @end format
 @end deffn
 
+@subsubsection amixer-volume-adjust
+@deffn {Command} amixer-volume-adjust   
+@table @kbd
+@item C-e 4
+@kindex C-e 4
+@item C-e 3
+@kindex C-e 3
+@item <fn> 4
+@kindex <fn> 4
+@item <fn> 3
+@kindex <fn> 3
+@end table
+
+@findex amixer-volume-adjust
+
+@format
+Adjust volume continuously.
+Press C-e 3 to lower volume; C-e 4 to increase it. Subsequent presses
+of 3 and 4 lower or raise volume.
+@end format
+@end deffn
+
 @subsubsection amixer-volume-down
-@deffn {Command} amixer-volume-down  (prompt)
+@deffn {Command} amixer-volume-down  (&optional prompt)
 @table @kbd
 @item <XF86AudioLowerVolume>
 @kindex <XF86AudioLowerVolume>
 @item C-<f1>
 @kindex C-<f1>
-@item C-e 3
-@kindex C-e 3
-@item <fn> 3
-@kindex <fn> 3
 @end table
 
 @findex amixer-volume-down
@@ -329,21 +346,17 @@ Persist  amixer.
 Lower Master volume by amixer-volume-step.
 Interactive prefix arg ‘PROMPT’ reads percentage as a number
 
-(fn PROMPT)
+(fn &optional PROMPT)
 @end format
 @end deffn
 
 @subsubsection amixer-volume-up
-@deffn {Command} amixer-volume-up  (prompt)
+@deffn {Command} amixer-volume-up  (&optional prompt)
 @table @kbd
 @item <XF86AudioRaiseVolume>
 @kindex <XF86AudioRaiseVolume>
 @item C-<f2>
 @kindex C-<f2>
-@item C-e 4
-@kindex C-e 4
-@item <fn> 4
-@kindex <fn> 4
 @end table
 
 @findex amixer-volume-up
@@ -352,7 +365,7 @@ Interactive prefix arg ‘PROMPT’ reads percentage as a number
 Raise Master volume by amixer-volume-step.
 Interactive prefix arg ‘PROMPT’ reads percentage as a number
 
-(fn PROMPT)
+(fn &optional PROMPT)
 @end format
 @end deffn
 
@@ -541,6 +554,33 @@ Stop  speech on notification stream.
 @end format
 @end deffn
 
+@subsubsection dtk-rate-adjust
+@deffn {Command} dtk-rate-adjust   
+@table @kbd
+@item C-e d -
+@kindex C-e d -
+@item C-e d +
+@kindex C-e d +
+@item C-e d =
+@kindex C-e d =
+@item <fn> d -
+@kindex <fn> d -
+@item <fn> d +
+@kindex <fn> d +
+@item <fn> d =
+@kindex <fn> d =
+@end table
+
+@findex dtk-rate-adjust
+
+@format
+Adjust speech rate in current buffer, inspired by
+  text-scale-adjust.   Invoke this command via C-e d =/+ or
+C-impel-d -. Pressing =,+, or - immediately continues to adjust
+the speech rate.  Call when on a non-blank line to preview the effectt
+@end format
+@end deffn
+
 @subsubsection dtk-reset-state
 @deffn {Command} dtk-reset-state   
 @table @kbd
@@ -600,10 +640,10 @@ then set the current local value to the result.
 @subsubsection dtk-set-chunk-separator-syntax
 @deffn {Command} dtk-set-chunk-separator-syntax  (s)
 @table @kbd
-@item C-e d RET
-@kindex C-e d RET
-@item <fn> d RET
-@kindex <fn> d RET
+@item C-e d C-j
+@kindex C-e d C-j
+@item <fn> d C-j
+@kindex <fn> d C-j
 @end table
 
 @findex dtk-set-chunk-separator-syntax
@@ -841,14 +881,10 @@ value, and then set the current local value to the result.
 @subsubsection dtk-toggle-punctuation-mode
 @deffn {Command} dtk-toggle-punctuation-mode  (&optional prefix)
 @table @kbd
-@item C-e C-x
-@kindex C-e C-x
 @item C-e <deletechar>
 @kindex C-e <deletechar>
 @item C-e <backspace>
 @kindex C-e <backspace>
-@item <fn> C-x
-@kindex <fn> C-x
 @item <fn> <deletechar>
 @kindex <fn> <deletechar>
 @item <fn> <backspace>
@@ -1494,9 +1530,12 @@ name: Bookmark tag
 Position: time offset from start
 
  This library will be used from emacspeak-m-player to set and jump
-to bookmarks. Amarks are stored in a .amarks file in the working
+to bookmarks. Amarks are stored in a .amarks.am file in the working
 directory.  It also provides a simple AMark Browser to use from a
-directory containing mp3 files where Amarks have been created.
+directory containing mp3 files where Amarks have been created --
+see @command{emacspeak-amarks-browse}.
+ @command{emacspeak-amarks-bookshelf} brings up a @emph{AmarksBookshelf}
+that can be used to  browse available Amark files.
 
 @subsection Emacspeak-Amark Commands
 
@@ -1514,7 +1553,7 @@ given name, it is updated with path and position.
 @end deffn
 
 @subsubsection emacspeak-amark-bookshelf
-@deffn {Command} emacspeak-amark-bookshelf   
+@deffn {Command} emacspeak-amark-bookshelf  (&optional pattern)
 @table @kbd
 @item C-; C-;
 @kindex C-; C-;
@@ -1526,8 +1565,12 @@ given name, it is updated with path and position.
 
 @format
 Open a locate buffer with all .amarks.am files.
-Use M-x emacspeak-dired-open-this-file to open the AMark Browser on
+Optional interactive prefix arg prompts for a pattern that is
+used to filter the amarks files to show.  Use
+M-x emacspeak-dired-open-this-file to open the AMark Browser on
 current file.
+
+(fn &optional PATTERN)
 @end format
 @end deffn
 
@@ -1572,7 +1615,13 @@ Return matching AMark if found in buffer-local AMark list.
 @findex emacspeak-amark-list-play
 
 @format
-Play amark list as a playlist
+Play amark list as a playlist.
+Maps command M-x emacspeak-m-player across elements of the amarks
+  list.  Pressing ‘y’ as the current item is playing skips to the
+  next item; this ‘y/n’ prompt is produced by
+  M-x emacspeak-m-player as is usual when that command is called
+  while media is already playing. Here, attempting to play the next
+  item while the current item is playing produces the prompt.
 @end format
 @end deffn
 
@@ -1938,8 +1987,8 @@ Optional interactive prefix arg prompts for a category to use as a filter.
 @findex emacspeak-bookshare-debugInfo-handler
 
 @format
-Do nothing and return nil.
-This function accepts any number of ARGUMENTS, but ignores them.
+Ignore ARGUMENTS, do nothing, and return nil.
+This function accepts any number of arguments in ARGUMENTS.
 Also see ‘always’.
 
 (fn &rest ARGUMENTS)
@@ -2337,8 +2386,8 @@ Custom URL executor for use in Bookshare TOC.
 @findex emacspeak-bookshare-version-handler
 
 @format
-Do nothing and return nil.
-This function accepts any number of ARGUMENTS, but ignores them.
+Ignore ARGUMENTS, do nothing, and return nil.
+This function accepts any number of arguments in ARGUMENTS.
 Also see ‘always’.
 
 (fn &rest ARGUMENTS)
@@ -3899,6 +3948,24 @@ Accumulate media links to register u
 Percentage seek in seconds,see ‘empv-seek’
 
 (fn TARGET)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-play-file
+@deffn {Command} emacspeak-empv-play-file  (file &optional left-channel)
+@table @kbd
+@item C-e C-;
+@kindex C-e C-;
+@item <fn> C-;
+@kindex <fn> C-;
+@end table
+
+@findex emacspeak-empv-play-file
+
+@format
+Play file using mpv;  Prefix arg plays on secondary device.
+
+(fn FILE &optional LEFT-CHANNEL)
 @end format
 @end deffn
 
@@ -5636,7 +5703,7 @@ Debugging tool  --- retains the  HTML source after XSLT.
 @command{emacspeak-we-extract-table-by-match}
 Extract matching table.
 @item p
-@command{emacspeak-we-xpath-filter-and-follow}
+@command{emacspeak-we-xpath-follow-and-filter}
 Follow link under point, and filter results by a specified XPath filter.
 @item r
 @command{emacspeak-we-extract-by-role}
@@ -5651,7 +5718,7 @@ Extracts tables by their position on the page.
 @command{emacspeak-we-extract-matching-urls}
 Display matching links on the page.
 @item v
-@command{emacspeak-we-class-filter-and-follow-link}
+@command{emacspeak-we-class-follow-and-filter-link}
 Follow link under point, and filter by specified class value.
 @item w
 @command{emacspeak-we-extract-by-property}
@@ -5660,7 +5727,7 @@ Extract element using a combination of DOM attributes.
 @command{emacspeak-we-extract-nested-table}
 Extract a nested table using a match-list.
 @item y
-@command{emacspeak-we-class-filter-and-follow}
+@command{emacspeak-we-class-follow-and-filter}
 Follow link under point and filter by class values.
 @end table
 @subsection EWW And EBooks On The Emacspeak Audio Desktop
@@ -7445,13 +7512,6 @@ Extract current  page from the Google cache.
 
 @subsubsection emacspeak-google-knowledge-search
 @deffn {Command} emacspeak-google-knowledge-search  (query &optional limit)
-@table @kbd
-@item C-; k
-@kindex C-; k
-@item C-x @@ h k
-@kindex C-x @@ h k
-@end table
-
 @findex emacspeak-google-knowledge-search
 
 @format
@@ -7525,285 +7585,6 @@ Ask Google to find documents similar to this one.
 
 @format
 Command to change values in the toolbelt and execute the query.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-Shopping
-@deffn {Command} emacspeak-google-toolbelt-change-Shopping   
-@findex emacspeak-google-toolbelt-change-Shopping
-
-@format
-Change  Shopping in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-blog
-@deffn {Command} emacspeak-google-toolbelt-change-blog   
-@findex emacspeak-google-toolbelt-change-blog
-
-@format
-Change  blog in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-books
-@deffn {Command} emacspeak-google-toolbelt-change-books   
-@findex emacspeak-google-toolbelt-change-books
-
-@format
-Change  books in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-books-format
-@deffn {Command} emacspeak-google-toolbelt-change-books-format   
-@findex emacspeak-google-toolbelt-change-books-format
-
-@format
-Change  books-format in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-books-type
-@deffn {Command} emacspeak-google-toolbelt-change-books-type   
-@findex emacspeak-google-toolbelt-change-books-type
-
-@format
-Change  books-type in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-books-viewability
-@deffn {Command} emacspeak-google-toolbelt-change-books-viewability   
-@findex emacspeak-google-toolbelt-change-books-viewability
-
-@format
-Change  books-viewability in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-commercial
-@deffn {Command} emacspeak-google-toolbelt-change-commercial   
-@findex emacspeak-google-toolbelt-change-commercial
-
-@format
-Change  commercial in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-commercial-prices
-@deffn {Command} emacspeak-google-toolbelt-change-commercial-prices   
-@findex emacspeak-google-toolbelt-change-commercial-prices
-
-@format
-Change  commercial-prices in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-date-filter
-@deffn {Command} emacspeak-google-toolbelt-change-date-filter   
-@findex emacspeak-google-toolbelt-change-date-filter
-
-@format
-Change  date-filter in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-forums
-@deffn {Command} emacspeak-google-toolbelt-change-forums   
-@findex emacspeak-google-toolbelt-change-forums
-
-@format
-Change  forums in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-group-discussions
-@deffn {Command} emacspeak-google-toolbelt-change-group-discussions   
-@findex emacspeak-google-toolbelt-change-group-discussions
-
-@format
-Change  group-discussions in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-images
-@deffn {Command} emacspeak-google-toolbelt-change-images   
-@findex emacspeak-google-toolbelt-change-images
-
-@format
-Change  images in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-in-depth
-@deffn {Command} emacspeak-google-toolbelt-change-in-depth   
-@findex emacspeak-google-toolbelt-change-in-depth
-
-@format
-Change  in-depth in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-literal
-@deffn {Command} emacspeak-google-toolbelt-change-literal   
-@findex emacspeak-google-toolbelt-change-literal
-
-@format
-Change  literal in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-news
-@deffn {Command} emacspeak-google-toolbelt-change-news   
-@findex emacspeak-google-toolbelt-change-news
-
-@format
-Change  news in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-non-commercial
-@deffn {Command} emacspeak-google-toolbelt-change-non-commercial   
-@findex emacspeak-google-toolbelt-change-non-commercial
-
-@format
-Change  non-commercial in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-patents
-@deffn {Command} emacspeak-google-toolbelt-change-patents   
-@findex emacspeak-google-toolbelt-change-patents
-
-@format
-Change  patents in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-places
-@deffn {Command} emacspeak-google-toolbelt-change-places   
-@findex emacspeak-google-toolbelt-change-places
-
-@format
-Change  places in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-recent
-@deffn {Command} emacspeak-google-toolbelt-change-recent   
-@findex emacspeak-google-toolbelt-change-recent
-
-@format
-Change  recent in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-recipes
-@deffn {Command} emacspeak-google-toolbelt-change-recipes   
-@findex emacspeak-google-toolbelt-change-recipes
-
-@format
-Change  recipes in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-reviews
-@deffn {Command} emacspeak-google-toolbelt-change-reviews   
-@findex emacspeak-google-toolbelt-change-reviews
-
-@format
-Change  reviews in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-social
-@deffn {Command} emacspeak-google-toolbelt-change-social   
-@findex emacspeak-google-toolbelt-change-social
-
-@format
-Change  social in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-sort-by-date
-@deffn {Command} emacspeak-google-toolbelt-change-sort-by-date   
-@findex emacspeak-google-toolbelt-change-sort-by-date
-
-@format
-Change  sort-by-date in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-structured-snippets
-@deffn {Command} emacspeak-google-toolbelt-change-structured-snippets   
-@findex emacspeak-google-toolbelt-change-structured-snippets
-
-@format
-Change  structured-snippets in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-timeline
-@deffn {Command} emacspeak-google-toolbelt-change-timeline   
-@findex emacspeak-google-toolbelt-change-timeline
-
-@format
-Change  timeline in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-timeline-high
-@deffn {Command} emacspeak-google-toolbelt-change-timeline-high   
-@findex emacspeak-google-toolbelt-change-timeline-high
-
-@format
-Change  timeline-high in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-timeline-low
-@deffn {Command} emacspeak-google-toolbelt-change-timeline-low   
-@findex emacspeak-google-toolbelt-change-timeline-low
-
-@format
-Change  timeline-low in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-video
-@deffn {Command} emacspeak-google-toolbelt-change-video   
-@findex emacspeak-google-toolbelt-change-video
-
-@format
-Change  video in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-video-duration
-@deffn {Command} emacspeak-google-toolbelt-change-video-duration   
-@findex emacspeak-google-toolbelt-change-video-duration
-
-@format
-Change  video-duration in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-web-history-not-visited
-@deffn {Command} emacspeak-google-toolbelt-change-web-history-not-visited   
-@findex emacspeak-google-toolbelt-change-web-history-not-visited
-
-@format
-Change  web-history-not-visited in the currently active toolbelt.
-@end format
-@end deffn
-
-@subsubsection emacspeak-google-toolbelt-change-web-history-visited
-@deffn {Command} emacspeak-google-toolbelt-change-web-history-visited   
-@findex emacspeak-google-toolbelt-change-web-history-visited
-
-@format
-Change  web-history-visited in the currently active toolbelt.
 @end format
 @end deffn
 
@@ -8421,7 +8202,7 @@ Default Value:
  ("l" eww-open-file)
  ("o" emacspeak-feeds-opml-display)
  ("p" emacspeak-wizards-pdf-open)
- ("q" emacspeak-wizards-iex-show-price)
+ ("q" emacspeak-wizards-quotes)
  ("r" emacspeak-feeds-rss-display)
  ("s" emacspeak-wizards-tune-in-radio-search)
  ("t" emacspeak-wizards-tune-in-radio-browse)
@@ -8447,9 +8228,9 @@ Default Value:
  ("d" magit-dispatch)
  ("e" emacspeak-wizards-eww-buffer-list)
  ("f" magit-file-dispatch)
- ("l" locate)
- ("n" emacspeak-wizards-cycle-to-next-buffer)
- ("p" emacspeak-wizards-cycle-to-previous-buffer)
+ ("l" emacspeak-m-player-locate-media)
+ ("n" emacspeak-wizards-buffer-select)
+ ("p" emacspeak-wizards-buffer-select)
  ("r" restart-emacs)
  ("s" magit-status)
  ("z" suspend-frame))
@@ -8465,12 +8246,7 @@ Default Value:
 
 @verbatim
 
-(("'" emacspeak-m-player-using-hrtf)
- ("," previous-buffer)
- ("." next-buffer)
- ("/" emacspeak-websearch-google-with-toolbelt)
- (":" emacspeak-m-player-using-openal)
- (";" emacspeak-multimedia)
+((";" emacspeak-multimedia)
  ("C-;" emacspeak-amark-bookshelf)
  ("C-a" emacspeak-wizards-term)
  ("C-b" eww-list-bookmarks)
@@ -8482,7 +8258,7 @@ Default Value:
  ("DEL" emacspeak-wizards-snarf-sexp)
  ("TAB" hippie-expand)
  ("a" emacspeak-amark-browse)
- ("b" eww-list-buffers)
+ ("b" emacspeak-wizards-bbc-sounds)
  ("c" browse-url-chrome)
  ("d" magit-dispatch)
  ("e" gmaps)
@@ -8490,15 +8266,11 @@ Default Value:
  ("g" gnus)
  ("h" emacspeak-m-player-from-history)
  ("i" ibuffer)
- ("k" emacspeak-google-knowledge-search)
- ("l" locate)
+ ("l" emacspeak-m-player-locate-media)
  ("m" vm)
- ("n" emacspeak-wizards-cycle-to-next-buffer)
  ("o" find-file)
- ("p" emacspeak-wizards-cycle-to-previous-buffer)
  ("r" emacspeak-wizards-find-file-as-root)
  ("s" magit-status)
- ("t" twit)
  ("u" list-unicode-display)
  ("w" emacspeak-wizards-noaa-weather)
  ("y" yas-expand))
@@ -8516,8 +8288,7 @@ Default Value:
 
 (("'" emacspeak-pianobar)
  ("d" sdcv-search-input)
- ("h" emacspeak-m-player-browse-history)
- ("l" emacspeak-m-player-locate-media)
+ ("l" locate)
  ("o" org-mode)
  ("y" emacspeak-google-yt-feed))
 
@@ -8525,7 +8296,39 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} emacspeak-personal-v-keys
+@defvar {User Option} emacspeak-super-keys
+Super key bindings. 
+
+Default Value: 
+
+@verbatim
+
+(("." emacspeak-wizards-shell-directory-reset)
+ ("C-n" emacspeak-wizards-google-headlines)
+ ("R" emacspeak-webspace-feed-reader)
+ ("SPC" scratch-buffer)
+ ("b" eww-list-buffers)
+ ("c" calculator)
+ ("d" emacspeak-dired-downloads)
+ ("e" elfeed)
+ ("f" browse-url-firefox)
+ ("g" emacspeak-google-tts)
+ ("h" emacspeak-org-capture-link)
+ ("l" emacspeak-wizards-locate-content)
+ ("m" emacspeak-wizards-view-buffers-filtered-by-this-mode)
+ ("n" emacspeak-wizards-google-news)
+ ("p" proced)
+ ("r" soundscape-restart)
+ ("s" soundscape)
+ ("t" soundscape-toggle)
+ ("u" soundscape-update-mood)
+ ("y" empv-youtube-tabulated))
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} emacspeak-v-keys
 Key bindings for use with C-e v. 
 
 Default Value: 
@@ -8538,7 +8341,20 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} emacspeak-personal-x-keys
+@defvar {User Option} emacspeak-windows-keys
+Key bindings on the windows  key. 
+
+Default Value: 
+
+@verbatim
+
+nil
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} emacspeak-x-keys
 Key bindings for  C-e x. 
 
 Default Value: 
@@ -8569,11 +8385,11 @@ Default Value:
  ("m" mspools-show)
  ("o" emacspeak-wizards-occur-header-lines)
  ("p" paradox-list-packages)
- ("q" emacspeak-wizards-quote)
  ("t" emacspeak-speak-telephone-directory)
  ("u" emacspeak-wizards-units)
  ("v" emacspeak-wizards-vc-viewer)
  ("w" emacspeak-wizards-noaa-weather)
+ ("x" exchange-point-and-mark)
  ("|" emacspeak-wizards-squeeze-blanks)
  ("<DEL>" desktop-clear))
 
@@ -8581,7 +8397,7 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} emacspeak-personal-y-keys
+@defvar {User Option} emacspeak-y-keys
 Key bindings for use with C-e y. 
 
 Default Value: 
@@ -8593,50 +8409,6 @@ Default Value:
  ("r" emacspeak-xslt-view-rss-file)
  ("x" emacspeak-xslt-view-file)
  ("y" emacspeak-empv-play-url))
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-super-keys
-Super key bindings. 
-
-Default Value: 
-
-@verbatim
-
-(("." emacspeak-wizards-shell-directory-reset)
- ("C-n" emacspeak-wizards-google-headlines)
- ("R" emacspeak-webspace-feed-reader)
- ("SPC" scratch-buffer)
- ("c" calculator)
- ("d" emacspeak-dired-downloads)
- ("e" elfeed)
- ("f" browse-url-firefox)
- ("g" emacspeak-google-tts)
- ("h" emacspeak-org-capture-link)
- ("l" emacspeak-wizards-locate-content)
- ("m" emacspeak-wizards-view-buffers-filtered-by-this-mode)
- ("n" emacspeak-wizards-google-news)
- ("p" proced)
- ("r" soundscape-restart)
- ("s" soundscape)
- ("t" soundscape-toggle)
- ("u" soundscape-update-mood)
- ("y" empv-youtube-tabulated))
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-windows-keys
-Key bindings on the windows  key. 
-
-Default Value: 
-
-@verbatim
-
-nil
 
 @end verbatim
 
@@ -9018,11 +8790,6 @@ Binds key to invoke m-player  on specified directory.
 
 @subsubsection emacspeak-m-player-browse-history
 @deffn {Command} emacspeak-m-player-browse-history   
-@table @kbd
-@item C-' h
-@kindex C-' h
-@end table
-
 @findex emacspeak-m-player-browse-history
 
 @format
@@ -9183,7 +8950,7 @@ Move forward by 1 minute.
 @end deffn
 
 @subsubsection emacspeak-m-player-from-history
-@deffn {Command} emacspeak-m-player-from-history  (posn)
+@deffn {Command} emacspeak-m-player-from-history  (&optional prefix)
 @table @kbd
 @item C-; h
 @kindex C-; h
@@ -9194,9 +8961,10 @@ Move forward by 1 minute.
 @findex emacspeak-m-player-from-history
 
 @format
-Play media from position ‘posn’media-history. 
+Play media from the front of media-history.
+   Interactive prefix arg invokes media history browser.
 
-(fn POSN)
+(fn &optional PREFIX)
 @end format
 @end deffn
 
@@ -9230,8 +8998,14 @@ Play both channels on left.
 @subsubsection emacspeak-m-player-locate-media
 @deffn {Command} emacspeak-m-player-locate-media  (pattern)
 @table @kbd
-@item C-' l
-@kindex C-' l
+@item C-; l
+@kindex C-; l
+@item C-e z l
+@kindex C-e z l
+@item <fn> z l
+@kindex <fn> z l
+@item C-x @@ h l
+@kindex C-x @@ h l
 @end table
 
 @findex emacspeak-m-player-locate-media
@@ -9580,13 +9354,6 @@ Display current position in track.
 
 @subsubsection emacspeak-m-player-shuffle
 @deffn {Command} emacspeak-m-player-shuffle   
-@table @kbd
-@item C-e :
-@kindex C-e :
-@item <fn> :
-@kindex <fn> :
-@end table
-
 @findex emacspeak-m-player-shuffle
 
 @format
@@ -9685,13 +9452,6 @@ URL fragment specifies optional start position.
 
 @subsubsection emacspeak-m-player-using-hrtf
 @deffn {Command} emacspeak-m-player-using-hrtf   
-@table @kbd
-@item C-; '
-@kindex C-; '
-@item C-x @@ h '
-@kindex C-x @@ h '
-@end table
-
 @findex emacspeak-m-player-using-hrtf
 
 @format
@@ -9702,13 +9462,6 @@ This will work if the soundcard is set to 48000.
 
 @subsubsection emacspeak-m-player-using-openal
 @deffn {Command} emacspeak-m-player-using-openal   
-@table @kbd
-@item C-; :
-@kindex C-; :
-@item C-x @@ h :
-@kindex C-x @@ h :
-@end table
-
 @findex emacspeak-m-player-using-openal
 
 @format
@@ -12372,17 +12125,51 @@ Arranges for ‘VAR’ to be restored when ‘file’ is loaded.
 
 @subsubsection emacspeak-beginning-or-end
 @deffn {Command} emacspeak-beginning-or-end   
-@table @kbd
-@item C-e ,
-@kindex C-e ,
-@item <fn> ,
-@kindex <fn> ,
-@end table
-
 @findex emacspeak-beginning-or-end
 
 @format
 Move to start or end of buffer.
+@end format
+@end deffn
+
+@subsubsection emacspeak-buffer-select
+@deffn {Command} emacspeak-buffer-select   
+@table @kbd
+@item C-e p
+@kindex C-e p
+@item C-e n
+@kindex C-e n
+@item C-e .
+@kindex C-e .
+@item C-e ,
+@kindex C-e ,
+@item <fn> p
+@kindex <fn> p
+@item <fn> n
+@kindex <fn> n
+@item <fn> .
+@kindex <fn> .
+@item <fn> ,
+@kindex <fn> ,
+@end table
+
+@findex emacspeak-buffer-select
+
+@format
+Select buffer by smart cycling.
+By default, this command is bound to multiple keys.
+The final key of the initial  key-sequence, and  further invocations
+of the keys below call the following bindings:
+
+, previous-buffer
+. next-buffer
+b switch-to-buffer
+f find-file
+k emacspeak-kill-buffer-quietly
+n emacspeak-cycle-to-next-buffer
+o other-window
+p emacspeak-cycle-to-previous-buffer
+
 @end format
 @end deffn
 
@@ -12394,6 +12181,24 @@ Move to start or end of buffer.
 Move to group of choices beginning with character last
 typed. If no such group exists, then we try to search for that
 char, or dont move. 
+@end format
+@end deffn
+
+@subsubsection emacspeak-cycle-to-next-buffer
+@deffn {Command} emacspeak-cycle-to-next-buffer   
+@findex emacspeak-cycle-to-next-buffer
+
+@format
+Cycles to next buffer having same mode.
+@end format
+@end deffn
+
+@subsubsection emacspeak-cycle-to-previous-buffer
+@deffn {Command} emacspeak-cycle-to-previous-buffer   
+@findex emacspeak-cycle-to-previous-buffer
+
+@format
+Cycles to previous buffer having same mode.
 @end format
 @end deffn
 
@@ -12833,9 +12638,9 @@ Speak the current column.
 
 @format
 Speak the current kill.
-This is what will be yanked by the next S-<insertchar>. Prefix numeric
+This is what will be yanked by the next <paste>. Prefix numeric
 arg, COUNT, specifies that the text that will be yanked as a
-result of a S-<insertchar> followed by count-1 M-x yank-pop be
+result of a <paste> followed by count-1 M-x yank-pop be
 spoken. The kill number that is spoken says what numeric prefix
 arg to give to command yank.
 
@@ -12959,10 +12764,10 @@ Speak current field.
 @subsubsection emacspeak-speak-header-line
 @deffn {Command} emacspeak-speak-header-line   
 @table @kbd
-@item C-e SPC
-@kindex C-e SPC
-@item <fn> SPC
-@kindex <fn> SPC
+@item C-e C-x
+@kindex C-e C-x
+@item <fn> C-x
+@kindex <fn> C-x
 @end table
 
 @findex emacspeak-speak-header-line
@@ -13286,10 +13091,10 @@ Speak display, before-string or after-string property if any.
 @subsubsection emacspeak-speak-page
 @deffn {Command} emacspeak-speak-page  (&optional arg)
 @table @kbd
-@item C-e [
-@kindex C-e [
-@item <fn> [
-@kindex <fn> [
+@item C-e ]
+@kindex C-e ]
+@item <fn> ]
+@kindex <fn> ]
 @end table
 
 @findex emacspeak-speak-page
@@ -13305,13 +13110,6 @@ Negative prefix arg will read from start of current page to point.
 
 @subsubsection emacspeak-speak-page-interactively
 @deffn {Command} emacspeak-speak-page-interactively   
-@table @kbd
-@item C-e ]
-@kindex C-e ]
-@item <fn> ]
-@kindex <fn> ]
-@end table
-
 @findex emacspeak-speak-page-interactively
 
 @format
@@ -13325,10 +13123,10 @@ any other key to speak entire page.
 @subsubsection emacspeak-speak-paragraph
 @deffn {Command} emacspeak-speak-paragraph  (&optional arg)
 @table @kbd
-@item C-e p
-@kindex C-e p
-@item <fn> p
-@kindex <fn> p
+@item C-e [
+@kindex C-e [
+@item <fn> [
+@kindex <fn> [
 @end table
 
 @findex emacspeak-speak-paragraph
@@ -13453,10 +13251,10 @@ Speak region bounded by start and end.
 @subsubsection emacspeak-speak-rest-of-buffer
 @deffn {Command} emacspeak-speak-rest-of-buffer   
 @table @kbd
-@item C-e n
-@kindex C-e n
-@item <fn> n
-@kindex <fn> n
+@item C-e i
+@kindex C-e i
+@item <fn> i
+@kindex <fn> i
 @end table
 
 @findex emacspeak-speak-rest-of-buffer
@@ -13700,10 +13498,10 @@ Speaks information about current window.
 @subsubsection emacspeak-speak-windowful
 @deffn {Command} emacspeak-speak-windowful   
 @table @kbd
-@item C-e .
-@kindex C-e .
-@item <fn> .
-@kindex <fn> .
+@item C-e SPC
+@kindex C-e SPC
+@item <fn> SPC
+@kindex <fn> SPC
 @end table
 
 @findex emacspeak-speak-windowful
@@ -15658,7 +15456,7 @@ When executing a command defined via Transient --- e.g. command
 Magit-dispatch and friends, press @kbd {C-z} (transient-suspend) to
 temporarily suspend   the currently active transient. Emacspeak now
 displays a  *transient-emacspeak* buffer that displays the contents of the
-most recently displayed transient choices. Pressing @kbd {C-c} resumes
+most recently displayed transient choices. Pressing @kbd {r} resumes
 the transient; Pressing @kbd{C-q} quits the transient.
 
 @subsection Emacspeak-Transient Commands
@@ -15709,53 +15507,6 @@ Speech-enable treesit navigation commands.
 
 @format
 If inspect-mode is on, speak current node.
-@end format
-@end deffn
-
-@node emacspeak-twittering
-@section emacspeak-twittering
-
- module twittering-mode.el  is found on  the emacs wiki
-This module speech-enables twittering-mode which works using
- oauth for authentication.
-Note: As of Thu Sep  2 08:11:25 PDT 2010
-twit.el is broken.
-
-Advises interactive functions to speak
-
-@subsection Emacspeak-Twittering Commands
-
-@subsubsection emacspeak-twittering-jump-to-following-url
-@deffn {Command} emacspeak-twittering-jump-to-following-url   
-@findex emacspeak-twittering-jump-to-following-url
-
-@format
-Move to and open closest URI  following point.
-@end format
-@end deffn
-
-@subsubsection emacspeak-twittering-speak-this-tweet
-@deffn {Command} emacspeak-twittering-speak-this-tweet  (&optional copy-as-kill)
-@findex emacspeak-twittering-speak-this-tweet
-
-@format
-Speak tweet under point.
-With interactive prefix arg ‘copy-as-kill’, copy it to kill ring as well.
-
-(fn &optional COPY-AS-KILL)
-@end format
-@end deffn
-
-@subsubsection emacspeak-twittering-twarc
-@deffn {Command} emacspeak-twittering-twarc  (&optional whose)
-@findex emacspeak-twittering-twarc
-
-@format
-Download data using credentials  for signed-in user.
-Interactive prefix arg ‘whose’ prompts for a username whose
-timeline we download. 
-
-(fn &optional WHOSE)
 @end format
 @end deffn
 
@@ -15844,6 +15595,23 @@ Save out url templates.
 (fn FILE)
 @end format
 @end deffn
+
+@subsection emacspeak-url-template Options
+
+@defvar {User Option} emacspeak-stock-tickers
+Set this to the stock tickers you want to check. Default is
+GAMA. Tickers is a list of stock symbols sorted in lexical order
+with duplicates removed when saving as a list of string.
+
+Default Value: 
+
+@verbatim
+
+("aapl" "amzn" "goog" "meta")
+
+@end verbatim
+
+@end defvar
 
 @node emacspeak-vdiff
 @section emacspeak-vdiff
@@ -16114,8 +15882,8 @@ to handle Web pages.
 
 @subsection Emacspeak-We Commands
 
-@subsubsection emacspeak-we-class-filter-and-follow
-@deffn {Command} emacspeak-we-class-filter-and-follow  (class url &optional prompt)
+@subsubsection emacspeak-we-class-follow-and-filter
+@deffn {Command} emacspeak-we-class-follow-and-filter  (class url &optional prompt)
 @table @kbd
 @item C-e x e y
 @kindex C-e x e y
@@ -16123,7 +15891,7 @@ to handle Web pages.
 @kindex <fn> x e y
 @end table
 
-@findex emacspeak-we-class-filter-and-follow
+@findex emacspeak-we-class-follow-and-filter
 
 @format
 Follow url and point, and filter the result by specified class.
@@ -16135,8 +15903,8 @@ used as well.
 @end format
 @end deffn
 
-@subsubsection emacspeak-we-class-filter-and-follow-link
-@deffn {Command} emacspeak-we-class-filter-and-follow-link  (&optional prompt)
+@subsubsection emacspeak-we-class-follow-and-filter-link
+@deffn {Command} emacspeak-we-class-follow-and-filter-link  (&optional prompt)
 @table @kbd
 @item C-e x e v
 @kindex C-e x e v
@@ -16144,7 +15912,7 @@ used as well.
 @kindex <fn> x e v
 @end table
 
-@findex emacspeak-we-class-filter-and-follow-link
+@findex emacspeak-we-class-follow-and-filter-link
 
 @format
 Follow url and point, and filter the result by specified class.
@@ -16264,9 +16032,9 @@ values as completion.
 
 @format
 Extract elements having specified id attribute from HTML. Extracts
-specified elements from current WWW page and displays it in a separate
-buffer.
-Interactive use provides list of id values as completion.
+specified elements from current WWW page and displays it in a
+separate buffer.  Interactive use prompts for   id values using
+completion.
 
 (fn ID URL &optional SPEAK)
 @end format
@@ -16630,8 +16398,8 @@ a rewrite rule even if one is already defined.
 @end format
 @end deffn
 
-@subsubsection emacspeak-we-xpath-filter-and-follow
-@deffn {Command} emacspeak-we-xpath-filter-and-follow  (&optional prompt)
+@subsubsection emacspeak-we-xpath-follow-and-filter
+@deffn {Command} emacspeak-we-xpath-follow-and-filter  (&optional prompt)
 @table @kbd
 @item C-e x e p
 @kindex C-e x e p
@@ -16639,7 +16407,7 @@ a rewrite rule even if one is already defined.
 @kindex <fn> x e p
 @end table
 
-@findex emacspeak-we-xpath-filter-and-follow
+@findex emacspeak-we-xpath-follow-and-filter
 
 @format
 Follow url and point, and filter the result by specified xpath.
@@ -16922,13 +16690,6 @@ Use this from inside the calendar to do Google date-range searches.
 
 @subsubsection emacspeak-websearch-google-with-toolbelt
 @deffn {Command} emacspeak-websearch-google-with-toolbelt  (query)
-@table @kbd
-@item C-; /
-@kindex C-; /
-@item C-x @@ h /
-@kindex C-x @@ h /
-@end table
-
 @findex emacspeak-websearch-google-with-toolbelt
 
 @format
@@ -17667,16 +17428,25 @@ Browse  Emacspeak productivity tips.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-alpha-vantage-quotes
-@deffn {Command} emacspeak-wizards-alpha-vantage-quotes  (ticker &optional custom)
-@findex emacspeak-wizards-alpha-vantage-quotes
+@subsubsection emacspeak-wizards-bbc-sounds
+@deffn {Command} emacspeak-wizards-bbc-sounds   
+@table @kbd
+@item C-; b
+@kindex C-; b
+@item C-x @@ h b
+@kindex C-x @@ h b
+@end table
+
+@findex emacspeak-wizards-bbc-sounds
 
 @format
-Retrieve stock quote data from Alpha Vantage. Prompts for ‘ticker’
---- a stock symbol. Optional interactive prefix arg ‘custom’ provides
-access to the various functions provided by alpha-vantage.
+Search BBC Sounds.
+Result page is filtered down to two sections, Shows and Episodes.
 
-(fn TICKER &optional CUSTOM)
+Press [RET] on links in the Show section to open that show page.
+The page for that show contains playable links for Episodes.
+
+Press ‘y’ on Episode links to play them with MPV.
 @end format
 @end deffn
 
@@ -17813,46 +17583,6 @@ Customize saved options matching ‘pattern’.  This command enables
 updating custom settings for a specific package or group of packages.
 
 (fn PATTERN)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-cycle-to-next-buffer
-@deffn {Command} emacspeak-wizards-cycle-to-next-buffer   
-@table @kbd
-@item C-; n
-@kindex C-; n
-@item C-e z n
-@kindex C-e z n
-@item <fn> z n
-@kindex <fn> z n
-@item C-x @@ h n
-@kindex C-x @@ h n
-@end table
-
-@findex emacspeak-wizards-cycle-to-next-buffer
-
-@format
-Cycles to next buffer having same mode.
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-cycle-to-previous-buffer
-@deffn {Command} emacspeak-wizards-cycle-to-previous-buffer   
-@table @kbd
-@item C-; p
-@kindex C-; p
-@item C-e z p
-@kindex C-e z p
-@item <fn> z p
-@kindex <fn> z p
-@item C-x @@ h p
-@kindex C-x @@ h p
-@end table
-
-@findex emacspeak-wizards-cycle-to-previous-buffer
-
-@format
-Cycles to previous buffer having same mode.
 @end format
 @end deffn
 
@@ -18162,114 +17892,6 @@ With interactive prefix arg, prompts for and remembers the file local pattern.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-iex-show-financials
-@deffn {Command} emacspeak-wizards-iex-show-financials  (symbol &optional refresh)
-@findex emacspeak-wizards-iex-show-financials
-
-@format
-Show financials for specified ticker.
-Checks cache, then makes API call if needed.
-Optional interactive prefix arg refreshes cache.
-
-(fn SYMBOL &optional REFRESH)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-show-metadata
-@deffn {Command} emacspeak-wizards-iex-show-metadata   
-@findex emacspeak-wizards-iex-show-metadata
-
-@format
-Account metadata.
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-show-news
-@deffn {Command} emacspeak-wizards-iex-show-news  (symbol &optional refresh)
-@findex emacspeak-wizards-iex-show-news
-
-@format
-Show news for specified ticker.
-Checks cache, then makes API call if needed.
-Optional interactive prefix arg refreshes cache.
-
-(fn SYMBOL &optional REFRESH)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-show-price
-@deffn {Command} emacspeak-wizards-iex-show-price  (symbol)
-@table @kbd
-@item C-, q
-@kindex C-, q
-@item C-x @@ a q
-@kindex C-x @@ a q
-@end table
-
-@findex emacspeak-wizards-iex-show-price
-
-@format
-Quick Quote: Just stock price from IEXCloud.
-
-(fn SYMBOL)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-show-quote
-@deffn {Command} emacspeak-wizards-iex-show-quote  (&optional refresh)
-@findex emacspeak-wizards-iex-show-quote
-
-@format
-Show portfolio  data from cache.
-Optional interactive prefix arg forces cache refresh.
-
-The quotes view uses emacspeak’s table mode.
-In addition,  the following  keys are available :
-
-F: Show financials for current stock.
-N: Show news for current stock.
-P: Show live price for current stock.
-
-(fn &optional REFRESH)
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-show-tops
-@deffn {Command} emacspeak-wizards-iex-show-tops   
-@findex emacspeak-wizards-iex-show-tops
-
-@format
-Uses tops/last end-point to show brief portfolio quotes.
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-this-financials
-@deffn {Command} emacspeak-wizards-iex-this-financials   
-@findex emacspeak-wizards-iex-this-financials
-
-@format
-Show financials for symbol in current row
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-this-news
-@deffn {Command} emacspeak-wizards-iex-this-news   
-@findex emacspeak-wizards-iex-this-news
-
-@format
-Show news for symbol in current row
-@end format
-@end deffn
-
-@subsubsection emacspeak-wizards-iex-this-price
-@deffn {Command} emacspeak-wizards-iex-this-price   
-@findex emacspeak-wizards-iex-this-price
-
-@format
-Show price for symbol in current row
-@end format
-@end deffn
-
 @subsubsection emacspeak-wizards-lacheck-buffer-file
 @deffn {Command} emacspeak-wizards-lacheck-buffer-file   
 @findex emacspeak-wizards-lacheck-buffer-file
@@ -18445,29 +18067,19 @@ Navigate to and speak previous ‘bullet’.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-quote
-@deffn {Command} emacspeak-wizards-quote  (&optional refresh)
+@subsubsection emacspeak-wizards-quotes
+@deffn {Command} emacspeak-wizards-quotes   
 @table @kbd
-@item C-e x q
-@kindex C-e x q
-@item <fn> x q
-@kindex <fn> x q
+@item C-, q
+@kindex C-, q
+@item C-x @@ a q
+@kindex C-x @@ a q
 @end table
 
-@findex emacspeak-wizards-quote
+@findex emacspeak-wizards-quotes
 
 @format
-Top-level dispatch for  Stock Market information.
-
-Key : Action
-f   :  Financials
-m   :  Account metadata
-n   :  News
-p   :  Price
-q   :  Quotes
-t   :  tops/last
-
-(fn &optional REFRESH)
+View stock quotes
 @end format
 @end deffn
 
@@ -18954,22 +18566,6 @@ nil
 
 @end defvar
 
-@defvar {User Option} emacspeak-iex-api-key
-Web API  key for IEX Finance access.
-See IEX Login Console   at
-https://iexcloud.io/cloud-login/
-for how to get  an API key. 
-
-Default Value: 
-
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} emacspeak-speak-telephone-directory
 File holding telephone directory.
 This is just a text file, and we use grep to search it.
@@ -18979,20 +18575,6 @@ Default Value:
 @verbatim
 
 "/home/raman/.emacspeak/tel-dir"
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-wizards-alpha-vantage-api-key
-API Key  used to retrieve stock data from alpha-vantage.
-Visit https://www.alphavantage.co/support/#api-key to get your key.
-
-Default Value: 
-
-@verbatim
-
-nil
 
 @end verbatim
 
@@ -19011,26 +18593,8 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} emacspeak-wizards-personal-portfolio
-Set this to the stock tickers you want to check. Default is
-GAFA. Tickers are separated by white-space and are automatically
-sorted in lexical order with duplicates removed when saving.
-
-Default Value: 
-
-@verbatim
-
-"aapl
-amzn
-fb
-goog"
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} emacspeak-wizards-project-shells
-List of shell-name/initial-directory pairs.
+Project shells, a list of shell-name/initial-directory pairs.
 
 Default Value: 
 
@@ -21402,7 +20966,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 61 URL Templates.
+This section documents a total of 62 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -21430,11 +20994,11 @@ Retrieve product details from Amazon by either ISBN or ASIN.@item @b{ArchWiki Se
 
 Search Linux ArchWiki@item @b{BBC Podcast Directory}
 
-BBC PodCast Directory@item @b{Bing News}
+BBC PodCast Directory@item @b{BBC Sounds}
 
-Bing News results as RSS feed.@item @b{Bing Search}
+Search BBC Sounds.@item @b{Bing News}
 
-Bing results as RSS feed.@item @b{Business Headlines From CNN}
+Bing News results as RSS feed.@item @b{Business Headlines From CNN}
 
 Money Headlines From CNN@item @b{CIA World Fact Book}
 
@@ -21476,7 +21040,9 @@ Display Hacker News Front Page@item @b{Hacker  News Search}
 
 Display Hacker News Front Page@item @b{Hoogle Haskell API Search}
 
-Haskell API Search against a local server.@item @b{NBA  standings}
+Haskell API Search against a local server.@item @b{Microsoft Search}
+
+Bing results as RSS feed.@item @b{NBA  standings}
 
 Display NBA standings.@item @b{NLS Bard Bookshelf}
 
@@ -21491,15 +21057,15 @@ template.@item @b{NLS Bard Search}
 
 Search NLS Bard Catalog. Login once before using this template.@item @b{NPR}
 
-Open NPR home , then display the alternative links to access RSS feeds.@item @b{NY Times Mobile}
-
-NYTimes Mobile Site@item @b{Old Time Radio}
+Open NPR home , then display the alternative links to access RSS feeds.@item @b{Old Time Radio}
 
 This months Old Time Radio Programming@item @b{OpenLibrary}
 
 Open Library Search@item @b{Patent Search From Google}
 
-Perform patent search via Google@item @b{RadioTime Browser}
+Perform patent search via Google@item @b{Player FM BBC RSS Feeds}
+
+Player FM BBC RSS Feeds@item @b{RadioTime Browser}
 
 RadioTime Entry point.@item @b{RadioTime Categories}
 

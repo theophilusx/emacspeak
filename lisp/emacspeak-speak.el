@@ -161,7 +161,7 @@ Speech flushes as you type."
            (not executing-kbd-macro)
            (not noninteractive))
     (let ((display (get-char-property (1- (point)) 'display)))
-      (dtk-stop)
+      (dtk-stop 'all)
       (cond
        ((stringp display) (dtk-say display))
        ((and emacspeak-word-echo
@@ -249,7 +249,7 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
 
 (defun emacspeak--notifications-init ()
   "Init Notifications buffer."
-  (let ((buffer (get-buffer-create "*Notifications*")))
+  (let ((buffer (get-buffer-create " *Notifications*")))
     (with-current-buffer buffer
       (special-mode)
       buffer)))
@@ -513,25 +513,25 @@ command emacspeak-speak-line-set-column-filter.")
 Interactive PREFIX arg means toggle  the global default value, and then set the
 current local  value to the result.")
 
-(defun emacspeak-speak-line-apply-column-filter (line &optional invert-filter)
+(defun emacspeak-speak-line-apply-column-filter (line &optional invert)
+  "Apply column filter."
   (cl-declare (special emacspeak-speak-line-column-filter))
   (let ((filter emacspeak-speak-line-column-filter)
         (l (length line))
         (pair nil)
-        (personality (if invert-filter nil
+        (personality (if invert nil
                        'inaudible)))
     (with-silent-modifications
-      (when invert-filter
+      (when invert
         (put-text-property 0 l
                            'personality 'inaudible line))
       (while filter
         (setq pair (pop filter))
         (when (and (<= (cl-first pair) l)
                    (<= (cl-second pair) l))
-          (put-text-property (cl-first pair)
-                             (cl-second pair)
-                             'personality personality
-                             line))))
+          (put-text-property
+           (cl-first pair) (cl-second pair)
+           'personality personality line))))
     line))
 
 (defun emacspeak-speak-persist-filter-entry (k v)
@@ -675,16 +675,14 @@ emacspeak will generate a tone
 instead of speaking such lines when punctuation mode is set
 to some.")
 
-(defcustom ems--speak-max-line 512
+(defvar-local ems--speak-max-line 256
   "Threshold for determining `long' lines.
 Emacspeak will ask for confirmation before speaking lines
 that are longer than this length.  This is to avoid accidentally
 opening a binary file and torturing the speech synthesizer
-with a long string of gibberish."
-  :group 'emacspeak
-  :type 'number)
+with a long string of gibberish.")
 
-(make-variable-buffer-local 'ems--speak-max-line)
+
 
 (defconst emacspeak-speak-blank-line-regexp
   "^[[:space:]]+$"
@@ -727,7 +725,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
                emacspeak-decoration-rule emacspeak-horizontal-rule
                emacspeak-unspeakable-rule
                emacspeak-audio-indentation))
-  (dtk-stop)
+  (dtk-stop 'all)
   (when (listp arg) (setq arg (car arg)))
   (let* ((inhibit-field-text-motion t)
          (inhibit-read-only t)
@@ -801,14 +799,17 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
           ((l (length line))
            (speakable ;; should we speak this line?
             (cond
-             ((or selective-display
-                  (< l ems--speak-max-line)
-                  (get-text-property start 'speak-line))
+             ((or                       ;speakable
+               selective-display
+               (< l ems--speak-max-line)
+               (get-text-property start 'speak-line))
               t)
-             ((y-or-n-p (format "Speak  this  %s long line? " l))
-              (setq ems--speak-max-line (1+ l))
-              (with-silent-modifications
-                (put-text-property start end 'speak-line t))
+             (t
+              (when (y-or-n-p "use Visual Lines")
+                (call-interactively #'visual-line-mode))
+              (unless visual-line-mode
+                (put-text-property start end 'start-line t)
+                (setq ems--speak-max-line (* 2 l)))
               t))))
         (when speakable
           (when
@@ -1176,7 +1177,7 @@ Negative prefix arg speaks from start of buffer to point. "
   (let () (when (not emacspeak-speak-voice-annotated-paragraphs)
             (emacspeak-speak-voice-annotate-paragraphs))
        (when (listp arg) (setq arg (car arg)))
-       (dtk-stop)
+       (dtk-stop 'all)
        (let ((start nil)
              (end nil))
          (cond
@@ -1427,6 +1428,7 @@ Speaks header-line if that is set when called non-interactively.
 Interactive prefix arg speaks buffer info."
   (interactive "P")
   (cl-declare (special mode-name major-mode vc-mode
+                       emacspeak-comint-autospeak
                        global-visual-line-mode visual-line-mode
                        header-line-format global-mode-string
                        folding-mode column-number-mode line-number-mode
@@ -1443,6 +1445,8 @@ Interactive prefix arg speaks buffer info."
      (t                                 ; main branch
       (let ((global-info (downcase (format-mode-line global-mode-string)))
             (window-count (length (window-list)))
+            (autospeak (when emacspeak-comint-autospeak
+           (propertize "Autospeak" 'personality voice-lighten)))
             (vc-state
              (when (and vc-mode (buffer-file-name))
                (vc-state (buffer-file-name))))
@@ -1473,6 +1477,7 @@ Interactive prefix arg speaks buffer info."
            'all
            (dtk-speak
             (concat
+             autospeak
              dir-info
              (propertize (buffer-name) 'personality
                          voice-lighten-medium)
@@ -1972,7 +1977,7 @@ location of the mark is indicated by an aural highlight. "
                      (not
                       (= emacspeak-execute-repeatedly-key
                          (string-to-char key))))
-            (dtk-stop)
+            (dtk-stop 'all)
             (setq continue nil)))))
     (dtk-speak "Exited continuous mode ")))
 
@@ -2037,7 +2042,7 @@ was spoken.  Any other key continues to speak the buffer."
 (defun emacspeak-speak-current-column ()
   "Speak the current column."
   (interactive)
-  (message "Point at column %d" (current-column)))
+   (message "Column %d" (current-column)))
 
 (defun emacspeak-speak-current-percentage ()
   "Announce the percentage into the current buffer."
@@ -2503,7 +2508,7 @@ streams. Runs `emacspeak-silence-hook' which can be used to
 configure which media players get silenced or paused/resumed."
   (interactive)
   (cl-declare (special emacspeak-silence-hook))
-  (dtk-stop)
+  (dtk-stop 'all)
   (run-hooks 'emacspeak-silence-hook))
 
 ;;}}}
@@ -2656,7 +2661,8 @@ Arranges for `VAR' to be restored when `file' is loaded."
         (if (listp (symbol-value var)) (insert "'"))
         (pp (symbol-value var) (current-buffer))
         (insert (format ") ;;; set %s\n\n" var))
-        (save-buffer)))))
+        (save-buffer)
+        (kill-buffer)))))
 
 ;;}}}
 ;;{{{Tapestry --Jump to window by name:
@@ -2778,7 +2784,8 @@ but quickly switch to a window by name."
    ((= (point) (point-max)) (call-interactively 'beginning-of-buffer))
    (t (call-interactively 'beginning-of-buffer)))
   (when (called-interactively-p 'interactive)
-    (dtk-notify-speak (format "%s%%" (emacspeak-get-current-percentage-into-buffer)))))
+    (dtk-notify-speak
+     (format "%s%%" (emacspeak-get-current-percentage-into-buffer)))))
 
 ;;}}}
 ;;{{{Utility: Accumulate 
@@ -2795,7 +2802,85 @@ Appended entries are separated by newlines."
    (length (split-string (get-register reg) "\n"))))
 
 ;;}}}
+;;{{{ Buffer Select:
 
+;; Helpers:
+
+(defsubst emacspeak-buffer-cycle-previous (mode)
+  "Return previous  buffer in cycle order having same major mode as `mode'."
+  (catch 'cl-loop
+    (dolist (buf (reverse (cdr (buffer-list (selected-frame)))))
+      (when (with-current-buffer buf (eq mode major-mode))
+        (throw 'cl-loop buf)))))
+
+(defsubst emacspeak-buffer-cycle-next (mode)
+  "Return next buffer in cycle order having same major mode as `mode'."
+  (catch 'cl-loop
+    (dolist (buf (cdr (buffer-list (selected-frame))))
+      (when (with-current-buffer buf (eq mode major-mode))
+        (throw 'cl-loop buf)))))
+
+;;;###autoload
+(defun emacspeak-cycle-to-previous-buffer ()
+  "Cycles to previous buffer having same mode."
+  (interactive)
+  (let ((prev (emacspeak-buffer-cycle-previous major-mode)))
+    (cond
+     (prev
+      (funcall-interactively #'switch-to-buffer prev))
+     (t (error "No previous buffer in mode %s" major-mode)))))
+
+;;;###autoload
+(defun emacspeak-cycle-to-next-buffer ()
+  "Cycles to next buffer having same mode."
+  (interactive)
+  (let ((next (emacspeak-buffer-cycle-next major-mode)))
+    (cond
+     (next ;  (bury-buffer)
+           (funcall-interactively #'switch-to-buffer next))
+     (t (error "No next buffer in mode %s" major-mode)))))
+
+;; Inspired by text-adjust-scale:
+(defun emacspeak-buffer-select()
+  "Select buffer by smart cycling.
+By default, this command is bound to multiple keys.
+The final key of the initial  key-sequence, and  further invocations
+of the keys below call the following bindings:
+
+, previous-buffer
+. next-buffer
+b switch-to-buffer
+f find-file
+k emacspeak-kill-buffer-quietly
+n emacspeak-cycle-to-next-buffer
+o other-window
+p emacspeak-cycle-to-previous-buffer
+"
+  (interactive )
+  (let ((key (event-basic-type last-command-event)))
+    (emacspeak-auditory-icon 'repeat-active)
+    (cl-case key
+      (?b (call-interactively 'switch-to-buffer))
+      (?f (call-interactively 'find-file))
+      (?k (call-interactively 'emacspeak-kill-buffer-quietly))
+      (?p
+       (call-interactively 'emacspeak-cycle-to-previous-buffer))
+      (?, (call-interactively 'previous-buffer))
+      (?n
+       (call-interactively 'emacspeak-cycle-to-next-buffer))
+      (?o (call-interactively 'other-window))
+      (?. (call-interactively 'next-buffer)))
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (dolist (key '("b" "f" "k" "," "."   "p" "n" "o"))
+         (define-key
+          map key
+          #'(lambda () (interactive) (emacspeak-buffer-select ))))
+       map)
+     t (lambda nil (emacspeak-auditory-icon 'repeat-end))
+     "Repeat with %k")))
+
+;;}}}       
 (provide 'emacspeak-speak)
 ;;{{{ end of file
 

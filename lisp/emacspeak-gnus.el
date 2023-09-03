@@ -558,6 +558,17 @@ Produce an auditory icon if possible."
   (emacspeak-auditory-icon 'close-object)
   (emacspeak-speak-line))
 
+(defadvice gnus-summary-read-group (around emacspeak-fix pre act
+                                             comp)
+  "Deactivate our shr-external-rendering-functions"
+  (let ((shr-external-rendering-functions nil)) ad-do-it))
+
+
+(defadvice gnus-summary-show-article (around emacspeak-fix pre act
+                                             comp)
+  "Deactivate our shr-external-rendering-functions"
+  (let ((shr-external-rendering-functions nil)) ad-do-it))
+
 (defadvice gnus-summary-show-article (after emacspeak pre act comp)
   "Start speaking the article. "
   (when (ems-interactive-p)
@@ -571,7 +582,7 @@ Produce an auditory icon if possible."
 (defadvice gnus-summary-next-page (after emacspeak pre act comp)
   "Speak the next pageful "
   (cl-declare (special gnus-article-buffer))
-  (dtk-stop)
+  (dtk-stop 'all)
   (emacspeak-auditory-icon 'scroll)
   (with-current-buffer
       gnus-article-buffer
@@ -586,7 +597,7 @@ Produce an auditory icon if possible."
 (defadvice gnus-summary-prev-page (after emacspeak pre act comp)
   "Speak the previous  pageful "
   (cl-declare (special gnus-article-buffer))
-  (dtk-stop)
+  (dtk-stop 'all)
   (emacspeak-auditory-icon 'scroll)
   (save-current-buffer
     (set-buffer  gnus-article-buffer)

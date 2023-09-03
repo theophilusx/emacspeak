@@ -436,18 +436,19 @@ This chapter documents a total of %d commands and %d options.\n\n"
   (cl-sort
    temp
    #'(lambda (a b)
-       (when (and (characterp (car a)) (characterp (car b)))
-       (string-lessp
-        (key-description (format "%c" (car a)))
-        (key-description (format "%c" (car b)))))))))
+       (cond
+        ((and (characterp (car a)) (characterp (car b)))
+         (< (car a) (car b)))
+        (t nil))))))
 
 (defvar self-document-keymap-list
   '(
     emacspeak-keymap emacspeak-dtk-submap
     emacspeak-hyper-keymap emacspeak-super-keymap emacspeak-alt-keymap
-    emacspeak-personal-x-keymap emacspeak-personal-v-keymap
-    emacspeak-personal-y-keymap
-    emacspeak-multi-keymap)
+    emacspeak-multi-keymap
+    emacspeak-v-keymap emacspeak-x-keymap
+    emacspeak-y-keymap  emacspeak-z-keymap
+    )
 "List of keymaps that we document.")
 
 (defun self-document-keymap (keymap)
@@ -455,15 +456,15 @@ This chapter documents a total of %d commands and %d options.\n\n"
   (cl-assert  (keymapp keymap) t "Not a valid keymap: %s")
   (let ((entries (sd-sort-keymap (cdr (copy-keymap keymap )))))
     (insert "@table @kbd\n")
-    (cl-loop for binding in
-          entries
-          when (and (characterp (car binding))
-                    (not (keymapp  (cdr binding))))
-          do 
-          (insert
-           (format "@item %s\n %s\n\n"
-                   (sd-texinfo-escape (key-description (format "%c" (car binding))))
-                   (cdr binding))))
+    (cl-loop
+     for binding in entries
+     when (and (characterp (car binding))
+               (not (keymapp  (cdr binding))))
+     do 
+     (insert
+      (format "@item %s  %s\n"
+              (sd-texinfo-escape (key-description (format "%c" (car binding))))
+              (cdr binding))))
     (insert "@end table\n")))
 
 

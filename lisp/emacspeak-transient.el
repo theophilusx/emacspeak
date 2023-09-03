@@ -79,7 +79,7 @@
 ;; Magit-dispatch and friends, press @kbd {C-z} (transient-suspend) to
 ;; temporarily suspend   the currently active transient. Emacspeak now
 ;; displays a  *transient-emacspeak* buffer that displays the contents of the
-;; most recently displayed transient choices. Pressing @kbd {C-c} resumes
+;; most recently displayed transient choices. Pressing @kbd {r} resumes
 ;; the transient; Pressing @kbd{C-q} quits the transient.
 ;; 
 ;;; Code:
@@ -123,14 +123,14 @@
   "speak."
   (cl-declare (special transient-show-common-commands))
   (when (ems-interactive-p)
-    (dtk-stop)
+    (dtk-stop 'all)
     (emacspeak-auditory-icon
      (if transient-show-common-commands 'on 'off))))
 
 (defadvice transient-resume (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (dtk-stop)
+    (dtk-stop 'all)
     (emacspeak-auditory-icon 'open-object)))
 
 (cl-loop
@@ -141,7 +141,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (dtk-stop)
+       (dtk-stop 'all)
        (emacspeak-auditory-icon 'close-object)
        (when (eq major-mode 'emacspeak-transient-mode) (bury-buffer))
        (emacspeak-speak-mode-line)))))
@@ -155,7 +155,7 @@
      "speak."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'save-object)
-       (dtk-stop)))))
+       (dtk-stop 'all)))))
 
 (cl-loop
  for f in
@@ -176,24 +176,24 @@
   (local-set-key (ems-kbd "M-n") 'emacspeak-transient-next-section)
   (local-set-key (ems-kbd "M-p") 'emacspeak-transient-previous-section)
   (local-set-key "q" 'bury-buffer)
-  (local-set-key (ems-kbd "C-c") 'transient-resume))
+  (local-set-key "r" 'transient-resume))
 
 (defvar emacspeak-transient-cache nil
   "Cache of the last Transient buffer contents.")
 
 (defadvice transient--show (after emacspeak pre act comp)
-  "Set up cache."
+  "Speak and set up cache."
   (when (window-live-p transient--window)
     (with-current-buffer (window-buffer transient--window)
       (setq emacspeak-transient-cache
             (buffer-substring (point-min)  (point-max)))
-      (when (sit-for 0.75)
-        (emacspeak-auditory-icon 'open-object)))))
+      (emacspeak-speak-line)
+      (emacspeak-auditory-icon 'open-object))))
 
 (defadvice transient-suspend (around emacspeak pre act comp)
   "Pop to *Transient-emacspeak* buffer where the message emitted by
 the transient can be browsed.
-Press `C-c' to resume the suspended transient."
+Press `r' to resume the suspended transient."
   (cl-declare (special emacspeak-transient-cache))
   (cond
    ((ems-interactive-p)
@@ -203,7 +203,7 @@ Press `C-c' to resume the suspended transient."
       (emacspeak-auditory-icon 'close-object)
       (with-current-buffer buff
         (erase-buffer)
-        (insert "C-c to resume, C-g to quit.\n\n")
+        (insert "r to resume, C-g to quit.\n\n")
         (insert emacspeak-transient-cache)
         (goto-char (point-min))
         (emacspeak-transient-mode))
@@ -223,10 +223,9 @@ Press `C-c' to resume the suspended transient."
           transient--window (selected-window))
     (when-let
         ((match
-          (funcall-interactively
-           #'text-property-search-forward
-           'face 'transient-heading t t)))
-      (goto-char (prop-match-beginning match)))))
+          (text-property-search-forward 'face 'transient-heading t t)))
+      (goto-char (prop-match-beginning match))
+      (emacspeak-speak-region (point) (prop-match-end match)))))
 
 (defun emacspeak-transient-previous-section ()
   "Previous transient section."
@@ -236,10 +235,10 @@ Press `C-c' to resume the suspended transient."
           transient--window (selected-window))
     (when-let
         ((match
-          (funcall-interactively
-           #'text-property-search-backward
+          (text-property-search-backward
            'face 'transient-heading t t)))
-      (goto-char (prop-match-beginning match)))))
+      (goto-char (prop-match-beginning match))
+      (emacspeak-speak-region (point) (prop-match-end match)))))
 
 ;;}}}
 ;;{{{Hooks:
@@ -248,7 +247,7 @@ Press `C-c' to resume the suspended transient."
   "Actions to execute after transient is done."
   (cl-declare (special transient--stack))
   (unless transient--stack
-    (dtk-stop)
+    (dtk-stop 'all)
     (emacspeak-auditory-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
@@ -282,11 +281,14 @@ Press `C-c' to resume the suspended transient."
   (cl-declare (special transient-enable-popup-navigation
                        transient-popup-navigation-map
                        transient-predicate-map))
+                                        ;(define-key transient-predicate-map [emacspeak-speak-line] 'transient--do-stay)
+                                        ;(define-key transient-predicate-map [emacspeak-speak-mode-line] 'transient--do-stay)
   (define-key transient-predicate-map
               [emacspeak-transient-previous-section] 'transient--do-move)
   (define-key transient-predicate-map
               [emacspeak-transient-next-section] 'transient--do-move)
-  
+
+  (define-key transient-popup-navigation-map "C-j" 'transient-push-button)
   (define-key transient-popup-navigation-map
               [left] 'emacspeak-transient-previous-section)
   (define-key transient-popup-navigation-map

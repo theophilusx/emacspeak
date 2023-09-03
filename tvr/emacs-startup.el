@@ -12,31 +12,31 @@
 ;;{{{ Introduction:
 
 ;;; Commentary:
-;; This startup file is set up with the following goals:
-;; 1. Speed up emacs startup
-;; 2. Customize packages via a custom file where possible.
-;; 3. Keep the  custom settings  in a separate file
-;; Place host-specific non-customizable bits in default.el.
-;; 3. Define package-specific settings not available via Custom in a
-;;    package-specific <package>-prepare.el file,
-;; then use Make to turn these into a single all-prepare.el..
-;; 4. Install everything from elpa/melpa as far as possible. (vm is an
-;;    exception at present) --- I have nearly 200 packages activated.
-;; 5. The startup file contains functions with prefix  tvr-.
-;; 6. The only top-level call is (tvr-emacs).
-;; 7. Function tvr-emacs starts up Emacspeak, and sets up two hooks:
-;;    - after-init-hook to do the bulk of the work.
-;; Set env var PULSE_SINK to binaural for using bs2b under pulseaudio
-;;    - emacs-startup-hook to set up  initial window configuration.
-;; 8. Function tvr-after-init on after-init-hook does the
-;; following:
-;;Loads all-prepare.el described above.
-;;    - Load the custom settings file.
-;;    - Starts up things like the emacs server.
-;;    - Some of these tasks are done on a separate thread using make-thread.
-;;   - The work of loading files etc., is done within macro tvr-time-load
-;;   which sets up an efficient environment for loading files and
-;; helps in profiling.
+;; *   This startup file is set up with the following goals:
+;; 
+;;   1. Speed up emacs startup
+;;   2. Customize packages via a custom file where possible.
+;;   3. Keep the  custom settings  in a separate file
+;;   4. Place host-specific non-customizable bits in default.el.
+;;   5. Define package-specific settings not available via Custom in a
+;;      package-specific <package>-prepare.el file,
+;;   then use Make to turn these into a single all-prepare.el.
+;;   1. Install everything from elpa/melpa as far as possible. (vm is an
+;;      exception at present).
+;;   2. The startup file contains functions with prefix  tvr-.
+;;   3. The only top-level call is (tvr-emacs).
+;;   4. Function tvr-emacs starts up Emacspeak, and sets up two hooks:
+;;      - after-init-hook to do the bulk of the work.
+;;      - emacs-startup-hook to set up  initial window configuration.
+;;      - Set env var PULSE_SINK to binaural for using bs2b under pulseaudio
+;;   5. Function tvr-after-init on after-init-hook:
+;;      - Loads all-prepare.el described above.
+;;      - Load the custom settings file.
+;;      - Starts up things like the emacs server.
+;;      - Some of these tasks are done on a separate thread using make-thread.
+;;      - The work of loading files etc., is done within macro tvr-time-load
+;;      which sets up an efficient environment for loading files and
+;;      helps in profiling.
 
 ;;}}}
 ;;{{{  libs, vars:
@@ -78,14 +78,10 @@ Produce timing information as the last step."
 ;;}}}
 ;;{{{ Fixups:
 
-
 (defadvice system-users (around fix pre act comp)
   "Just return user real name."
   (ignore ad--addoit-function)
   (setq ad-return-value (list user-real-login-name)))
-
-;; for twittering-mode:
-(defalias 'epa--decode-coding-string 'decode-coding-string)
 
 ;;}}}
 ;;{{{ tvr-shell-bind-keys:
@@ -112,19 +108,6 @@ Produce timing information as the last step."
   (tab-bar-switch-to-tab "Home"))
 
 ;;}}}
-;;{{{Node/NVM Setup:
-(defun tvr-nvm-setup ()
-  "Set up NVM/NPM."
-  (with-eval-after-load "nvm"
-    (let ((v (car (sort (mapcar #'car (nvm--installed-versions)) #'string>))))
-      (nvm-use v)
-      (executable-find "node"))))
-
-(defvar tvr-npm-node
-  (tvr-nvm-setup)
-  "Find the right Node executable.")
-
-;;}}}
 ;;{{{Functions: emacs-startup-hook, after-init-hook, tvr-customize
 
 (defun tvr-emacs-startup-hook ()
@@ -148,21 +131,21 @@ startup sound."
 Use Custom to customize where possible. "
   (cl-declare (special custom-file
                        global-mode-string outline-minor-mode-prefix
-                       python-mode-hook outline-mode-prefix-map
+                       outline-mode-prefix-map
                        completion-auto-select emacspeak-directory))
   (load-library "aster")
-  (add-hook 'python-mode-hook #'elpy-enable)
   ;; basic look and feel
   (setq frame-title-format '(multiple-frames "%b" ("Emacs")))
   (mapc
    #'(lambda (f) (put f 'disabled nil))
    '(list-threads narrow-to-page list-timers upcase-region
-     downcase-region  narrow-to-region eval-expression ))
-  (prefer-coding-system 'utf-8-emacs)
+                  downcase-region  narrow-to-region eval-expression ))
+  (global-set-key (kbd "C-l") ctl-x-map)
   (global-set-key[remap dabbrev-expand] 'hippie-expand)
   (cl-loop ;; global key-bindings
    for key in
    '(
+     ("C-]"  recenter-top-bottom)
      (  "C-x r a"  append-to-register)
      ("C-x r p"  prepend-to-register)
      ("C-x v ." magit-commit-create)
@@ -180,6 +163,7 @@ Use Custom to customize where possible. "
      ("M-C-v" vm-visit-folder))
    do
    (global-set-key (ems-kbd (cl-first key)) (cl-second key)))
+
   (cl-loop ;;; shell wizard
    for i from 0 to 9 do
    (global-set-key
@@ -204,15 +188,16 @@ Use Custom to customize where possible. "
   (when (file-exists-p custom-file)
     (tvr-time-load (load custom-file)))
   (load-theme 'modus-vivendi-tinted t)
-
-  (mapc
-   #'(lambda (m)
-       (diminish m ""))
-   '(outline-minor-mode reftex-mode voice-lock-mode company-mode hs-minor-mode
-     yas-minor-mode  auto-fill-function abbrev-mode auto-correct-mode))
+  (with-eval-after-load 'diminish
+    (mapc
+     #'(lambda (m)
+         (diminish m ""))
+     '(outline-minor-mode reftex-mode voice-lock-mode company-mode hs-minor-mode
+                          yas-minor-mode  auto-fill-function abbrev-mode auto-correct-mode)))
 
   (setq  global-mode-string '("" display-time-string battery-mode-line-string))
-  (bash-completion-setup))
+  (bash-completion-setup)
+  (tvr-set-color-for-today))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
@@ -220,14 +205,15 @@ Use Custom to customize where possible. "
   (cl-declare (special  tvr-libs ))
 ;;; load  settings   not  customizable via custom.
   (tvr-time-load (load tvr-libs))
-  (tvr-customize) ;;; customizations
   (with-eval-after-load
-    'yasnippet
+      'yasnippet
     (yas-reload-all)
-    (diminish ' ""))
+    (when (featurep 'diminish)
+      (diminish 'yas-minor-mode "")))
+;; customizations
+  (tvr-customize)
   (load "emacspeak-muggles")
-  (emacspeak-wizards-project-shells-initialize)
-  )
+  (emacspeak-wizards-project-shells-initialize))
 
 (declare-function
  emacspeak-pronounce-toggle-use-of-dictionaries
@@ -253,10 +239,10 @@ Use Custom to customize where possible. "
   (hs-minor-mode)
   (auto-fill-mode)
   (cond
-    ((memq major-mode '(emacs-lisp-mode lisp-mode lisp-interaction-mode))
-     (when dtk-caps (setq dtk-caps nil))
-     (lispy-mode ))
-    (t (smartparens-mode)))
+   ((memq major-mode '(emacs-lisp-mode lisp-mode lisp-interaction-mode))
+    (when dtk-caps (setq dtk-caps nil))
+    (lispy-mode ))
+   (t (smartparens-mode)))
   (yas-minor-mode)
   (abbrev-mode))
 
@@ -271,10 +257,10 @@ configuration happens via the after-init-hook. "
   (setenv "PULSE_SINK" "binaural")
   (unless (featurep 'emacspeak)
     (tvr-time-load                      ; load emacspeak:
-     (load ;; setenv EMACSPEAK_DIR if you want to load a different version
-      (expand-file-name
-       "lisp/emacspeak-setup"
-       (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
+        (load ;; setenv EMACSPEAK_DIR if you want to load a different version
+         (expand-file-name
+          "lisp/emacspeak-setup"
+          (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
   (cl-pushnew (expand-file-name "tvr/" emacspeak-directory) load-path
               :test #'string-equal)
   (push (expand-file-name "aster-math/ui" emacspeak-directory) load-path)
@@ -285,8 +271,7 @@ configuration happens via the after-init-hook. "
 (tvr-emacs)
 
 ;;{{{ Forward Function Declarations:
-(declare-function nvm--installed-versions "emacs-startup" t)
-
+(declare-function tvr-set-color-for-today "all-prepare" nil)
 (declare-function ems-kbd "emacspeak-keymap" (string))
 (declare-function yas-reload-all "yasnippet" (&optional no-jit interactive))
 (declare-function emacspeak-dbus-setup "emacspeak-dbus" nil)
@@ -297,9 +282,10 @@ configuration happens via the after-init-hook. "
 ;;}}}
 ;;{{{quick tts rescue:
 ;;; debug aid: tts appears to not restart but notification stream is
-;;live: so reuse it as the speaker 
+;;live: so reuse it as the speaker
 (defun n2s ()
   (interactive)
+  (cl-declare (special dtk-speaker-process dtk-notify-process))
   (setq dtk-speaker-process dtk-notify-process))
 
 ;;}}}

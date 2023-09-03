@@ -986,6 +986,31 @@ rate = dtk-speech-rate-base + dtk-speech-rate-step * level."
                    level
                    (if prefix "" "locally")))))))
 
+(defun dtk-rate-adjust ()
+  "Adjust speech rate in current buffer, inspired by
+  text-scale-adjust.   Invoke this command via C-e d =/+ or
+C-impel-d -. Pressing =,+, or - immediately continues to adjust
+the speech rate.  Call when on a non-blank line to preview the effectt"
+  (interactive )
+  (cl-declare (special dtk-speech-rate-step))
+  (let* ((base (event-basic-type last-command-event))
+         (step
+          (pcase base
+            ((or ?+ ?=) dtk-speech-rate-step)
+            (?- (- dtk-speech-rate-step))
+            (_ dtk-speech-rate-step))))
+    (emacspeak-auditory-icon 'repeat-start)
+    (dtk-set-rate (+ dtk-speech-rate  step))
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon (if (cl-minusp step) 'left 'right))
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (dolist (key '("=" "+" "-")) ;; = is often unshifted +.
+         (define-key map key (lambda () (interactive) (dtk-rate-adjust ))))
+       map)
+     t (lambda nil (emacspeak-auditory-icon 'repeat-end))
+     "Repeat with %k")))
+
 (defun dtk-set-character-scale (factor &optional prefix)
   "Set character scale FACTOR for   speech rate.
 Speech rate is scaled by this factor when speaking characters.
@@ -1697,7 +1722,9 @@ This is so text marked invisible is silenced.")
   (cl-declare (special
                org-fold-core-style org-link-descriptive
                org-link--link-folding-spec))
-  (when (and (boundp 'org-fold-core-style) (eq org-fold-core-style 'text-properties))
+  (when
+      (and
+       (boundp 'org-fold-core-style) (eq org-fold-core-style 'text-properties))
     (outline-mode)
     (org-fold-initialize "...")
     (org-fold-core-set-folding-spec-property

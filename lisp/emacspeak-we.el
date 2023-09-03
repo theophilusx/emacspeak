@@ -267,9 +267,6 @@ from Web page -- default is the current page being viewed."
     (add-hook
      'emacspeak-eww-pre-process-hook
      (emacspeak-xslt-make-xsl-transformer emacspeak-we-xsl-filter params))
-    (add-hook
-     'emacspeak-eww-post-process-hook
-     #'emacspeak-eww-reading-settings 'at-end)
     (browse-url url)))
 
 (defun emacspeak-we-xslt-pipeline-filter (specs    url  &optional _speak)
@@ -689,16 +686,16 @@ values as completion. "
 ;;;###autoload
 (defun emacspeak-we-extract-by-id (id   url &optional speak)
   "Extract elements having specified id attribute from HTML. Extracts
-specified elements from current WWW page and displays it in a separate
-buffer.
-Interactive use provides list of id values as completion."
+specified elements from current WWW page and displays it in a
+separate buffer.  Interactive use prompts for   id values using
+completion."
   (interactive
    (list
     (let ((completion-ignore-case t))
-      (completing-read "Id: "
-                       emacspeak-we-buffer-id-cache))
+      (completing-read "Id: " emacspeak-we-buffer-id-cache))
     (emacspeak-eww-read-url)
-    (or (called-interactively-p 'interactive) current-prefix-arg)))
+    (or (called-interactively-p 'interactive) current-prefix-arg))
+   current-prefix-arg)
   (emacspeak-we-xslt-filter
    (format "//*[@id=\"%s\"]"
            id)
@@ -738,7 +735,7 @@ separate buffer. Interactive use provides list of id values as completion. "
 (make-variable-buffer-local 'emacspeak-we-class-filter)
 
 ;;;###autoload
-(defun emacspeak-we-class-filter-and-follow (class url &optional _prompt)
+(defun emacspeak-we-class-follow-and-filter (class url &optional _prompt)
   "Follow url and point, and filter the result by specified class.
 Class can be set locally for a buffer, and overridden with an
 interactive prefix arg. If there is a known rewrite url rule, that is
@@ -853,7 +850,7 @@ urls.")
   "Filter paragraphs.")
 
 ;;;###autoload
-(defun emacspeak-we-xpath-filter-and-follow (&optional prompt)
+(defun emacspeak-we-xpath-follow-and-filter (&optional prompt)
   "Follow url and point, and filter the result by specified xpath.
 XPath can be set locally for a buffer, and overridden with an
 interactive prefix arg. If there is a known rewrite url rule, that is
@@ -906,7 +903,7 @@ urls.")
   "Caches most recently used class filter.")
 
 ;;;###autoload
-(defun emacspeak-we-class-filter-and-follow-link (&optional prompt)
+(defun emacspeak-we-class-follow-and-filter-link (&optional prompt)
   "Follow url and point, and filter the result by specified class.
 Class can be set locally for a buffer, and overridden with an
 interactive prefix arg. If there is a known rewrite url rule, that is
@@ -1022,15 +1019,15 @@ used as well."
            ("k" emacspeak-we-toggle-xsl-keep-result)
            ("m" emacspeak-we-extract-table-by-match)
            ("o" emacspeak-we-xsl-toggle)
-           ("p" emacspeak-we-xpath-filter-and-follow)
+           ("p" emacspeak-we-xpath-follow-and-filter)
            ("r" emacspeak-we-extract-by-role)
            ("s" emacspeak-we-xslt-select)
            ("t" emacspeak-we-extract-table-by-position)
            ("u" emacspeak-we-extract-matching-urls)
-           ("v" emacspeak-we-class-filter-and-follow-link)
+           ("v" emacspeak-we-class-follow-and-filter-link)
                                         ;("w" emacspeak-we-extract-by-property)
            ("x" emacspeak-we-extract-nested-table)
-           ("y" emacspeak-we-class-filter-and-follow)
+           ("y" emacspeak-we-class-follow-and-filter)
            ("z" emacspeak-we-extract-speakable)
            )
          do

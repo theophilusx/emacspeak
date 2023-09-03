@@ -346,8 +346,6 @@ Controls media playback when already playing.
 (defun emacspeak-m-player-command (key)
   "Invoke MPlayer commands."
   (interactive (list (read-key-sequence "Key: ")))
-  (unless (eq 'run (process-status emacspeak-m-player-process))
-    (emacspeak-multimedia))
   (call-interactively
    (when emacspeak-m-player-process
      (or
@@ -398,20 +396,21 @@ plays result as a directory." directory)
     (emacspeak-auditory-icon 'select-object)))
 
 (defun emacspeak-media-guess-directory ()
-     "Guess default directory.
+  "Guess default directory.
 If default directory matches emacspeak-media-directory-regexp,
 use it.  If default directory contains media files, then use it.
 Otherwise use emacspeak-media-directory as the fallback."
   (cl-declare (special emacspeak-media-directory-regexp
                        emacspeak-m-player-hotkey-p))
-  (cond
-   ((or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode)) nil)
-   (emacspeak-m-player-hotkey-p   emacspeak-media-shortcuts-directory)
-   ((or ;  dir  contains media:
-     (string-match emacspeak-media-directory-regexp default-directory)
-     (directory-files default-directory   nil emacspeak-media-extensions))
-    default-directory)
-   (t   emacspeak-media-shortcuts-directory)))
+  (let ((case-fold-search t))
+    (cond
+     ((or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode)) nil)
+     (emacspeak-m-player-hotkey-p   emacspeak-media-shortcuts-directory)
+     ((or                               ;  dir  contains media:
+       (string-match emacspeak-media-directory-regexp default-directory)
+       (directory-files default-directory   nil emacspeak-media-extensions))
+      default-directory)
+     (t   emacspeak-media-shortcuts-directory))))
 
 ;;;###autoload
 (defun emacspeak-m-player-url (url &optional playlist-p)
@@ -433,7 +432,8 @@ URL fragment specifies optional start position."
 (defsubst emacspeak-m-player-directory-files (directory)
   "Return media files in directory. "
   (cl-declare (special emacspeak-media-extensions))
-  (directory-files-recursively directory emacspeak-media-extensions))
+  (let ((case-fold-search t))
+    (directory-files-recursively directory emacspeak-media-extensions)))
 
 (defvar-local emacspeak-m-player-url-p nil
   "Records if  playing a URL")
@@ -445,9 +445,13 @@ URL fragment specifies optional start position."
   "Records   currently playing resource")
 
 (defun emacspeak-media-local-resource (prefix)
-  "Read local resource starting from default-directory"
+  "Read local filename starting from default-directory or
+  emacspeak-m-player-directory using completion over all
+subfiles.  Interactive prefix arg causes it to read a directory
+rather than completing over all subfiles."
   (cl-declare (special default-directory))
-  (let ((completion-ignore-case t))
+  (let ((completion-ignore-case t)
+        (case-fold-search t))
     (cond
      (prefix
       (setq current-prefix-arg nil)
@@ -621,7 +625,7 @@ dynamic playlist. "
         (emacspeak-amark-load))
       (when (called-interactively-p 'interactive)
         (message
-         " MPlayer opened  %s"
+         "Playing   %s"
          (cond
           ((null resource)
            (format
@@ -629,7 +633,8 @@ dynamic playlist. "
             (length file-list) duration))
           ((file-directory-p resource)
            (car (last (split-string resource "/" t))))
-          (t (file-name-nondirectory resource))))))))
+          (t
+           (abbreviate-file-name (file-name-nondirectory resource)))))))))
 
 ;;;###autoload
 (defun emacspeak-m-player-using-openal ()
@@ -943,6 +948,7 @@ The time position can also be specified as HH:MM:SS."
             (delete-process  emacspeak-m-player-process))
           (setq emacspeak-m-player-process nil)
           (and (buffer-live-p buffer) (kill-buffer buffer))
+          (emacspeak-speak-mode-line)
           (emacspeak-auditory-icon 'close-object))))))
 
 (defun emacspeak-m-player-volume-up ()
@@ -1199,16 +1205,17 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
   (call-interactively 'emacspeak-m-player-browse-history))
 
 ;;;###autoload
-(defun emacspeak-m-player-from-history (posn)
-  "Play media from position `posn'media-history. "
-  (interactive "p")
+(defun emacspeak-m-player-from-history (&optional prefix)
+  "Play media from the front of media-history.
+   Interactive prefix arg invokes media history browser."
+  (interactive "P")
   (cl-declare (special emacspeak-m-player-media-history))
-  (setq posn (1- posn))
   (cond
-   ((and emacspeak-m-player-media-history
-         (> (length emacspeak-m-player-media-history) posn))
-    (emacspeak-m-player-url (elt emacspeak-m-player-media-history posn)))
-   (t (error "Not enough history"))))
+   ((and prefix emacspeak-m-player-media-history) 
+    (call-interactively 'emacspeak-m-player-browse-history))
+   (emacspeak-m-player-media-history
+    (emacspeak-m-player-url (car emacspeak-m-player-media-history )))
+   (t (error "No media history"))))
 
 (defvar emacspeak-m-player-history-map
   (let ((map (make-sparse-keymap)))
@@ -1887,6 +1894,7 @@ to play  tracks."
   (cl-declare  (special emacspeak-media-extensions
                         locate-command locate-make-command-line))
   (let ((inhibit-read-only t)
+        (case-fold-search t)
         (locate-make-command-line
          #'(lambda (s) (list locate-command "-i" "--regexp" s))))
     (locate-with-filter
