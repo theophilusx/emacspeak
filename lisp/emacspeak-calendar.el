@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extensions to speech enable the calendar.
 ;; Keywords: Emacspeak, Calendar, Spoken Output
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,15 +35,13 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{  Introduction:
 ;;; Commentary:
 ;; This module speech enables the Emacs Calendar.  Speech enabling is
 ;; not the same as speaking the screen: This is an excellent example
 ;; of the advantages of speech-enabled interaction.
 ;;; Code:
-;;}}}
-;;{{{ required modules
+
+;;;  required modules
 ;;; Code:
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -52,8 +49,8 @@
 (require 'solar)
 (require 'g-utils)
 (require 'appt)
-;;}}}
-;;{{{  personalities
+
+;;;   personalities
 (voice-setup-add-map
  '(
    (calendar-today voice-bolden)
@@ -64,8 +61,7 @@
 (defvar emacspeak-calendar-mark-personality voice-bolden
   "Personality to use when showing marked calendar entries.")
 
-;;}}}
-;;{{{  functions:
+;;;   functions:
 (defun emacspeak-calendar-sort-diary-entries ()
   "Sort entries in diary entries list."
   (cl-declare (special diary-entries-list))
@@ -96,8 +92,7 @@
        (dtk-speak-using-voice emacspeak-calendar-mark-personality date))
       (t (dtk-speak date))))))
 
-;;}}}
-;;{{{  Advice:
+;;;   Advice:
 (defadvice calendar-exchange-point-and-mark (after emacspeak pre act comp)
   "Speak date under point"
   (when (ems-interactive-p)
@@ -362,8 +357,7 @@
    ad-do-it
    ad-return-value))
 
-;;}}}
-;;{{{ Global sunrise/sunset wizard:
+;;;  Global sunrise/sunset wizard:
 
 (defun emacspeak-calendar-sunrise-sunset (address &optional arg)
   "Display sunrise/sunset for specified address."
@@ -389,8 +383,7 @@
          (time-string (solar-sunrise-sunset-string date)))
     (message "%s: %s at %s" date-string time-string address)))
 
-;;}}}
-;;{{{  keymap
+;;;   keymap
 
 (defun emacspeak-calendar-setup()
   "Set up appropriate bindings for calendar"
@@ -404,10 +397,9 @@
     (define-key calendar-mode-map  "\C-ee"
                 'calendar-end-of-week)))
 
-;;}}}
-;;{{{  Appointments:
+;;;   Appointments:
 
-;;{{{ take over and speak the appointment
+;;;  take over and speak the appointment
 
 ;; For the present, we just take over and speak the appointment.
 
@@ -449,8 +441,6 @@
           (dtk-speak (buffer-string)))))
      (t (dtk-speak-and-echo "You have no appointments ")))))
 
-;;}}}
-
 (defadvice appt-add (after emacspeak pre act comp)
   "Confirm that the alarm got set."
   (when (ems-interactive-p)
@@ -459,8 +449,7 @@
       (message "Set alarm %s at %s"
                message time))))
 
-;;}}}
-;;{{{ Use GWeb if available for configuring sunrise/sunset coords
+;;;  Use GWeb if available for configuring sunrise/sunset coords
 
 (defun emacspeak-calendar-setup-sunrise-sunset ()
   "Set up geo-coordinates using Google Maps reverse geocoding.
@@ -491,8 +480,7 @@ To use, configure variable gmaps-my-address via M-x customize-variable."
                gmaps-my-address)))
    (t ad-do-it)))
 
-;;}}}
-;;{{{ Lunar Phases
+;;;  Lunar Phases
 
 (cl-loop for f in
          '(calendar-lunar-phases lunar-phases phases-of-moon)
@@ -516,12 +504,6 @@ To use, configure variable gmaps-my-address via M-x customize-variable."
                  (emacspeak-auditory-icon 'open-object)
                  (emacspeak-speak-buffer))))))
 
-;;}}}
 (provide 'emacspeak-calendar)
-;;{{{ emacs local variables
+;;;  emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

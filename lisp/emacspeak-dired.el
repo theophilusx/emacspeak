@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to speech enable dired
 ;; Keywords: Emacspeak, Dired, Spoken Output
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,9 +35,7 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;{{{  Introduction:
 
 ;;; Commentary:
 ;; This module speech enables dired.
@@ -48,16 +45,14 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  required packages
+;;;   required packages
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'dired)
 
-;;}}}
-;;{{{ Define personalities
+;;;  Define personalities
 
 (voice-setup-add-map
  '(
@@ -73,8 +68,7 @@
    (dired-ignored voice-lighten-extra)
    (dired-flagged voice-animate-extra)))
 
-;;}}}
-;;{{{  functions:
+;;;   functions:
 
 (defun emacspeak-dired-speak-line ()
   "Speak the dired line intelligently.
@@ -86,10 +80,10 @@ If in locate-mode, speak full pathname."
     (cond
      (filename (dtk-speak (propertize filename 'personality personality))
                (setq emacspeak-speak-last-spoken-word-position (point)))
-     (t (emacspeak-speak-line)))))
+     (t (emacspeak-speak-line)
+        (ding)))))
 
-;;}}}
-;;{{{  advice:
+;;;   advice:
 
 (defadvice dired-sort-toggle-or-edit (around emacspeak pre act comp)
   "speak."
@@ -194,8 +188,7 @@ If in locate-mode, speak full pathname."
     (emacspeak-auditory-icon 'deselect-object)
     (emacspeak-dired-speak-line)))
 
-;;}}}
-;;{{{  labeling fields in the dired buffer:
+;;;   labeling fields in the dired buffer:
 
 (defun emacspeak-dired-label-fields-on-current-line ()
   "Labels the fields on a dired line.
@@ -221,7 +214,7 @@ Assumes that `dired-listing-switches' contains  -l"
                            'field-name (car fields))
         (setq fields (cdr fields))
         (skip-syntax-forward " ")))))
-
+;;;###autoload
 (defun emacspeak-dired-label-fields ()
   "Labels the fields of the listing in the dired buffer.
 Currently is a no-op  unless
@@ -243,8 +236,7 @@ unless `dired-listing-switches' contains -l"
                 (forward-line 1))))
         (setq buffer-read-only read-only)))))
 
-;;}}}
-;;{{{ Additional status speaking commands
+;;;  Additional status speaking commands
 
 (defvar emacspeak-dired-file-cmd-options "-b"
   "Options passed to Unix builtin `file' command.")
@@ -345,8 +337,7 @@ On a directory line, run du -s on the directory to speak its size."
                (nth 8 (file-attributes filename))))
      (t (message "No file on current line")))))
 
-;;}}}
-;;{{{  keys
+;;;   keys
 (cl-eval-when (load))
 
 (defun emacspeak-dired-setup-keys ()
@@ -354,22 +345,22 @@ On a directory line, run du -s on the directory to speak its size."
   (cl-declare (special dired-mode-map))
   (define-key dired-mode-map "F" 'emacspeak-wizards-find-file-as-root)
   (define-key dired-mode-map "E" 'emacspeak-dired-epub-eww)
-  (define-key dired-mode-map (ems-kbd "C-j") 'emacspeak-dired-open-this-file)
-  (define-key dired-mode-map (ems-kbd "C-RET") 'emacspeak-dired-open-this-file)
+  (define-key dired-mode-map (kbd "C-j") 'emacspeak-dired-open-this-file)
+  (define-key dired-mode-map (kbd "C-RET") 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map [C-return] 'emacspeak-dired-open-this-file)
   (define-key dired-mode-map "'" 'emacspeak-dired-show-file-type)
   (define-key  dired-mode-map "/" 'emacspeak-dired-speak-file-permissions)
   (define-key  dired-mode-map ";" 'emacspeak-dired-play-duration)
   (define-key  dired-mode-map
-               (ems-kbd "M-;") 'emacspeak-m-player-add-dynamic)
+               (kbd "M-;") 'emacspeak-m-player-add-dynamic)
   (define-key  dired-mode-map "a" 'emacspeak-dired-speak-file-access-time)
   (define-key dired-mode-map "c" 'emacspeak-dired-speak-file-modification-time)
   (define-key dired-mode-map "z" 'emacspeak-dired-speak-file-size)
   (define-key dired-mode-map "\M-t" 'emacspeak-dired-speak-symlink-target)
   (define-key dired-mode-map "\C-i" 'emacspeak-speak-next-field)
   (define-key dired-mode-map  "," 'emacspeak-dired-speak-header-line))
-;;}}}
-;;{{{ Advice locate:
+
+;;;  Advice locate:
 (defun emacspeak-dired-open-this-directory ()
   "Open directory corresponding to file on current line."
   (interactive)
@@ -391,10 +382,10 @@ On a directory line, run du -s on the directory to speak its size."
 
 (cl-declaim (special locate-mode-map))
 (define-key locate-mode-map  "j" 'emacspeak-dired-open-this-directory)
-(define-key locate-mode-map  (ems-kbd "C-j") 'emacspeak-dired-open-this-file)
+(define-key locate-mode-map  (kbd "C-j") 'emacspeak-dired-open-this-file)
 (define-key locate-mode-map  [C-return] 'emacspeak-dired-open-this-file)
-;;}}}
-;;{{{ Context-sensitive openers:
+
+;;;  Context-sensitive openers:
 
 (defun emacspeak-dired-play-this-media ()
   "Plays media on current line."
@@ -492,8 +483,7 @@ current file in DirEd."
   (interactive)
   (emacspeak-table-find-csv-file (dired-get-filename current-prefix-arg)))
 
-;;}}}
-;;{{{ Locate results as a play-list:
+;;;  Locate results as a play-list:
 
 (defun emacspeak-locate-play-results-as-playlist (&optional shuffle)
   "Treat locate results as a play-list.
@@ -525,8 +515,7 @@ Optional interactive prefix arg shuffles playlist."
                emacspeak-m-player-options)))
         (emacspeak-m-player  m3u 'play-list)))))
 
-;;}}}
-;;{{{ Play Duration Using Soxi:
+;;;  Play Duration Using Soxi:
 
 (defun emacspeak-dired-play-duration ()
   "Speak duration of sound files.
@@ -540,7 +529,7 @@ If on a directory, speak the total duration of all sound files under
   (cl-assert (eq major-mode 'dired-mode)
              t "This command is only available in dired buffers.")
   (let ((f   (dired-get-filename))
-         (case-fold-search t))
+        (case-fold-search t))
     (cond
      ((and (not (file-directory-p f))
            (string-match emacspeak-media-extensions f))
@@ -557,16 +546,14 @@ If on a directory, speak the total duration of all sound files under
        (file-name-base f)))
      (t (message "No mp3  on current line.")))))
 
-;;}}}
-;;{{{ Open Downloads:
+;;;  Open Downloads:
 
 (defun emacspeak-dired-downloads ()
   "Open Downloads directory."
   (interactive)
   (funcall-interactively 'dired (expand-file-name "~/Downloads") "-alt"))
 
-;;}}}
-;;{{{Smarter replacement for find-dired wizard:
+;;; Smarter replacement for find-dired wizard:
 
 (defvar ems--find-switches
   '(
@@ -592,12 +579,6 @@ If on a directory, speak the total duration of all sound files under
       (setq arg (completing-read "Switch:" ems--find-switches nil t)))
     (find-dired directory (mapconcat #'identity (nreverse f-args) " "))))
 
-;;}}}
 (provide 'emacspeak-dired)
-;;{{{ emacs local variables
+;;;  emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

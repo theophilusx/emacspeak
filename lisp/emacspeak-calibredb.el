@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable CALIBREDB An Emacs Interface to calibredb
 ;; Keywords: Emacspeak,  Audio Desktop calibredb
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |raman@cs.cornell.edu
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2019, T. V. Raman
 ;; All Rights Reserved.
 ;; 
@@ -34,26 +33,25 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; CALIBREDB == Browse And Search Local Calibre Library
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'calibredb nil 'no-error)
 (require 'emacspeak-epub)
-;;}}}
-;;{{{ Map Faces:
+(declare-function calibredb-getattr "calibredb" t)
+(declare-function calibredb-find-candidate-at-point "calibredb" t)
+
+;;;  Map Faces:
 
 (voice-setup-add-map
  '(
@@ -79,8 +77,7 @@
    (calibredb-title-detail-view-face voice-bolden-medium)
    (calibredb-title-face voice-bolden)))
 
-;;}}}
-;;{{{ Advice Interactive Commands:
+;;;  Advice Interactive Commands:
 
 '(
   calibredb-add
@@ -215,8 +212,7 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{Emacspeak Commands:
+;;; Emacspeak Commands:
 
 (defun emacspeak-calibredb-epub-eww (&optional broken-ncx)
   "Open EPub at point in EWW.
@@ -230,8 +226,7 @@ with broken NCX files."
                        :file-path))
    broken-ncx))
 
-;;}}}
-;;{{{setup:
+;;; setup:
 
 (defun emacspeak-calibredb-setup ()
   "Setup Emacspeak for Calibredb."
@@ -240,12 +235,6 @@ with broken NCX files."
 
 (add-hook 'calibredb-search-mode-hook 'emacspeak-calibredb-setup)
 
-;;}}}
 (provide 'emacspeak-calibredb)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $ 
 ;; DescriptionEmacspeak extensions for man-mode
 ;; Keywords:emacspeak, audio interface to emacs man 
-;;{{{  LCD Archive entry: 
+;;;   LCD Archive entry: 
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com 
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1995 by T. V. Raman 
 ;; All Rights Reserved. 
@@ -36,16 +35,14 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 
-;;{{{  Introduction:
+
 ;;; Commentary:
 ;; Provide additional advice to man-mode 
 ;;; Code:
 ;;; Code:
 
-;;}}}
-;;{{{ Required modules
+;;;  Required modules
 
 ;;; Code:
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -53,16 +50,14 @@
 (require 'voice-setup)
 (require 'man)
 
-;;}}}
-;;{{{  Configure man
+;;;   Configure man
 
 (cl-declaim (special Man-switches system-type))
 
 (when (eq system-type 'gnu/linux)
   (setq Man-switches "-a"))
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map
  '(
@@ -70,8 +65,7 @@
    (Man-reverse voice-animate)
    (Man-underline voice-lighten)))
 
-;;}}}
-;;{{{  advice interactive commands 
+;;;   advice interactive commands 
 
 (defadvice  Man-mode (after emacspeak pre act comp)
   "Fixup variables paragraph-start and paragraph-separate.
@@ -145,8 +139,7 @@ Also provide an auditory icon"
   (when (ems-interactive-p)
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{  Additional commands
+;;;   Additional commands
 
 (defun emacspeak-man-speak-this-section ()
   "Speak current section"
@@ -183,12 +176,6 @@ Also provide an auditory icon"
 (define-key Man-mode-map "[" 'backward-paragraph)
 (define-key Man-mode-map "]" 'forward-paragraph)
 
-;;}}}
 (provide  'emacspeak-man)
-;;{{{  emacs local variables 
+;;;   emacs local variables 
 
-;; local variables:
-;; folded-file: t
-;; end: 
-
-;;}}}

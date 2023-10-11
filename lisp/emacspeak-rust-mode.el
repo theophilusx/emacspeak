@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable RUST-MODE An Emacs Interface to rust-mode
 ;; Keywords: Emacspeak,  Audio Desktop rust-mode
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2019, T. V. Raman
 ;; All Rights Reserved.
 ;; 
@@ -34,25 +33,21 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Speech-enable rust-mode
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map
  '(
@@ -61,8 +56,7 @@
    (rust-string-interpolation-face voice-lighten-medium)
    (rust-unsafe-face voice-animate)))
 
-;;}}}
-;;{{{ Interactive Commands: (rust-mode
+;;;  Interactive Commands: (rust-mode
 
 (cl-loop
  for f in 
@@ -125,14 +119,13 @@
   (cl-declare (special rust-mode-map))
   (when (and (bound-and-true-p rust-mode-map)
              (keymapp rust-mode-map))
-    (define-key rust-mode-map (ems-kbd "C-c C-c")'rust-compile)
-    (define-key rust-mode-map (ems-kbd "C-c C-r")'rust-run)
-    (define-key rust-mode-map (ems-kbd "C-c C-t")'rust-test)))
+    (define-key rust-mode-map (kbd "C-c C-c")'rust-compile)
+    (define-key rust-mode-map (kbd "C-c C-r")'rust-run)
+    (define-key rust-mode-map (kbd "C-c C-t")'rust-test)))
 
 (emacspeak-rust-mode-setup)
 
-;;}}}
-;;{{{Interactive Commands: rustic
+;;; Interactive Commands: rustic
 
 (cl-loop
  for f in 
@@ -148,12 +141,6 @@
          (emacspeak-auditory-icon 'large-movement)
          (emacspeak-speak-line))))))
 
-;;}}}
 (provide 'emacspeak-rust-mode)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

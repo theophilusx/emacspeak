@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable VUIET An Emacs Interface to vuiet
 ;; Keywords: Emacspeak,  Audio Desktop vuiet
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2019, T. V. Raman
 ;; All Rights Reserved.
 ;; 
@@ -34,10 +33,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; VUIET ==  Emacs Music Explorer And Player with last.fm integration
@@ -45,15 +42,13 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Interactive Commands:
+;;;  Interactive Commands:
 
 (defadvice vuiet-stop (after emacspeak pre act comp)
   "speak."
@@ -63,12 +58,12 @@
 (defadvice vuiet-love-track (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (dtk-notify-say "loved strack")))
+    (dtk-notify-say "loved track")))
 
 (defadvice vuiet-unlove-track (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (dtk-notify-say "UnLoved strack")))
+    (dtk-notify-say "UnLoved track")))
 
 (cl-loop
  for f in 
@@ -109,8 +104,7 @@
        (dtk-notify-say
         (format "Volume %s" (vuiet-player-volume)))))))
 
-;;}}}
-;;{{{Additional Commands:
+;;; Additional Commands:
 (defun emacspeak-vuiet-track-info ()
   "Speak current playing state."
   (interactive)
@@ -121,13 +115,6 @@
    (t
     (dtk-notify-speak (mapconcat #'identity mode-line-misc-info " ")))))
 
-;;}}}
-
 (provide 'emacspeak-vuiet)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

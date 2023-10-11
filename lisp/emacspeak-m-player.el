@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description: Controlling mplayer from emacs
 ;; Keywords: Emacspeak, m-player streaming media
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;;
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (c) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
@@ -36,10 +35,9 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ Introduction:
+:
 
 ;;; Commentary:
 
@@ -71,8 +69,7 @@
 ;;
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -84,8 +81,7 @@
 
 (declare-function emacspeak-xslt-get "emacspeak-xslt" (style))
 
-;;}}}
-;;{{{ Stream Metadata:
+;;;  Stream Metadata:
 
 (cl-defstruct ems--media-data
   title artist album info
@@ -113,8 +109,7 @@
     (message "Displayed metadata in other window.")
     (emacspeak-auditory-icon 'task-done)))
 
-;;}}}
-;;{{{ define a derived mode for m-player interaction
+;;;  define a derived mode for m-player interaction
 (define-derived-mode emacspeak-m-player-mode special-mode
   "M-Player Interaction"
   "Major mode for m-player interaction. \n\n
@@ -189,8 +184,7 @@ This is set to nil when playing Internet  streams.")
           (cl-second info)))))
     (t (format "Process MPlayer not running.")))))
 
-;;}}}
-;;{{{Dynamic playlist:
+;;; Dynamic playlist:
 
 ;; Dynamic playlists are one-shot, and managed directly by emacspeak,
 ;; i.e. no playlist file.
@@ -248,8 +242,7 @@ Reset immediately after being used.")
               (line-beginning-position) (line-end-position))))
      result)))
 
-;;}}}
-;;{{{ emacspeak-m-player
+;;;  emacspeak-m-player
 
 (defgroup emacspeak-m-player nil
   "Emacspeak media player."
@@ -309,7 +302,7 @@ Reset immediately after being used.")
        #'(lambda (binding)
            (let ((key (cl-first binding))
                  (directory (cl-second binding)))
-             (emacspeak-m-player-bind-hotkey directory (ems-kbd key))))
+             (emacspeak-m-player-bind-hotkey directory (kbd key))))
        val)
       (set-default sym val)))
 
@@ -684,8 +677,7 @@ Interactive prefix `raw' reads a raw URL."
      (raw (emacspeak-m-player (read-from-minibuffer "URL: ")))
      (t (call-interactively #'emacspeak-m-player)))))
 
-;;}}}
-;;{{{ Table of slave commands:
+;;;  Table of slave commands:
 
 (defvar emacspeak-m-player-command-list nil
   "Cache of MPlayer slave commands.")
@@ -708,8 +700,7 @@ necessary."
                       collect
                       (split-string c " " 'omit-nulls)))))))
 
-;;}}}
-;;{{{ commands
+;;;  commands
 
 (defun emacspeak-m-player-toggle-extrastereo ()
   "Toggle application of extrastereo filter to all streams."
@@ -1185,8 +1176,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
   (goto-char (point-min))
   (search-forward "INS"))
 
-;;}}}
-;;{{{ Media History:
+;;;  Media History:
 
 ;;;###autoload
 (defvar emacspeak-m-player-media-history nil
@@ -1254,8 +1244,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
            (emacspeak-speak-line))))
     (call-interactively #'browse-url-of-buffer)))
 
-;;}}}
-;;{{{ Reset Options:
+;;;  Reset Options:
 
 (defun emacspeak-m-player-reset-options ()
   "Reset MPlayer options."
@@ -1266,8 +1255,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
         (copy-sequence emacspeak-m-player-default-options))
   (message "Reset options."))
 
-;;}}}
-;;{{{ equalizer
+;;;  equalizer
 
 ;; Equalizer presets:
 ;; Cloned from VLC and munged for m-player.
@@ -1414,8 +1402,7 @@ flat classical club dance full-bass full-bass-and-treble
     (cl-pushnew "equalizer" emacspeak-m-player-active-filters :test #'string=)
     (ems--mp-send (format "af_add equalizer=%s" result))))
 
-;;}}}
-;;{{{ Key Bindings:
+;;;  Key Bindings:
 
 (cl-declaim (special emacspeak-m-player-mode-map))
 
@@ -1539,10 +1526,9 @@ flat classical club dance full-bass full-bass-and-treble
 (cl-loop
  for i from 1 to 9 do
  (define-key emacspeak-m-player-mode-map
-             (ems-kbd (format "%s" i)) 'emacspeak-m-player-volume-set))
+             (kbd (format "%s" i)) 'emacspeak-m-player-volume-set))
 
-;;}}}
-;;{{{ YouTube Player
+;;;  YouTube Player
 
 (defvar emacspeak-m-player-youtube-dl
   (executable-find "youtube-dl")
@@ -1626,8 +1612,7 @@ flat classical club dance full-bass full-bass-and-treble
     (kill-new u)
     (emacspeak-m-player u)))
 
-;;}}}
-;;{{{ pause/resume
+;;;  pause/resume
 
 (defun emacspeak-m-player-pause-or-resume ()
   "Pause/resume if m-player is running. For use  in
@@ -1638,8 +1623,7 @@ emacspeak-silence-hook."
     (emacspeak-m-player-pause)))
 (add-hook 'emacspeak-silence-hook 'emacspeak-m-player-pause-or-resume)
 
-;;}}}
-;;{{{ AMarks:
+;;;  AMarks:
 
 (defun emacspeak-m-player-amark-add (name &optional prompt-position)
   "Set AMark `name' at current position.
@@ -1688,8 +1672,7 @@ As the default, use current position."
         (emacspeak-m-player-seek-absolute (emacspeak-amark-position amark)))
        (t (emacspeak-amark-play amark))))))
 
-;;}}}
-;;{{{ Adding specific Ladspa filters:
+;;;  Adding specific Ladspa filters:
 
 ;; tap_reverb filter
 
@@ -1852,8 +1835,7 @@ As the default, use current position."
      (format "af_add %s" filter))
     (emacspeak-auditory-icon 'button)))
 
-;;}}}
-;;{{{ Play RSS Stream:
+;;;  Play RSS Stream:
 
 ;;;###autoload
 (defun emacspeak-m-player-play-rss (rss-url)
@@ -1872,13 +1854,12 @@ As the default, use current position."
       (save-buffer))
     (emacspeak-m-player file 'playlist)))
 
-;;}}}
-;;{{{ Use locate to construct media playlist:
+;;;  Use locate to construct media playlist:
 
 (defvar emacspeak-locate-media-map
   (let ((map (make-sparse-keymap)))
     (define-key map "               ;" 'emacspeak-dired-play-duration)
-    (define-key  map (ems-kbd "M-;") 'emacspeak-m-player-add-dynamic)
+    (define-key  map (kbd "M-;") 'emacspeak-m-player-add-dynamic)
     (define-key map "\C-m" 'emacspeak-locate-play-results-as-playlist)
     map)
   "Keymap used to play locate results.")
@@ -1911,8 +1892,7 @@ to play  tracks."
     (rename-buffer (format "Media  matching %s" pattern))
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{ MultiPlayer Support:
+;;;  MultiPlayer Support:
 
 (defun emacspeak-m-player-persist-process (&optional name)
   "Persists  m-player process instance by renaming its buffer.
@@ -1952,8 +1932,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
       (message "Restored  player process."))
      (t (error "No live player here.")))))
 
-;;}}}
-;;{{{ Panning:
+;;;  Panning:
 
 (defvar-local emacspeak-m-player-panner 0
   "The 11 pre-defined panning locations.")
@@ -1972,8 +1951,7 @@ Check first if current buffer is in emacspeak-m-player-mode."
       (setq emacspeak-m-player-panner -10))
     (message "Panned  to %.1f %.1f" (- 1 this) this)))
 
-;;}}}
-;;{{{ Apply Ladspa to MPlayer:
+;;;  Apply Ladspa to MPlayer:
 
 (defun emacspeak-m-player-ladspa-cmd (plugin)
   "Convert Ladspa Plugin to M-Player command args."
@@ -2019,8 +1997,7 @@ our pre-defined filters if appropriate."
 
   (ems--mp-send "af_del ladspa"))
 
-;;}}}
-;;{{{ Clipping:
+;;;  Clipping:
 
 (defcustom emacspeak-m-player-clips
   (expand-file-name "~/mp3/clips")
@@ -2093,12 +2070,6 @@ our pre-defined filters if appropriate."
      emacspeak-m-player-clips
      clip-start clip-end file)))
 
-;;}}}
 (provide 'emacspeak-m-player)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

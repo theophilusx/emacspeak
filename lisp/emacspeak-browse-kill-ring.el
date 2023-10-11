@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak front-end for BROWSE-KILL-RING
 ;; Keywords: Emacspeak, browse-kill-ring
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
@@ -35,23 +34,22 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Introduction:
+
 ;;; Commentary:
 ;; Browse the kill ring using 
 ;; browse-kill-ring.el - interactively insert items from kill-ring 
 ;;; Code:
-;;}}}
-;;{{{ required modules
+
+;;;  required modules
 
 ;;; Code:
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-;;}}}
-;;{{{ speech-enable interactive commands
+
+;;;  speech-enable interactive commands
 
 (defadvice browse-kill-ring-undo-other-window (after emacspeak pre act comp)
   "speak."
@@ -117,17 +115,12 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{ add keybinding on emacspeak desktop
+;;;  add keybinding on emacspeak desktop
 (cl-eval-when (load)
   (define-key emacspeak-keymap "\C-k" 'browse-kill-ring))
-;;}}}
-(provide 'emacspeak-browse-kill-ring)
-;;{{{ end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
+(provide 'emacspeak-browse-kill-ring)
+;;;  end of file
 
 (defadvice browse-kill-ring-search-forward (after emacspeak pre act comp)
   "speak."
@@ -141,4 +134,3 @@
     (emacspeak-speak-line)
     (emacspeak-auditory-icon 'select-object)))
 
-;;}}}

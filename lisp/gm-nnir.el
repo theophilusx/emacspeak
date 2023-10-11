@@ -3,7 +3,7 @@
 ;; $Author: raman $
 ;; Description:  GMail Search -> IMap -> NNIR -> Gnus
 ;; Keywords: GMail, IMap, gnus
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; gcal| T. V. Raman |tv.raman.tv@gmail.com
@@ -14,8 +14,7 @@
 ;; License: GPL
 ;; 
 
-;;}}}
-;;{{{ Copyright:
+;;;  Copyright:
 
 ;; Copyright (c) 2006 and later, Google Inc.
 ;; All rights reserved.
@@ -48,26 +47,22 @@
 ;; THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;; SUCH DAMAGE.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Makes search GMail more convenient.
 ;; IMap search operators, GMail search extensions.
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
-(with-no-warnings (require 'nnir))
+(with-suppressed-warnings ((obsolete nnir)) (require 'nnir))
 (require 'gnus-group)
-;;}}}
-;;{{{ IMap Search Operators:
+
+;;;  IMap Search Operators:
 
 ;; this list is extracted from the IMap RFC 3501
 ;; And adds X-GM_RAW  for GMail specific search extensions.
@@ -133,8 +128,7 @@
       (setq clause (gm-nnir-read-imap-clause)))
     (mapconcat #'identity query " ")))
 
-;;}}}
-;;{{{ NNIR Engine For GMail 
+;;;  NNIR Engine For GMail 
 
 ;; GMail Search Commands 
 
@@ -150,20 +144,15 @@ See https://support.google.com/mail/answer/7190?hl=en for syntax.
         (q (format "X-GM-RAW \"%s\"" query)))
     (cond
      ((gnus-group-group-name)           ; Search current group
-      (gnus-group-make-nnir-group
-       nil                              ; no extra params needed
+      (gnus-group-read-ephemeral-search-group
+       nil                              ; no parse
        `(nnir-specs (nnir-query-spec (query ,q))))
       (emacspeak-auditory-icon 'open-object)
       (emacspeak-speak-mode-line))
      (t (error "Not on a group.")))))
 
-;;}}}
 (provide 'gm-nnir)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
 ;; byte-compile-warnings: (not obsolete)
-;; end:
 
-;;}}}

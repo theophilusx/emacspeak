@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Module to set up Plain voices and personalities
 ;; Keywords: Voice, Personality, Plain
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -35,27 +34,22 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Introduction:
 
 ;;; Commentary:
 ;; This module defines the various voices used in voice-lock mode.
 ;;  Module Plain is  suitable for a device for which you haven't yet
 ;;  implemented appropriate voice-locking controls
 
-;;}}}
-;;{{{ required modules
+;;;  required modules
 
 ;;; Code:
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)           ;For `ems--fastload'.
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 
-;;}}}
-
-;;{{{plain:
+;;; plain:
 ;;;###autoload
 (defun plain ()
   "Plain TTS."
@@ -65,8 +59,7 @@
   (dtk-select-server "plain")
   (dtk-initialize))
 
-;;}}}
-;;{{{ Forward declarations:
+;;;  Forward declarations:
 
 ;; From dtk-speak.el:
 
@@ -74,8 +67,7 @@
 (defvar dtk-speech-rate-step)
 (defvar dtk-speech-rate-base)
 
-;;}}}
-;;{{{  voice table
+;;;   voice table
 
 (defvar plain-default-voice-string ""
   "Plain string for  default voice --set to be a no-op.")
@@ -105,17 +97,15 @@ COMMAND-STRING to the TTS server."
   (cl-declare (special plain-voice-table))
   (gethash name plain-voice-table))
 
-;;}}}
-;;{{{ voice definitions
+;;;  voice definitions
 
 ;; the nine predefined voices:
 (plain-define-voice 'paul "")
 
-;;}}}
-;;{{{  the inau
-;;{{{  Mapping css parameters to Plain codes
+;;;   the inau
+;;;   Mapping css parameters to Plain codes
 
-;;{{{ voice family codes
+;;;  voice family codes
 
 (defvar plain-family-table nil
   "Association list of Plain voice names and control codes.")
@@ -138,8 +128,7 @@ COMMAND-STRING to the TTS server."
 
 (plain-set-family-code 'paul "")
 
-;;}}}
-;;{{{  hash table for mapping families to their dimensions
+;;;   hash table for mapping families to their dimensions
 
 (defvar plain-css-code-tables (make-hash-table)
   "Hash table holding vectors of Plain codes.
@@ -160,8 +149,7 @@ and TABLE gives the values along that dimension."
   (let ((key (intern (format "%s-%s" family dimension))))
     (gethash key plain-css-code-tables)))
 
-;;}}}
-;;{{{  average pitch
+;;;   average pitch
 
 ;; Average pitch for standard male voice is 122hz --this is mapped to
 ;; a setting of 5.
@@ -170,7 +158,7 @@ and TABLE gives the values along that dimension."
 ;; We change parameter head-size in conjunction with average pitch to
 ;; produce a more natural change 
 
-;;{{{  paul average pitch
+;;;   paul average pitch
 
 (let ((table (make-vector 10 "")))
   (mapc
@@ -193,8 +181,6 @@ and TABLE gives the values along that dimension."
      ))
   (plain-css-set-code-table 'paul 'average-pitch table))
 
-;;}}}
-
 (defun plain-get-average-pitch-code (value family)
   "Get  AVERAGE-PITCH for specified VALUE and  FAMILY."
   (or family (setq family 'paul))
@@ -203,8 +189,7 @@ and TABLE gives the values along that dimension."
             value)
     ""))
 
-;;}}}
-;;{{{  pitch range
+;;;   pitch range
 
 ;;  Standard pitch range is 100 and is  mapped to
 ;; a setting of 5.
@@ -212,7 +197,7 @@ and TABLE gives the values along that dimension."
 ;; produces a highly animated voice.
 ;; Additionally, we also set the assertiveness of the voice so the
 ;; voice is less assertive at lower pitch ranges.
-;;{{{  paul pitch range
+;;;   paul pitch range
 
 (let ((table (make-vector 10 "")))
   (mapc
@@ -235,8 +220,6 @@ and TABLE gives the values along that dimension."
      ))
   (plain-css-set-code-table 'paul 'pitch-range table))
 
-;;}}}
-
 (defun plain-get-pitch-range-code (value family)
   "Get pitch-range code for specified VALUE and FAMILY."
   (or family (setq family 'paul))
@@ -245,8 +228,7 @@ and TABLE gives the values along that dimension."
             value)
     ""))
 
-;;}}}
-;;{{{  stress
+;;;   stress
 
 ;;  we vary four parameters
 ;; The hat rise which controls the overall shape of the F0 contour
@@ -257,7 +239,7 @@ and TABLE gives the values along that dimension."
 ;; and the quickness --a parameter that controls whether the final
 ;; frequency targets are completely achieved in the phonetic
 ;; transitions.
-;;{{{  paul stress
+;;;   paul stress
 
 (let ((table (make-vector 10 "")))
   (mapc
@@ -280,8 +262,6 @@ and TABLE gives the values along that dimension."
      ))
   (plain-css-set-code-table 'paul 'stress table))
 
-;;}}}
-
 (defun plain-get-stress-code (value family)
   (or family (setq family 'paul))
   (if value
@@ -289,13 +269,12 @@ and TABLE gives the values along that dimension."
             value)
     ""))
 
-;;}}}
-;;{{{  richness
+;;;   richness
 
 ;; Smoothness and richness vary inversely.
 ;; a  maximally smooth voice produces a quieter effect
 ;; a rich voice is "bright" in contrast.
-;;{{{  paul richness
+;;;   paul richness
 
 (let ((table (make-vector 10 "")))
   (mapc
@@ -317,8 +296,6 @@ and TABLE gives the values along that dimension."
      ))
   (plain-css-set-code-table 'paul 'richness table))
 
-;;}}}
-
 (defun plain-get-richness-code (value family)
   (or family (setq family 'paul))
   (if value
@@ -326,9 +303,7 @@ and TABLE gives the values along that dimension."
             value)
     ""))
 
-;;}}}
-;;}}}
-;;{{{  plain-define-voice-from-speech-style
+;;;   plain-define-voice-from-speech-style
 
 (defun plain-define-voice-from-speech-style (name style)
   "Define NAME to be a Plain voice as specified by settings in STYLE."
@@ -348,8 +323,7 @@ and TABLE gives the values along that dimension."
               (plain-get-richness-code (acss-richness style) family))))))
     (plain-define-voice name command)))
 
-;;}}}
-;;{{{ configurater
+;;;  configurater
 ;;;###autoload
 (defun plain-configure-tts ()
   "Configures TTS  to use Plain."
@@ -365,15 +339,8 @@ and TABLE gives the values along that dimension."
   (setq tts-default-speech-rate plain-default-speech-rate)
   (set-default 'tts-default-speech-rate plain-default-speech-rate))
 
-;;}}}
-
 (plain-configure-tts)
 
 (provide 'plain-voices)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

@@ -5,7 +5,7 @@
 ;; Keywords: Emacspeak, Speech, Dectalk,
 ;; Version: 55.0
 ;; Package-Requires: ((emacs "26") (hydra "0.5"))
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
@@ -14,8 +14,7 @@
 ;; Location undetermined
 ;;
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -38,9 +37,6 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{ Introduction
-
 ;;; Commentary:
 
 ;; Emacspeak extends Emacs to be a fully functional audio desktop.
@@ -52,44 +48,41 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ Required modules
+;;;  Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{  Customize groups
+;;;   Customize groups
 
 (defgroup emacspeak nil
-  "Emacspeak: The Complete Audio Desktop  "
+  "Emacspeak: The Complete Audio Desktop."
   :link '(url-link :tag "Web" "http://emacspeak.sf.net"
-          :help-echo "Emacspeak  Site")
+                   :help-echo "Emacspeak  Site")
   :link '(url-link :tag "Blog" "http://emacspeak.blogspot.com"
-          :help-echo "Emacspeak Blog")
+                   :help-echo "Emacspeak Blog")
   :link '(url-link :tag "Apps"
-          "https://tvraman.github.io/emacspeak/applications.html"
-          :help-echo "Browse available  applications on
+                   "https://tvraman.github.io/emacspeak/applications.html"
+                   :help-echo "Browse available  applications on
 the Emacspeak desktop.")
   :link '(url-link :tag "Guide"
-          "https://tvraman.github.io/emacspeak/manual"
-          :help-echo "online user guide.")
+                   "https://tvraman.github.io/emacspeak/manual"
+                   :help-echo "online user guide.")
   :link '(url-link :tag "Tips"
-          "https://tvraman.github.io/emacspeak/tips.html"
-          :help-echo "Emacspeak Tips and Tricks.")
+                   "https://tvraman.github.io/emacspeak/tips.html"
+                   :help-echo "Emacspeak Tips and Tricks.")
   ;; end links
   :group 'applications)
 
-;;}}}
-;;{{{ Package Setup Helper
+;;;  Package Setup Helper
 
 ;; This function adds the appropriate form to `after-load-alist' to
 ;; set up Emacspeak support for a given package.  Argument MODULE (a
 ;; symbol)specifies the emacspeak module that implements the
 ;; speech-enabling extensions for `package' (a string).
 (defsubst emacspeak-do-package-setup (package module)
-  "Setup Emacspeak extension for   PACKAGE. "
+  "Setup Emacspeak extension for   PACKAGE by loading MODULE."
   (with-eval-after-load package (require module)))
 
 ;; DocView
@@ -97,8 +90,7 @@ the Emacspeak desktop.")
 (with-eval-after-load "doc-view"
   (add-hook 'doc-view-mode-hook #'doc-view-open-text))
 
-;;}}}
-;;{{{ Setup package extensions
+;;;  Setup package extensions
 (defvar emacspeak-packages-to-prepare
   '(
     ("abc-mode" emacspeak-abc-mode)
@@ -140,9 +132,7 @@ the Emacspeak desktop.")
     ("doctor" emacspeak-entertain)
     ("dumb-jump" emacspeak-dumb-jump)
     ("dunnet" emacspeak-entertain)
-    ("eaf" emacspeak-eaf)
     ("ecb" emacspeak-ecb)
-    ("eclim" emacspeak-eclim)
     ("ediff" emacspeak-ediff)
     ("eglot" emacspeak-eglot)
     ("ein" emacspeak-ein)
@@ -298,7 +288,9 @@ the Emacspeak desktop.")
 (defun emacspeak-prepare-emacs ()
   "Prepare Emacs to speech-enable packages when loaded."
   (cl-declare (special emacspeak-packages-to-prepare
+                       Info-file-list-for-emacs
                        emacspeak-soundscapes))
+  (push "emacspeak" Info-file-list-for-emacs)
   (setq-default line-move-visual nil)
   (setq use-dialog-box nil)
   (when (boundp 'Info-directory-list)
@@ -309,15 +301,14 @@ the Emacspeak desktop.")
    emacspeak-packages-to-prepare)
   (when emacspeak-soundscapes (soundscape-toggle)))
 
-;;}}}
-;;{{{ setup programming modes
+;;;  setup programming modes
 
 ;; turn on automatic voice locking , split caps and punctuations in
 ;; programming  modes
 
 ;;;###autoload
 (defsubst emacspeak-setup-programming-mode ()
-  "Setup programming mode. "
+  "Setup programming mode."
   (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
   (ems-with-messages-silenced
    (dtk-set-punctuations 'all)
@@ -356,8 +347,7 @@ the Emacspeak desktop.")
      sgml-mode-hook xml-mode-hook nxml-mode-hook xsl-mode-hook
      TeX-mode-hook LaTeX-mode-hook bibtex-mode-hook)))
 
-;;}}}
-;;{{{ Emacspeak:
+;;;  Emacspeak:
 
 (defcustom emacspeak-play-emacspeak-startup-icon t
   "If set to T, emacspeak plays its icon as it launches."
@@ -377,12 +367,12 @@ the Emacspeak desktop.")
 
 (defvar emacspeak-startup-message
   (eval-when-compile
-   (format
-    "  Press %s to get an   overview of emacspeak  %s. \
+    (format
+     "  Press %s to get an   overview of emacspeak  %s. \
  I am  completely operational,  and all my circuits are functioning perfectly!"
-    (substitute-command-keys
-     "\\[emacspeak-describe-emacspeak]")
-    emacspeak-version))
+     (substitute-command-keys
+      "\\[emacspeak-describe-emacspeak]")
+     emacspeak-version))
   "Emacspeak startup message.")
 
 (defcustom emacspeak-soundscapes nil
@@ -436,14 +426,7 @@ commands and options for details."
   (message emacspeak-startup-message)
   (emacspeak-play-startup-icon))
 
-;;}}}
 (provide 'emacspeak)
-;;{{{ end of file
-
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}
+;;;  end of file
 
 ;;; emacspeak.el ends here

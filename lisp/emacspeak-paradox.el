@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable PARADOX An Emacs Interface to paradox
 ;; Keywords: Emacspeak,  Audio Desktop paradox
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,18 +35,15 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; PARADOX == paradox.el Improved package management interface
 ;; Manage Emacs packages.
 ;; This module speech-enables paradox.el with a few convenience commands.
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -55,8 +51,7 @@
 (require 'paradox "paradox" 'no-error)
 (require 'calendar)
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map
  '(
@@ -72,8 +67,7 @@
    (paradox-highlight-face voice-animate)
    (paradox-homepage-button-face voice-bolden-medium)))
 
-;;}}}
-;;{{{ Additional Commands
+;;;  Additional Commands
 
 (defun emacspeak-paradox-summarize-line ()
   "Succinct Summary."
@@ -106,8 +100,7 @@
 
 (add-hook 'paradox-menu-mode-hook 'emacspeak-paradox-mode-hook)
 
-;;}}}
-;;{{{ Managing Packages:
+;;;  Managing Packages:
 
 (defadvice paradox-menu-execute(around emacspeak pre act comp)
   "Silence messages while installing packages. "
@@ -124,8 +117,7 @@
      (when (ems-interactive-p)
        (emacspeak-paradox-summarize-line)))))
 
-;;}}}
-;;{{{ Advice:
+;;;  Advice:
 
 (defadvice paradox-quit-and-close (after emacspeak pre act comp)
   "provide auditory feedback."
@@ -145,8 +137,7 @@
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'task-done)))))
 
-;;}}}
-;;{{{ Commit Navigation:
+;;;  Commit Navigation:
 (cl-loop
  for f in 
  '(paradox-next-commit paradox-previous-commit)
@@ -170,13 +161,6 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-
-;;}}}
 (provide 'emacspeak-paradox)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

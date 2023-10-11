@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable hydra
 ;; Keywords: Emacspeak,  Audio Desktop hydra
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -10,8 +10,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2011, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -33,26 +32,22 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Speech-enable package hydra:
 ;; For  uses of hydra see module @xref{emacspeak-muggles}.
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'hydra "hydra" 'no-error)
 
-;;}}}
-;;{{{ Map Hydra Colors To Voices:
+;;;  Map Hydra Colors To Voices:
 
 (voice-setup-add-map
  '(
@@ -62,9 +57,8 @@
    (hydra-face-pink voice-bolden-medium)
    (hydra-face-teal voice-lighten-medium)))
 
-;;}}}
-;;{{{ Toggle Talkative:
-
+;;;  Toggle Talkative:
+;;;###autoload
 (defun emacspeak-hydra-toggle-talkative ()
   "Toggle hydra-is-helpful"
   (interactive)
@@ -72,26 +66,24 @@
   (setq hydra-is-helpful (not hydra-is-helpful))
   (emacspeak-auditory-icon (if hydra-is-helpful 'on 'off)))
 
-;;}}}
-;;{{{ Emacspeak Helpers:
-
+;;;  Emacspeak Helpers:
+;;;###autoload
 (defun emacspeak-hydra-body-pre (&optional name)
   "Provide auditory icon"
   (when name (dtk-speak name))
   (emacspeak-auditory-icon 'open-object))
-
+;;;###autoload
 (defun emacspeak-hydra-pre ()
   "Provide auditory icon"
   (emacspeak-auditory-icon 'progress))
-
+;;;###autoload
 (defun emacspeak-hydra-post ()
   "Provide auditory icon. "
   (dtk-stop 'all)
   (when emacspeak-use-auditory-icons
     (emacspeak-play-auditory-icon 'close-object)))
 
-;;}}}
-;;{{{ Setup Help And Hint 
+;;;  Setup Help And Hint 
 
 ;; We use plain messages:
 
@@ -100,13 +92,12 @@
    hydra-head-format "%s "
    hydra-hint-display-type nil
    hydra-hint-display-type #'message))
-
+;;;###autoload
 (defun emacspeak-hydra-self-help (name)
   "Speak hint for specified Hydra."
   (message (eval (symbol-value (intern (format "%s/hint" name))))))
 
-;;}}}
-;;{{{lv-message:
+;;; lv-message:
 
 (defvar ems--lv-cache nil
   "Emacspeak's private cache of the last lv message.")
@@ -126,12 +117,6 @@
   (dtk-stop 'all)
   (emacspeak-auditory-icon 'delete-object))
 
-;;}}}
 (provide 'emacspeak-hydra)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

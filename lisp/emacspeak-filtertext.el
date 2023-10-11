@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:   Implement text filters 
 ;; Keywords: Emacspeak, Audio Desktop
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
@@ -36,15 +35,13 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ required modules
+;;;  required modules
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-;;}}}
-;;{{{  Introduction:
+
 ;;; Commentary:
 ;; It is often useful  to view the results of filtering
 ;; large amounts of text.;;; Typically you do this with
@@ -61,8 +58,8 @@
 ;; D: Provides commands for saving results from
 ;; intermediate filters.
 ;;; Code:
-;;}}}
-;;{{{  structures 
+
+;;;   structures 
 
 (cl-defstruct (emacspeak-filtertext
                (:constructor
@@ -71,8 +68,7 @@
   filters                               ;chain of filters applied 
   )
 
-;;}}}
-;;{{{ filtertext  mode 
+;;;  filtertext  mode 
 
 (defvar emacspeak-filtertext-info  nil
   "Holds filtertext info structure.")
@@ -88,8 +84,7 @@
 (define-key emacspeak-filtertext-mode-map "r"
             'emacspeak-filtertext-revert)
 
-;;}}}
-;;{{{ Interactive commands 
+;;;  Interactive commands 
 ;;;###autoload
 (defun emacspeak-filtertext(start end)
   "Copy over text in region to special filtertext buffer to  filter text. "
@@ -124,12 +119,6 @@
     (emacspeak-auditory-icon 'unmodified-object)
     (message "Reverted filtered text.")))
 
-;;}}}
 (provide 'emacspeak-filtertext)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

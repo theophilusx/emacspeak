@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  DBus Tools For The Emacspeak Desktop
 ;; Keywords: Emacspeak,  Audio Desktop dbus
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,10 +35,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Loading this module sets  up Emacspeak to respond to DBus notifications.
@@ -72,8 +69,7 @@
 ;; via appropriately named hook functions.
 ;; 
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -83,15 +79,14 @@
 (require 'dbus)
 (require 'emacspeak-nm "emacspeak-nm" 'no-error)
 
-;;}}}
-;;{{{ Forward Declarations:
+;;;  Forward Declarations:
 (declare-function jabber-connect-all "jabber-core" (&optional arg))
 (declare-function jabber-disconnect "jabber-core" (&optional arg))
 (declare-function twittering-start "ext:twittering-mode" nil)
 (declare-function twittering-stop "twittering-mode" nil)
 (declare-function soundscape-restart "soundscape" (&optional device))
-;;}}}
-;;{{{ ScreenSaver Mode:
+
+;;;  ScreenSaver Mode:
 
 (define-derived-mode emacspeak-screen-saver-mode special-mode
   "Screen Saver Mode"
@@ -114,8 +109,7 @@ Initialize screen-saver buffer  if needed, and switch to  it."
     (funcall-interactively #'switch-to-buffer buffer)
     (delete-other-windows)))
 
-;;}}}
-;;{{{ NM Handlers
+;;;  NM Handlers
 (declare-function ems-get-active-network-interfaces "emacspeak-wizards" nil)
 
 (defun emacspeak-dbus-nm-connected ()
@@ -140,8 +134,7 @@ Stop apps that use the network."
 (add-hook 'nm-connected-hook 'emacspeak-dbus-nm-connected)
 (add-hook 'nm-disconnected-hook 'emacspeak-dbus-nm-disconnected)
 
-;;}}}
-;;{{{ Sleep/Resume:
+;;;  Sleep/Resume:
 
 (defun emacspeak-dbus-login1-sleep-p ()
   "Test if login1 service  sleep signal is available."
@@ -255,8 +248,7 @@ already disabled."
 
 (add-hook 'emacspeak-dbus-resume-hook #'emacspeak-dbus-resume)
 
-;;}}}
-;;{{{ UDisks2:
+;;;  UDisks2:
 
 (defvar emacspeak-dbus-udisks-registration nil
   "List holding storage (UDisks2) registration.")
@@ -298,8 +290,7 @@ already disabled."
     (setq emacspeak-dbus-udisks-registration
           (cdr emacspeak-dbus-udisks-registration))))
 
-;;}}}
-;;{{{ UPower:
+;;;  UPower:
 
 (defvar emacspeak-dbus-upower-registration nil
   "List holding storage (UPower) registration.")
@@ -348,8 +339,7 @@ already disabled."
     (setq emacspeak-dbus-upower-registration
           (cdr emacspeak-dbus-upower-registration))))
 
-;;}}}
-;;{{{ Interactive Command: Lock Screen
+;;;  Interactive Command: Lock Screen
 (defun emacspeak-dbus-lock-screen ()
   "Lock screen using DBus."
   (interactive)
@@ -364,9 +354,9 @@ already disabled."
    "org.gnome.ScreenSaver"
    "Lock"))
 
-(global-set-key (ems-kbd "C-, C-d") 'emacspeak-dbus-lock-screen)
-;;}}}
-;;{{{ Watch Screensaver:
+(global-set-key (kbd "C-, C-d") 'emacspeak-dbus-lock-screen)
+
+;;;  Watch Screensaver:
 
 (defvar emacspeak-dbus-screen-lock-handle nil
   "Handle to DBus signal registration for watching screenlock.")
@@ -385,17 +375,17 @@ already disabled."
         (cl-declare (special tts-notification-device))
         (if lock
             (progn (emacspeak-screen-saver))
-            (progn
-              (with-environment-variables
-                  (("PULSE_SINK"  tts-notification-device))
-                (emacspeak-prompt "success")
-                (light-black))
-              (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
-              (when
-                  (window-configuration-p emacspeak-screen-saver-saved-conf)
-                (set-window-configuration
-                 emacspeak-screen-saver-saved-conf))
-              (emacspeak-speak-mode-line)))))))
+          (progn
+            (with-environment-variables
+                (("PULSE_SINK"  tts-notification-device))
+              (emacspeak-prompt "success")
+              (light-black))
+            (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
+            (when
+                (window-configuration-p emacspeak-screen-saver-saved-conf)
+              (set-window-configuration
+               emacspeak-screen-saver-saved-conf))
+            (emacspeak-speak-mode-line)))))))
 
 (defun emacspeak-dbus-unwatch-screen-lock ()
   "De-Register a handler to watch screen lock/unlock."
@@ -403,8 +393,7 @@ already disabled."
   (dbus-unregister-object emacspeak-dbus-screen-lock-handle)
   (setq emacspeak-dbus-screen-lock-handle nil))
 
-;;}}}
-;;{{{Setup:
+;;; Setup:
 ;;;###autoload
 (defun emacspeak-dbus-setup ()
   "Turn on DBus handlers."
@@ -416,12 +405,6 @@ already disabled."
     (emacspeak-dbus-upower-enable)
     (emacspeak-dbus-watch-screen-lock)))
 
-;;}}}
 (provide 'emacspeak-dbus)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Expose Ladspa Plugins to Emacs/Emacspeak
 ;; Keywords: Emacspeak,  Audio Desktop Ladspa
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; All Rights Reserved.
@@ -35,10 +34,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 
@@ -53,16 +50,15 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile
   (require 'subr-x)
   (require 'derived))
-;;}}}
-;;{{{ Structures:
+
+;;;  Structures:
 
 (cl-defstruct ladspa-control
   desc
@@ -72,8 +68,7 @@
 (cl-defstruct ladspa-plugin
   desc library label controls)
 
-;;}}}
-;;{{{ Ladspa Setup:
+;;;  Ladspa Setup:
 ;;;###autoload
 (defconst ladspa-home
   (or (getenv "LADSPA_PATH") "/usr/lib/ladspa")
@@ -103,8 +98,7 @@
            (nconc ladspa-libs (directory-files d  nil "\\.so\\'"))))
     ladspa-libs)))
 
-;;}}}
-;;{{{ Ladspa Plugins:
+;;;  Ladspa Plugins:
 
 (defvar ladspa-plugins nil
   "List of installed plugins with their metadata.")
@@ -176,8 +170,7 @@ list of parsed ladspa-plugin structures, one per label."
     (ladspa-table-init)
     ladspa-plugins)))
 
-;;}}}
-;;{{{ Ladspa Table:
+;;;  Ladspa Table:
 
 (defvar ladspa-table (make-hash-table :test #'eq)
   "Table of Ladspa plugins.")
@@ -204,8 +197,7 @@ list of parsed ladspa-plugin structures, one per label."
            nil 'must-match))))
     (when label (gethash label ladspa-table))))
 
-;;}}}
-;;{{{ Ladspa Mode:
+;;;  Ladspa Mode:
 
 (defconst ladspa-header-line-format
   '((:eval
@@ -286,8 +278,7 @@ list of parsed ladspa-plugin structures, one per label."
          do
          (define-key ladspa-mode-map (kbd (cl-first k)) (cl-second k)))
 
-;;}}}
-;;{{{ Instantiate Ladspa Plugin:
+;;;  Instantiate Ladspa Plugin:
 (defvar ladspa-edit-help
   (concat
    (propertize "a" 'face 'bold)
@@ -360,8 +351,7 @@ list of parsed ladspa-plugin structures, one per label."
                   'face 'font-lock-keyword-face))))
         (funcall-interactively #'pop-to-buffer buffer))))))
 
-;;}}}
-;;{{{ Edit Ladspa Plugin:
+;;;  Edit Ladspa Plugin:
 
 (defun ladspa-edit-control ()
   "Edit Ladspa control  at point by prompting for control values."
@@ -394,8 +384,7 @@ list of parsed ladspa-plugin structures, one per label."
      'ladspa plugin)
     (goto-char (line-beginning-position))))
 
-;;}}}
-;;{{{ Analyse Plugin At Point
+;;;  Analyse Plugin At Point
 
 (defun ladspa-analyse-plugin-at-point ()
   "Analyse plugin at point."
@@ -409,12 +398,6 @@ list of parsed ladspa-plugin structures, one per label."
              ladspa-analyse
              (ladspa-plugin-library plugin) (ladspa-plugin-label plugin)))))
 
-;;}}}
 (provide 'ladspa)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

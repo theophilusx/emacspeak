@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Module for setting up emacspeak keybindings
 ;; Keywords: Emacspeak
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;;
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -37,9 +36,6 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{  Introduction:
-
 ;;; Commentary:
 
 ;; This module defines the emacspeak keybindings.
@@ -47,85 +43,14 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ requires
+;;;  requires
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
 
-;;}}}
-;;{{{ems-kbd: replacement for function kbd
-
-;; simplified kbd function:
-;; Uses split-string to  simplify tokenizer.
-
-(defvar ems--kbd-char-table
-  '(
-    ("NUL" . "\0")
-    ("RET" . "\r")
-    ("LFD" . "\n")
-    ("TAB" . "\t")
-    ("ESC" . "\e")
-    ("SPC" . " ")
-    ("DEL" . "\177"))
-  "Map  kbd-char-names to char-values.")
-
-(defvar ems--kbd-mod-table
-  '(
-    (?A . ?\A-\^@)
-    (?C . ?\C-\^@)
-    (?H . ?\H-\^@)
-    (?M . ?\M-\^@)
-    (?s . ?\s-\^@)
-    (?S . ?\S-\^@))
-  "Map modifier names to modifier bit-values.")
-
-(defun ems-kbd (string )
-  "Like function kbd, but returns a vector."
-  (cl-declare (special ems--kbd-mod-table ems--kbd-char-table))
-  (let ((res [])
-        (mod+char "^[ACHMsS]-.")
-        (mod+angle-reg "^\\(\\([ACHMsS]-\\)*\\)<\\(.+\\)>$"))
-    (cl-loop
-     for word in (split-string string) do
-     (let ((key nil))
-       (cond
-        ((string-match mod+angle-reg word)  ;;; modifier+-<key>
-         (setq key
-               (list
-                (intern
-                 (concat ;;; strip < and >
-                  (substring word (match-beginning 1) (match-end 1))
-                  (substring word (match-beginning 3) (match-end 3)))))))
-        (t
-         (let ((prefix 0)
-               (bits 0))
-           (while (string-match mod+char word) ;;; calculate modifier bits
-             (cl-incf bits
-                      (cdr (assq (aref word 0) ems--kbd-mod-table)))
-             (cl-incf prefix 2) ;;; strip modifier
-             (cl-callf substring word 2)) ;;; end while modifiers
-           (when-let (c (assoc word ems--kbd-char-table)) (setq word (cdr c)))
-           (cond ;;; apply modifiers
-            ((= bits 0) (setq key word)) ;;; no modifier bits
-            ((/= (length word) 1)
-             (error "%s: Prefix must precede a character, not %s"
-                    string word))
-            ((and
-              (/= (logand bits ?\C-\^@) 0)
-              (string-match "^[@-_a-z]" word)) ;;; ascii control char
-             (setq key ;;; C-a is 1 etc.
-                   (list (+ bits (- ?\C-\^@)
-                            (logand (aref word 0) 31)))))
-            (t (setq key (list (+ bits (aref word 0)))))))))
-       ;; push key on to the result vector
-       (when key (cl-callf vconcat res key))))
-    res))
-
-;;}}}
-;;{{{ Custom Widget Types:
+;;;  Custom Widget Types:
 
 (defun emacspeak-keymap-command-p (s)
   "Test if `s' can to be bound to a key."
@@ -133,14 +58,14 @@
 
 (defsubst emacspeak-keymap-update (keymap binding)
   "Update keymap with  binding."
-  (define-key keymap  (ems-kbd (cl-first binding)) (cl-second binding)))
+  (define-key keymap  (kbd (cl-first binding)) (cl-second binding)))
 
 (defsubst emacspeak-keymap-bindings-update (keymap bindings)
   "Update keymap with  list of bindings."
   (cl-loop
    for binding in bindings
    do
-   (define-key keymap (ems-kbd (cl-first binding)) (cl-second binding))))
+   (define-key keymap (kbd (cl-first binding)) (cl-second binding))))
 
 (define-widget 'ems-interactive-command 'restricted-sexp
   "An interactive command  or keymap that can be bound to a key."
@@ -162,10 +87,9 @@
   :value 'ignore
   :tag "Interactive Command")
 
-;;}}}
-;;{{{  variables:
+;;;   variables:
 
-(defvar emacspeak-prefix (ems-kbd "C-e")
+(defvar emacspeak-prefix (kbd "C-e")
   "Emacspeak Prefix key. ")
 
 (defvar emacspeak-keymap nil
@@ -177,8 +101,7 @@
 (defvar emacspeak-table-submap nil
   "Submap used for table  commands. ")
 
-;;}}}
-;;{{{   Binding keymap and submap
+;;;    Binding keymap and submap
 
 (define-prefix-command  'emacspeak-keymap)
 (define-prefix-command   'emacspeak-dtk-submap)
@@ -189,18 +112,17 @@
 
 ;;; Special keys:
 ;; One-finger use on laptop:
-(global-set-key (ems-kbd "<XF86WakeUp>")  'emacspeak-keymap)
-(global-set-key (ems-kbd "<XF86AudioPlay>")  'emacspeak-silence)
-(global-set-key (ems-kbd "C-<f1>")  'amixer-volume-down)
-(global-set-key (ems-kbd "C-<f2>")  'amixer-volume-up)
-(global-set-key (ems-kbd "<XF86AudioLowerVolume>")  'amixer-volume-down)
-(global-set-key (ems-kbd "<XF86AudioRaiseVolume>") 'amixer-volume-up)
+(global-set-key (kbd "<XF86WakeUp>")  'emacspeak-keymap)
+(global-set-key (kbd "<XF86AudioPlay>")  'emacspeak-silence)
+(global-set-key (kbd "C-<f1>")  'amixer-volume-down)
+(global-set-key (kbd "C-<f2>")  'amixer-volume-up)
+(global-set-key (kbd "<XF86AudioLowerVolume>")  'amixer-volume-down)
+(global-set-key (kbd "<XF86AudioRaiseVolume>") 'amixer-volume-up)
 
 (define-key emacspeak-keymap "d"  'emacspeak-dtk-submap)
-(define-key emacspeak-keymap (ems-kbd "C-t")  'emacspeak-table-submap-command)
+(define-key emacspeak-keymap (kbd "C-t")  'emacspeak-table-submap-command)
 
-;;}}}
-;;{{{  The Emacspeak key  bindings.
+;;;   The Emacspeak key  bindings.
 
 ;; help map additions:
 
@@ -431,8 +353,8 @@
  (emacspeak-keymap-update emacspeak-table-submap binding))
 
 ;; Put these in the global map:
-(global-set-key [(shift left)] 'previous-buffer)
-(global-set-key [(shift right)] 'next-buffer)
+(global-set-key [(shift left)] 'emacspeak-skip-space-backward)
+(global-set-key [(shift right)] 'emacspeak-skip-space-forwar)
 (global-set-key [(control left)] 'emacspeak-previous-frame-or-buffer)
 (global-set-key [(control right)] 'emacspeak-next-frame-or-buffer)
 (global-set-key [(control down)] 'pop-to-mark-command)
@@ -445,21 +367,18 @@
 (global-set-key  [27 next]  'emacspeak-owindow-scroll-up)
 (define-key esc-map "\M-:" 'emacspeak-wizards-show-eval-result)
 
-;;}}}
-;;{{{ emacspeak under X windows
+;;;  emacspeak under X windows
 
 ;; Get hyper, alt, super, and multi:
-(global-set-key (ems-kbd "C-,") 'emacspeak-alt-keymap)
-(global-set-key  (ems-kbd "C-.") 'emacspeak-super-keymap)
-(global-set-key  (ems-kbd "C-;") 'emacspeak-hyper-keymap)
-(global-set-key  (ems-kbd "C-'") 'emacspeak-multi-keymap)
-
+(global-set-key (kbd "C-,") 'emacspeak-alt-keymap)
+(global-set-key  (kbd "C-.") 'emacspeak-super-keymap)
+(global-set-key  (kbd "C-;") 'emacspeak-hyper-keymap)
+(global-set-key  (kbd "C-'") 'emacspeak-multi-keymap)
 
 ;; Our very own silence key on the console
 (global-set-key '[silence] 'emacspeak-silence)
 
-;;}}}
-;;{{{ Create personal c-e v map
+;;;  Create personal c-e v map
 
 (defvar  emacspeak-v-keymap nil
   "Emacspeak v keymap")
@@ -487,8 +406,7 @@
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-;;}}}
-;;{{{ Create a personal keymap for c-e x
+;;;  Create a personal keymap for c-e x
 
 ;; Adding keys using custom:
 (defvar  emacspeak-x-keymap nil
@@ -549,13 +467,11 @@
         val
         #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-
 (define-key emacspeak-keymap "v" 'emacspeak-v-keymap)
 (define-key  emacspeak-keymap "x" 'emacspeak-x-keymap)
 (define-key  emacspeak-keymap "y" 'emacspeak-y-keymap)
 
-;;}}}
-;;{{{ Create personal y map
+;;;  Create personal y map
 
 (defvar  emacspeak-y-keymap nil
   "Emacspeak y keymap")
@@ -586,8 +502,7 @@
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-;;}}}
-;;{{{ Create a C-z keymap that is customizable
+;;;  Create a C-z keymap that is customizable
 
 ;; 2020: Suspending emacs with C-z is something I've not done in 30
 ;; years.
@@ -597,7 +512,7 @@
   "Emacspeak ctl-z keymap")
 
 (define-prefix-command 'emacspeak-z-keymap)
-
+(global-set-key (kbd "C-z") 'emacspeak-z-keymap)
 (defcustom emacspeak-ctl-z-keys
   '(
     ("SPC" flyspell-mode)
@@ -631,8 +546,7 @@
 
 (define-key emacspeak-keymap  "z" 'emacspeak-z-keymap)
 
-;;}}}
-;;{{{ Create a hyper keymap that users can put personal commands
+;;;  Create a hyper keymap that users can put personal commands
 
 (defvar  emacspeak-hyper-keymap nil
   "Emacspeak hyper keymap")
@@ -645,7 +559,7 @@
     ("C-;" emacspeak-amark-bookshelf)
     ("C-l" emacspeak-librivox)
     (";" emacspeak-multimedia)
-    ("C-a" emacspeak-wizards-term)
+    ("C-a" ansi-term)
     ("C-b" eww-list-bookmarks)
     ("C-d" dictionary-search)
     ("C-e" eshell)
@@ -661,6 +575,7 @@
     ("g" gnus)
     ("h" emacspeak-m-player-from-history)
     ("i" ibuffer)
+    ("j" emacspeak-zoxide)
     ("l" emacspeak-m-player-locate-media)
     ("m" vm)
     ("o" find-file)
@@ -688,10 +603,9 @@
 (global-set-key "\C-x@h" 'emacspeak-hyper-keymap)
 (when (locate-library "empv")
   (require 'empv)
-  (global-set-key (ems-kbd "C-; v") empv-map))
+  (global-set-key (kbd "C-; v") empv-map))
 
-;;}}}
-;;{{{ Create a super keymap that users can put personal commands
+;;;  Create a super keymap that users can put personal commands
 
 (defvar  emacspeak-super-keymap nil
   "Emacspeak super keymap")
@@ -738,8 +652,7 @@
 
 (global-set-key "\C-x@s" 'emacspeak-super-keymap)
 
-;;}}}
-;;{{{ Create an  alt keymap that users can put personal commands
+;;;  Create an  alt keymap that users can put personal commands
 
 (defvar  emacspeak-alt-keymap nil "Emacspeak alt keymap")
 
@@ -784,8 +697,7 @@
 
 (global-set-key "\C-x@a" 'emacspeak-alt-keymap)
 
-;;}}}
-;;{{{ Create a multi keymap that users can put personal commands
+;;;  Create a multi keymap that users can put personal commands
 
 (defvar  emacspeak-multi-keymap nil "Emacspeak multi keymap")
 
@@ -795,8 +707,10 @@
   '(
     ("'" emacspeak-pianobar)
     ("d" sdcv-search-input)
+    ("f" ffap)
     ("l" locate)
     ("o" org-mode)
+    ("m" notmuch-search)
     ("y" emacspeak-google-yt-feed))
   "Multi key bindings. "
   :group 'emacspeak
@@ -813,8 +727,7 @@
                          val
                          #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-;;}}}
-;;{{{Windows Key As One More Map
+;;; Windows Key As One More Map
 (defcustom emacspeak-windows-keys nil
   "Key bindings on the windows  key. "
   :group 'emacspeak
@@ -840,8 +753,7 @@
         val
         #'(lambda (a b) (< (car a) (car b)))))))
 
-;;}}}
-;;{{{ Helper: recover end-of-line
+;;;  Helper: recover end-of-line
 
 (defun emacspeak-keymap-recover-eol ()
   "Recover EOL ."
@@ -850,18 +762,10 @@
   (global-set-key (concat emacspeak-prefix emacspeak-prefix) 'move-end-of-line))
 (add-hook 'after-change-major-mode-hook  'emacspeak-keymap-recover-eol)
 
-;;}}}
-;;{{{ Global Bindings From Other Modules:
-(global-set-key (ems-kbd "C-x r C-e") 'emacspeak-eww-marks-browse)
-(global-set-key (ems-kbd "C-x r e") 'emacspeak-eww-open-mark)
-
-;;}}}
+;;;  Global Bindings From Other Modules:
+(global-set-key (kbd "C-x r C-e") 'emacspeak-eww-marks-browse)
+(global-set-key (kbd "C-x r e") 'emacspeak-eww-open-mark)
 
 (provide 'emacspeak-keymap)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

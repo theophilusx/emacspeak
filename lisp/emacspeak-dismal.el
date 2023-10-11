@@ -1,7 +1,7 @@
 ;;; emacspeak-dismal.el --- Speech enable Dismal -*- lexical-binding: t; -*-
 ;; Description: spread sheet extension
 ;; Keywords:emacspeak, audio interface to emacs spread sheets
-;;{{{  LCD Archive entry: 
+;;;   LCD Archive entry: 
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -11,8 +11,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1995 by T. V. Raman  
 ;; All Rights Reserved. 
@@ -34,20 +33,18 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{  Introduction
+;;;   Introduction
 
 ;; emacspeak extensions to the dismal spreadsheet. 
 ;; Dismal can be found at ftp://cs.nyu.edu/pub/local/fox/dismal
 ;;; Code:
 
-;;}}}
-;;{{{  requires 
+;;;   requires 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-;;}}}
-;;{{{ Forward Decls:
+
+;;;  Forward Decls:
 
 (declare-function dismal-get-val "ext:dismal" (r c))
 (declare-function  dismal-convert-cellexpr-to-string "dismal" (sexp))
@@ -59,8 +56,7 @@
 (declare-function  dis-backward-column "dismal" (cols))
 (declare-function dis-recalculate-matrix "dismal" nil)
 
-;;}}}
-;;{{{  helper functions:
+;;;   helper functions:
 
 ;; return cell value as a string
 
@@ -86,8 +82,7 @@
   (dismal-convert-cellexpr-to-string
    (dismal-get-exp 0  dismal-current-col)))
 
-;;}}}
-;;{{{  Additional interactive commands
+;;;   Additional interactive commands
 
 (defun emacspeak-dismal-display-cell-expression ()
   "Display the expression in the message area"
@@ -150,8 +145,7 @@ The `column header' is the entry in row 0."
   (dis-backward-column cols)
   (emacspeak-dismal-col-summarize))
 
-;;}}}
-;;{{{  Intelligent summaries
+;;;   Intelligent summaries
 
 (defvar emacspeak-dismal-sheet-summarizer-list nil
   "Specifies how the entire sheet  should be summarized. ")
@@ -321,8 +315,7 @@ emacspeak-dismal-sheet-summarizer-list"
          (format "%S"
                  (or emacspeak-dismal-sheet-summarizer-list  "[")))))
 
-;;}}}
-;;{{{  key bindings
+;;;   key bindings
 
 ;; record emacspeak stat that we want dismal to save
 (defvar emacspeak-dismal-already-customized-dismal nil
@@ -367,11 +360,9 @@ Checked by emacspeak specific dis-mode-hooks entry.")
      (define-key
       dismal-map '[right] 'emacspeak-dismal-forward-col-and-summarize)))
 
-;;}}}
-;;{{{  Advice some commands. 
+;;;   Advice some commands. 
 
-;;}}}
-;;{{{ customize for use with html helper mode
+;;;  customize for use with html helper mode
 (defadvice dis-html-dump-file (around emacspeak pre act comp)
   "Sets html-helper-build-new-buffer to nil first so we dont
 end up building a template page first."
@@ -384,12 +375,6 @@ end up building a template page first."
 
   (let ((html-helper-build-new-buffer nil)) ad-do-it))
 
-;;}}}
 (provide  'emacspeak-dismal)
-;;{{{  emacs local variables 
+;;;   emacs local variables 
 
-;; local variables:
-;; folded-file: t
-;; end: 
-
-;;}}}

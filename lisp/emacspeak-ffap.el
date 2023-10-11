@@ -2,7 +2,7 @@
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable FFAP An Emacs Interface to ffap
 ;;; Keywords: Emacspeak,  Audio Desktop ffap
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
@@ -11,8 +11,7 @@
 ;;; Location undetermined
 ;;;
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;;;Copyright (C) 1995 -- 2007, 2019, T. V. Raman
 ;;; All Rights Reserved.
 ;;;
@@ -33,32 +32,27 @@
 ;;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;;; FFAP ==  Find file at point and friends
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile (require 'ffap))
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map 
  '((ffap voice-bolden)))
 
-;;}}}
-;;{{{ Interactive Commands:
+;;;  Interactive Commands:
 
 (cl-loop
  for f in 
@@ -78,12 +72,10 @@
        (emacspeak-auditory-icon 'open-object)
        (emacspeak-speak-mode-line)))))
 
-;;}}}
 (provide 'emacspeak-ffap)
-;;{{{ end of file
+;;;  end of file
 
-;;; local variables:
-;;; folded-file: t
-;;; end:
+                                        ; 
+                                        ; 
+                                        ; 
 
-;;}}}

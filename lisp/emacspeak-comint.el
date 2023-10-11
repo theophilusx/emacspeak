@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable COMINT An Emacs Interface to comint
 ;; Keywords: Emacspeak,  Audio Desktop comint
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |raman@cs.cornell.edu
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2007, 2019, T. V. Raman
 ;; All Rights Reserved.
@@ -35,10 +34,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 
@@ -48,8 +45,7 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -57,9 +53,8 @@
 (require 'comint)
 (require 'shell)
 
-;;}}}
-;;{{{ comint
-
+;;;  comint
+;;;###autoload
 (defcustom emacspeak-comint-autospeak t
   "Speak comint output.
 Use \\[emacspeak-toggle-comint-autospeak] to toggle this setting."
@@ -166,8 +161,7 @@ Interactive PREFIX arg means toggle the global default value. ")
 
 (add-hook 'comint-mode-hook 'emacspeak-comint-speech-setup)
 
-;;}}}
-;;{{{ Advice comint:
+;;;  Advice comint:
 
 (defadvice comint-delete-output (after emacspeak pre act comp)
   "speak."
@@ -525,8 +519,7 @@ instead, always play an auditory icon when the shell prompt is displayed."
   (when (ems-interactive-p)
     (emacspeak-speak-completions-if-available)))
 
-;;}}}
-;;{{{dirtrack-procfs:
+;;; dirtrack-procfs:
 
 (declare-function shell-dirtrack-mode "shell" (&optional arg))
 ;; Directory tracking for shell buffers on  systems that have  /proc
@@ -572,12 +565,26 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
 (when (file-exists-p "/proc")
   (add-hook 'shell-mode-hook 'dirtrack-procfs-mode))
 
-;;}}}
+;;; zoxide:
+;;; Inspired by zoxide.el
+
+;;;###autoload
+(defun emacspeak-zoxide (q)
+  "Query zoxide  and launch dired.
+Shell Utility zoxide --- implemented in Rust --- lets you jump to
+directories that are used often. "
+  (interactive "sZoxide:")
+  (if-let
+      ((z (executable-find "zoxide"))
+       (target
+        (with-temp-buffer; match found here if process returns 0
+          (if (= 0 (call-process z nil t nil "query" q))
+              (string-trim (buffer-string))))))
+      (funcall-interactively #'dired  target)
+    (unless z (error "Install zoxide"))
+    (unless target (error "No Match"))))
+
+(provide 'emacspeak-wizards)
 (provide 'emacspeak-comint)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

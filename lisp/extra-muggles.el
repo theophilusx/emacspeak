@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable MUGGLES An Emacs Interface to muggles
 ;; Keywords: Emacspeak,  Audio Desktop muggles
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -10,8 +10,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2007, 2011, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -34,10 +33,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 
@@ -84,25 +81,28 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'emacspeak-dired)
+(require 'hydra)
+(require 'org)
+(require 'emacspeak-outline)
+(require 'emacspeak-m-player)
+(require 'view)
+(require 'smartparens "smartparens" 'no-error)
 (eval-when-compile
+  (setq byte-compile-warnings '(not docstrings))
   (require 'emacspeak-hydra)
-  (require 'emacspeak-outline)
+  
   (require 'vuiet nil 'no-error)
-  (require 'smartparens "smartparens" 'no-error)
-  (require 'hydra "hydra" 'no-error)
-  (require 'view)
-  (require 'emacspeak-m-player))
+  (require 'hydra "hydra" 'no-error))
+(require 'eww)
 (with-no-warnings (require 'origami "origami" 'no-error))
 
-;;}}}
-;;{{{ Generate Muggles From Keymaps:
+;;;  Generate Muggles From Keymaps:
 
 ;; Generate A Muggle: Take a name of a keymap (symbol) And generate an
 ;; interactive command that can be bound to a key.  Invoking that
@@ -133,21 +133,20 @@ Argument `k-map' is a symbol  that names a keymap."
 ;; Create a command to invoke our media player map:
 
 (global-set-key
- (ems-kbd "s-m")
+ (kbd "s-m")
  (emacspeak-muggles-generate 'emacspeak-m-player-mode-map))
 
 ;; Create one for pianobar
 (when (featurep 'pianobar)
   (global-set-key
-   (ems-kbd "s-'")
+   (kbd "s-'")
    (emacspeak-muggles-generate 'pianobar-key-map)))
 
-;;}}}
-;;{{{ Media Player:
+;;;  Media Player:
 
 (declare-function emacspeak-amark-save "emacspeak-muggles" t)
 (global-set-key
- (ems-kbd "s-;")
+ (kbd "s-;")
  (defhydra emacspeak-muggles-m-player
            (:body-pre (emacspeak-hydra-body-pre "Media Player")
                       :pre emacspeak-hydra-pre :post emacspeak-hydra-post)
@@ -159,8 +158,6 @@ Argument `k-map' is a symbol  that names a keymap."
            ("." emacspeak-m-player-forward-10s)
            ("<" emacspeak-m-player-backward-1min)
            ("<down>" emacspeak-m-player-forward-1min)
-           ("<end>" emacspeak-m-player-end-of-track)
-           ("<home>" emacspeak-m-player-beginning-of-track)
            ("<left>" emacspeak-m-player-backward-10s)
            ("<next>" emacspeak-m-player-forward-10min)
            ("<prior>" emacspeak-m-player-backward-10min)
@@ -168,11 +165,8 @@ Argument `k-map' is a symbol  that names a keymap."
            ("<up>" emacspeak-m-player-backward-1min)
            ("=" emacspeak-m-player-volume-up)
            (">" emacspeak-m-player-forward-1min)
-           ("?" emacspeak-m-player-display-position)
            ("C" emacspeak-m-player-clear-filters)
            ("DEL" emacspeak-m-player-reset-speed)
-           ("O" emacspeak-m-player-reset-options)
-           ("P" emacspeak-m-player-apply-reverb-preset)
            ("Q" emacspeak-m-player-quit "quit")
            ("R" emacspeak-m-player-edit-reverb)
            ("S" emacspeak-amark-save)
@@ -190,12 +184,10 @@ Argument `k-map' is a symbol  that names a keymap."
            ("l" emacspeak-m-player-get-length)
            ("m" emacspeak-m-player-mode-line)
            ("n" emacspeak-m-player-next-track)
-           ("o" emacspeak-m-player-customize-options)
            ("p" emacspeak-m-player-previous-track)
            ("q" bury-buffer)
            ("r" emacspeak-m-player-seek-relative)
            ("s" emacspeak-m-player-scale-speed)
-           ("t" emacspeak-m-player-play-tracks-jump)
            ("u" emacspeak-m-player-url)
            ("v" emacspeak-m-player-volume-change)
            ("(" emacspeak-m-player-left-channel)
@@ -204,12 +196,11 @@ Argument `k-map' is a symbol  that names a keymap."
            ("}" emacspeak-m-player-double-speed)
            ))
 
-;;}}}
-;;{{{ Outliner:
+;;;  Outliner:
 
 ;; Cloned from Hydra Wiki:
 (global-set-key
- (ems-kbd "C-. o")
+ (kbd "C-. o")
  (defhydra emacspeak-muggles-outliner
            (:body-pre
             (progn
@@ -250,11 +241,10 @@ _d_: subtree
            ("b" outline-backward-same-level)      ; Backward - same level
            ("z" nil "leave")))
 
-;;}}}
-;;{{{ Info Summary:
+;;;  Info Summary:
 
 ;; Taken from Hydra wiki and customized to taste:
-(define-key Info-mode-map (ems-kbd "?")
+(define-key Info-mode-map (kbd "?")
             (defhydra emacspeak-muggles-info-summary
                       (
                        :color blue :hint nil
@@ -310,8 +300,7 @@ _d_: subtree
                       ("q"   quit-window "Info exit")
                       ("C-g" nil "cancel" :color blue)))
 
-;;}}}
-;;{{{ origami:
+;;;  origami:
 
 (declare-function origami-open-node "origami" (buffer point))
 (declare-function origami-close-node "origami" (buffer point))
@@ -322,7 +311,7 @@ _d_: subtree
 (declare-function origami-mode "origami" (&optional arg))
 
 (global-set-key
- (ems-kbd "C-, /")
+ (kbd "C-, /")
  (defhydra emacspeak-origami
            (:color red
                    :body-pre
@@ -343,8 +332,7 @@ _d_: subtree
            ("f" origami-forward-toggle-node)
            ("a" origami-toggle-all-nodes)))
 
-;;}}}
-;;{{{ Muggles Autoload Wizard:
+;;;  Muggles Autoload Wizard:
 
 (defvar emacspeak-muggles-pattern
   "emacspeak-muggles-.*/body$"
@@ -386,11 +374,10 @@ Also generates global keybindings if any."
       (save-buffer))
     (message "Generated autoloads for muggles.")))
 
-;;}}}
-;;{{{ smartParens:
+;;;  smartParens:
 
 (global-set-key
- (ems-kbd "C-c ,")
+ (kbd "C-c ,")
  (defhydra emacspeak-muggles-smartparens
            (:body-pre
             (progn
@@ -428,11 +415,10 @@ Also generates global keybindings if any."
            ("w" sp-copy-sexp)  
            ("{" #'(lambda (_) (interactive "P") (sp-wrap-with-pair "{")))))
 
-;;}}}
-;;{{{  View Mode:
+;;;   View Mode:
 
 (global-set-key
- (ems-kbd
+ (kbd
   "C-. v")
  (defhydra emacspeak-muggles-view
            (:body-pre
@@ -490,14 +476,13 @@ Also generates global keybindings if any."
            ("}" forward-paragraph)
            ))
 
-;;}}}
-;;{{{Vuiet:
+;;; Vuiet:
 
 (declare-function emacspeak-vuiet-track-info "emacspeak-vuiet" nil)
 (when (locate-library "vuiet")
   (with-no-warnings
     (global-set-key
-     (ems-kbd "C-; v")
+     (kbd "C-; v")
      (defhydra emacspeak-muggles-vuiet
                (:body-pre
                 (progn
@@ -524,38 +509,33 @@ Also generates global keybindings if any."
                ("t" vuiet-play-track)
                ("u" vuiet-unlove-track)))))
 
-;;}}}
-;;{{{ Org Mode Structure Navigation:
+;;;  Org Mode Structure Navigation:
 
 (with-eval-after-load "org"
+  (cl-declaim (special org-mode-map))
   (define-key
    org-mode-map
-   (ems-kbd "C-c C-SPC")
+   (kbd "C-c C-SPC")
    (defhydra emacspeak-muggles-org-nav
-             (:body-pre
-              (progn
-                (emacspeak-hydra-toggle-talkative)
-                (emacspeak-hydra-body-pre "OrgNavView"))
-              :hint nil
-              :pre emacspeak-hydra-pre :post emacspeak-hydra-post
-              :color red :columns 3)
-             "Org Mode Navigate "
-             ("?" (emacspeak-hydra-self-help "emacspeak-muggles-org-nav"))
-             ("SPC" emacspeak-outline-speak-this-heading  "Speak this section")
-             ("n" emacspeak-outline-speak-next-heading  "next heading")
-             ("p" emacspeak-outline-speak-previous-heading "prev heading")
-             ("f" org-forward-heading-same-level "next heading at same level")
-             ("b" org-backward-heading-same-level "prev heading at same level")
-             ("u" outline-up-heading "up heading")
-             ("g" org-goto "goto" :exit t))))
+     (:body-pre
+      (progn
+        (emacspeak-hydra-toggle-talkative)
+        (emacspeak-hydra-body-pre "OrgNavView"))
+      :hint nil
+      :pre emacspeak-hydra-pre :post emacspeak-hydra-post
+      :color red :columns 3)
+     "Org Mode Navigate "
+     ("?" (emacspeak-hydra-self-help "emacspeak-muggles-org-nav"))
+     ("SPC" emacspeak-outline-speak-this-heading  "Speak this section")
+     ("n" emacspeak-outline-speak-next-heading  "next heading")
+     ("p" emacspeak-outline-speak-previous-heading "prev heading")
+     ("f" org-forward-heading-same-level "next heading at same level")
+     ("b" org-backward-heading-same-level "prev heading at same level")
+     ("u" outline-up-heading "up heading")
+     ("g" org-goto "goto" :exit t))))
 
-;;}}}
 (provide 'extra-muggles)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
 ;; byte-compile-warnings: (docstring noruntime )
-;; end:
 
-;;}}}

@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  File for setting up and starting Emacspeak
 ;; Keywords: Emacspeak, Setup, Spoken Output
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -36,9 +35,6 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{ Introduction
-
 ;;; Commentary:
 ;; Entry point for Emacspeak.
 ;; The simplest and most basic way to start emacspeak is:
@@ -52,8 +48,7 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{Load-path:
+;;; Load-path:
 (eval-when-compile (require 'cl-lib))
 (cl-pushnew (file-name-directory load-file-name) load-path :test #'string=)
 (require 'emacspeak-preamble)
@@ -65,14 +60,8 @@
     (load  "emacspeak-loaddefs")
     (emacspeak)))
 
-;;}}}
-
 (provide 'emacspeak-setup)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
 ;; mode: emacs-lisp
-;; folded-file: t
-;; end:
 
-;;}}}

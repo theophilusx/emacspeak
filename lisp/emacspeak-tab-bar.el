@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable tab-bar An Emacs Interface to tab-bar
 ;; Keywords: Emacspeak,  Audio Desktop tab-bar
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2011, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -35,10 +34,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 
@@ -51,15 +48,13 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map 
  '(
@@ -68,8 +63,7 @@
    (tab-bar-tab-inactive voice-smoothen)
    (tab-line voice-lighten)))
 
-;;}}}
-;;{{{Helpers:
+;;; Helpers:
 
 (defsubst emacspeak-tab-bar-speak-tab-name ()
   "Speak name of current tab."
@@ -78,8 +72,7 @@
    (format "%s"
            (alist-get 'name (alist-get 'current-tab (tab-bar-tabs))))))
 
-;;}}}
-;;{{{ Interactive Commands:
+;;;  Interactive Commands:
 
 (defadvice tab-bar-switch-to-tab (after emacspeak pre act comp)
   "speak."
@@ -131,8 +124,7 @@
     (dtk-speak (message "Closed tab %s" (ad-get-arg  0)))
     (emacspeak-auditory-icon 'close-object)))
 
-;;}}}
-;;{{{tab-list commands:
+;;; tab-list commands:
 
 (cl-loop
  for f in 
@@ -183,12 +175,6 @@
     (emacspeak-auditory-icon 'select-object)
     (emacspeak-speak-line)))
 
-;;}}}
 (provide 'emacspeak-tab-bar)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

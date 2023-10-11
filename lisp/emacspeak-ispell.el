@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to speech enable ispell
 ;; Keywords: Emacspeak, Ispell, Spoken Output, Ispell version 2.30
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,10 +35,9 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Introduction:
+
 ;;; Commentary:
 ;; This module speech enables ispell.  Implementation note: This is
 ;; hard because of how ispell.el is written Namely, all of the work is
@@ -54,15 +52,14 @@
 ;; C-r and C-s.
 
 ;;; Code:
-;;}}}
-;;{{{ requires
+
+;;;  requires
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{  ispell command cl-loop:
+;;;   ispell command cl-loop:
 
 ;; defun ispell-command-loop (miss guess word start end)
 ;; Advice speaks the line containing the error with the erroneous
@@ -124,8 +121,7 @@ many available corrections."
   (let ((dtk-stop-immediately nil))
     (dtk-speak (documentation 'ispell-help))))
 
-;;}}}
-;;{{{  Advice top-level ispell commands:
+;;;   Advice top-level ispell commands:
 
 (cl-loop
  for f in
@@ -155,12 +151,6 @@ many available corrections."
    (t ad-do-it))
   ad-return-value)
 
-;;}}}
 (provide 'emacspeak-ispell)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

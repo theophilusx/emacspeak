@@ -2,7 +2,7 @@
 ;;; $Author: tv.raman.tv $
 ;;; Description:  Speech-enable EMPV An Emacs Interface to empv
 ;;; Keywords: Emacspeak,  Audio Desktop empv
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
@@ -11,8 +11,7 @@
 ;;; Location undetermined
 ;;;
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -35,18 +34,15 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;;; EMPV ==  Another Emacs Media Player
 ;; Provides better Youtube integration
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -57,8 +53,7 @@
                   "emacspeak-google" (url))
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
 
-;;}}}
-;;{{{Interactive Commands:
+;;; Interactive Commands:
 
 (cl-loop
  for f in
@@ -84,11 +79,9 @@
 
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{Additional Commands:
+;;; Additional Commands:
 
-;;}}}
-;;{{{Commands:
+;;; Commands:
 
 (defvar emacspeak-empv-history nil
   "Youtube history for EMpv.")
@@ -115,12 +108,10 @@
         (empv-play url))
     (empv-play url)))
 
-
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
 
 (declare-function emacspeak-media-read-resource
                   "emacspeak-m-player" (&optional prefix))
-
 
 ;;;###autoload
 (defun emacspeak-empv-play-file (file &optional left-channel)
@@ -143,8 +134,7 @@
   (emacspeak-accumulate-to-register ?u
                                     'empv-youtube-results--current-video-url))
 
-;;}}}
-;;{{{Seekers:
+;;; Seekers:
 
 (defun emacspeak-empv-relative-seek (target)
   "Relative seek in seconds,see `empv-seek'"
@@ -153,7 +143,6 @@
   (when (called-interactively-p 'interactive)
     (emacspeak-auditory-icon 'button)
     (call-interactively 'empv-display-current)))
-
 
 (defun emacspeak-empv-absolute-seek (target)
   "Absolute seek in seconds,see `empv-seek'"
@@ -171,13 +160,12 @@
     (emacspeak-auditory-icon 'button)
     (call-interactively 'empv-display-current)))
 
-;;}}}
-;;{{{Setup:
+;;; Setup:
 
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
   (cl-declare (special empv-map))
-  (global-set-key (ems-kbd "C-; v") empv-map)
+  (global-set-key (kbd "C-; v") empv-map)
   (cl-loop
    for b in
    '(
@@ -207,12 +195,10 @@
 
 (emacspeak-empv-setup)
 
-;;}}}
 (provide 'emacspeak-empv)
-;;{{{ end of file
+;;;  end of file
 
-;;; local variables:
-;;; folded-file: t
-;;; end:
+                                        ; 
+                                        ; 
+                                        ; 
 
-;;}}}

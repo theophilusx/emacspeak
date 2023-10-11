@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:   extension to speech enable re-builder
 ;; Keywords: Emacspeak, Audio Desktop
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
@@ -36,9 +35,7 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;{{{ Introduction
 
 ;;; Commentary: 
 
@@ -46,24 +43,22 @@
 ;; Will be used to advantage in efficiently setting up outline
 ;; regexp wizards
 
-;;}}}
 
-;;{{{ required modules
+;;;  required modules
 ;;; Code:
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Map faces to personalities 
+;;;  Map faces to personalities 
 (voice-setup-add-map
  '(
    (reb-match-0 voice-overlay-0)
    (reb-match-1 voice-overlay-1)
    (reb-match-2 voice-overlay-2)
    (reb-match-3 voice-overlay-3)))
-;;}}}
-;;{{{ Speech-enable interactive commands.
+
+;;;  Speech-enable interactive commands.
 
 (defadvice  re-builder (after emacspeak pre act comp)
   "Speak status information."
@@ -125,12 +120,6 @@
          #'(lambda (o) (overlay-put o 'auditory-icon 'item))  reb-overlays))))
   (emacspeak-speak-message-again))
 
-;;}}}
 (provide 'emacspeak-re-builder)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

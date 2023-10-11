@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable CIDER An Emacs Interface to cider
 ;; Keywords: Emacspeak,  Audio Desktop, cider
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2007, 2011, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -35,25 +34,21 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Speech-Enable CIDER --- Clojure IDE
 
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Map Faces:
+;;;  Map Faces:
 
 (voice-setup-add-map
  '(
@@ -90,8 +85,7 @@
    (cider-warning-highlight-face voice-animate-extra)
    ))
 
-;;}}}
-;;{{{ Apropos:
+;;;  Apropos:
 
 (cl-loop
  for f in
@@ -109,8 +103,7 @@
        (emacspeak-speak-mode-line)
        (emacspeak-auditory-icon 'open-object)))))
 
-;;}}}
-;;{{{ Associate Connection:
+;;;  Associate Connection:
 
 (cl-loop
  for f in
@@ -126,8 +119,7 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'task-done)))))
 
-;;}}}
-;;{{{ Browse:
+;;;  Browse:
 
 (cl-loop
  for f in
@@ -145,8 +137,7 @@
          (emacspeak-auditory-icon 'open-object)
          (emacspeak-speak-line))))))
 
-;;}}}
-;;{{{ Speech-enable Eval:
+;;;  Speech-enable Eval:
 
 (cl-loop
  for f in
@@ -162,8 +153,7 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'task-done)))))
 
-;;}}}
-;;{{{ cider-repl:
+;;;  cider-repl:
 
 ;;; Navigators:
 
@@ -243,8 +233,7 @@
     (message "Turned  %s pretty printing."
              (if cider-repl-use-pretty-printing 'on 'off))))
 
-;;}}}
-;;{{{ find:
+;;;  find:
 
 (cl-loop
  for f in
@@ -255,8 +244,7 @@
      "speak."(when (ems-interactive-p)
                (emacspeak-speak-line)))))
 
-;;}}}
-;;{{{ misc commands:
+;;;  misc commands:
 (cl-loop
  for f in
  '(cider-popup-buffer-quit-function cider-popup-buffer-quit)
@@ -303,8 +291,7 @@
        (emacspeak-auditory-icon 'open-object)
        (message "Displayed in other window.")))))
 
-;;}}}
-;;{{{ Speech-enable Debug:
+;;;  Speech-enable Debug:
 (cl-loop
  for f in
  '(cider-debug-defun-at-point cider-debug-move-here cider-debug-toggle-locals)
@@ -316,8 +303,7 @@
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'button)))))
 
-;;}}}
-;;{{{ Speech-enable Insert:
+;;;  Speech-enable Insert:
 
 (cl-loop
  for f in
@@ -332,8 +318,7 @@
        (emacspeak-speak-line)
        (emacspeak-auditory-icon 'yank-object)))))
 
-;;}}}
-;;{{{ Inspect And Inspector:
+;;;  Inspect And Inspector:
 
 (cl-loop
  for f in
@@ -369,12 +354,6 @@
        (emacspeak-auditory-icon 'select-object)
        (emacspeak-speak-line)))))
 
-;;}}}
 (provide 'emacspeak-cider)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

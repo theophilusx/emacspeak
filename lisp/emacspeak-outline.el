@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; DescriptionEmacspeak extensions for outline-mode
 ;; Keywords:emacspeak, audio interface to emacs Outlines
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |raman@crl.dec.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,9 +35,7 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 
-;;{{{  Introduction:
 
 ;;; Commentary:
 
@@ -46,15 +43,13 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ requires
+;;;  requires
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'outline)
 
-;;}}}
-;;{{{  Navigating through an outline:
+;;;   Navigating through an outline:
 
 (defadvice outline-next-heading (after emacspeak pre act comp)
   "Speak the line."
@@ -100,13 +95,12 @@
     (emacspeak-auditory-icon 'section)
     (emacspeak-speak-line)))
 
-;;}}}
-;;{{{outline-flag-region:
+;;; outline-flag-region:
 ;; Handle outline hide/show directly here --- rather than relying on
 ;;overlay advice alone.
 
 (defadvice outline-flag-region (around emacspeak pre act comp)
-  "Reflect hide/show via property invisible as wel"
+  "Reflect hide/show via property invisible as well"
   (defvar ems--voiceify-overlays)
   (let  ((ems--voiceify-overlays  nil)
          (beg (ad-get-arg 0))
@@ -119,7 +113,7 @@
        beg end 'invisible
        (if (ad-get-arg 2) 'outline nil)))))
 
-;;{{{  Hiding and showing subtrees
+;;;   Hiding and showing subtrees
 
 (defadvice outline-hide-entry (after emacspeak pre act comp)
   "Produce an auditory icon"
@@ -188,8 +182,7 @@
     (emacspeak-auditory-icon 'open-object)
     (message "Exposed subheadings below current level")))
 
-;;}}}
-;;{{{  Interactive speaking of sections
+;;;   Interactive speaking of sections
 
 (defvar emacspeak-outline-dont-query-before-speaking t
   "Option to control prompts when speaking  outline sections.")
@@ -262,7 +255,7 @@ except that the outline section is  spoken"
                   (count-lines start end) (ems--this-line))))
      (emacspeak-speak-region start end))))
 
-;;{{{ bind these in outline mode
+;;;  bind these in outline mode
 
 (defun emacspeak-outline-setup-keys ()
   "Bind keys in outline minor mode map"
@@ -275,6 +268,8 @@ except that the outline section is  spoken"
        (list outline-mode-prefix-map outline-navigation-repeat-map)
      (list outline-mode-prefix-map ))
    do
+   (define-key map "j" 'outline-next-visible-heading)
+   (define-key map "k" 'outline-previous-visible-heading)
    (define-key map "p" 'emacspeak-outline-speak-previous-heading)
    (define-key map "n" 'emacspeak-outline-speak-next-heading)
    (define-key map "b" 'emacspeak-outline-speak-backward-heading)
@@ -292,11 +287,7 @@ except that the outline section is  spoken"
 (add-hook 'outline-mode-hook 'emacspeak-outline-setup-keys)
 (add-hook 'outline-minor-mode-hook 'emacspeak-outline-setup-keys)
 
-;;}}}
-
-;;}}}
-
-;;{{{ Personalities (
+;;;  Personalities (
 (voice-setup-add-map
  '(
    (outline-1 voice-bolden)
@@ -307,8 +298,7 @@ except that the outline section is  spoken"
    (outline-6 voice-lighten-medium)
    ))
 
-;;}}}
-;;{{{ silence errors to help org-mode:
+;;;  silence errors to help org-mode:
 
 (defadvice outline-up-heading (around emacspeak pre act comp)
   "Silence error messages."
@@ -316,10 +306,7 @@ except that the outline section is  spoken"
    ad-do-it
    ad-return-value))
 
-;;}}}
-
-;;}}}
-;;{{{ foldout specific advice
+;;;  foldout specific advice
 
 (with-eval-after-load "foldout"
   (defadvice foldout-zoom-subtree (after emacspeak pre act comp)
@@ -336,12 +323,6 @@ except that the outline section is  spoken"
       (emacspeak-auditory-icon 'close-object)
       (emacspeak-speak-line))))
 
-;;}}}
 (provide  'emacspeak-outline)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

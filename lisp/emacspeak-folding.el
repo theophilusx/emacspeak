@@ -2,7 +2,7 @@
 ;; $Author: tv.raman.tv $
 ;; DescriptionEmacspeak extensions for folding-mode
 ;; Keywords:emacspeak, audio interface to emacs Folding editor
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -12,8 +12,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -36,9 +35,6 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
-;;{{{  Introduction:
-
 ;;; Commentary:
 ;; Folding mode turns emacs into a folding editor.
 ;; Folding mode is what I use:
@@ -48,14 +44,12 @@
 ;; 
 ;;; Code:
 
-;;}}}
-;;{{{ requires
+;;;  requires
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Advice
+;;;  Advice
 
 (cl-loop
  for f in
@@ -136,28 +130,20 @@ Then speak the  line."
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-speak-line)))))
 
-;;}}}
-;;{{{ Fix keymap:
+;;;  Fix keymap:
 (add-hook
  'folding-mode-hook
  #'(lambda ()
      (cl-declare (special folding-mode-map))
      (when (boundp 'folding-mode-map)
        (define-key
-        folding-mode-map (ems-kbd "C-e") 'emacspeak-keymap))))
+        folding-mode-map (kbd "C-e") 'emacspeak-keymap))))
 
-;;}}}
-;;{{{Diminish:
+;;; Diminish:
 
 (when (featurep 'diminish)
   (diminish 'folding-mode ""))
 
-;;}}}
 (provide  'emacspeak-folding)
-;;{{{  emacs local variables
+;;;   emacs local variables
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

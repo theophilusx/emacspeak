@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable PROCED A Task manager for Emacs
 ;; Keywords: Emacspeak,  Audio Desktop proced Task Manager
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,25 +35,21 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; PROCED ==  Process Editor
 ;; A new Task Manager for Emacs.
 ;; Proced is part of emacs 23.
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Variables
+;;;  Variables
 
 (defvar emacspeak-proced-minibuffer-history nil
   "History variable to track minibuffer usage in proced.")
@@ -64,8 +59,7 @@
 (defvar emacspeak-proced-process-cache nil
   "Cache of processes that are displayed.")
 
-;;}}}
-;;{{{ Helpers and actions
+;;;  Helpers and actions
 
 (defun emacspeak-proced-update-fields ()
   "Updates cache of field-name .column-positions alist."
@@ -286,8 +280,7 @@
       (emacspeak-proced-speak-this-field))
      (t (error "Can't find %s" name)))))
 
-;;}}}
-;;{{{ Advice interactive commands:
+;;;  Advice interactive commands:
 
 (defadvice proced-mark (before emacspeak pre act comp)
   "speak."
@@ -342,8 +335,7 @@
        (emacspeak-proced-speak-this-field)
        (emacspeak-auditory-icon 'task-done)))))
 
-;;}}}
-;;{{{ additional commands:
+;;;  additional commands:
 
 (defun emacspeak-proced-next-line ()
   "Move to next line and speak a summary."
@@ -366,12 +358,6 @@
       (skip-syntax-forward " ")
       (emacspeak-proced-speak-field 'args))))
 
-;;}}}
 (provide 'emacspeak-proced)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

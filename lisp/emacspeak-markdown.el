@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable MARKDOWN An Emacs Interface to markdown
 ;; Keywords: Emacspeak,  Audio Desktop markdown
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,24 +35,20 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; MARKDOWN ==  Light-weight markup.
 ;; This module speech-enables markdown.el
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ Map faces to voices:
+;;;  Map faces to voices:
 (voice-setup-add-map
  '(
    (markdown-italic-face  voice-animate)
@@ -83,8 +78,8 @@
    (markdown-metadata-key-face voice-smoothen)
    (markdown-metadata-value-face voice-smoothen-medium)
    ))
-;;}}}
-;;{{{ Advice Interactive Commands:
+
+;;;  Advice Interactive Commands:
 (cl-loop
  for f in
  '(markdown-outdent-or-delete markdown-exdent-or-delete)
@@ -182,12 +177,6 @@
        (emacspeak-auditory-icon 'complete)
        (emacspeak-speak-line)))))
 
-;;}}}
 (provide 'emacspeak-markdown)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

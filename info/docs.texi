@@ -4,7 +4,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1152 commands and 147 options.
+This chapter documents a total of 1153 commands and 147 options.
 
 @menu
 * amixer::Set Audio Volume from Emacs.
@@ -56,9 +56,7 @@ This chapter documents a total of 1152 commands and 147 options.
 * emacspeak-dired::Speech enable Dired Mode.
 * emacspeak-dismal::Speech enable Dismal.
 * emacspeak-dumb-jump::DUMB-JUMP.
-* emacspeak-eaf::Speech-enable EAF.
 * emacspeak-ecb::speech-enable ECB.
-* emacspeak-eclim::Speech-enable ECLIM.
 * emacspeak-ediff::Speech enable  ediff.
 * emacspeak-eglot::Speech-enable EGLOT.
 * emacspeak-ein::Speech-enable EIN.
@@ -1656,6 +1654,7 @@ Save buffer-local AMarks in  currently playing directory.
 @section emacspeak-analog
 
 Speech-enables package analog --convenient log analyzer
+ required modules
 
 @subsection Emacspeak-Analog Commands
 
@@ -1721,6 +1720,8 @@ This module speech-enables apt-sources.el
 that is included in the debian-el package
 and provides a major mode for editing
 APT's sources.list file.
+
+  Required modules
 
 @node emacspeak-arc
 @section emacspeak-arc
@@ -1821,6 +1822,8 @@ Tie the next n  words.
 BBC developer API (backstage) is now history.
 that implementation is in obsolete/emacspeak-bbc-backstage.el
 This module contains a light-weight client.
+
+  Required modules
 
 @subsection Emacspeak-Bbc Commands
 
@@ -2237,6 +2240,7 @@ b Browse
 
 Key             Binding
 -------------------------------------------------------------------------------
+RET		emacspeak-bookshare-toc-at-point
 SPC		emacspeak-bookshare-expand-at-point
 +		emacspeak-bookshare-action
 /		emacspeak-bookshare-action
@@ -3054,6 +3058,26 @@ toggles personality under point.
 @end format
 @end deffn
 
+@subsubsection emacspeak-zoxide
+@deffn {Command} emacspeak-zoxide  (q)
+@table @kbd
+@item C-; j
+@kindex C-; j
+@item C-x @@ h j
+@kindex C-x @@ h j
+@end table
+
+@findex emacspeak-zoxide
+
+@format
+Query zoxide  and launch dired.
+Shell Utility zoxide --- implemented in Rust --- lets you jump to
+directories that are used often. 
+
+(fn Q)
+@end format
+@end deffn
+
 @subsection emacspeak-comint Options
 
 @defvar {User Option} emacspeak-comint-autospeak
@@ -3083,6 +3107,8 @@ along with other custom settings. Function
 @code{emacspeak-company-frontend} handles providing spoken
 feedback, and leaves it to other frontends on
 @var{company-frontends}   to generate their own feedback.
+
+  Required modules
 
 @node emacspeak-compile
 @section emacspeak-compile
@@ -3163,6 +3189,8 @@ See relevant hooks for customizing behavior.
 Note that each of the  sleep/wake-up, UDisks2   and network/up-down
 can be separately enabled/disabled, and the actions customized
 via appropriately named hook functions.
+
+  Required modules
 
 @subsection Emacspeak-Dbus Commands
 
@@ -3279,6 +3307,7 @@ server at dict.org:2628
 @section emacspeak-diff-mode
 
 DIFF-MODE  support.
+  Required modules
 
 @node emacspeak-dired
 @section emacspeak-dired
@@ -3663,13 +3692,6 @@ emacspeak-dismal-sheet-summarizer-list
 DUMB-JUMP ==  Jump to imputed cross-references  in source code.
 This module speech-enables dumb-jump
 
-@node emacspeak-eaf
-@section emacspeak-eaf
-
-EAF ==  Emacs Application Framework
-https://github.com/manateelazycat/emacs-application-framework.git
-This module speech-enables the elisp side of EAF.
-
 @node emacspeak-ecb
 @section emacspeak-ecb
 
@@ -3732,15 +3754,6 @@ Clear search pattern during incremental search in tree buffers.
 @end format
 @end deffn
 
-@node emacspeak-eclim
-@section emacspeak-eclim
-
-ECLIM ==  Eclipse/Vim integration.
-http://www.eclim.org turns Eclipse into a headless server
-that can be called from other programs.
-Package Emacs-Eclim connects Emacs to Eclim.
-Package emacspeak-eclim speech-enables emacs-eclim.
-
 @node emacspeak-ediff
 @section emacspeak-ediff
 
@@ -3781,6 +3794,8 @@ EIN ==  Emacs IPython Notebook
 You can install package EIN via mELPA
 This module speech-enables EIN
 
+  Required modules
+
 @subsection Emacspeak-Ein Commands
 
 @subsubsection emacspeak-ein-speak-current-cell
@@ -3798,6 +3813,8 @@ Speak current cell.
 ELFEED ==  Feed Reader for Emacs.
 Install from elpa
 M-x package-install  elfeed
+
+  Required modules
 
 @subsection Emacspeak-Elfeed Commands
 
@@ -4546,6 +4563,7 @@ Key             Binding
 -------------------------------------------------------------------------------
 C-a		emacspeak-epub-bookshelf-add-directory
 C-d		emacspeak-epub-bookshelf-remove-directory
+C-k		emacspeak-epub-delete
 C-l		emacspeak-epub-bookshelf-redraw
 RET		emacspeak-epub-eww
 C-o		emacspeak-epub-bookshelf-open-epub
@@ -4830,6 +4848,8 @@ This module speech-enables EShell
 
 ESS == Emacs Speaks Statistics
 This module makes ESS speak.
+
+  Required modules
 
 @node emacspeak-etable
 @section emacspeak-etable
@@ -5687,6 +5707,10 @@ Filters out elements having specified class value.
 @item e
 @command{emacspeak-we-url-expand-and-execute}
 Follow link under point, but pass the result to a custom executor.
+Availability of special executors for link under point is indicated
+by auditory icon @emph{item} instead of @emph{button}
+You can then experiment by pressing @code{RET} or @code {e e}.
+Special executors are available for Reddit Links, Wikipedia Links etc.
 @item f
 @command{emacspeak-we-xslt-filter}
 Apply a specified XSLT filter (XPath) to current page.
@@ -6895,6 +6919,7 @@ Cycle to next workspace, with wrap-around
 @section emacspeak-feeds
 
 This module provides Feeds support for Emacspeak
+ required modules
 
 @subsection Emacspeak-Feeds Commands
 
@@ -7388,6 +7413,7 @@ all
 @section emacspeak-go-mode
 
 GO-MODE ==  Go Language support in emacs
+  Required modules
 
 @node emacspeak-gomoku
 @section emacspeak-gomoku
@@ -8176,6 +8202,8 @@ JS2-mode http://js2-mode.googlecode.com/svn/trunk
 is a new, powerful Emacs mode for working with JavaScript.
 This module speech-enables js2.
 
+  Required modules
+
 @node emacspeak-keymap
 @section emacspeak-keymap
 
@@ -8248,7 +8276,7 @@ Default Value:
 
 ((";" emacspeak-multimedia)
  ("C-;" emacspeak-amark-bookshelf)
- ("C-a" emacspeak-wizards-term)
+ ("C-a" ansi-term)
  ("C-b" eww-list-bookmarks)
  ("C-d" dictionary-search)
  ("C-e" eshell)
@@ -8266,6 +8294,7 @@ Default Value:
  ("g" gnus)
  ("h" emacspeak-m-player-from-history)
  ("i" ibuffer)
+ ("j" emacspeak-zoxide)
  ("l" emacspeak-m-player-locate-media)
  ("m" vm)
  ("o" find-file)
@@ -8288,7 +8317,9 @@ Default Value:
 
 (("'" emacspeak-pianobar)
  ("d" sdcv-search-input)
+ ("f" ffap)
  ("l" locate)
+ ("m" notmuch-search)
  ("o" org-mode)
  ("y" emacspeak-google-yt-feed))
 
@@ -8417,7 +8448,10 @@ Default Value:
 @node emacspeak-kmacro
 @section emacspeak-kmacro
 
+  Introduction
 speech-enables kmacro --- a kbd macro interface
+
+ required modules
 
 @node emacspeak-librivox
 @section emacspeak-librivox
@@ -8998,6 +9032,8 @@ Play both channels on left.
 @subsubsection emacspeak-m-player-locate-media
 @deffn {Command} emacspeak-m-player-locate-media  (pattern)
 @table @kbd
+@item C-z l
+@kindex C-z l
 @item C-; l
 @kindex C-; l
 @item C-e z l
@@ -9710,6 +9746,8 @@ nil
 MAGIT ==  Git interface in Emacs
 git clone git://github.com/magit/magit.git
 
+  Required modules
+
 @node emacspeak-make-mode
 @section emacspeak-make-mode
 
@@ -9745,6 +9783,8 @@ Speak current section
 
 MARKDOWN ==  Light-weight markup.
 This module speech-enables markdown.el
+
+  Required modules
 
 @node emacspeak-maths
 @section emacspeak-maths
@@ -9979,6 +10019,8 @@ Speech-enables metapost mode.
 metapost is a powerful drawing package
 typically installed as mpost by modern TeX
 installations.
+
+  completion
 
 @node emacspeak-midge
 @section emacspeak-midge
@@ -10402,11 +10444,13 @@ The body can be accessed via ‘emacspeak-muggles-yank-pop/body’.
 @section emacspeak-muse
 
 Speech enable Muse
+  Required modules
 
 @node emacspeak-net-utils
 @section emacspeak-net-utils
 
 This module speech enables net-utils
+ requires
 
 @node emacspeak-newsticker
 @section emacspeak-newsticker
@@ -10414,6 +10458,8 @@ This module speech enables net-utils
 Newsticker provides a continuously updating newsticker using
 RSS
 Provides functionality similar to amphetadesk --but in pure elisp
+
+ required modules
 
 @node emacspeak-notmuch
 @section emacspeak-notmuch
@@ -11156,6 +11202,8 @@ PACKAGE == package.el
 Manage Emacs packages.
 This module speech-enables package.el with a few convenience commands.
 
+  Required modules
+
 @subsection Emacspeak-Package Commands
 
 @subsubsection emacspeak-package-next-line
@@ -11191,6 +11239,8 @@ Succinct Summary.
 PARADOX == paradox.el Improved package management interface
 Manage Emacs packages.
 This module speech-enables paradox.el with a few convenience commands.
+
+  Required modules
 
 @subsection Emacspeak-Paradox Commands
 
@@ -11360,6 +11410,8 @@ POPUP ==  popup.el from MELPA
 PROCED ==  Process Editor
 A new Task Manager for Emacs.
 Proced is part of emacs 23.
+
+  Required modules
 
 @subsection Emacspeak-Proced Commands
 
@@ -11710,6 +11762,7 @@ Will be used to advantage in efficiently setting up outline
 regexp wizards
 
 
+ required modules
 
 @node emacspeak-reftex
 @section emacspeak-reftex
@@ -12033,6 +12086,8 @@ found in appropriate subdirectories of emacspeak-sounds-directory.
 @item The auditory icon player is configure via
 custom option @code{emacspeak-play-program}.
 @end itemize
+
+ required modules
 
 @subsection Emacspeak-Sounds Commands
 
@@ -14000,6 +14055,8 @@ Playing SuDoku using speech output.
 Written to discover what type of feedback one needs for  this
 task.
 
+  Required modules
+
 @subsection Emacspeak-Sudoku Commands
 
 @subsubsection emacspeak-sudoku-board-columns-summarize
@@ -15590,7 +15647,7 @@ Add book under point to wishlist.
 @findex emacspeak-url-template-save
 
 @format
-Save out url templates.
+Save url templates.
 
 (fn FILE)
 @end format
@@ -15868,6 +15925,7 @@ Speak current playing state.
 @section emacspeak-wdired
 
 Speech-enable wdired to permit in-place renaming of groups of files.
+ required modules
 
 @node emacspeak-we
 @section emacspeak-we
@@ -16595,17 +16653,6 @@ Search Computer Science Bibliographies.
 @end format
 @end deffn
 
-@subsubsection emacspeak-websearch-citeseer-search
-@deffn {Command} emacspeak-websearch-citeseer-search  (term)
-@findex emacspeak-websearch-citeseer-search
-
-@format
-Perform a CiteSeer search. 
-
-(fn TERM)
-@end format
-@end deffn
-
 @subsubsection emacspeak-websearch-dispatch
 @deffn {Command} emacspeak-websearch-dispatch   
 @table @kbd
@@ -16736,6 +16783,7 @@ Search the Merriam Webster Dictionary.
 
 @format
 Search Wikipedia using Google.
+Use URL Template ‘wikipedia at point’ to advantage in the results buffer.
 
 (fn QUERY)
 @end format
@@ -16886,6 +16934,8 @@ nil
 This module implements the necessary extensions to provide talking
 widgets.
 
+ required modules
+
 @subsection Emacspeak-Widget Commands
 
 @subsubsection emacspeak-widget-browse-widget-interactively
@@ -16945,6 +16995,8 @@ Sets widget at ‘pos’ by invoking its prompter.
 Package  windmove (bundled with Emacs 21)
 provides commands for navigating to windows based on
 relative position.
+
+ required modules
 
 @node emacspeak-winring
 @section emacspeak-winring
@@ -17237,6 +17289,34 @@ Move backward  across blank lines, then speak line.
 @format
 Move forward across blank lines, then speak line.
 
+@end format
+@end deffn
+
+@subsubsection emacspeak-skip-space-backward
+@deffn {Command} emacspeak-skip-space-backward   
+@table @kbd
+@item S-<left>
+@kindex S-<left>
+@end table
+
+@findex emacspeak-skip-space-backward
+
+@format
+Skip back across blanks.
+@end format
+@end deffn
+
+@subsubsection emacspeak-skip-space-forwar
+@deffn {Command} emacspeak-skip-space-forwar   
+@table @kbd
+@item S-<right>
+@kindex S-<right>
+@end table
+
+@findex emacspeak-skip-space-forwar
+
+@format
+Skip forward across blanks.
 @end format
 @end deffn
 
@@ -17711,6 +17791,8 @@ interactive prompt.
 @subsubsection emacspeak-wizards-eww-buffer-list
 @deffn {Command} emacspeak-wizards-eww-buffer-list   
 @table @kbd
+@item C-z e
+@kindex C-z e
 @item C-e z e
 @kindex C-e z e
 @item <fn> z e
@@ -18359,27 +18441,6 @@ Swap foreground and background.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-term
-@deffn {Command} emacspeak-wizards-term  (create)
-@table @kbd
-@item C-; C-a
-@kindex C-; C-a
-@item C-x @@ h C-a
-@kindex C-x @@ h C-a
-@end table
-
-@findex emacspeak-wizards-term
-
-@format
-Switch to an ansi-term buffer or create one.
-With prefix arg, always creates a new terminal.
-Otherwise cycles through existing terminals, creating the first
-term if needed.
-
-(fn CREATE)
-@end format
-@end deffn
-
 @subsubsection emacspeak-wizards-tex-tie-current-word
 @deffn {Command} emacspeak-wizards-tex-tie-current-word  (n)
 @findex emacspeak-wizards-tex-tie-current-word
@@ -18534,6 +18595,8 @@ Buffer menu filtered by  m-player mode.
 @subsubsection emacspeak-wizards-view-buffers-filtered-by-this-mode
 @deffn {Command} emacspeak-wizards-view-buffers-filtered-by-this-mode   
 @table @kbd
+@item C-z b
+@kindex C-z b
 @item C-. m
 @kindex C-. m
 @item C-e z b
@@ -18632,6 +18695,8 @@ View XKCD comics in Emacs.
 Speech enables package xkcd
 Augments it by displaying the alt text and the transcript.
 
+  Required modules
+
 @subsection Emacspeak-Xkcd Commands
 
 @subsubsection emacspeak-xkcd-open-explanation-browser
@@ -18649,6 +18714,8 @@ Open explanation of current xkcd in default browser
 XREF ==  Cross-references in source code.
 This is part of Emacs 25.
 This module speech-enables xref
+
+  Required modules
 
 @node emacspeak-xslt
 @section emacspeak-xslt
@@ -18933,8 +19000,6 @@ The heads for the associated hydra are:
 ".":    ‘emacspeak-m-player-forward-10s’,
 "<":    ‘emacspeak-m-player-backward-1min’,
 "<down>":    ‘emacspeak-m-player-forward-1min’,
-"<end>":    ‘emacspeak-m-player-end-of-track’,
-"<home>":    ‘emacspeak-m-player-beginning-of-track’,
 "<left>":    ‘emacspeak-m-player-backward-10s’,
 "<next>":    ‘emacspeak-m-player-forward-10min’,
 "<prior>":    ‘emacspeak-m-player-backward-10min’,
@@ -18942,11 +19007,8 @@ The heads for the associated hydra are:
 "<up>":    ‘emacspeak-m-player-backward-1min’,
 "=":    ‘emacspeak-m-player-volume-up’,
 ">":    ‘emacspeak-m-player-forward-1min’,
-"?":    ‘emacspeak-m-player-display-position’,
 "C":    ‘emacspeak-m-player-clear-filters’,
 "DEL":    ‘emacspeak-m-player-reset-speed’,
-"O":    ‘emacspeak-m-player-reset-options’,
-"P":    ‘emacspeak-m-player-apply-reverb-preset’,
 "Q":    ‘emacspeak-m-player-quit’,
 "R":    ‘emacspeak-m-player-edit-reverb’,
 "S":    ‘emacspeak-amark-save’,
@@ -18964,12 +19026,10 @@ The heads for the associated hydra are:
 "l":    ‘emacspeak-m-player-get-length’,
 "m":    ‘emacspeak-m-player-mode-line’,
 "n":    ‘emacspeak-m-player-next-track’,
-"o":    ‘emacspeak-m-player-customize-options’,
 "p":    ‘emacspeak-m-player-previous-track’,
 "q":    ‘bury-buffer’,
 "r":    ‘emacspeak-m-player-seek-relative’,
 "s":    ‘emacspeak-m-player-scale-speed’,
-"t":    ‘emacspeak-m-player-play-tracks-jump’,
 "u":    ‘emacspeak-m-player-url’,
 "v":    ‘emacspeak-m-player-volume-change’,
 "(":    ‘emacspeak-m-player-left-channel’,
@@ -19771,6 +19831,8 @@ Default Value:
 This module defines the various voices used in voice-lock mode.
  Module Plain is  suitable for a device for which you haven't yet
  implemented appropriate voice-locking controls
+
+ required modules
 
 @node soundscape
 @section soundscape
@@ -20838,9 +20900,9 @@ This is a minor mode.  If called interactively, toggle the
 ‘Voice-Lock mode’ mode.  If the prefix argument is positive,
 enable the mode, and if it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is ‘toggle’.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is ‘toggle’. Enable
+the mode if ARG is nil, omitted, or is a positive number. Disable
+the mode if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
 evaluate ‘voice-lock-mode’.
@@ -20966,7 +21028,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 62 URL Templates.
+This section documents a total of 63 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20982,140 +21044,142 @@ Each URL template carries out the following steps:
 @end itemize
 @enumerate 
 
-@item @b{AQI From Wunderground}
+@item @b{air traffic control}
 
-Air quality from Wunderground@item @b{Air Traffic Control}
+Find live streams for Air Traffic Control.@item @b{airport conditions}
 
-Find live streams for Air Traffic Control.@item @b{Airport conditions}
+Display airport conditions from the FAA.@item @b{amazon product details by asin}
 
-Display airport conditions from the FAA.@item @b{Amazon Product Details By ASIN}
+Retrieve product details from Amazon by either ISBN or ASIN.@item @b{aqi from wunderground}
 
-Retrieve product details from Amazon by either ISBN or ASIN.@item @b{ArchWiki Search}
+Air quality from Wunderground@item @b{archwiki search}
 
-Search Linux ArchWiki@item @b{BBC Podcast Directory}
+Search Linux ArchWiki@item @b{bbc podcast directory}
 
-BBC PodCast Directory@item @b{BBC Sounds}
+BBC PodCast Directory@item @b{bbc sounds}
 
-Search BBC Sounds.@item @b{Bing News}
+Search BBC Sounds@item @b{bing news}
 
-Bing News results as RSS feed.@item @b{Business Headlines From CNN}
+Bing News results as RSS feed.@item @b{business headlines from cnn}
 
-Money Headlines From CNN@item @b{CIA World Fact Book}
+Money Headlines From CNN@item @b{cia world fact book}
 
-Open CIA World Fact Book For Specified Country.@item @b{CNBC Quotes}
+Open CIA World Fact Book For Specified Country.@item @b{cnbc quotes}
 
-Stock portfolio via CNBC@item @b{CNBC Ticker}
+Stock portfolio via CNBC@item @b{cnbc ticker}
 
-Stock Quote via CNBC@item @b{CNN Headlines}
+Stock Quote via CNBC@item @b{cnn headlines}
 
-News Headlines From CNN@item @b{CNN Money}
+News Headlines From CNN@item @b{cnn money}
 
-CNN Money@item @b{CNN World}
+CNN Money@item @b{cnn world}
 
-CNN World@item @b{Cricinfo Print}
+CNN World@item @b{cricinfo print}
 
-Printer friendly   link on Cricinfo@item @b{Dictionary Lookup}
+Printer friendly   link on Cricinfo@item @b{dictionary lookup}
 
-Dictionary Lookup@item @b{Finance  Google}
+Dictionary Lookup@item @b{finance  google}
 
-Lookup ticker on Google Finance.@item @b{Finance Summary From Google}
+Lookup ticker on Google Finance.@item @b{finance summary from google}
 
-Display top stocks  from Google Finance.@item @b{FreeSound}
+Display top stocks  from Google Finance.@item @b{freesound}
 
-Search FreeSound.@item @b{Google News Search}
+Search FreeSound.@item @b{google news search}
 
-Search Google news.@item @b{Google Quotes}
+Search Google news.@item @b{google quotes}
 
-Light-weight Google Stock quotes.@item @b{Google Scholar}
+Light-weight Google Stock quotes.@item @b{google scholar}
 
-Google Scholar Search@item @b{Google Trends}
+Google Scholar Search@item @b{google trends}
 
-Google Trends@item @b{Google Weather}
+Google Trends@item @b{google weather}
 
-Light-weight Google weather.@item @b{Guardian RSS Feeds Directory}
+Light-weight Google weather.@item @b{guardian rss feeds directory}
 
-Guardian Feeds  Directory@item @b{Hacker  News Frontpage}
+Guardian Feeds  Directory@item @b{hacker  news frontpage}
 
-Display Hacker News Front Page@item @b{Hacker  News Search}
+Display Hacker News Front Page@item @b{hacker  news search}
 
-Display Hacker News Front Page@item @b{Hoogle Haskell API Search}
+Display Hacker News Front Page@item @b{hoogle haskell api search}
 
-Haskell API Search against a local server.@item @b{Microsoft Search}
+Haskell API Search against a local server.@item @b{html google news search}
 
-Bing results as RSS feed.@item @b{NBA  standings}
+Search Google news.@item @b{microsoft search}
 
-Display NBA standings.@item @b{NLS Bard Bookshelf}
+Bing results as RSS feed.@item @b{nba  standings}
+
+Display NBA standings.@item @b{nls bard bookshelf}
 
 NLS Bard Catalog: Most Popular. Login once before using this
-template.@item @b{NLS Bard Popular}
+template.@item @b{nls bard popular}
 
 NLS Bard Catalog: Most Popular. Login once before using this
-template.@item @b{NLS Bard Recent}
+template.@item @b{nls bard recent}
 
 NLS Bard Catalog: Recently Added. Login once before using this
-template.@item @b{NLS Bard Search}
+template.@item @b{nls bard search}
 
-Search NLS Bard Catalog. Login once before using this template.@item @b{NPR}
+Search NLS Bard Catalog. Login once before using this template.@item @b{npr}
 
-Open NPR home , then display the alternative links to access RSS feeds.@item @b{Old Time Radio}
+Open NPR home , then display the alternative links to access RSS feeds.@item @b{old time radio}
 
-This months Old Time Radio Programming@item @b{OpenLibrary}
+This months Old Time Radio Programming@item @b{openlibrary}
 
-Open Library Search@item @b{Patent Search From Google}
+Open Library Search@item @b{patent search from google}
 
-Perform patent search via Google@item @b{Player FM BBC RSS Feeds}
+Perform patent search via Google@item @b{player fm bbc rss feeds}
 
-Player FM BBC RSS Feeds@item @b{RadioTime Browser}
+Player FM BBC RSS Feeds@item @b{radiotime browser}
 
-RadioTime Entry point.@item @b{RadioTime Categories}
+RadioTime Entry point.@item @b{radiotime categories}
 
-RadioTime Categories .@item @b{RadioTime Search}
+RadioTime Categories @item @b{radiotime search}
 
-RadioTime Search.@item @b{Reddit At Point.}
+RadioTime Search@item @b{reddit at point}
 
-Open RSS Feed for Reddit URL under point.@item @b{Reddit By Topic.}
+Open RSS Feed for Reddit URL under point.@item @b{reddit by topic}
 
-Open RSS Feed for Reddit Topic.@item @b{Reddit Front Page.}
+Open RSS Feed for Reddit Topic.@item @b{reddit front page}
 
-Open  Feed for Reddit  Front Page.@item @b{Reddit Search.}
+Open  Feed for Reddit  Front Page.@item @b{reddit search}
 
-Reddit Search Results Feed.@item @b{StreamWorld Radio}
+Reddit Search Results Feed.@item @b{sourceforge browse mirrors}
+
+Retrieve download page at Sourceforge for specified project.@item @b{sourceforge download}
+
+Download specified file.@item @b{sourceforge project}
+
+Open specified project page at SourceForge.@item @b{streamworld radio}
 
 Play radio stream.
 Example: kcbsFM.
-Format is stationid+AM/FM.@item @b{Tech News From CNet}
+Format is stationid+AM/FM.@item @b{tech news from cnet}
 
-Display tech news from CNET@item @b{TuneIn Radio}
+Display tech news from CNET@item @b{tunein radio}
 
-Translate StreamId to playable stream.@item @b{US Stock Market From Google }
+Translate StreamId to playable stream.@item @b{us stock market from google }
 
-Light-weight Google US Stock Markets.@item @b{Washington Post}
-
-Washington Post Contents@item @b{Wiki Data Search}
-
-Search WikiData.@item @b{WordNet Search}
-
-Look up term in WordNet.@item @b{Yahoo RSSNews}
-
-News  From Yahoo As RSS.@item @b{html Google News Search}
-
-Search Google news.@item @b{sourceforge Download}
-
-Download specified file.@item @b{sourceforge browse mirrors}
-
-Retrieve download page at Sourceforge for specified project.@item @b{sourceforge project}
-
-Open specified project page at SourceForge.@item @b{w3c IRC Logs}
+Light-weight Google US Stock Markets.@item @b{w3c irc logs}
 
 Use this to pull up the
 archived logs from the W3C IRC. You need to know the exact
-name of the channel.@item @b{w3c Lists}
+name of the channel.@item @b{w3c lists}
 
 Use this to pull up the
 archived mail from the W3C list. You need to know the exact
-name of the list.@item @b{world CNN Content}
+name of the list.@item @b{washington post}
 
-Filter down to CNN content area.
+Washington Post Contents@item @b{wiki data search}
+
+Search WikiData.@item @b{wikipedia at point}
+
+Extract body content from Wikipedia link at point@item @b{wordnet search}
+
+Look up term in WordNet.@item @b{world cnn content}
+
+Filter down to CNN content area.@item @b{yahoo rssnews}
+
+News  From Yahoo As RSS.
 
 @end enumerate
 

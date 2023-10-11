@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description: Implement library of URI templates
 ;; Keywords: Emacspeak, Audio Desktop
-;;{{{ LCD Archive entry:
+;;;  LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{ Copyright:
+;;;  Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman<tv.raman.tv@gmail.com>
 ;; All Rights Reserved.
@@ -36,10 +35,9 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{ Introduction:
+:
 
 ;;; Commentary:
 
@@ -53,8 +51,7 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ required modules
+;;;  required modules
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
@@ -68,8 +65,8 @@
 (require 'g-utils)
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
-;;}}}
-;;{{{ structures
+
+;;;  structures
 
 (cl-defstruct (emacspeak-url-template
                (:constructor emacspeak-url-template-constructor))
@@ -81,8 +78,7 @@
   fetcher ; custom fetcher
   dont-url-encode)
 
-;;}}}
-;;{{{ Helpers
+;;;  Helpers
 
 (defun emacspeak-url-template-url (ut)
   "Instantiate URL identified by URL template."
@@ -103,8 +99,7 @@
                  (emacspeak-url-template-generators ut)))))
     url))
 
-;;}}}
-;;{{{ persistent store
+;;;  persistent store
 
 (defvar emacspeak-url-template-table (make-hash-table :test 'equal)
   "Stores URL templates. ")
@@ -112,16 +107,15 @@
 (defun emacspeak-url-template-set (key ut)
   "Add specified template to key. "
   (cl-declare (special emacspeak-url-template-table))
-  (setf (gethash key emacspeak-url-template-table) ut))
+  (setf (gethash (downcase key) emacspeak-url-template-table) ut))
 
 ;;;###autoload
 (defun emacspeak-url-template-get (key)
   "Lookup key and return corresponding template. "
   (cl-declare (special emacspeak-url-template-table))
-  (gethash key emacspeak-url-template-table))
+  (gethash (downcase key) emacspeak-url-template-table))
 
-;;}}}
-;;{{{ define resources
+;;;  define resources
 
 (defun emacspeak-url-template-define (name template
                                            &optional generators post-action
@@ -167,7 +161,7 @@ dont-url-encode if true then url arguments are not url-encoded "
                     file))))
 
 (defun emacspeak-url-template-save (file)
-  "Save out url templates."
+  "Save url templates."
   (interactive
    (list
     (read-file-name "Save URL templates to: " emacspeak-user-directory)))
@@ -190,10 +184,9 @@ dont-url-encode if true then url arguments are not url-encoded "
       (basic-save-buffer)
       (kill-buffer buffer))))
 
-;;}}}
 ;; template resources
 
-;;{{{ Stock Tickers:
+;;;  Stock Tickers:
 
 ;;;###autoload
 (defcustom emacspeak-stock-tickers
@@ -217,8 +210,7 @@ with duplicates removed when saving as a list of string."
   (cl-declare (special emacspeak-stock-tickers))
   (mapconcat #'identity emacspeak-stock-tickers ","))
 
-;;}}}
-;;{{{ amazon
+;;;  amazon
 
 (emacspeak-url-template-define
  "Amazon Product Details By ASIN"
@@ -227,8 +219,7 @@ with duplicates removed when saving as a list of string."
  nil
  "Retrieve product details from Amazon by either ISBN or ASIN.")
 
-;;}}}
-;;{{{ old time radio
+;;;  old time radio
 
 (emacspeak-url-template-define
  "Old Time Radio"
@@ -241,8 +232,7 @@ with duplicates removed when saving as a list of string."
       (list 2 3)
       url)))
 
-;;}}}
-;;{{{ Guardian Feed Directory:
+;;;  Guardian Feed Directory:
 (emacspeak-url-template-define
  "Guardian RSS Feeds Directory"
  "http://rss2.io/lists/guardian.opml"
@@ -250,15 +240,14 @@ with duplicates removed when saving as a list of string."
  "Guardian Feeds  Directory"
  #'emacspeak-feeds-opml-display)
 
-;;}}}
-;;{{{ bbc
+;;;  bbc
 
 (emacspeak-url-template-define
  "BBC Sounds"
  "https://www.bbc.co.uk/sounds/search?q=%s"
  (list "BBC Sounds:")
-#'emacspeak-speak-line
- "Search BBC Sounds."
+ #'emacspeak-speak-line
+ "Search BBC Sounds"
  #'(lambda (url)
      (let ((filter
             (mapconcat
@@ -267,7 +256,6 @@ with duplicates removed when saving as a list of string."
              '(  3 4 5)
              " | ")))
        (emacspeak-we-xslt-filter filter url))))
-
 
 (declare-function
  emacspeak-xslt-view-xml
@@ -286,8 +274,7 @@ with duplicates removed when saving as a list of string."
  "BBC PodCast Directory"
  #'emacspeak-feeds-opml-display)
 
-;;}}}
-;;{{{ Google Trends:
+;;;  Google Trends:
 (declare-function
  emacspeak-google-canonicalize-result-url "emacspeak-google" (url))
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
@@ -298,8 +285,7 @@ with duplicates removed when saving as a list of string."
  "Google Trends"
  #'emacspeak-feeds-rss-display)
 
-;;}}}
-;;{{{ utils:
+;;;  utils:
 
 (defun emacspeak-url-template-setup-content-filter ()
   "Set up content filter in displayed page."
@@ -307,12 +293,11 @@ with duplicates removed when saving as a list of string."
    (special emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
   (setq emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
 
-;;}}}
-;;{{{Basic Google:
+;;; Basic Google:
 
 (emacspeak-url-template-define
  "Google Weather"
-  "https://www.google.com/search?num=25&gbv=1&q=weather+%s"
+ "https://www.google.com/search?num=25&gbv=1&q=weather+%s"
  (list #'(lambda nil gmaps-my-zip))
  #'(lambda nil
      (search-forward "Search Tools")
@@ -332,7 +317,6 @@ with duplicates removed when saving as a list of string."
      (emacspeak-speak-windowful))
  "Light-weight Google Stock quotes.")
 
-
 (emacspeak-url-template-define
  "US Stock Market From Google "
  "https://www.google.com/search?num=25&lite=90586&q=US+Stock+Market+Summary"
@@ -344,11 +328,9 @@ with duplicates removed when saving as a list of string."
      (emacspeak-speak-windowful))
  "Light-weight Google US Stock Markets.")
 
-;;}}}
-;;{{{ Calendar Mobile:
+;;;  Calendar Mobile:
 
-;;}}}
-;;{{{ google patent search:
+;;;  google patent search:
 
 (emacspeak-url-template-define
  "Patent Search From Google"
@@ -362,8 +344,7 @@ with duplicates removed when saving as a list of string."
  #'(lambda (url)
      (emacspeak-we-extract-by-id "center_col" url 'speak)))
 
-;;}}}
-;;{{{ google finance
+;;;  google finance
 
 (emacspeak-url-template-define
  "Finance  Google"
@@ -393,8 +374,7 @@ with duplicates removed when saving as a list of string."
      (emacspeak-speak-windowful))
  "Display top stocks  from Google Finance.")
 
-;;}}}
-;;{{{ google scholar
+;;;  google scholar
 
 (emacspeak-url-template-define
  "Google Scholar"
@@ -406,11 +386,9 @@ with duplicates removed when saving as a list of string."
  #'(lambda (url)
      (emacspeak-we-extract-by-class "gs_r" url 'speak)))
 
-;;}}}
-;;{{{ google translation service
+;;;  google translation service
 
-;;}}}
-;;{{{ dictionary.com:
+;;;  dictionary.com:
 (emacspeak-url-template-define
  "Dictionary Lookup"
  "http://dictionary.reference.com/search?q=%s"
@@ -423,8 +401,7 @@ with duplicates removed when saving as a list of string."
      (emacspeak-xslt-without-xsl
       (browse-url url))))
 
-;;}}}
-;;{{{ google OverviewOfNews
+;;;  google OverviewOfNews
 
 (emacspeak-url-template-define
  "html Google News Search"
@@ -456,15 +433,11 @@ with duplicates removed when saving as a list of string."
  "Search Google news."
  #'emacspeak-url-template-google-atom-news-display)
 
-;;}}}
-;;{{{ Google Structured Data Parser:
+;;;  Google Structured Data Parser:
 
-;;}}}
-;;{{{ Google Archive Search
+;;;  Google Archive Search
 
-;;}}}
- 
-;;{{{ cnet news
+;;;  cnet news
 
 (emacspeak-url-template-define
  "Tech News From CNet"
@@ -474,8 +447,7 @@ with duplicates removed when saving as a list of string."
  "Display tech news from CNET"
  #'emacspeak-feeds-rss-display)
 
-;;}}}
-;;{{{ yahoo daily news
+;;;  yahoo daily news
 (emacspeak-url-template-define
  "Yahoo RSSNews"
  "http://news.yahoo.com/rss"
@@ -486,8 +458,7 @@ with duplicates removed when saving as a list of string."
  "News  From Yahoo As RSS."
  #'emacspeak-feeds-rss-display)
 
-;;}}}
-;;{{{ w3c
+;;;  w3c
 
 (emacspeak-url-template-define
  "w3c IRC Logs"
@@ -526,8 +497,7 @@ name of the list.")
   (emacspeak-speak-collect-date "Date range: "
                                 "%Y%h"))
 
-;;}}}
-;;{{{CNBC Quotes
+;;; CNBC Quotes
 
 (defun ems--ut-quotes-cleanup ()
   "Clean up stock quotes buffer."
@@ -548,7 +518,7 @@ name of the list.")
  #'ems--ut-quotes-cleanup
  "Stock Quote via CNBC"
  #'(lambda (u)
-       (emacspeak-we-extract-by-id "MainContentContainer" u )))
+     (emacspeak-we-extract-by-id "MainContentContainer" u )))
 
 (emacspeak-url-template-define
  "CNBC Quotes"
@@ -557,12 +527,11 @@ name of the list.")
  #'ems--ut-quotes-cleanup
  "Stock portfolio via CNBC"
  #'(lambda (u)
-       (emacspeak-we-extract-by-id "MainContentContainer" u )))
+     (emacspeak-we-extract-by-id "MainContentContainer" u )))
 
 (flush-lines "^Price Quote Arrow Quote " (point-min) (point-max))
-;;}}}
-;;{{{ cnn
 
+;;;  cnn
 
 (emacspeak-url-template-define
  "CNN Money"
@@ -612,8 +581,7 @@ name of the list.")
  #'(lambda (url)
      (emacspeak-we-extract-by-class "column" url 'speak)))
 
-;;}}}
-;;{{{ sourceforge
+;;;  sourceforge
 
 (emacspeak-url-template-define
  "sourceforge project"
@@ -638,8 +606,7 @@ name of the list.")
  'browse-url
  'dont-url-encode)
 
-;;}}}
-;;{{{ NBA Standings:
+;;;  NBA Standings:
 (declare-function emacspeak-wizards-nba-standings  "emacspeak-wizards" nil)
 (emacspeak-url-template-define
  "NBA  standings"
@@ -650,8 +617,7 @@ name of the list.")
  #'(lambda (_url)
      (emacspeak-wizards-nba-standings)))
 
-;;}}}
-;;{{{ Listening to Air Traffic control
+;;;  Listening to Air Traffic control
 
 (emacspeak-url-template-define
  "Air Traffic Control"
@@ -665,8 +631,7 @@ name of the list.")
       url
       'speak)))
 
-;;}}}
-;;{{{ airport conditions:
+;;;  airport conditions:
 (emacspeak-url-template-define
  "Airport conditions"
  "http://www.fly.faa.gov/flyfaa/flyfaaindex.jsp?ARPT=%s&p=0"
@@ -677,8 +642,7 @@ name of the list.")
      (emacspeak-we-extract-table-by-match "Status"
                                           url 'speak)))
 
-;;}}}
-;;{{{ wordnet
+;;;  wordnet
 
 (emacspeak-url-template-define
  "WordNet Search"
@@ -691,8 +655,7 @@ name of the list.")
      (emacspeak-speak-windowful))
  "Look up term in WordNet.")
 
-;;}}}
-;;{{{ Radio station streams
+;;;  Radio station streams
 
 (emacspeak-url-template-define
  "StreamWorld Radio"
@@ -706,8 +669,7 @@ Format is stationid+AM/FM."
  #'(lambda (url)
      (emacspeak-m-player url 'playlist)))
 
-;;}}}
-;;{{{Hoogle
+;;; Hoogle
 (declare-function emacspeak-eww-next-h1 "emacspeak-eww" (&optional speak))
 
 (emacspeak-url-template-define
@@ -717,9 +679,7 @@ Format is stationid+AM/FM."
  #'emacspeak-eww-next-h1
  "Haskell API Search against a local server.")
 
-;;}}}
-
-;;{{{ Bing RSS
+;;;  Bing RSS
 
 (emacspeak-url-template-define
  "Microsoft Search"
@@ -745,8 +705,7 @@ Format is stationid+AM/FM."
  "Bing News results as RSS feed."
  #'emacspeak-feeds-rss-display)
 
-;;}}}
-;;{{{ TuneIn: streamId->URL
+;;;  TuneIn: streamId->URL
 ;; wget -O t    "http://stream.radiotime.com/listen.stream?streamIds=4299203"
 (emacspeak-url-template-define
  "TuneIn Radio"
@@ -772,7 +731,7 @@ Format is stationid+AM/FM."
  "http://opml.radiotime.com/Search.ashx?query=%s"
  (list "Search: ")
  nil
- "RadioTime Search."
+ "RadioTime Search"
  #'emacspeak-feeds-opml-display)
 
 (defvar emacspeak-url-template--radiotime-categories
@@ -788,11 +747,10 @@ Format is stationid+AM/FM."
       (completing-read
        "Category: " emacspeak-url-template--radiotime-categories)))
  nil
- "RadioTime Categories ."
+ "RadioTime Categories "
  #'emacspeak-feeds-opml-display)
 
-;;}}}
-;;{{{ OpenLibrary
+;;;  OpenLibrary
 
 (emacspeak-url-template-define
  "OpenLibrary"
@@ -802,8 +760,7 @@ Format is stationid+AM/FM."
  nil
  "Open Library Search")
 
-;;}}}
-;;{{{ FreeSound.org:
+;;;  FreeSound.org:
 
 (emacspeak-url-template-define
  "FreeSound"
@@ -812,8 +769,7 @@ Format is stationid+AM/FM."
  nil
  "Search FreeSound.")
 
-;;}}}
-;;{{{ Interactive commands
+;;;  Interactive commands
 
 ;;;###autoload
 (defun emacspeak-url-template-open (ut)
@@ -884,8 +840,7 @@ resources."
                            emacspeak-url-template-table))
     (emacspeak-url-template-help-internal name)))
 
-;;}}}
-;;{{{ Generate texinfo documentation for all defined url
+;;;  Generate texinfo documentation for all defined url
 
 (defun emacspeak-url-template-generate-texinfo-documentation (buffer)
   "Generates texinfo section documenting all defined URL templates."
@@ -935,8 +890,16 @@ Each URL template carries out the following steps:
          (emacspeak-url-template-get key))))
       (insert "\n\n@end enumerate\n\n"))))
 
-;;}}}
-;;{{{ wikiData:
+;;;  wikiData:
+
+(emacspeak-url-template-define
+ "Wikipedia At Point"
+ "" nil nil
+ "Extract body content from Wikipedia link at point"
+ #'(lambda (_)
+     (emacspeak-auditory-icon 'open-object)
+     (emacspeak-eww-autospeak)
+     (emacspeak-we-extract-by-id "bodyContent" (shr-url-at-point nil))))
 
 (emacspeak-url-template-define
  "Wiki Data Search"
@@ -948,8 +911,7 @@ Each URL template carries out the following steps:
      (emacspeak-speak-windowful))
  "Search WikiData.")
 
-;;}}}
-;;{{{ Search NLS Bard:
+;;;  Search NLS Bard:
 
 (defun emacspeak-url-template-nls-add-to-wishlist  (book)
   "Add book under point to wishlist."
@@ -1028,8 +990,7 @@ template."
             'high))
        (eww-browse-url url))))
 
-;;}}}
-;;{{{ Washington Post
+;;;  Washington Post
 (declare-function emacspeak-eww-next-h "emacspeak-eww" (&optional speak))
 
 (emacspeak-url-template-define
@@ -1041,8 +1002,7 @@ template."
      (emacspeak-speak-line))
  "Washington Post Contents")
 
-;;}}}
-;;{{{ ArchWiki
+;;;  ArchWiki
 
 (emacspeak-url-template-define
  "ArchWiki Search"
@@ -1053,13 +1013,12 @@ template."
      (emacspeak-speak-windowful))
  "Search Linux ArchWiki")
 
-;;}}}
-;;{{{Reddit Tools:
+;;; Reddit Tools:
 
 (declare-function shr-url-at-point "shr" (image-url))
 
 (emacspeak-url-template-define
- "Reddit At Point."
+ "Reddit At Point"
  "" nil nil
  "Open RSS Feed for Reddit URL under point."
  #'(lambda (_url)
@@ -1080,7 +1039,7 @@ template."
        (emacspeak-feeds-atom-display (concat url ".rss")))))
 
 (emacspeak-url-template-define
- "Reddit Search."
+ "Reddit Search"
  "https://www.reddit.com/search.rss?q=%s&sort=new&t=all"
  (list "Reddit Search:")
  nil
@@ -1088,7 +1047,7 @@ template."
  #'emacspeak-feeds-atom-display)
 
 (emacspeak-url-template-define
- "Reddit By Topic."
+ "Reddit By Topic"
  "https://www.reddit.com/r/%s/.rss"
  (list "Topic:")
  nil
@@ -1096,15 +1055,14 @@ template."
  #'emacspeak-feeds-atom-display)
 
 (emacspeak-url-template-define
- "Reddit Front Page."
+ "Reddit Front Page"
  "https://www.reddit.com/.rss"
  nil
  nil
  "Open  Feed for Reddit  Front Page."
  #'emacspeak-feeds-atom-display) 
 
-;;}}}
-;;{{{Hacker News:
+;;; Hacker News:
 
 (emacspeak-url-template-define
  "Hacker  News Frontpage"
@@ -1121,8 +1079,7 @@ template."
  "Display Hacker News Front Page"
  #'emacspeak-feeds-rss-display)
 
-;;}}}
-;;{{{CIA World Fact Book:
+;;; CIA World Fact Book:
 
 (emacspeak-url-template-define
  "CIA World Fact Book"
@@ -1131,8 +1088,7 @@ template."
  #'emacspeak-speak-buffer
  "Open CIA World Fact Book For Specified Country.")
 
-;;}}}
-;;{{{Air Quality From Wunderground
+;;; Air Quality From Wunderground
 
 (emacspeak-url-template-define
  "AQI From Wunderground"
@@ -1147,9 +1103,7 @@ template."
       "small-6" url 'speak))
  'dont-encode)
 
-;;}}}
-
-;;{{{cricinfo print rule
+;;; cricinfo print rule
 
 (emacspeak-url-template-define
  "Cricinfo Print"
@@ -1170,9 +1124,7 @@ template."
        "print/\\1"
        (shr-url-at-point nil)))))
 
-;;}}}
-;;{{{npr:
-
+;;; npr:
 
 (declare-function emacspeak-eww-links-rel "emacspeak-eww" nil)
 
@@ -1183,13 +1135,6 @@ template."
  #'emacspeak-eww-links-rel
  "Open NPR home , then display the alternative links to access RSS feeds.")
 
-;;}}}
-
 (provide 'emacspeak-url-template)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

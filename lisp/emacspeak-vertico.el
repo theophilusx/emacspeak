@@ -3,7 +3,7 @@
 ;; Description:  Speech-enable Vertico, a modern Emacs completion interface
 ;; Keywords: Emacspeak, Audio Desktop, Vertico, completion
 
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 2021 Krzysztof Drewniak <krzysdrewniak@gmail.com>
 ;; All Rights Reserved.
@@ -25,32 +25,28 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Vertico is a modern completion UI that uses Emacs's native completion engine
 ;; This module speech-enables Vertico's UI
 
-;;}}}
 ;;; Code:
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'vertico nil 'noerror)
-;;}}}
-;;{{{ Map faces to voices:
+
+;;;  Map faces to voices:
 
 (voice-setup-add-map
  '((vertico-group-title voice-smoothen)
    (vertico-group-separator voice-overlay-0)))
 
-;;}}}
-;;{{{ Define bookkeeping variables for UI state
+;;;  Define bookkeeping variables for UI state
 
 (defvar-local emacspeak-vertico--prev-candidate nil
   "Previously spoken candidate")
@@ -58,13 +54,11 @@
 (defvar-local emacspeak-vertico--prev-index nil
   "Index of previously spoken candidate")
 
-;;}}}
-;;{{{
+;;; 
 
 (declare-function 'vertico--candidate "vertico.el" (&optional hl))
 
-;;}}}
-;;{{{ Advice interactive commands
+;;;  Advice interactive commands
 
 (defadvice vertico-insert (around emacspeak pre act comp)
   "speak."
@@ -90,16 +84,13 @@
                       0)))
         (to-speak nil))
     (unless (equal emacspeak-vertico--prev-candidate new-cand)
-      (push new-cand to-speak)
+      (setq to-speak new-cand)
       (when (or (equal vertico--index emacspeak-vertico--prev-index)
                 (and (not (equal vertico--index -1))
                      (equal emacspeak-vertico--prev-index -1)))
-        (push "candidate" to-speak)))
-    (when (and (not vertico--allow-prompt)
-               (equal emacspeak-vertico--prev-candidate nil))
-      (push "first candidate" to-speak))
+        (emacspeak-auditory-icon 'select-object)))
     (when to-speak
-      (dtk-speak (mapconcat 'identity to-speak " ")))
+      (dtk-speak to-speak))
     (setq-local
      emacspeak-vertico--prev-candidate new-cand
      emacspeak-vertico--prev-index vertico--index)))
@@ -121,12 +112,6 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon ',icon)))))
 
-;;}}}
 (provide 'emacspeak-vertico)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

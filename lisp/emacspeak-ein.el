@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Speech-enable EIN An Emacs Interface to IPython Notebooks
 ;; Keywords: Emacspeak,  Audio Desktop IPython, Jupyter, Notebooks
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,26 +35,22 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  introduction
 
 ;;; Commentary:
 ;; EIN ==  Emacs IPython Notebook
 ;; You can install package EIN via mELPA
 ;; This module speech-enables EIN
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'sox-gen)
 
-;;}}}
-;;{{{  Face->Voice mappings
+;;;   Face->Voice mappings
 
 (voice-setup-add-map
  '(
@@ -110,8 +105,7 @@
    (ein:notification-tab-selected voice-animate)
    (ein:pos-tip-face voice-annotate)))
 
-;;}}}
-;;{{{ Additional Interactive Commands:
+;;;  Additional Interactive Commands:
 
 (defsubst emacspeak-ein-sox-gen (type)
   "Generate a tone  that indicates markdown, code, or raw."
@@ -130,8 +124,7 @@
   (interactive)
   (emacspeak-speak-region (point) (next-overlay-change (point))))
 
-;;}}}
-;;{{{ Bind additional interactive commands
+;;;  Bind additional interactive commands
 (when (boundp 'ein:notebook-mode-map)
   (cl-loop for k in
            '(
@@ -140,11 +133,9 @@
            do
            (emacspeak-keymap-update ein:notebook-mode-map k)))
 
-;;}}}
-;;{{{Modules To Enable:
+;;; Modules To Enable:
 
-;;}}}
-;;{{{tb (traceback):
+;;; tb (traceback):
 
 (cl-loop
  for f in 
@@ -164,8 +155,7 @@
     (emacspeak-auditory-icon 'open-object)
     (emacspeak-speak-line)))
 
-;;}}}
-;;{{{pytools:
+;;; pytools:
 
 (cl-loop
  for f in 
@@ -178,8 +168,7 @@
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-speak-line)))))
 
-;;}}}
-;;{{{ Worksheets:
+;;;  Worksheets:
 
 (cl-loop
  for f in
@@ -306,8 +295,7 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-line)))
 
-;;}}}
-;;{{{Notebooks:
+;;; Notebooks:
 
 (cl-loop
  for f in 
@@ -353,8 +341,7 @@
     (emacspeak-auditory-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
-;;}}}
-;;{{{Notebooklists:
+;;; Notebooklists:
 
 (cl-loop
  for f in 
@@ -367,12 +354,6 @@
        (emacspeak-auditory-icon 'large-movement)
        (emacspeak-speak-line)))))
 
-;;}}}
 (provide 'emacspeak-ein)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to speech enable flyspell
 ;; Keywords: Emacspeak, Ispell, Spoken Output, fly spell checking
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
@@ -36,10 +35,8 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;{{{  Introduction:
 
 ;;; Commentary:
 
@@ -60,15 +57,13 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ Requires
+;;;  Requires
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{ define personalities
+;;;  define personalities
 
 (defgroup emacspeak-flyspell nil
   "Emacspeak support for on the
@@ -81,8 +76,7 @@ fly spell checking."
  '((flyspell-incorrect voice-bolden)
    (flyspell-duplicate voice-monotone-extra)))
 
-;;}}}
-;;{{{ advice
+;;;  advice
 
 (cl-declaim (special flyspell-delayed-commands))
 (when (fboundp 'emacspeak-self-insert-command)
@@ -116,8 +110,7 @@ fly spell checking."
      (unless (eq p 'doublon) (emacspeak-auditory-icon 'help))
      nil))
 
-;;}}}
-;;{{{ use flyspell-correct if available:
+;;;  use flyspell-correct if available:
 (defcustom emacspeak-flyspell-correct
   (cond
    ((locate-library "flyspell-correct-ido") 'flyspell-correct-ido)
@@ -132,9 +125,9 @@ fly spell checking."
 (when
     (and (bound-and-true-p flyspell-mode-map)
          (locate-library "flyspell-correct"))
-  (define-key flyspell-mode-map (ems-kbd "C-x .") 'flyspell-correct-at-point)
-  (define-key flyspell-mode-map (ems-kbd "C-'") 'flyspell-correct-previous)
-  (define-key flyspell-mode-map (ems-kbd "C-;") 'flyspell-correct-wrapper)
+  (define-key flyspell-mode-map (kbd "C-x .") 'flyspell-correct-at-point)
+  (define-key flyspell-mode-map (kbd "C-'") 'flyspell-correct-previous)
+  (define-key flyspell-mode-map (kbd "C-;") 'flyspell-correct-wrapper)
   (require emacspeak-flyspell-correct))
 
 (cl-loop
@@ -147,14 +140,7 @@ fly spell checking."
      (when (ems-interactive-p)
        (dtk-speak (car (flyspell-get-word nil)))))))
 
-;;}}}
 (provide 'emacspeak-flyspell)
-;;{{{ emacs local variables
-
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}
+;;;  emacs local variables
 
 ;;; emacspeak-flyspell.el ends here

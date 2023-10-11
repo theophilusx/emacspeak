@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $
 ;; Description:  Emacspeak extension to make Web searching convenient
 ;; Keywords: Emacspeak, WWW interaction
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2022, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
@@ -37,9 +36,7 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;{{{  Introduction:
 
 ;;; Commentary:
 
@@ -47,8 +44,8 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ required modules
+
+;;;  required modules
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -58,14 +55,12 @@
 (declare-function calendar-cursor-to-date "calendar" (&optional error event))
 (declare-function emacspeak-eww-autospeak "emacspeak-eww" nil)
 
-;;}}}
-;;{{{ Forward Declarations:
+;;;  Forward Declarations:
 
 (declare-function gweb-google-autocomplete "gweb" (&optional prompt))
 (declare-function calendar-astro-date-string "cal-julian" (&optional date))
 
-;;}}}
-;;{{{ searcher table
+;;;  searcher table
 
 (defvar emacspeak-websearch-table (make-hash-table)
   "Table to map  search engine names to appropriate searcher functions.")
@@ -78,8 +73,7 @@
   (cl-declare (special emacspeak-websearch-table))
   (gethash engine emacspeak-websearch-table))
 
-;;}}}
-;;{{{ Key table
+;;;  Key table
 
 (defvar emacspeak-websearch-keytable (make-hash-table)
   "Table holding mapping from keys to appropriate search engine names.")
@@ -92,8 +86,7 @@
   (cl-declare (special emacspeak-websearch-keytable))
   (gethash key emacspeak-websearch-keytable))
 
-;;}}}
-;;{{{ top-level dispatch
+;;;  top-level dispatch
 
 (defun emacspeak-websearch-help ()
   "Displays key mapping used by Emacspeak Websearch."
@@ -141,8 +134,7 @@
         (call-interactively searcher)
       (error "I do not know how to search using %s" engine))))
 
-;;}}}
-;;{{{ helpers to read the query
+;;;  helpers to read the query
 
 (defvar emacspeak-websearch-history nil
   "Holds history of search queries.")
@@ -159,8 +151,7 @@
     (cl-pushnew answer  emacspeak-websearch-history :test #'string=)
     answer))
 
-;;}}}
-;;{{{post-processor
+;;; post-processor
 (defun emacspeak-websearch-post-process (locator speaker &rest args)
   "Set up post processing steps on a result page.
 LOCATOR is a string to search for in the results page.
@@ -181,9 +172,7 @@ ARGS specifies additional arguments to SPEAKER if any."
              (error nil)))))
    'at-end))
 
-;;}}}
-
-;;{{{ Computer Science Bibliography
+;;;  Computer Science Bibliography
 
 (emacspeak-websearch-set-searcher 'biblio
                                   'emacspeak-websearch-biblio-search)
@@ -209,32 +198,7 @@ ARGS specifies additional arguments to SPEAKER if any."
    query
    'emacspeak-speak-line))
 
-;;}}}
-;;{{{ CiteSeer Citation index
-
-(defvar emacspeak-websearch-citeseer-uri
-  (concat
-   "https://citeseerx.ist.psu.edu/search"
-   "?t=doc&sort=rlv&s2=Semantic+Scholar&submit=Search&q=%s") 
-  "URI for searching CiteSeer index. ")
-
-(emacspeak-websearch-set-searcher
- 'citeseer
- 'emacspeak-websearch-citeseer-search)
-
-(emacspeak-websearch-set-key 3 'citeseer)
-
-(defun emacspeak-websearch-citeseer-search(term)
-  "Perform a CiteSeer search. "
-  (interactive
-   (list (emacspeak-websearch-read-query "Enter CiteSeer query term:")))
-  (cl-declare (special emacspeak-websearch-citeseer-uri))
-  (browse-url
-   (format  emacspeak-websearch-citeseer-uri (url-hexify-string term)))
-  (emacspeak-websearch-post-process term  #'emacspeak-speak-line))
-
-;;}}}
-;;{{{ FolDoc
+;;;  FolDoc
 
 (emacspeak-websearch-set-searcher 'foldoc
                                   'emacspeak-websearch-foldoc-search)
@@ -257,8 +221,7 @@ ARGS specifies additional arguments to SPEAKER if any."
    query
    'emacspeak-speak-line))
 
-;;}}}
-;;{{{ Gutenberg
+;;;  Gutenberg
 
 (emacspeak-websearch-set-searcher 'gutenberg
                                   'emacspeak-websearch-gutenberg)
@@ -285,8 +248,7 @@ ARGS specifies additional arguments to SPEAKER if any."
    query
    'emacspeak-speak-line))
 
-;;}}}
-;;{{{ google
+;;;  google
 (emacspeak-websearch-set-searcher 'google-lucky
                                   'emacspeak-websearch-google-feeling-lucky)
 
@@ -454,8 +416,7 @@ Optional prefix arg prompts for toolbelt options."
   (define-key calendar-mode-map "gg"
               'emacspeak-websearch-google-search-in-date-range))
 
-;;}}}
-;;{{{ Google News
+;;;  Google News
 
 (emacspeak-websearch-set-searcher 'google-news
                                   'emacspeak-websearch-google-news)
@@ -469,8 +430,7 @@ Optional prefix arg prompts for toolbelt options."
     (emacspeak-url-template-open
      (emacspeak-url-template-get name))))
 
-;;}}}
-;;{{{  Ask Jeeves
+;;;   Ask Jeeves
 
 (emacspeak-websearch-set-searcher 'jeeves
                                   'emacspeak-websearch-ask-jeeves)
@@ -490,8 +450,7 @@ Optional prefix arg prompts for toolbelt options."
            (url-hexify-string query)))
   (emacspeak-websearch-post-process query 'emacspeak-speak-line))
 
-;;}}}
-;;{{{ Merriam Webster
+;;;  Merriam Webster
 
 (emacspeak-websearch-set-searcher 'merriam-webster
                                   'emacspeak-websearch-merriam-webster-search)
@@ -512,8 +471,7 @@ Optional prefix arg prompts for toolbelt options."
    (concat emacspeak-websearch-merriam-webster-uri
            (url-hexify-string query))))
 
-;;}}}
-;;{{{ wikipedia
+;;;  wikipedia
 
 (emacspeak-websearch-set-searcher 'wikipedia
                                   'emacspeak-websearch-wikipedia-search)
@@ -521,14 +479,14 @@ Optional prefix arg prompts for toolbelt options."
 (emacspeak-websearch-set-key ?w 'wikipedia)
 
 (defun emacspeak-websearch-wikipedia-search (query)
-  "Search Wikipedia using Google."
+  "Search Wikipedia using Google.
+Use URL Template `wikipedia at point' to advantage in the results buffer."
   (interactive
    (list (emacspeak-websearch-read-query "Search Wikipedia: ")))
   (emacspeak-websearch-google
    (url-hexify-string (format "site:wikipedia.org %s"query))))
 
-;;}}}
-;;{{{ YouTube Search:
+;;;  YouTube Search:
 
 (emacspeak-websearch-set-searcher 'youtube-search
                                   'emacspeak-websearch-youtube-search)
@@ -541,8 +499,7 @@ Optional prefix arg prompts for toolbelt options."
   (emacspeak-websearch-google
    (url-hexify-string (format "site:youtube.com  %s"query))))
 
-;;}}}
-;;{{{ Shopping at Amazon
+;;;  Shopping at Amazon
 
 (emacspeak-websearch-set-searcher 'amazon-search
                                   'emacspeak-websearch-amazon-search)
@@ -559,12 +516,6 @@ Optional prefix arg prompts for toolbelt options."
   (cl-declare (special emacspeak-websearch-amazon-search-form))
   (browse-url emacspeak-websearch-amazon-search-form))
 
-;;}}}
 (provide 'emacspeak-websearch)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}

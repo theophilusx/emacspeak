@@ -3,7 +3,7 @@
 ;; $Author: tv.raman.tv $ 
 ;; DescriptionEmacspeak extensions for view
 ;; Keywords:emacspeak, audio interface to emacs, view-mode
-;;{{{  LCD Archive entry: 
+;;;   LCD Archive entry: 
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; Location undetermined
 ;; 
 
-;;}}}
-;;{{{  Copyright:
+;;;   Copyright:
 ;; Copyright (C) 1995 -- 2022, T. V. Raman 
 ;; Copyright (c) 1996 by T. V. Raman 
 ;; All Rights Reserved. 
@@ -36,19 +35,17 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;}}}
 
-;;{{{  Introduction:
+
 ;;; Commentary:
 ;; Provide additional advice to view-mode
 ;;; Code:
-;;}}}
-;;{{{ requires
+
+;;;  requires
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 
-;;}}}
-;;{{{  Setup view mode to work with emacspeak
+;;;   Setup view mode to work with emacspeak
 
 ;; restore emacspeak keybindings:
 (cl-declaim (special emacspeak-prefix))
@@ -59,8 +56,7 @@
      (emacspeak-view-setup-keys)))
 ;; Generate automatic advise:
 
-;;}}}
-;;{{{ additional interactive commands
+;;;  additional interactive commands
 
 (defun emacspeak-view-line-to-top ()
   "Moves current line to top of window"
@@ -69,8 +65,7 @@
   (emacspeak-speak-line)
   (emacspeak-auditory-icon 'select-object))
 
-;;}}}
-;;{{{ Advise additional interactive commands:
+;;;  Advise additional interactive commands:
 (defadvice view-file (after emacspeak pre act comp)
   "Load directory specific settings"
   (emacspeak-speak-load-directory-settings)
@@ -248,7 +243,7 @@
     (let ((buffer (current-buffer)))
       ad-do-it
       (cond
-       ((not (eq buffer (current-buffer))) ;we exitted view mode 
+       ((not (eq buffer (current-buffer))) ;we exited view mode 
         (emacspeak-auditory-icon 'close-object)
         (emacspeak-speak-mode-line))
        (t (emacspeak-auditory-icon 'scroll)
@@ -305,8 +300,7 @@
     (emacspeak-auditory-icon 'scroll)
     (dtk-speak (emacspeak-get-window-contents))))
 
-;;}}}
-;;{{{ bind convenience keys
+;;;  bind convenience keys
 (defvar emacspeak-view-keys-optimized nil
   "Records if we have already optimized Emacspeak
 keybindings for view mode")
@@ -368,12 +362,6 @@ keybindings for view mode")
   (define-key view-mode-map "w" 'emacspeak-speak-word)
   (emacspeak-view-optimize-view-keys))
 
-;;}}}
 (provide  'emacspeak-view)
-;;{{{  emacs local variables 
+;;;   emacs local variables 
 
-;; local variables:
-;; folded-file: t
-;; end: 
-
-;;}}}

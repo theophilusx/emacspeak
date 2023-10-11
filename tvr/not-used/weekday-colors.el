@@ -1,9 +1,9 @@
 (require  'cl-lib)
 ;;{{{Weekday Colors:
 
-(defconst tvr-weekday-color-map
-  [("light sky blue" . "#6FBD87")       ; silver tree
-   ("royal blue" . "#FFD724")              ;RoyalBlue on pink
+(defconst tvr-weekday-color-map ; background . foreground
+  [("#0d0e1c" . "#6FBD87")       ; silver tree
+   ("Light blue" . "#FFD724")              ;RoyalBlue on pink
    ("#F4C430" . "sea green")            ; saffron
    ("#FFFFDA" . "royal blue")
    ("mint cream" . "royal blue")

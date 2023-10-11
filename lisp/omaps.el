@@ -2,7 +2,7 @@
 ;; $Author: raman $
 ;; Description:  Open Street Maps
 ;; Keywords: Open Street    Maps API
-;;{{{  LCD Archive entry:
+;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; gcal| T. V. Raman |tv.raman.tv@gmail.com
@@ -13,8 +13,7 @@
 ;; License: GPL
 ;;
 
-;;}}}
-;;{{{ Copyright:
+;;;  Copyright:
 
 ;; Copyright (c) 2006 and later, Google Inc.
 ;; All rights reserved.
@@ -45,25 +44,20 @@
 ;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ;; OF THE POSSIBILITY OF SUCH DAMAGE.
 
-;;}}}
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;{{{  introduction
 
 ;;; Commentary:
 ;; Implements geocoding via the Open Street Maps API
 ;; https://nominatim.org/
 ;;; Code:
 
-;;}}}
-;;{{{  Required modules
+;;;   Required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'g-utils)
 
-;;}}}
-;;{{{ Maps Geo-Coding and Reverse Geo-Coding:
+;;;  Maps Geo-Coding and Reverse Geo-Coding:
 
 ;; https://nominatim.org/
 ;; eg: '/search?q=6217+hopi+court+San+Jose+CA+95123&format=json' | jq
@@ -112,12 +106,6 @@ Optional argument `full' returns full  object."
 
 ;; Example of use:
 
-;;}}}
 (provide 'omaps)
-;;{{{ end of file
+;;;  end of file
 
-;; local variables:
-;; folded-file: t
-;; end:
-
-;;}}}
