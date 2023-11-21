@@ -986,6 +986,7 @@ the speech rate.  Call when on a non-blank line to preview the effectt"
 (defun dtk-set-character-scale (factor &optional prefix)
   "Set character scale FACTOR for   speech rate.
 Speech rate is scaled by this factor when speaking characters.
+Not presently used by either Dectalk or Viavoice TTS.
 Interactive PREFIX arg means set the global default value, and
 then set the current local value to the result."
   (interactive "nEnter new factor:\nP")
@@ -1544,35 +1545,28 @@ program. Port defaults to dtk-local-server-port"
 
 (defsubst tts-notification-from-env ()
   "Compute tts-notification device from env."
-  (let ((device
-         (or
-          (cl-first
-           (split-string
-            (shell-command-to-string
-             "aplay -L 2>/dev/null | grep mono")))
-          (cl-first
-           (split-string
-            (shell-command-to-string
-             "pacmd list-sinks | grep tts | cut -f 2 -d ':'")))
-          "default")))
-    (if (string-match "<" device) ; strip <> from pactl result
-        (substring device 1 -1)
-      device)))
-
-(defsubst tts-secondary-from-env ()
-  "Compute tts-secondary device from env."
-  (let ((device
-         (or
-          (cl-second
-           (split-string
-            (shell-command-to-string
-             "aplay -L 2>/dev/null | grep mono")))
-          (cl-second
-           (split-string
-            (shell-command-to-string
-             "pacmd list-sinks | grep tts | cut -f 2 -d ':'")))
-          "default")))
-    (if (string-match "<" device) ; strip <> from pactl result
+  (let* ((result nil)
+         (device
+          (or                        ; each clause is for a given env:
+           (and                      ; pipewire-pulse
+            (executable-find "pamixer")
+            (setq result
+             (split-string
+              (shell-command-to-string
+               "pamixer --list-sinks | grep right")))
+            (substring (cl-second result) 1 -1))
+           (and                         ; pure pipewire  or pure alsa
+            (not (zerop (length (shell-command-to-string "pidof pulseaudio"))))
+            (cl-first
+             (split-string
+              (shell-command-to-string
+               "pacmd list-sinks | grep tts | cut -f 2 -d ':'"))))
+           (cl-second                   ; basic alsa
+            (split-string
+             (shell-command-to-string
+              "aplay -L 2>/dev/null | grep tts")))
+           "default")))
+    (if (string-match "<" device)       ; strip <> from pactl result
         (substring device 1 -1)
       device)))
 
@@ -1585,14 +1579,6 @@ Set to nil to disable a separate Notification stream."
           (string :value ""))
   :group 'tts)
 
-(defcustom tts-secondary-device
-  (eval-when-compile (tts-secondary-from-env))
-  "Virtual sound device to use as a secondary display stream.
-Set to nil to disable a secondary Notification stream."
-  :type '(choice
-          (const :tag "None" nil)
-          (string :value ""))
-  :group 'tts)
 (defvar dtk-speak-server-initialized nil
   "Records if the server is initialized.")
 

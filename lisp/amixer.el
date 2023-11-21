@@ -232,7 +232,9 @@ to  ~/.emacs.d ")
      "AlsaCtl" nil alsactl-program
      "restore"))
   (dtk-stop 'all)
-  (message "Resetting  sound to default")
+  (message
+   "Resetting  sound to %s"
+   (string-trim (shell-command-to-string ems--vol-cmd)))
   (amixer-build-db))
 
 ;;;###autoload
@@ -308,6 +310,17 @@ Interactive prefix arg refreshes cache."
                                       control)))))
 
 ;;;###autoload
+(defun amixer-get (name)
+  "Return setting for specified control."
+  (cl-declare (special amixer-db amixer-alsactl-config-file  ))
+  (unless amixer-alsactl-config-file (amixer-alsactl-setup))
+  (when  (null amixer-db) (amixer-build-db))
+  (let ((control (cdr (assoc name amixer-db))))
+    (message
+     "%s "
+     (amixer-control-setting-current (amixer-control-setting control)))))
+
+;;;###autoload
 (defun amixer-store()
   "Persist  amixer."
   (interactive)
@@ -323,7 +336,7 @@ Interactive prefix arg refreshes cache."
              amixer-alsactl-config-file)))
 
 ;;; Raise/Lower Volume Using pactl:
-(defcustom amixer-volume-step 2
+(defcustom amixer-volume-step 1
   "Step-size for volume change."
   :type 'integer
   :group 'emacspeak)
@@ -369,6 +382,7 @@ Interactive prefix arg `PROMPT' reads percentage as a number"
 Press C-e 3 to lower volume; C-e 4 to increase it. Subsequent presses
 of 3 and 4 lower or raise volume."
   (interactive )
+  (cl-declare (special ems--vol-cmd))
   (let ((key (event-basic-type last-command-event)))
     (emacspeak-auditory-icon 'repeat-start)
     (cl-case key
@@ -380,7 +394,11 @@ of 3 and 4 lower or raise volume."
          (define-key map key (lambda () (interactive) (amixer-volume-adjust ))))
        map)
      t (lambda nil (emacspeak-auditory-icon 'repeat-end))
-     "Repeat with %k")))
+     (concat
+      (propertize
+       (string-trim (shell-command-to-string ems--vol-cmd))
+       'personality voice-bolden)
+      " Repeat with %k"))))
 
 (provide 'amixer)
 ;;;  end of file

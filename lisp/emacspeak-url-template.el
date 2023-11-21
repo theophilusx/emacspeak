@@ -190,9 +190,9 @@ dont-url-encode if true then url arguments are not url-encoded "
 
 ;;;###autoload
 (defcustom emacspeak-stock-tickers
-  (list "goog" "aapl" "meta" "amzn")
+  (list "goog" "aapl" "meta" "amzn" "nflx" "msft" "nvda")
   "Set this to the stock tickers you want to check. Default is
-GAMA. Tickers is a list of stock symbols sorted in lexical order
+the current fab-7!. Tickers is a list of stock symbols sorted in lexical order
 with duplicates removed when saving as a list of string."
   :type
   '(repeat
@@ -719,7 +719,7 @@ Format is stationid+AM/FM."
  "TuneIn Helper.")
 
 (emacspeak-url-template-define
- "RadioTime Browser"
+ "Online RadioTime Browser"
  "http://opml.radiotime.com/"
  nil
  nil
@@ -727,7 +727,7 @@ Format is stationid+AM/FM."
  #'emacspeak-feeds-opml-display)
 
 (emacspeak-url-template-define
- "RadioTime Search"
+ "Online RadioTime Search"
  "http://opml.radiotime.com/Search.ashx?query=%s"
  (list "Search: ")
  nil
@@ -1116,7 +1116,7 @@ template."
       #'(lambda nil
           (search-forward "\n\n")
           (dtk-set-punctuations-to-some)
-          (emacspeak-speak-windowful))
+          (emacspeak-speak-rest-of-buffer))
       'at-end)
      (browse-url
       (replace-regexp-in-string

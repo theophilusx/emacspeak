@@ -111,8 +111,7 @@
 (global-set-key emacspeak-prefix 'emacspeak-keymap)
 
 ;;; Special keys:
-;; One-finger use on laptop:
-(global-set-key (kbd "<XF86WakeUp>")  'emacspeak-keymap)
+(global-set-key (kbd "<XF86WakeUp>")  'dtk-stop)
 (global-set-key (kbd "<XF86AudioPlay>")  'emacspeak-silence)
 (global-set-key (kbd "C-<f1>")  'amixer-volume-down)
 (global-set-key (kbd "C-<f2>")  'amixer-volume-up)
@@ -168,6 +167,7 @@
 (cl-loop
  for binding in
  '(
+   ("M-SPC" emacspeak-speak-completions-if-available)
    ("!" emacspeak-speak-run-shell-command)
    ("#" emacspeak-gridtext)
    ("$" flyspell-mode)
@@ -200,7 +200,7 @@
    ("<up>"  emacspeak-read-previous-line)
    ("=" emacspeak-speak-current-column)
    ("?" emacspeak-websearch-dispatch)
-   ("'" emacspeak-pianobar)
+   ("'" emacspeak-empv-play-file)
    ("@" emacspeak-speak-message-at-time)
    ("A" emacspeak-appt-repeat-announcement)
    ("B" emacspeak-speak-buffer-interactively)
@@ -216,6 +216,7 @@
    ("<deletechar>" dtk-toggle-punctuation-mode)
    ("C-a" emacspeak-toggle-auditory-icons)
    ("C-b" emacspeak-bookshare)
+   ("C-c" set-selective-display)
    ("C-M-c" emacspeak-clipfile-copy)
    ("C-d" emacspeak-toggle-show-point)
    ("C-e" move-end-of-line)
@@ -239,9 +240,7 @@
    ("M" emacspeak-speak-minor-mode-line)
    ("M-%" emacspeak-goto-percent)
    ("M-;" emacspeak-eww-play-media-at-point)
-   ("M-C-@" emacspeak-speak-spaces-at-point)
    ("M-C-SPC" emacspeak-speak-spaces-at-point)
-   ("M-C-k" kill-emacs)
    ("M-b" emacspeak-speak-other-buffer)
    ("M-c" emacspeak-copy-current-file)
    ("M-d" emacspeak-pronounce-dispatch)
@@ -601,9 +600,6 @@
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 (global-set-key "\C-x@h" 'emacspeak-hyper-keymap)
-(when (locate-library "empv")
-  (require 'empv)
-  (global-set-key (kbd "C-; v") empv-map))
 
 ;;;  Create a super keymap that users can put personal commands
 
@@ -707,6 +703,7 @@
   '(
     ("'" emacspeak-pianobar)
     ("d" sdcv-search-input)
+    ("e" eat)
     ("f" ffap)
     ("l" locate)
     ("o" org-mode)

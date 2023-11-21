@@ -126,6 +126,7 @@ Use Custom to customize where possible. "
                   downcase-region  narrow-to-region eval-expression ))
   (global-set-key (kbd "C-l") ctl-x-map)
   (global-set-key[remap dabbrev-expand] 'hippie-expand)
+  (global-set-key (kbd "<f12>") empv-map)
   (cl-loop ;; global key-bindings
    for key in
    '(
@@ -135,6 +136,8 @@ Use Custom to customize where possible. "
      ("C-x v ." magit-commit-create)
      ("<f3>" bury-buffer)
      ("<f4>" emacspeak-kill-buffer-quietly)
+     ("<f5>" set-selective-display)
+     ("<f9>" eat)
      ("M--" undo-only)
      ("M-C-c" calendar)
      ("M-C-j" imenu)
@@ -176,7 +179,8 @@ Use Custom to customize where possible. "
        abbrev-mode auto-correct-mode)))
   (setq  global-mode-string '("" display-time-string battery-mode-line-string))
   (bash-completion-setup)
-  (load-theme 'modus-vivendi-tinted t))
+                                        ;(load-theme 'modus-vivendi-tinted t)
+  (load-theme 'ef-maris-dark t))
 
 (defun tvr-after-init ()
   "Actions to take after Emacs is up and ready."
@@ -186,6 +190,7 @@ Use Custom to customize where possible. "
   (tvr-time-load (load tvr-libs))
   (with-eval-after-load 'yasnippet
     (yas--load-snippet-dirs)
+    (yas-global-mode 1)
     (diminish 'yas-minor-mode ""))
   (tvr-customize)
   (load "emacspeak-muggles")
@@ -230,14 +235,15 @@ Use Custom to customize where possible. "
   "Start up emacs.
 This function loads Emacspeak. Emacs customization and library
 configuration happens via the after-init-hook. "
-  (cl-declare (special emacspeak-directory))
+  (cl-declare (special emacspeak-directory ))
   (setenv "PULSE_SINK" "binaural")
+                                        ; pipewire transition
   (unless (featurep 'emacspeak)
     (tvr-time-load                      ; load emacspeak:
-     (load ;; setenv EMACSPEAK_DIR if you want to load a different version
-      (expand-file-name
-       "lisp/emacspeak-setup"
-       (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
+        (load ;; setenv EMACSPEAK_DIR if you want to load a different version
+         (expand-file-name
+          "lisp/emacspeak-setup"
+          (or (getenv  "EMACSPEAK_DIR") "~/emacs/lisp/emacspeak")))))
   (push (expand-file-name "tvr/" emacspeak-directory) load-path)
   (push (expand-file-name "aster-math/ui" emacspeak-directory) load-path)
   (add-hook 'after-init-hook #'tvr-after-init)

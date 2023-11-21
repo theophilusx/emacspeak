@@ -175,7 +175,6 @@ emacspeak will not speak messages as they are echoed to the
 message area.  You can use command
 `emacspeak-toggle-speak-messages' bound to
 \\[emacspeak-toggle-speak-messages]."
-
   :group 'emacspeak
   :type 'boolean)
 
@@ -292,15 +291,12 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
     (cond
      ((and completions
            (window-live-p (get-buffer-window completions)))
-      (save-window-excursion
-        (save-current-buffer
-          (set-buffer completions)
+      (with-minibuffer-completions-window
           (emacspeak-auditory-icon 'help)
           (dtk-chunk-on-white-space-and-punctuations)
           (next-completion 1)
           (tts-with-punctuations
-              'all
-            (emacspeak-speak-buffer)))))
+              'all (emacspeak-speak-rest-of-buffer))))
      (t (emacspeak-speak-line)))))
 
 ;;;   Macros
@@ -924,7 +920,7 @@ spelled out  instead of being spoken."
        (t (setq emacspeak-speak-last-spoken-word-position orig)))
       (funcall speaker (buffer-substring start end)))))
 
-(defun emacspeak-is-alpha-p (c)
+(defsubst emacspeak-is-alpha-p (c)
   "Check if `C' is an alphabetic char."
   (and (= ?w (char-syntax c))
        (dtk-unicode-char-untouched-p c)))
@@ -1016,6 +1012,7 @@ char is assumed to be one of a--z."
      ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string char)))
      ((> char 128) (emacspeak-speak-char-name char))
      (t (dtk-dispatch (dtk-char-to-speech char))))))
+
 (defun emacspeak-speak-char (&optional prefix)
   "Speak character under point.
 Pronounces character phonetically unless  called with a PREFIX arg."
@@ -1196,19 +1193,25 @@ Negative prefix arg speaks from start of buffer to point."
         (dtk-speak "First ask for help")))))
 
 (defun emacspeak-get-current-completion ()
-  "Return the completion string under point in the *Completions* buffer."
-  (let (beg end)
-    (if (and (not (eobp)) (get-text-property (point) 'mouse-face))
-        (setq end (point) beg (1+ (point))))
-    (if (and (not (bobp)) (get-text-property (1- (point)) 'mouse-face))
-        (setq end (1- (point)) beg (point)))
-    (if (null beg)
-        (error "No current  completion "))
-    (setq beg (or
-               (previous-single-property-change beg 'mouse-face)
-               (point-min)))
-    (setq end (or (next-single-property-change end 'mouse-face) (point-max)))
-    (buffer-substring beg end)))
+  "Return the completion under point in the *Completions* buffer."
+  (with-minibuffer-completions-window
+    (let (beg end)
+      (if (and (not (eobp)) (get-text-property (point) 'completion--string))
+          (setq end (point) beg (1+ (point))))
+      (if (and (not (bobp))
+               (get-text-property (1- (point)) 'completion--string))
+          (setq end (1- (point)) beg (point)))
+      (if (and  (bobp)
+                (next-completion 1))
+          (setq end (1- (point)) beg (point)))
+      (if (null beg) (error "No current  completion "))
+      (setq beg (or
+                 (previous-single-property-change beg 'completion--string)
+                 (point-min)))
+      (setq end
+            (or (next-single-property-change end 'completion--string)
+                (point-max)))
+      (buffer-substring beg end))))
 
 ;;;  mail check
 
@@ -1475,7 +1478,7 @@ Interactive prefix arg speaks buffer info."
     (buffer-substring-no-properties (point-min) (point-max))))
 
 (defun emacspeak-return-minor-mode-line ()
-  "Debug tool: return visually displayed minore-mode-line as a string."
+  "Debug tool: return visually displayed minor-mode-line as a string."
   (with-temp-buffer
     (insert (format-mode-line minor-mode-alist))
     (buffer-substring-no-properties (point-min) (point-max))))
@@ -1502,11 +1505,15 @@ Interactive prefix arg speaks buffer info."
 
 (defconst ems--vol-cmd
   (eval-when-compile
-    (concat
-     "pacmd list-sinks | grep -A 8 '  \\* index' | grep volume"
-     "|  cut -d ',' -f 1"
-     "| cut -d ':' -f 3"
-     "| cut -d '/' -f 2"))
+    (cond
+     ((zerop (length (shell-command-to-string "pidof pulseaudio")))
+      "amixer cget numid=3 | tail -1 | cut -d ',' -f 2")
+     (t 
+      (concat
+       "pacmd list-sinks | grep -A 8 '  \\* index' | grep volume"
+       "|  cut -d ',' -f 1"
+       "| cut -d ':' -f 3"
+       "| cut -d '/' -f 2"))))
   "Shell pipeline for getting volume.")
 
 (defsubst ems--show-current-volume ()
@@ -1514,14 +1521,8 @@ Interactive prefix arg speaks buffer info."
   (cl-declare (special ems--vol-cmd))
   (propertize
    (format
-    " %s %s"
-    (cond
-     ((ems--pulse-headphones-p) "🎧")
-     ((ems--pulse-speaker-p) "🔈")
-     (t "Vol"))
-    (substring
-     (string-trim (shell-command-to-string ems--vol-cmd))
-     0 -1))
+    " Vol %s"
+     (string-trim (shell-command-to-string ems--vol-cmd)))
    'personality 'voice-bolden))
 
 (defvar emacspeak-speak-show-volume nil
@@ -1533,7 +1534,7 @@ Optional interactive prefix arg `log-msg' logs spoken info to
 *Messages*."
   (interactive "P")
   (cl-declare (special minor-mode-alist))
-  (let* ((emacspeak-speak-show-volume (executable-find "pactl"))
+  (let* ((emacspeak-speak-show-volume (executable-find "amixer"))
          (info (format-mode-line minor-mode-alist)))
     (when log-msg (ems--log-message info))
     (tts-with-punctuations 'some
@@ -1683,7 +1684,7 @@ Optional second arg `set' sets the TZ environment variable as well."
   "Time in brief"
   (interactive)
   (cl-declare (special emacspeak-speak-time-brief-format))
-  (dtk-notify-say
+  (dtk-say
    (format-time-string emacspeak-speak-time-brief-format)))
 
 (defun emacspeak-speak-time (&optional world)
@@ -1737,7 +1738,7 @@ Seconds value is also placed in the kill-ring."
 
 ;;;  Codenames etc.
 (defvar emacspeak-codename
-  (propertize "ErgoDog" 'face 'bold)
+  (propertize "VirtualDog" 'face 'bold)
   "Code name of present release.")
 
 (defun emacspeak-setup-get-revision ()
@@ -1751,7 +1752,7 @@ Seconds value is also placed in the kill-ring."
       "")))
 
 (defvar emacspeak-version
-  (concat "58.0,   " emacspeak-codename)
+  (concat "59.0,   " emacspeak-codename)
   "Version number for Emacspeak.")
 
 (defun emacspeak-speak-version (&optional speak-rev)
@@ -2360,9 +2361,8 @@ char, or dont move. "
 
 (defun emacspeak-completion-setup-hook ()
   "Set things up for emacspeak."
-  (with-current-buffer standard-output
+  (with-minibuffer-completions-window 
     (goto-char (point-min))
-    (emacspeak-make-string-inaudible (emacspeak-get-minibuffer-contents))
     (emacspeak-auditory-icon 'help)))
 
 (add-hook 'completion-setup-hook 'emacspeak-completion-setup-hook)
@@ -2515,70 +2515,8 @@ This function is sensitive to calendar mode when prompting."
   (emacspeak-speak-collect-date "Date:"
                                 "%Y-%m-%d"))
 
-;;;  Navigating completions:
 
-(defun emacspeak-minibuffer-next-completion ()
-  "Move to next available minibuffer completion."
-  (interactive)
-  (or (get-buffer "*Completions*") (minibuffer-completion-help))
-  (when (get-buffer "*Completions*")
-    (with-current-buffer (get-buffer "*Completions*")
-      (let ((voice-lock-mode nil))
-        (funcall-interactively #'next-completion 1)))))
-
-(defun emacspeak-minibuffer-previous-completion ()
-  "Move to previous available minibuffer completion."
-  (interactive)
-  (or (get-buffer "*Completions*") (minibuffer-completion-help))
-  (when (get-buffer "*Completions*")
-    (with-current-buffer (get-buffer "*Completions*")
-      (let ((voice-lock-mode nil))
-        (funcall-interactively #'previous-completion 1)))))
-
-;; Hacked out of choose-completion
-(defun emacspeak--choose-completion ()
-  "Choose the completion at point."
-  (interactive)
-  (let ((buffer completion-reference-buffer)
-        (base-position completion-base-position)
-        (insert-function completion-list-insert-choice-function)
-        (choice
-         (save-excursion
-           (let (beg end)
-             (cond
-              ((and (not (eobp)) (get-text-property (point) 'mouse-face))
-               (setq end (point) beg (1+ (point))))
-              ((and (not (bobp))
-                    (get-text-property (1- (point)) 'mouse-face))
-               (setq end (1- (point)) beg (point)))
-              (t (error "No completion here")))
-             (setq beg (previous-single-property-change beg 'mouse-face))
-             (setq end (or (next-single-property-change end 'mouse-face)
-                           (point-max)))
-             (buffer-substring-no-properties beg end)))))
-    (unless (buffer-live-p buffer) (error "Destination buffer is dead"))
-    (with-current-buffer buffer
-      (choose-completion-string choice buffer base-position insert-function))))
-
-(defun emacspeak-minibuffer-choose-completion ()
-  "Choose current completion."
-  (interactive)
-  (when (get-buffer "*Completions*")
-    (with-current-buffer (get-buffer "*Completions*")
-      (message "%s" (thing-at-point 'symbol))
-      (emacspeak--choose-completion))))
-
-(define-key
- minibuffer-local-completion-map
- (kbd "C-n") 'emacspeak-minibuffer-next-completion)
-(define-key
- minibuffer-local-completion-map
- (kbd "C-p") 'emacspeak-minibuffer-previous-completion)
-(define-key
- minibuffer-local-completion-map
- (kbd "C-SPC") 'emacspeak-minibuffer-choose-completion)
-
-;;;  Open Emacspeak Info Pages:
+;; ;;;  Open Emacspeak Info Pages:
 
 (defun emacspeak-open-info ()
   "Open Emacspeak Info Manual."
@@ -2829,4 +2767,6 @@ p emacspeak-cycle-to-previous-buffer
      "Repeat with %k")))
 
 (provide 'emacspeak-speak)
+;;; Selective Display:
+
 ;;;  end of file

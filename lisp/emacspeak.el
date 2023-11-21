@@ -93,6 +93,7 @@ the Emacspeak desktop.")
 ;;;  Setup package extensions
 (defvar emacspeak-packages-to-prepare
   '(
+    ("2048-game" emacspeak-2048)
     ("abc-mode" emacspeak-abc-mode)
     ("add-log" emacspeak-add-log)
     ("analog" emacspeak-analog)
@@ -133,14 +134,15 @@ the Emacspeak desktop.")
     ("dumb-jump" emacspeak-dumb-jump)
     ("dunnet" emacspeak-entertain)
     ("ecb" emacspeak-ecb)
+    ("eat" emacspeak-eat)
     ("ediff" emacspeak-ediff)
     ("eglot" emacspeak-eglot)
     ("ein" emacspeak-ein)
     ("ein-notebook" emacspeak-ein)
     ("elfeed" emacspeak-elfeed)
     ("elisp-refs" emacspeak-elisp-refs)
-    ("elpy" emacspeak-elpy)
     ("elpher" emacspeak-elpher)
+    ("elpy" emacspeak-elpy)
     ("elscreen" emacspeak-elscreen)
     ("emms" emacspeak-emms)
     ("empv" emacspeak-empv)
@@ -216,6 +218,7 @@ the Emacspeak desktop.")
     ("pcvs" emacspeak-pcl-cvs)
     ("perl-mode" emacspeak-perl)
     ("pianobar" emacspeak-pianobar)
+    ("pipewire" emacspeak-pipewire)
     ("popup" emacspeak-popup)
     ("proced" emacspeak-proced)
     ("project" emacspeak-project)
@@ -251,8 +254,8 @@ the Emacspeak desktop.")
     ("syslog" emacspeak-syslog)
     ("tab-bar" emacspeak-tab-bar)
     ("table" emacspeak-etable)
-    ("tar-mode" emacspeak-tar)
     ("tabulated-list" emacspeak-tabulated-list)
+    ("tar-mode" emacspeak-tar)
     ("tcl" emacspeak-tcl)
     ("tempo" emacspeak-tempo)
     ("term" emacspeak-eterm)
@@ -281,7 +284,6 @@ the Emacspeak desktop.")
     ("xref" emacspeak-xref)
     ("yaml-mode" emacspeak-yaml)
     ("yasnippet" emacspeak-yasnippet)
-    ("2048-game" emacspeak-2048)
     )
   "Packages to  speech-enable.")
 
@@ -408,6 +410,8 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
+  (setq ring-bell-function
+      #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
   (dtk-initialize)
   (mapc #'load
         (directory-files-recursively
@@ -427,6 +431,22 @@ commands and options for details."
   (emacspeak-play-startup-icon))
 
 (provide 'emacspeak)
+;;; Orca For Lock Screen:
+
+;; Orca Toggle:
+;; Easily start/stop orca for use with lock-screen, Chrome etc.
+
+(defvar emacspeak-orca-handle nil
+  "Orca process handle")
+;;;###autoload
+(defun emacspeak-orca-toggle ()
+  "Toggle state of orca."
+  (interactive)
+  (cl-declare (special emacspeak-orca-handle))
+  (cond
+   (emacspeak-orca-handle (delete-process emacspeak-orca-handle)
+                               (setq emacspeak-orca-handle  nil))
+   (t (setq emacspeak-orca-handle (start-process "Orca"nil "orca")))))
 ;;;  end of file
 
 ;;; emacspeak.el ends here

@@ -90,11 +90,13 @@
   "Max number of history to preserve.")
 
 ;;;###autoload
-(defun emacspeak-empv-play-url (url &optional left-channel)
-  "Play URL using mpv;  Prefix arg plays on secondary device."
+(defun emacspeak-empv-play-url (url &optional notification-device)
+  "Play URL using mpv;  Prefix arg plays on notification  device.
+For the  prefix arg to take effect, make sure to add the line
+`ao=pulse,' to your .config/mpv.conf file."
   (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)
                      current-prefix-arg ))
-  (cl-declare (special tts-secondary-device
+  (cl-declare (special tts-notification-device
                        emacspeak-empv-history-max emacspeak-empv-history))
   (require 'empv)
   (when
@@ -103,8 +105,8 @@
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
   (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
-  (if left-channel
-      (with-environment-variables (("PULSE_SINK" tts-secondary-device))
+  (if notification-device
+      (with-environment-variables (("PULSE_SINK" tts-notification-device))
         (empv-play url))
     (empv-play url)))
 
@@ -115,13 +117,13 @@
 
 ;;;###autoload
 (defun emacspeak-empv-play-file (file &optional left-channel)
-  "Play file using mpv;  Prefix arg plays on secondary device."
+  "Play file using mpv;  Prefix arg plays on notification device."
   (interactive
    (list (emacspeak-media-read-resource) current-prefix-arg  ))
-  (cl-declare (special tts-secondary-device))
+  (cl-declare (special tts-notification-device))
   (require 'empv)
   (if left-channel
-      (with-environment-variables (("PULSE_SINK" tts-secondary-device))
+      (with-environment-variables (("PULSE_SINK" tts-notification-device))
         (empv-play file))
     (empv-play file)))
 
@@ -165,7 +167,8 @@
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
   (cl-declare (special empv-map))
-  (global-set-key (kbd "C-; v") empv-map)
+  (global-set-key (kbd "C-; ;") empv-map)
+  (global-set-key (kbd "C-' v") empv-map)
   (cl-loop
    for b in
    '(
@@ -178,6 +181,7 @@
      ("RET" empv-youtube-tabulated)
      ("SPC" empv-toggle)
      ("x" empv-exit)
+     ("k" empv-exit)
      ("r" emacspeak-empv-relative-seek)
      ("s" emacspeak-empv-absolute-seek)
      ("u" emacspeak-empv-accumulate-to-register)

@@ -118,6 +118,7 @@ emacspeak-diff-mode.elc \
 emacspeak-dired.elc \
 emacspeak-dismal.elc \
 emacspeak-dumb-jump.elc \
+emacspeak-eat.elc \
 emacspeak-ecb.elc \
 emacspeak-ediff.elc \
 emacspeak-eglot.elc \
@@ -142,8 +143,8 @@ emacspeak-eterm.elc \
 emacspeak-eudc.elc \
 emacspeak-evil.elc \
 emacspeak-eww.elc \
-emacspeak-exwm.elc \
 emacspeak-extras.elc \
+emacspeak-exwm.elc \
 emacspeak-feeds.elc \
 emacspeak-ffap.elc \
 emacspeak-ffip.elc \
@@ -211,6 +212,7 @@ emacspeak-package.elc \
 emacspeak-paradox.elc \
 emacspeak-perl.elc \
 emacspeak-pianobar.elc \
+emacspeak-pipewire.elc \
 emacspeak-popup.elc \
 emacspeak-proced.elc \
 emacspeak-project.elc \
@@ -290,7 +292,7 @@ sox.elc
 
 ADDON_OBJECTS = \
 emacspeak-nm.elc  dom-addons.elc light.elc  \
-xbacklight.elc  toy-braille.elc tetris.elc   \
+xbacklight.elc   tetris.elc   \
 omaps.elc g-utils.elc gweb.elc gmaps.elc gm-nnir.elc 
 
 OBJECTS = $(TTS_OBJECTS) $(SPEAK_OBJECTS) $(CORE_OBJECTS)  $(ADDON_OBJECTS)
@@ -321,6 +323,10 @@ emacspeak-loaddefs.el:
 ### Development  target: indent, tags, relint 
 indent:
 	$(EMACS) -batch -q -no-site-file -l ../utils/indent-files.el
+
+#identify long lines:
+ll:
+	wc -L *.el | sort -n
 
 spell:
 	codespell -I .codespell *.el

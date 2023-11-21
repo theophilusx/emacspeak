@@ -1,3 +1,2 @@
-Note that as of June 15, 2023, only the BBC World Service shortcuts
-work --- for other BBC Stations, open bbc.co.uk/sounds in Chrome or
-Firefox.
+Use mpv, not mplayer to play BBC streams:: C-e C-: in Emacspeak
+Thanks [[https://garfnet.org.uk/cms/2023/10/29/latest-bbc-hls-radio-streams/][https://garfnet.org.uk/cms/2023/10/29/latest-bbc-hls-radio-streams/]]

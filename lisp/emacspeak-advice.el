@@ -415,7 +415,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'scroll)
        (dtk-speak (emacspeak-get-window-contents))
-       (dtk-notify-speak
+       (dtk-notify-say
         (propertize
          (format "%s " (emacspeak-get-current-percentage-into-buffer))
          'personality voice-smoothen))))))
@@ -646,6 +646,10 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (voice-setup-set-voice-for-face 'minibuffer-prompt 'voice-bolden)
 
+(defadvice minibuffer-completion-help (around emacspeak pre act comp)
+  "Silence messages"
+  (ems-with-messages-silenced ad-do-it))
+
 (defadvice quoted-insert (after emacspeak pre act comp)
   "Speak inserted  character."
   (when (ems-interactive-p)
@@ -685,18 +689,33 @@ When on a close delimiter, speak matching delimiter after a small delay. "
  for f in
  '(
    minibuffer-complete-history
-   minibuffer-next-completion minibuffer-previous-completion
    next-history-element previous-history-element
    next-line-or-history-element previous-line-or-history-element
    previous-matching-history-element next-matching-history-element)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
-     "Speak the history element just inserted."
+     "Speak the completion element just inserted."
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'select-object)
        (tts-with-punctuations 'all
-                              (dtk-speak (minibuffer-contents)))))))
+         (dtk-speak
+          (or (minibuffer-contents)
+              (emacspeak-get-current-completion))))))))
+
+
+(cl-loop
+ for f in 
+ '(   minibuffer-next-completion minibuffer-previous-completion
+   minibuffer-next-line-completion minibuffer-previous-line-completion)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (tts-with-punctuations 'all
+         (emacspeak-auditory-icon 'item)
+         (dtk-speak (emacspeak-get-current-completion)))))))
 
 (defvar emacspeak-last-message nil
   "Last output from `message'.")
@@ -851,12 +870,28 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (defadvice completion-at-point (around emacspeak pre act comp)
   "Speak completion."
+  (let ((orig (save-excursion (skip-syntax-backward "^->_") (point))))
+    ad-do-it
+    (when (ems-interactive-p) (dtk-speak (buffer-substring orig (point)))
+      (emacspeak-auditory-icon 'complete))
+    ad-return-value))
+
+
+(defadvice minibuffer-choose-completion (around emacspeak pre act comp)
+  "Speak completion."
   (let ((orig (save-excursion (skip-syntax-backward "^ >_") (point))))
     ad-do-it
     (when (ems-interactive-p)
       (dtk-speak (buffer-substring orig (point)))
       (emacspeak-auditory-icon 'complete))
     ad-return-value))
+
+
+(defadvice minibuffer-choose-completion-or-exit (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-auditory-icon 'close-object)))
 
 ;;;  advice various input functions to speak:
 
@@ -960,19 +995,20 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   (emacspeak-auditory-icon 'select-object)
   (dtk-speak (emacspeak-get-current-completion)))
 
-(defadvice next-completion (after emacspeak pre act comp)
-  "speak."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (tts-with-punctuations 'all
-                           (dtk-speak (emacspeak-get-current-completion)))))
 
-(defadvice previous-completion (after emacspeak pre act comp)
-  "speak."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
-    (tts-with-punctuations 'all
-                           (dtk-speak (emacspeak-get-current-completion)))))
+(cl-loop
+ for f in 
+ '(
+   next-line-completion previous-line-completion
+   next-completion previous-completion)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'select-object)
+       (tts-with-punctuations 'all
+         (dtk-speak (emacspeak-get-current-completion)))))))
 
 (defadvice choose-completion (before emacspeak pre act comp)
   "speak."
@@ -2697,17 +2733,19 @@ Produce an auditory icon if possible."
       mode-name
       '("ELisp"
         (lexical-binding
-         (:propertize ":l"
-                      'personality voice-smoothen
-                      help-echo "Using lexical-binding mode")
-         (:propertize ":d"
-                      'personality voice-smoothen
-                      help-echo "Using old dynamic scoping mode "
-                      face warning mouse-face mode-line-highlight
-                      local-map
-                      (keymap
-                       (mode-line keymap
-                                  (mouse-1 . elisp-enable-lexical-binding)))))))))
+         (:propertize
+          ":l"
+          'personality voice-smoothen
+          help-echo "Using lexical-binding mode")
+         (:propertize
+          ":d"
+          'personality voice-smoothen
+          help-echo "Using old dynamic scoping mode "
+          face warning mouse-face mode-line-highlight
+          local-map
+          (keymap
+           (mode-line keymap
+                      (mouse-1 . elisp-enable-lexical-binding)))))))))
 
 (provide 'emacspeak-advice)
 ;;;  end of file
