@@ -1483,8 +1483,7 @@ Set by \\[dtk-set-punctuations].")
   "Checks if this tts-engine can support multiple streams."
   (cl-declare (special tts-notification-device))
   (and
-   (member tts-engine '("outloud"  "cloud-outloud" "espeak"
-                        "cloud-espeak" "dtk-soft" "cloud-dtk-soft"))
+   (member tts-engine '("outloud"  "cloud-outloud"))
    (not (string= tts-notification-device "default"))))
 
 (defun dtk-cloud ()
@@ -1548,12 +1547,16 @@ program. Port defaults to dtk-local-server-port"
   (let* ((result nil)
          (device
           (or                        ; each clause is for a given env:
-           (and                      ; pipewire-pulse
+           (and (not (executable-find "pulseaudio")) ;pipewire-alsa
+                (setq result
+                      (string-trim
+                       (shell-command-to-string "aplay -L | grep mono_right"))))
+           (and                         ; pipewire-pulse
             (executable-find "pamixer")
             (setq result
-             (split-string
-              (shell-command-to-string
-               "pamixer --list-sinks | grep right")))
+                  (split-string
+                   (shell-command-to-string
+                    "pamixer --list-sinks | grep right")))
             (substring (cl-second result) 1 -1))
            (and                         ; pure pipewire  or pure alsa
             (not (zerop (length (shell-command-to-string "pidof pulseaudio"))))
@@ -1579,6 +1582,15 @@ Set to nil to disable a separate Notification stream."
           (string :value ""))
   :group 'tts)
 
+(defvar tts-audio-env-var
+  (cond
+   ((executable-find "pulseaudio") "PULSE_SINK")
+   (t "ALSA_DEFAULT"))
+  "Environment  variable for TTS output; PULSE_SINK if running
+  pulseaudio, otherwise ALSA_DEFAULT for both plain ALSA and
+  pipewire-alsa.  Note that pipewire-pulse is special and also
+  uses PULSE_SINK, but only if pipewire-alsa is not installed.")
+
 (defvar dtk-speak-server-initialized nil
   "Records if the server is initialized.")
 
@@ -1590,7 +1602,8 @@ Set to nil to disable a separate Notification stream."
         (default-directory (expand-file-name "~/"))
         (program (expand-file-name dtk-program emacspeak-servers-directory))
         (process nil))
-    (setq process (start-process name nil program))
+    (setq process
+          (start-process name nil program))
     (set-process-coding-system process 'utf-8 'utf-8)
     process))
 
@@ -1956,19 +1969,18 @@ Designed to work with ALSA and Pulseaudio."
   "Initialize notification TTS stream."
   (interactive)
   (cl-declare (special dtk-notify-process
-                       tts-notification-device))
-  (let ((dtk-program
-         (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program))
-        (new-process nil))
+                       tts-audio-env-var tts-notification-device))
+  (let ((new-process nil)
+        (dtk-program
+         (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program)))
+    (when (and dtk-notify-process (process-live-p dtk-notify-process))
+      (delete-process dtk-notify-process))
     (unless (zerop (length tts-notification-device))
       (with-environment-variables
-          (("PULSE_SINK" tts-notification-device))
-        (setq  new-process (dtk-make-process "Notify")))
-      (when
-          (memq (process-status new-process) '(run open))
-        (when (and dtk-notify-process (process-live-p dtk-notify-process))
-          (delete-process dtk-notify-process))
-        (setq dtk-notify-process new-process)))))
+          ((tts-audio-env-var tts-notification-device))
+        (setq  new-process (dtk-make-process "Notify"))
+        (when (memq (process-status new-process) '(run open))
+          (setq dtk-notify-process new-process))))))
 
 (defun dtk-notify-using-voice (voice text &optional dont-log)
   "Use voice VOICE to speak text TEXT on notification stream."

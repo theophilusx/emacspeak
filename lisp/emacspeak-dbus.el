@@ -228,12 +228,11 @@ already disabled."
 (defun emacspeak-dbus-resume ()
   "Emacspeak hook for Login1-resume."
   (cl-declare (special amixer-alsactl-config-file
+                       tts-audio-env-var
                        tts-notification-device))
   (ems-with-messages-silenced
     (tts-restart)
-    (with-environment-variables
-        (("PULSE_SINK"  tts-notification-device))
-      (emacspeak-prompt "waking-up"))
+          (emacspeak-prompt "waking-up")
     (amixer-restore amixer-alsactl-config-file)
     (when (executable-find "orca")
       (emacspeak-orca-toggle))
@@ -377,11 +376,9 @@ already disabled."
         (if lock
             (progn (emacspeak-screen-saver))
           (progn
-            (with-environment-variables
-                (("PULSE_SINK"  tts-notification-device))
-              (emacspeak-prompt "success")
-              (emacspeak-orca-toggle)
-              (light-black))
+            (emacspeak-prompt "success")
+            (emacspeak-orca-toggle)
+            (light-black)
             (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
             (when
                 (window-configuration-p emacspeak-screen-saver-saved-conf)

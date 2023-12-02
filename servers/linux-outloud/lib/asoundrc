@@ -1,4 +1,5 @@
 # $Id: .asoundrc,v 1.3 2012/03/08 19:19:31 raman Exp raman $
+# Under pipewire, install pipewire-alsa to use this as before.
 # {{{crossfeed (bs2b):
 ## Adding these stanzas to your .asoundrc or /etc/asound.conf will
 ## create an ALSA output device called 'crossfeed' which outputs
@@ -207,36 +208,28 @@ pcm.soft_left {
 # Unspecified entries default to 0.
 # Format: Source.Destination = Value
 
-pcm.tts_right {
-    type plug
-    slave.pcm {
-        type route
-        slave.pcm "default" 
-        ttable {
-            0.0 =  0.03
-            0.1 = 1
-            1.0 =  0.03
-            1.1 = 1
-        }
-    }
-}
-
-pcm.tts_left {
-    type plug
+pcm.tts_mono_right {
+    type upmix
     slave.pcm {
         type route
         slave.pcm "default"
-        ttable {
-            0.0 =  1
-            0.1 = 0.03
-            1.0 =  1
-            1.1 = 0.03
-        }
+        ttable.0.1 = 1
+        ttable.1.1 = 1 
+    }
+}
+
+pcm.tts_mono_left {
+    type upmix
+    slave.pcm {
+        type route
+        slave.pcm "default"
+        ttable.0.0=1
+        ttable.1.0 = 1
     }
 }
 
 pcm.tts_mid_left {
-    type plug
+    type upmix
     slave.pcm {
         type route
         slave.pcm "default"
@@ -249,9 +242,23 @@ pcm.tts_mid_left {
     }
 }
 
+
+pcm.tts_mid_right {
+    type upmix
+    slave.pcm {
+        type route
+        slave.pcm "default"
+        ttable {
+            0.1 =  0.66
+            0.0 = 0.33
+            1.1 =  0.66
+            1.0 = 0.33
+        }
+    }
+}
 #quarters
 pcm.tts_quarter_left {
-    type plug
+    type upmix
     slave.pcm {
         type route
         slave.pcm "default"
@@ -265,7 +272,7 @@ pcm.tts_quarter_left {
 }
 
 pcm.tts_quarter_right {
-    type plug
+    type upmix
     slave.pcm {
         type route
         slave.pcm "default"
@@ -536,6 +543,23 @@ pcm.save2file {
     type file
     slave.pcm "default"
     file "save.wav"
+}
+
+# }}}
+# {{{ matrixSpatializer
+
+pcm.spatial {
+    type plug
+    slave.pcm {
+        type ladspa
+        slave.pcm "default" # Set this line to match your configuration
+        path "/usr/lib/ladspa/"
+        plugins [{
+                    label matrixSpatialiser
+                    input {controls [256 ]}
+                }
+                ]
+    }
 }
 
 # }}}

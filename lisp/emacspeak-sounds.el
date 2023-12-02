@@ -225,6 +225,8 @@ Fully qualified filename if using Alsa; basename if using pactl. "
         (setq emacspeak-sounds-current-theme
               (expand-file-name "pan-chimes/" emacspeak-sounds-directory)))
        ((string= (executable-find "play") val)
+        (setq emacspeak-sounds-current-theme
+              (expand-file-name "ogg-chimes/" emacspeak-sounds-directory))
         (setq emacspeak-play-args nil))))
   :group 'emacspeak)
 
@@ -309,15 +311,14 @@ Optional interactive PREFIX arg toggles global value."
 
 (defun emacspeak-prompt (name)
   "Play  prompt for specified name."
-  (cl-declare (special emacspeak-prompts-directory emacspeak-m-player-program))
+  (cl-declare (special emacspeak-prompts-directory
+                       emacspeak-m-player-program))
   (let  ((file (expand-file-name (format "%s.mp3" name)
                                  emacspeak-prompts-directory)))
     (cl-assert (file-exists-p file) t  "File does not exist")
     (when emacspeak-m-player-program
-      (with-environment-variables
-          (("PULSE_SINK"))
-        (call-process
-         emacspeak-m-player-program nil  0 nil file)))))
+      (call-process
+         emacspeak-m-player-program nil  0 nil file))))
 
 (provide  'emacspeak-sounds)
 ;;;   emacs local variables

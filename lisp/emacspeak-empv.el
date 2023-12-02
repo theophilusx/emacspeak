@@ -90,41 +90,41 @@
   "Max number of history to preserve.")
 
 ;;;###autoload
-(defun emacspeak-empv-play-url (url &optional notification-device)
-  "Play URL using mpv;  Prefix arg plays on notification  device.
-For the  prefix arg to take effect, make sure to add the line
-`ao=pulse,' to your .config/mpv.conf file."
+(defun emacspeak-empv-play-url (url &optional left)
+  "Play URL using mpv.
+Interactive prefix arg plays on left ear using Alsa. "
   (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)
-                     current-prefix-arg ))
-  (cl-declare (special tts-notification-device
-                       emacspeak-empv-history-max emacspeak-empv-history))
+                     current-prefix-arg))
+  (cl-declare (special emacspeak-empv-history-max
+                       emacspeak-empv-history
+                       empv-mpv-args))
   (require 'empv)
   (when
-      (and url
-           (stringp url)
+      (and url (stringp url)
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
-  (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
-  (if notification-device
-      (with-environment-variables (("PULSE_SINK" tts-notification-device))
-        (empv-play url))
+  (add-to-history 'emacspeak-empv-history url
+                  emacspeak-empv-history-max)
+  (let* ((args (copy-sequence empv-mpv-args))
+         (empv-mpv-args args))
+    (when left (push "--audio-device=alsa/tts_quarter_left" empv-mpv-args))
     (empv-play url)))
 
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
-
 (declare-function emacspeak-media-read-resource
                   "emacspeak-m-player" (&optional prefix))
 
 ;;;###autoload
-(defun emacspeak-empv-play-file (file &optional left-channel)
-  "Play file using mpv;  Prefix arg plays on notification device."
-  (interactive
-   (list (emacspeak-media-read-resource) current-prefix-arg  ))
-  (cl-declare (special tts-notification-device))
+(defun emacspeak-empv-play-file (file &optional left)
+  "Play file using mpv.
+Interactive prefix arg plays on left ear using alsa."
+  (interactive(list (emacspeak-media-read-resource)
+                    current-prefix-arg))
+  (cl-declare (special empv-mpv-args))
   (require 'empv)
-  (if left-channel
-      (with-environment-variables (("PULSE_SINK" tts-notification-device))
-        (empv-play file))
+  (let* ((args (copy-sequence empv-mpv-args))
+         (empv-mpv-args args))
+    (when left (push "--audio-device=alsa/tts_quarter_left" empv-mpv-args))
     (empv-play file)))
 
 (put 'emacspeak-empv-play-file 'repeat-map 'empv-map)
@@ -175,6 +175,7 @@ For the  prefix arg to take effect, make sure to add the line
      ("%" emacspeak-empv-percentage-seek)
      ("'" empv-current-loop-on)
      ("/" empv-seek)
+     (";" emacspeak-empv-toggle-filter)
      ("0" empv-volume-up)
      ("9" empv-volume-down)
      ("C-j" empv-youtube-results-play-current)
@@ -198,6 +199,12 @@ For the  prefix arg to take effect, make sure to add the line
    empv-map))
 
 (emacspeak-empv-setup)
+;;; Experimental: Toggling Filters
+(defun emacspeak-empv-toggle-filter (filter)
+  "Toggle Filter.
+Filter is of the  form name=arg-1:arg-2:..."
+  (interactive "sFilter:")
+  (empv--send-command (list "af" "toggle" filter)))
 
 (provide 'emacspeak-empv)
 ;;;  end of file
