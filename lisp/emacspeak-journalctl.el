@@ -50,14 +50,13 @@
 ;;;  Map Faces:
 
 (voice-setup-add-map
- '
- (
+ '(
   (journalctl-error-face voice-animate)
   (journalctl-finished-face voice-lighten)
   (journalctl-host-face voice-smoothen)
-  (journalctl-process-face voice-monotone)
+  (journalctl-process-face voice-brighten)
   (journalctl-starting-face voice-lighten)
-  (journalctl-timestamp-face voice-monotone)
+  (journalctl-timestamp-face voice-bolden)
   (journalctl-warning-face voice-animate)))
 
 ;;;  Interactive Commands:
@@ -86,6 +85,13 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'scroll)
        (emacspeak-speak-line)))))
+
+(defadvice journalctl-quit (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
+
 
 (provide 'emacspeak-journalctl)
 ;;;  end of file

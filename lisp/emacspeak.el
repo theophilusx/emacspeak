@@ -410,22 +410,25 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
-  (setq ring-bell-function
-      #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
+  (cl-declare (special dtk-speaker-process))
   (dtk-initialize)
-  (mapc #'load
-        (directory-files-recursively
-         emacspeak-sounds-directory "define-theme\\.el"))
+  (cl-assert
+   (eq 'run (process-status dtk-speaker-process)) t
+   "Speech server %s failed, not starting Emacspeak!" dtk-program)
+  (setq ring-bell-function #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
+  (mapc
+   #'load
+   (directory-files-recursively emacspeak-sounds-directory "define-theme\\.el"))
   (emacspeak-pronounce-load-dictionaries)
   (make-thread #'(lambda () (ems--fastload "emacspeak-advice")))
   (emacspeak-setup-programming-modes)
-  (setq line-number-mode nil column-number-mode nil)
   (make-thread #'emacspeak-prepare-emacs)
+  (setq line-number-mode nil column-number-mode nil)
   (global-visual-line-mode -1)
+  (transient-mark-mode -1)
   (add-to-list
    'minor-mode-alist
    '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
-  (transient-mark-mode -1)
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (message emacspeak-startup-message)
   (emacspeak-play-startup-icon))

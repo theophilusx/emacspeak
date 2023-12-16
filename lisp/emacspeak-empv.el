@@ -71,7 +71,9 @@
 (defadvice empv-exit (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)))
+    (dtk-stop 'all)
+    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 (defadvice empv-youtube-tabulated (after emacspeak pre act comp)
   "speak."
@@ -199,11 +201,20 @@ Interactive prefix arg plays on left ear using alsa."
    empv-map))
 
 (emacspeak-empv-setup)
+
+(defvar emacspeak-empv-filter-history nil
+  "History of filters used.")
+
 ;;; Experimental: Toggling Filters
 (defun emacspeak-empv-toggle-filter (filter)
   "Toggle Filter.
 Filter is of the  form name=arg-1:arg-2:..."
-  (interactive "sFilter:")
+  (interactive
+   (list
+    (read-from-minibuffer  "Filter:" nil nil nil
+                           'emacspeak-empv-filter-history)))
+  (cl-declare (special emacspeak-empv-filter-history))
+  (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
 
 (provide 'emacspeak-empv)

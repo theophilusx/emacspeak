@@ -311,10 +311,9 @@ bound to \\[dtk-toggle-caps].")
 
 (defsubst dtk-get-style (&optional pos)
   " Return  style based on personality or face at `POS'.   "
-  (or pos (setq pos (point)))
   (or
-   (get-text-property pos 'personality)
-   (dtk-get-voice-for-face (get-text-property pos 'face))))
+   (get-text-property (or pos (point)) 'personality)
+   (dtk-get-voice-for-face (get-text-property (or pos (point)) 'face))))
 
 ;;;  Tone Helpers:
 
@@ -405,10 +404,9 @@ bound to \\[dtk-toggle-caps].")
 
 (defun dtk-silence (duration &optional force)
   "Produce `duration' ms of silence. "
-  (cl-declare (special dtk-quiet dtk-speaker-process
-                       dtk-speak-server-initialized))
+  (cl-declare (special dtk-quiet dtk-speaker-process))
   (unless dtk-quiet
-    (when dtk-speak-server-initialized
+    (when (process-live-p dtk-speaker-process)
       (dtk-interp-silence duration
                           (if force "\nd" "")))))
 
@@ -422,12 +420,10 @@ bound to \\[dtk-toggle-caps].")
  Pitch   is  in hertz.
  Duration  is  in milliseconds.
 Uses a 5ms fade-in and fade-out. "
-  (cl-declare (special dtk-quiet dtk-speaker-process
-                       dtk-use-tones dtk-speak-server-initialized))
+  (cl-declare (special dtk-quiet dtk-speaker-process dtk-use-tones))
   (unless
-      (or dtk-quiet
-          (not dtk-use-tones)
-          (not dtk-speak-server-initialized))
+      (or dtk-quiet (not dtk-use-tones)
+          (not (process-live-p dtk-speaker-process) ))
     (dtk-interp-tone pitch duration force)))
 
 (defun dtk-set-language (lang)
@@ -435,8 +431,8 @@ Uses a 5ms fade-in and fade-out. "
  voice, using the syntax language:voice , where language can be
  omitted."
   (interactive "sEnter language: \n")
-  (cl-declare (special dtk-speak-server-initialized dtk-speaker-process))
-  (when dtk-speak-server-initialized
+  (cl-declare (special dtk-speaker-process))
+  (when (process-live-p dtk-speaker-process)
     (unless (eq dtk-speaker-process (dtk-notify-process))
       (let ((dtk-speaker-process (dtk-notify-process)))
         (dtk-interp-language lang nil)))
@@ -445,8 +441,8 @@ Uses a 5ms fade-in and fade-out. "
 (defun dtk-set-next-language ()
   "Switch to  next  language"
   (interactive)
-  (cl-declare (special dtk-speak-server-initialized dtk-speaker-process))
-  (when dtk-speak-server-initialized
+  (cl-declare (special dtk-speaker-process))
+  (when (process-live-p dtk-speaker-process)
     (unless (eq dtk-speaker-process (dtk-notify-process))
       (let ((dtk-speaker-process (dtk-notify-process)))
         (dtk-interp-next-language nil)))
@@ -455,8 +451,8 @@ Uses a 5ms fade-in and fade-out. "
 (defun dtk-set-previous-language ()
   "Switch to  previous  language"
   (interactive)
-  (cl-declare (special dtk-speak-server-initialized dtk-speake-process))
-  (when dtk-speak-server-initialized
+  (cl-declare (special   dtk-speake-process))
+  (when (process-live-p dtk-speaker-process)
     (unless (eq dtk-speaker-process (dtk-notify-process))
       (let ((dtk-speaker-process (dtk-notify-process)))
         (dtk-interp-previous-language nil)))
@@ -465,8 +461,8 @@ Uses a 5ms fade-in and fade-out. "
 (defun dtk-set-preferred-language (alias lang)
   "Set language by alias."
   (interactive "s")
-  (cl-declare (special dtk-speak-server-initialized dtk-speaker-process))
-  (when dtk-speak-server-initialized
+  (cl-declare (special dtk-speaker-process))
+  (when (process-live-p dtk-speaker-process)
     (unless (eq dtk-speaker-process (dtk-notify-process))
       (let ((dtk-speaker-process (dtk-notify-process)))
         (dtk-interp-preferred-language alias lang)))
@@ -840,10 +836,10 @@ Argument COMPLEMENT  is the complement of separator."
 (defun dtk-dispatch (string)
   "Send request  to speech server."
   (cl-declare (special dtk-speaker-process
-                       dtk-speak-server-initialized
+                       (process-live-p dtk-speaker-process)
                        dtk-quiet))
   (unless dtk-quiet
-    (when dtk-speak-server-initialized
+    (when (process-live-p dtk-speaker-process)
       (dtk-interp-say string))))
 
 (defun dtk-stop (&optional all)
@@ -913,8 +909,8 @@ current local  value to the result."
    (list (read-from-minibuffer "Enter new rate: ")
          current-prefix-arg))
   (cl-declare (special dtk-speech-rate dtk-speaker-process
-                       dtk-program dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
+                       dtk-program  ))
+  (when (process-live-p dtk-speaker-process)
     (cond
      (prefix
       (unless (eq dtk-speaker-process (dtk-notify-process))
@@ -991,8 +987,8 @@ Interactive PREFIX arg means set the global default value, and
 then set the current local value to the result."
   (interactive "nEnter new factor:\nP")
   (cl-declare (special dtk-character-scale dtk-speaker-process
-                       dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
+                       ))
+  (when (process-live-p dtk-speaker-process)
     (cond
      (prefix
       (setq-default dtk-character-scale factor)
@@ -1056,9 +1052,9 @@ current local  value to the result."
                       t))
     current-prefix-arg))
   (cl-declare (special dtk-punctuation-mode dtk-speaker-process
-                       dtk-speak-server-initialized
+
                        dtk-punctuation-mode-alist))
-  (when dtk-speak-server-initialized
+  (when (process-live-p dtk-speaker-process)
     (cond
      (prefix
       (setq dtk-punctuation-mode mode)
@@ -1103,8 +1099,8 @@ Interactive PREFIX arg makes the new setting global."
   "Reset TTS engine."
   (interactive)
   (cl-declare (special dtk-speaker-process
-                       dtk-speak-server-initialized))
-  (when dtk-speak-server-initialized
+                       ))
+  (when (process-live-p dtk-speaker-process)
     (dtk-interp-reset-state)))
 
 (defun tts-speak-version ()
@@ -1591,9 +1587,6 @@ Set to nil to disable a separate Notification stream."
   pipewire-alsa.  Note that pipewire-pulse is special and also
   uses PULSE_SINK, but only if pipewire-alsa is not installed.")
 
-(defvar dtk-speak-server-initialized nil
-  "Records if the server is initialized.")
-
 ;; Helper: dtk-make-process:
 (defun dtk-make-process (name)
   "Make a  TTS process called name."
@@ -1608,25 +1601,21 @@ Set to nil to disable a separate Notification stream."
     process))
 
 (declare-function voice-setup "voice-setup" ())
-
 (defun dtk-initialize ()
   "Initialize speech system."
-  ;; `voice-setup' requires us, so we can't require it at top-level.
-  (require 'voice-setup)
-                                        ; fallback of fallbacks
+  (cl-declare (special dtk-speaker-process dtk-program))
+  ;; fallback of fallbacks
   (unless dtk-program (setq dtk-program "espeak"))
-  (voice-setup)
-  (let* ((new-process (dtk-make-process "Speaker"))
-         (state (process-status new-process)))
-    (setq dtk-speak-server-initialized (memq state '(run open)))
-    (cond
-     (dtk-speak-server-initialized ;; nuke old server
-      (when (and dtk-speaker-process (process-live-p dtk-speaker-process))
-        (delete-process dtk-speaker-process))
-      (setq dtk-speaker-process new-process)
-      (when (process-live-p dtk-notify-process)
-        (delete-process dtk-notify-process))
-      (when (tts-multistream-p dtk-program) (dtk-notify-initialize))))))
+  (let ((new (dtk-make-process "Speaker")))
+    (unless (process-live-p new) (error "Fail: Speech server"))
+    ;; success, so nuke old server
+      (when (processp dtk-speaker-process) (delete-process dtk-speaker-process))
+      (setq dtk-speaker-process new)
+      (when (processp dtk-notify-process) (delete-process dtk-notify-process))
+      (when (tts-multistream-p dtk-program) (dtk-notify-initialize))
+      ;; `voice-setup' requires us, so we can't require it at top-level.
+      (require 'voice-setup)
+      (voice-setup)))
 
 (defun tts-restart ()
   "Restart TTS server."
@@ -1682,7 +1671,7 @@ This is so text marked invisible is silenced.")
 (declare-function org-set-regexps-and-options "org" (&optional tags-only))
 
 (defun dtk-org-fold ()
-  "Prepare Org fold." 
+  "Prepare Org fold."
   (cl-declare (special
                org-fold-core-style org-link-descriptive
                org-link--link-folding-spec))
@@ -1705,7 +1694,7 @@ unless   `dtk-quiet' is set to t. "
                dtk-yank-excluded-properties
                dtk-speaker-process dtk-stop-immediately
                tts-strip-octals
-               dtk-speak-server-initialized emacspeak-use-auditory-icons
+               emacspeak-use-auditory-icons
                dtk-speech-rate dtk-speak-nonprinting-chars
                dtk-quiet dtk-chunk-separator-syntax
                inhibit-modification-hooks
@@ -1721,7 +1710,7 @@ unless   `dtk-quiet' is set to t. "
   ;; I will remain silent.
   ;; I also do nothing if text is nil or ""
   (unless
-      (or dtk-quiet (not dtk-speak-server-initialized)
+      (or dtk-quiet (not (process-live-p dtk-speaker-process))
           (null text) (zerop (length text)))
     ;; flush previous speech if asked to
     (when dtk-stop-immediately
@@ -1814,8 +1803,8 @@ unless   `dtk-quiet' is set to t. "
 (defun dtk-speak-and-echo (message)
   "Speak message and echo it."
   (ems-with-messages-silenced
-   (dtk-speak (format "%s" message))
-   (message (format "%s" message))))
+    (dtk-speak (format "%s" message))
+    (message (format "%s" message))))
 
 (defun dtk-speak-list (text &optional group)
   "Speak a  list of strings.
@@ -1869,16 +1858,16 @@ grouping"
 (defun dtk-letter (letter)
   "Speak a LETTER."
   (cl-declare (special dtk-speaker-process
-                       dtk-speak-server-initialized
+
                        dtk-quiet))
   (unless dtk-quiet
-    (when dtk-speak-server-initialized
+    (when (process-live-p dtk-speaker-process)
       (dtk-interp-letter letter))))
 
 (defun dtk-say (words)
   "Say these WORDS."
   (cl-declare (special dtk-speaker-process dtk-stop-immediately
-                       dtk-speak-server-initialized dtk-quiet))
+                       dtk-quiet))
                                         ; ensure words is a  string
   (unless (stringp words) (setq words (format "%s" words)))
   ;; I won't talk if you dont want me to
@@ -1887,7 +1876,7 @@ grouping"
     (or (eq 'run (process-status dtk-speaker-process))
         (eq 'open (process-status dtk-speaker-process))
         (dtk-initialize))
-    (when dtk-speak-server-initialized
+    (when (process-live-p dtk-speaker-process)
       (when dtk-stop-immediately
         (when (process-live-p dtk-notify-process) (dtk-notify-stop))
         (dtk-stop))
@@ -2264,4 +2253,3 @@ When called interactively, CHAR defaults to the character after point."
 ;;;   emacs local variables
 
 ;; coding: utf-8
-

@@ -266,41 +266,37 @@ Define a voice for it if needed, then return the symbol."
 
 ;;;  interactively silence personalities
 
-(defvar voice-setup-buffer-face-voice-table (make-hash-table :test #'eq)
+(defvar  voice-setup-local-map (make-hash-table :test #'eq)
   "Buffer local face->personality.")
-
-;; If personality at point is currently audible, its
-;; face->personality map is cached in a buffer local variable, and
-;; its face->personality map is replaced by face->inaudible.  If
-;; personality at point is inaudible, and there is a cached value,
-;; then the original face->personality mapping is restored.  In
-;; either case, the buffer is refontified to have the new mapping take effect.
+;; We toggle audibility at point by:
+;; If face at point is currently audible, its face->personality
+;; map is cached in hash-table voice-setup-local-map, and its
+;; face->personality map is updated to be inaudible.
+;; If personality at point is inaudible, and there is a cached value,
+;; then the original face->personality mapping is restored from the
+;; cached value.
 
 ;;;###autoload
 (defun voice-setup-toggle-silence-personality ()
-  "Toggle audibility of personality under point  . "
+  "Toggle audibility of personality under point  . "
   (interactive)
-  (cl-declare (special voice-setup-buffer-face-voice-table))
-  (let* ((personality  (dtk-get-style))
-         (face (get-text-property (point) 'face))
-         (orig (gethash face voice-setup-buffer-face-voice-table)))
+  (cl-declare (special voice-setup-local-map))
+  (let* ((face (get-text-property (point) 'face))
+         (f (if (listp face)   (cl-first face)face))
+         (personality (voice-setup-get-voice-for-face f))
+         (orig (gethash f voice-setup-local-map)))
     (cond
      ((null personality) (message "No personality here."))
-     ((eq personality  'inaudible)
-      (voice-setup-set-voice-for-face face  orig)
-      (message "Made personality %s audible." orig)
-      (emacspeak-auditory-icon 'open-object))
-     (t (voice-setup-set-voice-for-face
-         (if (listp face)   (cl-first face)face)
-         'inaudible)
-        (setf
-         (gethash
-          (if (listp face) (cl-first face) face)
-          voice-setup-buffer-face-voice-table)
-         personality)
-        (message "Silenced personality %s" personality)
-        (emacspeak-auditory-icon 'close-object)))
-    (when (buffer-file-name) (normal-mode))))
+     ((and orig (eq personality  'inaudible))  ; currently inaudible,
+      (voice-setup-set-voice-for-face f  orig) ; restore orig
+      (remhash f voice-setup-local-map)        ; clean cache
+      (message "Made face %s audible." f)
+      (emacspeak-auditory-icon 'item))
+     (t
+      (voice-setup-set-voice-for-face f  'inaudible) ; update
+      (puthash f personality voice-setup-local-map)  ; cache
+      (message "Silenced face %s" f)
+      (emacspeak-auditory-icon 'close-object)))))
 
 (provide 'voice-setup)
 ;;;  end of file
