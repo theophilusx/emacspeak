@@ -1,6 +1,6 @@
-;;; emacspeak-<skeleton>.el --- Speech-enable <SKELETON>  -*- lexical-binding: t; -*-
+;;; emacspeak-enwc.el --- Speech-enable ENWC  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
-;;; Keywords: Emacspeak,  Audio Desktop <skeleton>
+;;; Keywords: Emacspeak,  Audio Desktop enwc
 ;;;   LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -37,8 +37,8 @@
 
 
 ;;; Commentary:
-;;; <SKELETON> == 
-
+;;; ENWC ==  Emacs Network Client
+;; Work easily with NM and friends.
 ;;; Code:
 
 ;;;   Required modules
@@ -49,32 +49,46 @@
 
 ;;;  Map Faces:
 
-(let ((print-length 0)
-      (faces (emacspeak-wizards-enumerate-unmapped-faces "^<skeleton>"))
-      (start (point)))
-  (insert "\n\n(voice-setup-add-map \n'(\n")
-  (cl-loop for f in faces do 
-           (insert (format "(%s)\n" f)))
-  (insert "\n)\n)")
-  (goto-char start)
-  (backward-sexp)
-  (kill-sexp)
-  (goto-char (search-forward "("))
-  (indent-pp-sexp))
+(voice-setup-add-map 
+ '(
+   (enwc-connected voice-bolden)
+   (enwc-header voice-lighten)))
 
 ;;;  Interactive Commands:
 
-(let ((print-length nil)
-      (start (point))
-      (commands (emacspeak-wizards-enumerate-uncovered-commands "^<skeleton>")))
-  (insert "'(\n")
-  (cl-loop for c in commands do (insert (format "%s\n" c)))
-  (insert ")\n")
-  (goto-char start)
-  (backward-sexp)
-  (kill-sexp)
-  (goto-char (search-forward "("))
-  (indent-pp-sexp))
+'(
+  enwc-disable-auto-scan
+  enwc-disable-display-mode-line
+  enwc-disconnect-network
+  enwc-enable-auto-scan
+  enwc-enable-display-mode-line
+  enwc-find-network
+  enwc-load-backend
+  enwc-mode
+  enwc-redisplay-networks
+  enwc-restart-auto-scan
+  enwc-scan
+  enwc-toggle-auto-scan
+  enwc-toggle-display-mode-line
+  enwc-toggle-wired
+  )
 
-(provide 'emacspeak-<skeleton>)
+(defadvice enwc (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+(cl-loop
+ for f in 
+ '(enwc-connect-to-network-at-point enwc-connect-to-network
+                                    enwc-connect-to-network-essid)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'select-object)))))
+
+(provide 'emacspeak-enwc)
 ;;;  end of file

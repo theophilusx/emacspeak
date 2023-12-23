@@ -1,6 +1,6 @@
-;;; emacspeak-<skeleton>.el --- Speech-enable <SKELETON>  -*- lexical-binding: t; -*-
+;;; emacspeak-ellama.el --- Speech-enable ELLAMA  -*- lexical-binding: t; -*-
 ;;; $Author: tv.raman.tv $
-;;; Keywords: Emacspeak,  Audio Desktop <skeleton>
+;;; Keywords: Emacspeak,  Audio Desktop ellama
 ;;;   LCD Archive entry:
 
 ;;; LCD Archive Entry:
@@ -37,7 +37,8 @@
 
 
 ;;; Commentary:
-;;; <SKELETON> == 
+;;; ELLAMA ==  Emacs LLM Interaction.
+;; ellama uses package llm, and this module speech-enables ellama.
 
 ;;; Code:
 
@@ -49,32 +50,45 @@
 
 ;;;  Map Faces:
 
-(let ((print-length 0)
-      (faces (emacspeak-wizards-enumerate-unmapped-faces "^<skeleton>"))
-      (start (point)))
-  (insert "\n\n(voice-setup-add-map \n'(\n")
-  (cl-loop for f in faces do 
-           (insert (format "(%s)\n" f)))
-  (insert "\n)\n)")
-  (goto-char start)
-  (backward-sexp)
-  (kill-sexp)
-  (goto-char (search-forward "("))
-  (indent-pp-sexp))
-
 ;;;  Interactive Commands:
 
-(let ((print-length nil)
-      (start (point))
-      (commands (emacspeak-wizards-enumerate-uncovered-commands "^<skeleton>")))
-  (insert "'(\n")
-  (cl-loop for c in commands do (insert (format "%s\n" c)))
-  (insert ")\n")
-  (goto-char start)
-  (backward-sexp)
-  (kill-sexp)
-  (goto-char (search-forward "("))
-  (indent-pp-sexp))
 
-(provide 'emacspeak-<skeleton>)
+'(
+  ellama-add-code
+ellama-ask
+ellama-ask-about
+ellama-ask-interactive
+ellama-ask-line
+ellama-ask-selection
+ellama-change
+ellama-change-code
+ellama-chat
+ellama-code-add
+ellama-code-complete
+ellama-code-edit
+ellama-code-improve
+ellama-code-review
+ellama-complete
+ellama-complete-code
+ellama-define-word
+ellama-enhance-code
+ellama-enhance-grammar-spelling
+ellama-enhance-wording
+ellama-get-ollama-local-model
+ellama-improve-conciseness
+ellama-improve-grammar
+ellama-improve-wording
+ellama-make-concise
+ellama-make-format
+ellama-make-list
+ellama-make-table
+ellama-provider-select
+ellama-render
+ellama-setup-keymap
+ellama-summarize
+ellama-summarize-webpage
+ellama-translate
+)
+
+(provide 'emacspeak-ellama)
 ;;;  end of file

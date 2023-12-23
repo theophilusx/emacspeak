@@ -141,12 +141,14 @@ the Emacspeak desktop.")
     ("ein-notebook" emacspeak-ein)
     ("elfeed" emacspeak-elfeed)
     ("elisp-refs" emacspeak-elisp-refs)
+    ("ellama" emacspeak-ellama)
     ("elpher" emacspeak-elpher)
     ("elpy" emacspeak-elpy)
     ("elscreen" emacspeak-elscreen)
     ("emms" emacspeak-emms)
     ("empv" emacspeak-empv)
     ("enriched" emacspeak-enriched)
+    ("enwc" emacspeak-enwc)
     ("epa" emacspeak-epa)
     ("eperiodic" emacspeak-eperiodic)
     ("erc" emacspeak-erc)
@@ -351,16 +353,16 @@ the Emacspeak desktop.")
 
 ;;;  Emacspeak:
 
-(defcustom emacspeak-play-emacspeak-startup-icon t
-  "If set to T, emacspeak plays its icon as it launches."
-  :type 'boolean
-  :group 'emacspeak)
+(defvar emacspeak-play-startup-icon t
+  "If set to T, emacspeak plays its icon as it launches.
+This cannot be set via custom; set this in your startup file before
+  you load anything else.")
 
 (defsubst emacspeak-play-startup-icon ()
   "Play startup icon."
-  (cl-declare (special emacspeak-play-emacspeak-startup-icon
+  (cl-declare (special emacspeak-play-startup-icon
                        emacspeak-m-player-program))
-  (when (and  emacspeak-play-emacspeak-startup-icon emacspeak-m-player-program)
+  (when (and  emacspeak-play-startup-icon emacspeak-m-player-program)
     (start-process
      "mp3" nil
      emacspeak-m-player-program
@@ -410,11 +412,7 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
-  (cl-declare (special dtk-speaker-process))
   (dtk-initialize)
-  (cl-assert
-   (eq 'run (process-status dtk-speaker-process)) t
-   "Speech server %s failed, not starting Emacspeak!" dtk-program)
   (setq ring-bell-function #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
   (mapc
    #'load
@@ -448,7 +446,7 @@ commands and options for details."
   (cl-declare (special emacspeak-orca-handle))
   (cond
    (emacspeak-orca-handle (delete-process emacspeak-orca-handle)
-                               (setq emacspeak-orca-handle  nil))
+                          (setq emacspeak-orca-handle  nil))
    (t (setq emacspeak-orca-handle (start-process "Orca"nil "orca")))))
 ;;;  end of file
 

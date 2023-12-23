@@ -79,7 +79,7 @@ Emacspeak-95 (code named Illinois) was released on the
 Internet in May 1995 as the first complete speech interface
 to UNIX workstations.  The subsequent release, Emacspeak-96
 (code named Egypt) made available in May 1996 provided
-significant enhancements to the interface. Emacspeak-97
+significan\'t enhancements to the interface. Emacspeak-97
 (Tennessee) went further in providing a true audio desktop.
 Emacspeak-98 integrated Internetworking  into
 all aspects of the audio desktop to provide the first fully
@@ -103,7 +103,7 @@ About Emacspeak:
 Based at Cornell (NY) <http://cs.cornell.edu/home/raman>
 --home to some of the most innovative auditory interfaces on
 the WWW-- Emacspeak is mirrored world-wide by an
-international netwrok of software archives and bundled with
+international network of software archives and bundled with
 all major Linux distributions on CDROM.  The Emacspeak
 mailing list is archived at
 <http://www.cs.vassar.edu/~priestdo/emacspeak/> --thanks to

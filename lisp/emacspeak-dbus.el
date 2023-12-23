@@ -110,15 +110,17 @@ Initialize screen-saver buffer  if needed, and switch to  it."
     (delete-other-windows)))
 
 ;;;  NM Handlers
-(declare-function ems-get-active-network-interfaces "emacspeak-wizards" nil)
+(declare-function ems--get-active-network-interfaces "emacspeak-wizards" nil)
 
 (defun emacspeak-dbus-nm-connected ()
   "Announce  network manager connection.
 Startup  apps that need the network."
   (cl-declare (special emacspeak-speak-network-interfaces-list))
   (setq emacspeak-speak-network-interfaces-list
-        (ems-get-active-network-interfaces))
-  (dtk-notify-say "Network up")
+        (ems--get-active-network-interfaces))
+  (dtk-notify-say
+   (message "Network up: %s"
+            (ems--get-essid)))
   (emacspeak-play-auditory-icon 'network-up))
 
 (defun emacspeak-dbus-nm-disconnected ()
@@ -231,20 +233,20 @@ already disabled."
                        tts-audio-env-var
                        tts-notification-device))
   (ems-with-messages-silenced
-    (tts-restart)
-          (emacspeak-prompt "waking-up")
-    (amixer-restore amixer-alsactl-config-file)
-    (when (executable-find "orca")
-      (emacspeak-orca-toggle))
-    (when (featurep 'soundscape) (soundscape-restart))
-    (when (featurep 'light) (light-black))
-    (when
-        (dbus-call-method
-         :session
-         "org.gnome.ScreenSaver" "/org/gnome/ScreenSaver"
-         "org.gnome.ScreenSaver" "GetActive")
-      (emacspeak-prompt "pwd")
-      (emacspeak-auditory-icon 'help))))
+   (tts-restart)
+   (emacspeak-prompt "waking-up")
+   (amixer-restore amixer-alsactl-config-file)
+   (when (executable-find "orca")
+     (emacspeak-orca-toggle))
+   (when (featurep 'soundscape) (soundscape-restart))
+   (when (featurep 'light) (light-black))
+   (when
+       (dbus-call-method
+        :session
+        "org.gnome.ScreenSaver" "/org/gnome/ScreenSaver"
+        "org.gnome.ScreenSaver" "GetActive")
+     (emacspeak-prompt "pwd")
+     (emacspeak-auditory-icon 'help))))
 
 (add-hook 'emacspeak-dbus-resume-hook #'emacspeak-dbus-resume)
 

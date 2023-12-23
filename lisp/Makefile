@@ -125,6 +125,7 @@ emacspeak-eglot.elc \
 emacspeak-ein.elc \
 emacspeak-elfeed.elc \
 emacspeak-elisp-refs.elc \
+emacspeak-ellama.elc \
 emacspeak-elpher.elc \
 emacspeak-elpy.elc \
 emacspeak-elscreen.elc \
@@ -132,6 +133,7 @@ emacspeak-emms.elc \
 emacspeak-empv.elc \
 emacspeak-enriched.elc \
 emacspeak-entertain.elc \
+emacspeak-enwc.elc \
 emacspeak-epa.elc \
 emacspeak-eperiodic.elc \
 emacspeak-epub.elc \

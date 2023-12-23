@@ -171,11 +171,18 @@
    )
  do
  (eval
-  `(defadvice ,f(after emacspeak pre act comp)
+  `(defadvice ,f(around emacspeak pre act comp)
      "Speak."
-     (when (ems-interactive-p)
-       (emacspeak-speak-line)
-       (emacspeak-auditory-icon 'paragraph)))))
+     (cond
+      ((ems-interactive-p)
+       (let ((orig (point)))
+         ad-do-it
+         (if (> (count-lines orig (point)) 1)
+             (emacspeak-speak-region orig (point))
+           (emacspeak-speak-line)))
+       (emacspeak-auditory-icon 'large-movement))
+      (t ad-do-it)
+      ad-return-value))))
 
 (defadvice org-cycle-list-bullet (after emacspeak pre act comp)
   "Speak."
@@ -439,8 +446,6 @@
      ("M-S-<up>" org-shiftmetaup)
      ("M-S-RET" org-insert-todo-heading)
      ("S-RET" org-table-previous-row)
-     ("M-n" org-next-item)
-     ("M-p" org-previous-item)
      ("S-<down>" org-shiftdown)
      ("S-<left>" org-shiftleft)
      ("S-<right>" org-shiftright)

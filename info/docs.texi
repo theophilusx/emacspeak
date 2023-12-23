@@ -56,6 +56,7 @@
 * emacspeak-ein::Speech-enable EIN.
 * emacspeak-elfeed::Speech-enable ELFEED.
 * emacspeak-elisp-refs::ELISP-REFS.
+* emacspeak-ellama::Speech-enable ELLAMA.
 * emacspeak-elpher::Speech-enable ELPHER.
 * emacspeak-elpy::Speech-enable ELPY.
 * emacspeak-elscreen::ELSCREEN.
@@ -63,6 +64,7 @@
 * emacspeak-empv::Speech-enable EMPV.
 * emacspeak-enriched::Audio FormatRichtext.
 * emacspeak-entertain::Speech enable games.
+* emacspeak-enwc::Speech-enable ENWC.
 * emacspeak-epa::Speech-enable GPG Helper.
 * emacspeak-eperiodic::Periodic Table.
 * emacspeak-epub::epubs for  desktop.
@@ -247,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1149 commands and 146 options.
+This chapter documents a total of 1149 commands and 145 options.
 
 @node amixer
 @section amixer
@@ -269,8 +271,6 @@ default values, Press @kbd{C-j}.
 @subsubsection amixer
 @deffn {Command} amixer  (&optional refresh)
 @table @kbd
-@item C-e 9
-@kindex C-e 9
 @item C-e (
 @kindex C-e (
 @end table
@@ -814,10 +814,6 @@ value, and then set the current local value to the result.
 @subsubsection dtk-toggle-punctuation-mode
 @deffn {Command} dtk-toggle-punctuation-mode  (&optional prefix)
 @table @kbd
-@item C-e <deletechar>
-@kindex C-e <deletechar>
-@item C-e <backspace>
-@kindex C-e <backspace>
 @item C-e d ,
 @kindex C-e d ,
 @end table
@@ -1223,19 +1219,6 @@ Toggle state of orca.
 @end deffn
 
 @subsection emacspeak Options
-
-@defvar {User Option} emacspeak-play-emacspeak-startup-icon
-If set to T, emacspeak plays its icon as it launches.
-
-Default Value: 
-
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
 
 @defvar {User Option} emacspeak-soundscapes
 Whether we should turn on soundscapes on startup.
@@ -3781,6 +3764,12 @@ Speak entry at point.
 Speech-enable package elisp-refs.
 ELISP-REFS ==
 
+@node emacspeak-ellama
+@section emacspeak-ellama
+
+ELLAMA ==  Emacs LLM Interaction.
+ellama uses package llm, and this module speech-enables ellama.
+
 @node emacspeak-elpher
 @section emacspeak-elpher
 
@@ -3864,8 +3853,6 @@ Percentage seek in seconds,see ‘empv-seek’
 @table @kbd
 @item C-e '
 @kindex C-e '
-@item C-e C-;
-@kindex C-e C-;
 @end table
 
 @findex emacspeak-empv-play-file
@@ -3961,6 +3948,12 @@ Speak current guessed string.
 Speak statistics.
 @end format
 @end deffn
+
+@node emacspeak-enwc
+@section emacspeak-enwc
+
+ENWC ==  Emacs Network Client
+Work easily with NM and friends.
 
 @node emacspeak-epa
 @section emacspeak-epa
@@ -8125,8 +8118,7 @@ Default Value:
 
 @verbatim
 
-((";" emacspeak-multimedia)
- ("C-;" emacspeak-amark-bookshelf)
+(("C-;" emacspeak-amark-bookshelf)
  ("C-a" ansi-term)
  ("C-b" eww-list-bookmarks)
  ("C-d" dictionary-search)
@@ -8167,6 +8159,7 @@ Default Value:
 @verbatim
 
 (("'" emacspeak-pianobar)
+ ("C-'" empv-exit)
  ("d" sdcv-search-input)
  ("e" eat)
  ("f" ffap)
@@ -9448,10 +9441,6 @@ Use youtube-dl  to stream  using mplayer.
 @table @kbd
 @item C-e ;
 @kindex C-e ;
-@item C-; ;
-@kindex C-; ;
-@item C-x @@ h ;
-@kindex C-x @@ h ;
 @end table
 
 @findex emacspeak-multimedia
@@ -10063,7 +10052,6 @@ The heads for the associated hydra are:
 
 "?":    ‘(emacspeak-hydra-self-help "emacspeak-muggles-brightness")’,
 "b":    ‘emacspeak-brightness-alert-toggle’,
-"B":    ‘emacspeak-brightness-autoblack-toggle’,
 "s":    ‘light-set’,
 "g":    ‘light-get’,
 "t":    ‘emacspeak-hydra-toggle-talkative’,
@@ -11937,8 +11925,6 @@ custom option @code{emacspeak-play-program}.
 @subsubsection emacspeak-sounds-select-theme
 @deffn {Command} emacspeak-sounds-select-theme  (&optional theme)
 @table @kbd
-@item C-e 0
-@kindex C-e 0
 @item C-e )
 @kindex C-e )
 @end table
@@ -12126,16 +12112,11 @@ Also set the mark at the position where point was.
 
 @subsubsection emacspeak-mark-backward-mark
 @deffn {Command} emacspeak-mark-backward-mark   
-@table @kbd
-@item C-<up>
-@kindex C-<up>
-@end table
-
 @findex emacspeak-mark-backward-mark
 
 @format
 Cycle backward through the mark ring.
-To cycle forward, use pop-to-mark-command bound to C-<down> 
+To cycle forward, use pop-to-mark-command bound to M-x pop-to-mark-command 
 @end format
 @end deffn
 
@@ -12500,8 +12481,6 @@ location of the mark is indicated by an aural highlight.
 @subsubsection emacspeak-speak-current-percentage
 @deffn {Command} emacspeak-speak-current-percentage   
 @table @kbd
-@item C-e 5
-@kindex C-e 5
 @item C-e %
 @kindex C-e %
 @end table
@@ -12820,6 +12799,21 @@ Speaks header-line if that is set when called non-interactively.
 Interactive prefix arg speaks buffer info.
 
 (fn &optional BUFFER-INFO)
+@end format
+@end deffn
+
+@subsubsection emacspeak-speak-net-id
+@deffn {Command} emacspeak-speak-net-id   
+@table @kbd
+@item C-e `
+@kindex C-e `
+@end table
+
+@findex emacspeak-speak-net-id
+
+@format
+Shows active network interfaces in the echo area.
+ The address is also copied to the kill ring for convenient yanking.
 @end format
 @end deffn
 
@@ -16616,8 +16610,8 @@ Kill current buffer without  confirmation.
 @end format
 @end deffn
 
-@subsubsection emacspeak-learn-emacs-mode
-@deffn {Command} emacspeak-learn-emacs-mode   
+@subsubsection emacspeak-learn-emacs
+@deffn {Command} emacspeak-learn-emacs   
 @table @kbd
 @item C-e <f1>
 @kindex C-e <f1>
@@ -16629,7 +16623,7 @@ Kill current buffer without  confirmation.
 @kindex <help> C-l
 @end table
 
-@findex emacspeak-learn-emacs-mode
+@findex emacspeak-learn-emacs
 
 @format
 Helps you learn the keys.  You can press keys and hear what they do.
@@ -16653,11 +16647,6 @@ Prompts for the new location and preserves modification time
 
 @subsubsection emacspeak-next-frame-or-buffer
 @deffn {Command} emacspeak-next-frame-or-buffer  (&optional frame)
-@table @kbd
-@item C-<right>
-@kindex C-<right>
-@end table
-
 @findex emacspeak-next-frame-or-buffer
 
 @format
@@ -16670,11 +16659,6 @@ With optional interactive prefix arg ‘frame’, move to next frame instead.
 
 @subsubsection emacspeak-previous-frame-or-buffer
 @deffn {Command} emacspeak-previous-frame-or-buffer  (&optional frame)
-@table @kbd
-@item C-<left>
-@kindex C-<left>
-@end table
-
 @findex emacspeak-previous-frame-or-buffer
 
 @format
@@ -16851,25 +16835,6 @@ Speak host name.
 
 @format
 Pop up Messages  and switch to it.
-@end format
-@end deffn
-
-@subsubsection emacspeak-speak-show-active-network-interfaces
-@deffn {Command} emacspeak-speak-show-active-network-interfaces  (&optional address)
-@table @kbd
-@item C-e I
-@kindex C-e I
-@end table
-
-@findex emacspeak-speak-show-active-network-interfaces
-
-@format
-Shows all active network interfaces in the echo area.
-With interactive prefix argument ADDRESS it prompts for a
-specific interface and shows its address. The address is
-also copied to the kill ring for convenient yanking.
-
-(fn &optional ADDRESS)
 @end format
 @end deffn
 
@@ -20323,11 +20288,6 @@ Turn on Voice Lock mode .
 
 @subsubsection voice-setup-toggle-silence-personality
 @deffn {Command} voice-setup-toggle-silence-personality   
-@table @kbd
-@item C-e M-q
-@kindex C-e M-q
-@end table
-
 @findex voice-setup-toggle-silence-personality
 
 @format

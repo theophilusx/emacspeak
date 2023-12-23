@@ -1,0 +1,144 @@
+* Introduction
+
+This is an Emacspeak-specific follow-on to my article [[https://emacspeak.blogspot.com/2023/12/emacs-hidden-holiday-gems.html][Emacs: Hidden
+Holiday Gems]].  This article extends its predecessor by:
+
+1. Adding Emacspeak-specific details for each gem; the earlier article
+   purposely avoided anything Emacspeak-specific.
+2. Where appropriate, I'll point out the importance of choosing a
+   solution that is appropriate to the user, e.g., low-vision vs
+   complete eyes-free use. Note that for the most part, Emacspeak is
+   optimized for the latter case.
+3. As before, the goal is not to be exhaustive; --- rather the goal is
+   to be thought-provoking with respect to encouraging readers to
+   discover their own optimal solution. The reference section at the
+   end links to some of the follow-up discussion on the 
+   [[https://mail.emacspeak.net/sympa/arc/emacspeak/2023-12/msg00004.html][Emacspeak Mailing List]].
+4. All topics covered here are already well-documented in the  Emacs
+   and Emacspeak manuals, and this article will not attempt to replace those.
+
+* Emacspeak: Hidden Holiday Gems
+
+
+  - Selective Display :: This expands and collapses content purely
+    based on indentation. The human eye is very efficient at scanning
+    down the margin and ignore content indented beyond a given level;
+    /selective-display/ provides the same affordance when you cannot
+    see the display.
+  - Registers :: Easily becomes part of muscle-memory, especially when
+    moving text around, duplicating content in multiple locations. For
+    more complex use-cases, I use /yasnippets/, which is one of Emacs'
+    many template libraries.
+  - Bookmarks ::  Emacspeak builds heavily on Emacs' built-in
+    bookmarks to provide:
+    1. Persistent bookmarks when reading EPub and Bookshare books.
+    2. Audio Marks (AMarks) within org-mode buffers for
+      marking locations  in audio streams such as Podcasts.
+    3. An Emacspeak /browser/ for browsing saved  /eww-marks/ and /a-marks/.
+    4. Together, the above make a very useful [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][note-taking]] extension to
+       org-mode.
+  - Tabulated Lists :: Implements tabulated UIs and is speech-enabled by Emacspeak.
+    - Emacspeak augments it with additional keyboard navigation.
+    - This is leveraged in Emacs by a variety of
+    end-user packages including /package.el/ and its asynchronous cousin /paradox.el/.
+    - It is also used to advantage by /empv/, a powerful
+    interface to the GNU MPv media player.
+    - AMarks mentioned in
+     the previous item, this is my present means of listening to
+     tech-talks on Youtube while taking notes using org-mode.
+  - Forms Mode ::  Forms interface used by Emacspeak to browse BBC programs.
+  - Mark Ring :: Supported by default in Emacspeak but something I dont
+    use much. Some of its affordances really shine in
+    /transient-mark-mode/ but that facility is somewhat counter to
+    eyes-free use.
+  - Undo :: Both basic  and advanced. However a long series of
+    undo and redo commands as with  /tree-undo/ can get confusing quickly in
+    eyes-free interaction.
+  - Dired ::  I use /dired-mode/ and its derivatives heavily:
+    - To browse the file-system as intended.
+    - With  [[https://emacspeak.blogspot.com/2023/09/augment-with-zoxide.html][emacspeak-zoxide]]  to rapidly move to far-away portions of
+      the file system.
+    - With  /locate/ to search the file system.
+    - With command  /emacspeak-m-player-locate-media/ to find and play
+      local media.
+    - With /flx/ and /fuzzy/ completion to provide a powerful
+      interactive UI for finding and playing media such as Internet streams.
+  - - Writeable Dired ::  Useful to:
+    - Consistently rename files, especially when confronted with
+     filenames with embedded white space.    
+  - Org-Mode ::  This margin is too small to do it justice; see
+    documentation for module
+    _emacspeak-org_ for all that Emacspeak does with org.
+  - Magit ::  As with the previous item, see the associated Emacspeak
+    documentation for _emacspeak-magit_.
+  - Forge :: I use  _forge_ for issue tracking, but often revert to
+    old habits and use _gh_ at the shell inside Emacs.
+  - EWW ::  See the Emacspeak documentation for
+    [[https://emacspeak.blogspot.com/2014/05/emacspeak-eww-updates-for-complete.html][_emacspeak-eww_]]. Highlights include:
+    - Dom filtering,
+    - XPath filtering,
+    - MPlayer and EMpv integration for playing online media,
+    - EPub  and Bookshare books,
+    - And much, much more.
+  - Elfeed :: My chosen means of following RSS and Atom feeds.
+  - GNUS ::  For mail, now that Usenet is history.
+    - I use gnus as an /imap/ mail reader for GMail.
+    - Emacspeak implements the equivalent of GMail's search operators.
+    - I complement gnus with package /vm/ for reading email delivered
+      locally; I use _fetchmail_ to fetch mail and _procmail_ to sort
+      mail into folders in the background.
+    - And finally I use _notmuch_ to search locally saved email.
+  - Tramp ::  Accessing and working in the Cloud:
+    - I use /tramp/ to open remote files.
+    - Emacspeak wizard    /emacspeak-wizards-tramp-open-location/ to
+      quickly open files on servers I access often.
+    - If you [[https://emacspeak.blogspot.com/2021/11/emacspeak-in-age-of-cloud-computing.html][work in the Cloud]], Emacspeak lets you SSH to your
+      CloudTop and have Emacs running on the CloudTop speak on your
+      local machine.
+    - The above can be done using a plain old XTerm with _screen_,
+      _dtach_, or _emacs --daemon_ providing a persistent Emacs
+      session at the remote end.
+    - Alternatively, you can use wizard
+      /emacspeak-wizards-remote-frame/ to open a graphical frame on the
+      remote machine.
+  - Eshell :: A Shell that is deeply integrated into Emacs. Fully
+    speech-enabled by Emacspeak. Well-suited for running compile, grep
+    and friends for starters.
+  - Comint ::  This is the goto solution for software development in
+    Emacspeak, be it Common Lisp or Python.
+  - Zip Archives :: One more reason you dont need to leave  Emacs for
+    a text console.
+  - Calculators ::  From the simple to complex, we have it all!
+    - Simple calculations.
+    - Symbolic Algebra.
+    - Calc in /embedded mode/ can directly replace a calculation with
+      an answer.
+    - For even smarter work-flows, leverage /org-mode/ with /calc/.
+    - you can even [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][audio-format]]  computations in Calc output as LaTeX
+      using [[https://github.com/tvraman/aster-math][AsTeR]].
+
+
+*  References
+
+1. [[https://mail.emacspeak.net/sympa/arc/emacspeak/2023-12/msg00004.html][Mailing List Discussion]].
+2. [[https://emacspeak.blogspot.com/2023/12/emacs-hidden-holiday-gems.html][Emacs: Hidden Holiday Gems]].
+3. [[https://tvraman.github.io/emacspeak/manual][Emacspeak Manual]].
+4.  [[http://tvraman.github.io/emacspeak/blog/articles.html][Emacspeak Blog Articles]] as a single page.
+
+   Note that the Emacspeak blog, the online manual etc., are all
+   available locally in the Emacspeak  Git checkout.
+   
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:nil todo:t |:t
+#+title: Emacspeak HHG: Hidden Holiday Gems
+#+date: <2023-12-15 Fri>
+#+author: T.V Raman
+#+email: raman@google.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 30.0.50 (Org mode 9.6.11)
+#+cite_export:

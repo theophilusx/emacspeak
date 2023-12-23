@@ -1597,6 +1597,7 @@ Set to nil to disable a separate Notification stream."
         (process nil))
     (setq process
           (start-process name nil program))
+    (unless (process-live-p process) (error "Fail: Speech Server"))
     (set-process-coding-system process 'utf-8 'utf-8)
     process))
 
@@ -1607,15 +1608,13 @@ Set to nil to disable a separate Notification stream."
   ;; fallback of fallbacks
   (unless dtk-program (setq dtk-program "espeak"))
   (let ((new (dtk-make-process "Speaker")))
-    (unless (process-live-p new) (error "Fail: Speech server"))
     ;; success, so nuke old server
-      (when (processp dtk-speaker-process) (delete-process dtk-speaker-process))
-      (setq dtk-speaker-process new)
-      (when (processp dtk-notify-process) (delete-process dtk-notify-process))
-      (when (tts-multistream-p dtk-program) (dtk-notify-initialize))
-      ;; `voice-setup' requires us, so we can't require it at top-level.
-      (require 'voice-setup)
-      (voice-setup)))
+    (when (processp dtk-speaker-process) (delete-process dtk-speaker-process))
+    (setq dtk-speaker-process new)
+    (when (tts-multistream-p dtk-program) (dtk-notify-initialize))
+    ;; `voice-setup' requires us, so we can't require it at top-level.
+    (require 'voice-setup)
+    (voice-setup)))
 
 (defun tts-restart ()
   "Restart TTS server."
@@ -1803,8 +1802,8 @@ unless   `dtk-quiet' is set to t. "
 (defun dtk-speak-and-echo (message)
   "Speak message and echo it."
   (ems-with-messages-silenced
-    (dtk-speak (format "%s" message))
-    (message (format "%s" message))))
+   (dtk-speak (format "%s" message))
+   (message (format "%s" message))))
 
 (defun dtk-speak-list (text &optional group)
   "Speak a  list of strings.
@@ -1959,7 +1958,7 @@ Designed to work with ALSA and Pulseaudio."
   (interactive)
   (cl-declare (special dtk-notify-process
                        tts-audio-env-var tts-notification-device))
-  (let ((new-process nil)
+  (let ((new nil)
         (dtk-program
          (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program)))
     (when (and dtk-notify-process (process-live-p dtk-notify-process))
@@ -1967,9 +1966,9 @@ Designed to work with ALSA and Pulseaudio."
     (unless (zerop (length tts-notification-device))
       (with-environment-variables
           ((tts-audio-env-var tts-notification-device))
-        (setq  new-process (dtk-make-process "Notify"))
-        (when (memq (process-status new-process) '(run open))
-          (setq dtk-notify-process new-process))))))
+        (setq  new (dtk-make-process "Notify"))
+        (when (process-live-p new)
+          (setq dtk-notify-process new))))))
 
 (defun dtk-notify-using-voice (voice text &optional dont-log)
   "Use voice VOICE to speak text TEXT on notification stream."
