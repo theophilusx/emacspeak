@@ -47,13 +47,22 @@
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
-
 ;;;  Map faces to voices:
 (voice-setup-add-map
  '(
-   (markdown-italic-face  voice-animate)
+
+   
+   
+   
+   
+   
+   
+   (markdown-blockquote-face voice-lighten)
    (markdown-bold-face voice-bolden)
-   (markdown-header-rule-face voice-bolden-medium)
+   (markdown-code-face voice-monotone)
+   (markdown-comment-face voice-monotone-extra)
+   (markdown-footnote-marker-face voice-smoothen)
+   (markdown-footnote-text-face voice-smoothen)
    (markdown-header-delimiter-face voice-lighten)
    (markdown-header-face voice-bolden)
    (markdown-header-face-1 voice-brighten)
@@ -62,21 +71,29 @@
    (markdown-header-face-4 voice-smoothen)
    (markdown-header-face-5 voice-monotone)
    (markdown-header-face-6 voice-monotone-extra)
+   (markdown-header-rule-face voice-bolden-medium)
+   (markdown-highlight-face voice-animate)
+   (markdown-highlighting-face voice-animate)
+   (markdown-html-attr-name-face voice-lighten)
+   (markdown-html-attr-value-face voice-brighten)
+   (markdown-html-entity-face voice-smoothen)
+   (markdown-html-tag-name-face voice-bolden)
    (markdown-inline-code-face voice-monotone-extra)
-   (markdown-list-face voice-animate)
-   (markdown-blockquote-face voice-lighten)
-   (markdown-pre-face voice-monotone-extra)
+   (markdown-italic-face  voice-animate)
    (markdown-language-keyword-face voice-smoothen)
-   (markdown-link-face voice-bolden)
-   (markdown-missing-link-face voice-animate)
-   (markdown-reference-face voice-lighten)
-   (markdown-url-face voice-bolden-and-animate)
-   (markdown-link-title-face voice-lighten)
    (markdown-line-break-face voice-monotone-extra)
-   (markdown-comment-face voice-monotone-extra)
+   (markdown-link-face voice-bolden)
+   (markdown-link-title-face voice-lighten)
+   (markdown-list-face voice-animate)
    (markdown-math-face voice-animate)
    (markdown-metadata-key-face voice-smoothen)
    (markdown-metadata-value-face voice-smoothen-medium)
+   (markdown-missing-link-face voice-animate)
+   (markdown-plain-url-face voice-lighten)
+   (markdown-pre-face voice-monotone-extra)
+   (markdown-reference-face voice-lighten)
+   (markdown-table-face voice-monotone)
+   (markdown-url-face voice-bolden-and-animate)
    ))
 
 ;;;  Advice Interactive Commands:
@@ -98,6 +115,7 @@
 (cl-loop
  for f in
  '(
+   markdown-back-to-heading
    markdown-backward-block markdown-backward-page
    markdown-beginning-of-list markdown-beginning-of-text-block
    markdown-edit-code-block markdown-end-of-list
@@ -176,6 +194,17 @@
      (when (ems-interactive-p)
        (emacspeak-auditory-icon 'complete)
        (emacspeak-speak-line)))))
+;;; Eepeat-mode:
+(cl-declaim (special markdown-mode-map))
+(when (and (bound-and-true-p markdown-mode-map) (keymapp  markdown-mode-map))
+  (map-keymap
+   (lambda (_key cmd)
+     (when
+         (and
+          (symbolp cmd)
+          (not (eq cmd 'digit-argument)))
+       (put cmd 'repeat-map 'markdown-mode-map)))
+   markdown-mode-map))
 
 (provide 'emacspeak-markdown)
 ;;;  end of file
