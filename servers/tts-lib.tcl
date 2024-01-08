@@ -6,14 +6,14 @@
 # A speech interface to Emacs |
 # $Date$ |
 #  $Revision$ | 
-# Location undetermined
+# Location https://github.com/tvraman/emacspeak
 #
 
 #}}}
 #{{{ Copyright:
 
 #x
-#Copyright (C) 1995 -- 2022, T. V. Raman 
+#Copyright (C) 1995 -- 2024, T. V. Raman 
 #All Rights Reserved
 # Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 # All Rights Reserved. 

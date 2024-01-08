@@ -10,12 +10,12 @@
 ;; A speech interface to Emacs |
 ;;
 ;; $Revision: 4532 $ |
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;;
 
 ;;;  Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;;
@@ -469,6 +469,10 @@
 (declare-function
  emacspeak-m-player "emacspeak-m-player" (resource &optional play-list))
 
+;;; Appease Emacs-30:
+
+(declare-function iimage-recenter "iimage" (&optional arg))
+
 ;;;  Helpers:
 
 ;;;###autoload
@@ -605,6 +609,7 @@ Safari/537.36"
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
   (define-key eww-link-keymap ";" 'emacspeak-empv-play-url)
+  (define-key eww-link-keymap "Y" 'emacspeak-eww-yt-dl)
   (define-key eww-link-keymap "U" 'emacspeak-eww-curl-play-media-at-point)
   (define-key eww-link-keymap "x" 'emacspeak-feeds-select-feed)
   (define-key eww-link-keymap  "y" 'emacspeak-empv-play-url)
@@ -2552,6 +2557,22 @@ Use for large EBook buffers."
     (emacspeak-auditory-icon 'task-done)))
 
 ;;; Command: url-to-register
+;;; youtube-dl downloader:
+
+(defvar ems--eww-yt-dl (executable-find "youtube-dl")
+  "YouTube download tool")
+
+(defun emacspeak-eww-yt-dl (url)
+  "Download link at point   using youtube-dl --- works with BBC Sounds. "
+  (interactive
+   (list (car (browse-url-interactive-arg "Media URL: ")))
+   eww-mode)
+  (cl-declare (special ems--eww-yt-dl ))
+  (cl-assert ems--eww-yt-dl t "Install youtube-dl first.")
+  (let ((dir (funcall eww-download-directory)))
+    (access-file dir "Cannot download here")
+    (async-shell-command (format "cd %s; %s %s" dir ems--eww-yt-dl url))))
+
 
 (defun emacspeak-eww-url-to-register ()
   "Accumulate  URL in register `u'"

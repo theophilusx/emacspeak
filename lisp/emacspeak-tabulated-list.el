@@ -8,12 +8,12 @@
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
 ;;;  $Revision: 4532 $ |
-;;; Location undetermined
+;;; Location https://github.com/tvraman/emacspeak
 ;;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -72,7 +72,8 @@
                        :test #'string= :key #'car))
          (value (elt (tabulated-list-get-entry)  col)))
       (when (= 0 col) (emacspeak-auditory-icon 'left))
-      (when (= (1- (length tabulated-list-format)) col) (emacspeak-auditory-icon 'right))
+      (when (= (1- (length tabulated-list-format)) col)
+        (emacspeak-auditory-icon 'right))
       (when (zerop (length (string-trim value)))
         (dtk-tone 261.6 150 'force))    ;blank
       (if (called-interactively-p 'interactive) 
@@ -115,7 +116,8 @@
            :test #'string= :key #'car)))
     (forward-line -1)
     (tabulated-list-next-column  col)
-    (when-let ((goal (next-single-property-change (point) 'tabulated-list-column-name)))
+    (when-let ((goal (next-single-property-change
+                      (point) 'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
 

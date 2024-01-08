@@ -10,12 +10,12 @@
 ;; A speech interface to Emacs |
 ;;
 ;;  $Revision: 4638 $ |
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;;
@@ -96,6 +96,9 @@
                   "emacspeak-org" nil)
 (declare-function emacspeak-org-table-speak-column-header-and-element
                   "emacspeak-org" nil)
+;;; Appease Emacs-30:
+
+(declare-function iimage-recenter "iimage" (&optional arg))
 
 ;;; defgroup:
 (defgroup emacspeak-wizards nil
@@ -2604,7 +2607,7 @@ before brightness is checked.")
     (emacspeak-speak-mode-line)))
 
 ;;; BC Sounds:
-
+;;;###autoload
 (defun emacspeak-wizards-bbc-sounds ()
   "Search BBC Sounds.
 Result page is filtered down to two sections, Shows and Episodes.
@@ -2615,6 +2618,14 @@ The page for that show contains playable links for Episodes.
 Press `y' on Episode links to play them with MPV."
   (interactive)
   (emacspeak-url-template-open (emacspeak-url-template-get "BBC Sounds")))
+
+(defun emacspeak-wizards-bbc-iplayer ()
+  "Browse BBC Schedule from get_iplayer radio cache"
+  (interactive)
+  (funcall-interactively
+   #'emacspeak-forms-find-file
+   (expand-file-name "forms/get-iplayer.el" emacspeak-etc-directory)))
+
 
 ;;; Portfolio:
 

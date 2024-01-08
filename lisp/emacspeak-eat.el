@@ -7,12 +7,12 @@
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
 ;;;  $Revision: 4532 $ |
-;;; Location undetermined
+;;; Location https://github.com/tvraman/emacspeak
 ;;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;;
@@ -47,6 +47,8 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (eval-when-compile (require 'eat "eat" 'no-error))
+(declare-function eat-term-display-cursor "eat" (terminal))
+
 ;;;  Map Faces:
 
 (voice-setup-add-map

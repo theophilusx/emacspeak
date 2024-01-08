@@ -10,12 +10,12 @@
 ;; A speech interface to Emacs |
 ;;
 ;;  $Revision: 4544 $ |
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;;
@@ -256,7 +256,7 @@
    ("V" emacspeak-speak-version)
    ("W" emacspeak-select-window-by-name)
    ("[" emacspeak-speak-paragraph)
-   ("\"" emacspeak-speak-sexp)
+   ("\"" emacspeak-empv-play-local)
    ("\\" emacspeak-toggle-speak-line-invert-filter)
    ("]" emacspeak-speak-page)
    ("^" emacspeak-filtertext)
@@ -425,7 +425,6 @@
     ("f" emacspeak-wizards-remote-frame)
     ("h" emacspeak-wizards-how-many-matches)
     ("i" ibuffer)
-    ("l" emacspeak-m-player-youtube-live)
     ("m" mspools-show)
     ("o" emacspeak-wizards-occur-header-lines)
     ("p" paradox-list-packages)
@@ -556,7 +555,6 @@
     ("b" emacspeak-wizards-bbc-sounds)
     ("c" browse-url-chrome)
     ("d" magit-dispatch)
-    ("e" gmaps)
     ("f" magit-file-dispatch)
     ("g" gnus)
     ("h" emacspeak-m-player-from-history)
@@ -660,7 +658,6 @@
     ("u" emacspeak-m-player-url)
     ("v" visual-line-mode)
     ("w" define-word)
-    ("y" emacspeak-m-player-youtube-player)
     ("SPC" emacspeak-eww-smart-tabs)
     )
   "Alt key bindings. "

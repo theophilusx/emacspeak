@@ -10,12 +10,12 @@
 ;; A speech interface to Emacs |
 ;; 
 ;;  $Revision: 4532 $ | 
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;; 
 
 ;;;   Copyright:
 
-;; Copyright (c) 1995 -- 2022, T. V. Raman
+;; Copyright (c) 1995 -- 2024, T. V. Raman
 ;; All Rights Reserved. 
 ;; 
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -57,7 +57,7 @@
 
 ;;;   list buffers 
 
-(defun emacspeak-list-buffers-speak-buffer-name ()
+(defun emacspeak-list-buffers-speak-name ()
   "Speak the name of the buffer on this line"
   (interactive)
   (cond
@@ -132,7 +132,7 @@ and set up additional Emacspeak bindings."
   (when (ems-interactive-p)
     (select-window  ad-return-value)
     (tabulated-list-next-column 3)
-    (define-key Buffer-menu-mode-map "," 'emacspeak-list-buffers-speak-buffer-name)
+    (define-key Buffer-menu-mode-map "," 'emacspeak-list-buffers-speak-name)
     (define-key Buffer-menu-mode-map "l"
                 'emacspeak-list-buffers-speak-buffer-line)
     (define-key Buffer-menu-mode-map "n" 'emacspeak-list-buffers-next-line)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 Author: T. V. Raman <raman@cs.cornell.edu>
-Copyright: (C) T. V. Raman, 2001 - 2022,   All Rights Reserved.
+Copyright: (C) T. V. Raman, 2001 - 2024,   All Rights Reserved.
 License: GPL
 View OPML feeds as XHTML
 -->
@@ -44,7 +44,7 @@ View OPML feeds as XHTML
           <xsl:when test="@type='link'"> (Link: x o to open) </xsl:when>
           <xsl:when test="@type='atom'"> (Atom: x a to open) </xsl:when>
           <xsl:when test="@type='rss'"> (RSS: x r to open) </xsl:when>
-          <xsl:when test="@type='audio'"> (Play: C-u ; or U)
+          <xsl:when test="@type='audio'"> (Press y to play using mpv)
             </xsl:when>
           <xsl:otherwise>(<xsl:value-of select="@type"/>)</xsl:otherwise>
         </xsl:choose>

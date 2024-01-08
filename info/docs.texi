@@ -15,7 +15,6 @@
 * emacspeak-apt-sources::speech-enable apt.
 * emacspeak-arc::Speech enable archive-mode.
 * emacspeak-auctex::Speech enable AucTeX --.
-* emacspeak-bbc::Light-Weight BBC Client.
 * emacspeak-bbdb::Speech enable BBDB.
 * emacspeak-bibtex::Speech enable bibtex.
 * emacspeak-bookmark::Speech enable bookmark.
@@ -249,7 +248,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1148 commands and 145 options.
+This chapter documents a total of 1149 commands and 146 options.
 
 @node amixer
 @section amixer
@@ -1716,34 +1715,6 @@ Tie the next n  words.
 @end format
 @end deffn
 
-@node emacspeak-bbc
-@section emacspeak-bbc
-
-Use get_iplayer script to get  BBC Schedules, download and play.
-  Required modules
-
-@subsection Emacspeak-Bbc Commands
-
-@subsubsection emacspeak-bbc-get-iplayer-stream-url
-@deffn {Command} emacspeak-bbc-get-iplayer-stream-url  (url)
-@findex emacspeak-bbc-get-iplayer-stream-url
-
-@format
-Stream using get_iplayer.
-
-(fn URL)
-@end format
-@end deffn
-
-@subsubsection emacspeak-bbc-schedule
-@deffn {Command} emacspeak-bbc-schedule   
-@findex emacspeak-bbc-schedule
-
-@format
-Browse BBC Schedule from get_iplayer radio cache
-@end format
-@end deffn
-
 @node emacspeak-bbdb
 @section emacspeak-bbdb
 
@@ -2404,9 +2375,9 @@ Speak information about this buffer
 @end format
 @end deffn
 
-@subsubsection emacspeak-list-buffers-speak-buffer-name
-@deffn {Command} emacspeak-list-buffers-speak-buffer-name   
-@findex emacspeak-list-buffers-speak-buffer-name
+@subsubsection emacspeak-list-buffers-speak-name
+@deffn {Command} emacspeak-list-buffers-speak-name   
+@findex emacspeak-list-buffers-speak-name
 
 @format
 Speak the name of the buffer on this line
@@ -3823,6 +3794,15 @@ Accumulate media links to register u
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-clear-filter
+@deffn {Command} emacspeak-empv-clear-filter   
+@findex emacspeak-empv-clear-filter
+
+@format
+Clear all filters. 
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-percentage-seek
 @deffn {Command} emacspeak-empv-percentage-seek  (target)
 @findex emacspeak-empv-percentage-seek
@@ -3848,6 +3828,22 @@ Play file using mpv.
 Interactive prefix arg plays on left ear using alsa.
 
 (fn FILE &optional LEFT)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-play-local
+@deffn {Command} emacspeak-empv-play-local  (file)
+@table @kbd
+@item C-e "
+@kindex C-e "
+@end table
+
+@findex emacspeak-empv-play-local
+
+@format
+Play a local resource  using mpv.
+
+(fn FILE)
 @end format
 @end deffn
 
@@ -3879,6 +3875,15 @@ Relative seek in seconds,see ‘empv-seek’
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-toggle-custom
+@deffn {Command} emacspeak-empv-toggle-custom   
+@findex emacspeak-empv-toggle-custom
+
+@format
+Toggle our custom filters.
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-toggle-filter
 @deffn {Command} emacspeak-empv-toggle-filter  (filter)
 @findex emacspeak-empv-toggle-filter
@@ -3890,6 +3895,22 @@ Filter is of the  form name=arg-1:arg-2:...
 (fn FILTER)
 @end format
 @end deffn
+
+@subsection emacspeak-empv Options
+
+@defvar {User Option} emacspeak-empv-custom-filters
+List of custom filters to turn on/off at one shot
+The default value is suitable for classical instrumental music.
+
+Default Value: 
+
+@verbatim
+
+("extrastereo" "stereowiden=4.25:.1:735:.8")
+
+@end verbatim
+
+@end defvar
 
 @node emacspeak-enriched
 @section emacspeak-enriched
@@ -6482,6 +6503,17 @@ Accumulate  URL in register ‘u’
 @end format
 @end deffn
 
+@subsubsection emacspeak-eww-yt-dl
+@deffn {Command} emacspeak-eww-yt-dl  (url)
+@findex emacspeak-eww-yt-dl
+
+@format
+Download link at point   using youtube-dl --- works with BBC Sounds. 
+
+(fn URL)
+@end format
+@end deffn
+
 @subsection emacspeak-eww Options
 
 @defvar {User Option} emacspeak-eww-autospeak
@@ -8066,8 +8098,7 @@ Default Value:
  ("t" emacspeak-wizards-tune-in-radio-browse)
  ("u" emacspeak-m-player-url)
  ("v" visual-line-mode)
- ("w" define-word)
- ("y" emacspeak-m-player-youtube-player))
+ ("w" define-word))
 
 @end verbatim
 
@@ -8118,7 +8149,6 @@ Default Value:
  ("b" emacspeak-wizards-bbc-sounds)
  ("c" browse-url-chrome)
  ("d" magit-dispatch)
- ("e" gmaps)
  ("f" magit-file-dispatch)
  ("g" gnus)
  ("h" emacspeak-m-player-from-history)
@@ -8244,7 +8274,6 @@ Default Value:
  ("f" emacspeak-wizards-remote-frame)
  ("h" emacspeak-wizards-how-many-matches)
  ("i" ibuffer)
- ("l" emacspeak-m-player-youtube-live)
  ("m" mspools-show)
  ("o" emacspeak-wizards-occur-header-lines)
  ("p" paradox-list-packages)
@@ -9384,41 +9413,6 @@ Volume up.
 
 @format
 Split selected range using SoX
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-youtube-live
-@deffn {Command} emacspeak-m-player-youtube-live  (url)
-@table @kbd
-@item C-e x l
-@kindex C-e x l
-@end table
-
-@findex emacspeak-m-player-youtube-live
-
-@format
-Use youtube-dl and mplayer to live-stream   from Youtube. 
-
-(fn URL)
-@end format
-@end deffn
-
-@subsubsection emacspeak-m-player-youtube-player
-@deffn {Command} emacspeak-m-player-youtube-player  (url &optional prefix)
-@table @kbd
-@item C-, y
-@kindex C-, y
-@item C-x @@ a y
-@kindex C-x @@ a y
-@end table
-
-@findex emacspeak-m-player-youtube-player
-
-@format
-Use youtube-dl  to stream  using mplayer.
- Optional interactive prefix arg mpv  instead. 
-
-(fn URL &optional PREFIX)
 @end format
 @end deffn
 
@@ -13071,11 +13065,6 @@ Negative prefix arg speaks from start of sentence to point.
 
 @subsubsection emacspeak-speak-sexp
 @deffn {Command} emacspeak-speak-sexp  (&optional arg)
-@table @kbd
-@item C-e "
-@kindex C-e "
-@end table
-
 @findex emacspeak-speak-sexp
 
 @format
@@ -16942,6 +16931,15 @@ Browse  Emacspeak productivity tips.
 @end format
 @end deffn
 
+@subsubsection emacspeak-wizards-bbc-iplayer
+@deffn {Command} emacspeak-wizards-bbc-iplayer   
+@findex emacspeak-wizards-bbc-iplayer
+
+@format
+Browse BBC Schedule from get_iplayer radio cache
+@end format
+@end deffn
+
 @subsubsection emacspeak-wizards-bbc-sounds
 @deffn {Command} emacspeak-wizards-bbc-sounds   
 @table @kbd
@@ -18738,13 +18736,6 @@ Implements the Google Maps API
 
 @subsubsection gmaps
 @deffn {Command} gmaps   
-@table @kbd
-@item C-; e
-@kindex C-; e
-@item C-x @@ h e
-@kindex C-x @@ h e
-@end table
-
 @findex gmaps
 
 @format
@@ -20369,7 +20360,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 63 URL Templates.
+This section documents a total of 58 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20397,15 +20388,17 @@ Air quality from Wunderground@item @b{archwiki search}
 
 Search Linux ArchWiki@item @b{bbc podcast directory}
 
-BBC PodCast Directory@item @b{bbc sounds}
+BBC PodCast Directory@item @b{bbc r4 extra schedule }
+
+BBC Radio 4 Extra Schedule@item @b{bbc r4 schedule }
+
+BBC R4 Schedule@item @b{bbc sounds}
 
 Search BBC Sounds@item @b{bing news}
 
 Bing News results as RSS feed.@item @b{business headlines from cnn}
 
-Money Headlines From CNN@item @b{cia world fact book}
-
-Open CIA World Fact Book For Specified Country.@item @b{cnbc quotes}
+Money Headlines From CNN@item @b{cnbc quotes}
 
 Stock portfolio via CNBC@item @b{cnbc ticker}
 
@@ -20413,9 +20406,7 @@ Stock Quote via CNBC@item @b{cnn headlines}
 
 News Headlines From CNN@item @b{cnn money}
 
-CNN Money@item @b{cnn world}
-
-CNN World@item @b{cricinfo print}
+CNN Money@item @b{cricinfo print}
 
 Printer friendly   link on Cricinfo@item @b{dictionary lookup}
 
@@ -20427,9 +20418,7 @@ Display top stocks  from Google Finance.@item @b{freesound}
 
 Search FreeSound.@item @b{google news search}
 
-Search Google news.@item @b{google quotes}
-
-Light-weight Google Stock quotes.@item @b{google scholar}
+Search Google news.@item @b{google scholar}
 
 Google Scholar Search@item @b{google trends}
 
@@ -20462,17 +20451,13 @@ template.@item @b{nls bard search}
 
 Search NLS Bard Catalog. Login once before using this template.@item @b{npr}
 
-Open NPR home , then display the alternative links to access RSS feeds.@item @b{old time radio}
-
-This months Old Time Radio Programming@item @b{online radiotime browser}
+Open NPR home , then display the alternative links to access RSS feeds.@item @b{online radiotime browser}
 
 RadioTime Entry point.@item @b{online radiotime search}
 
 RadioTime Search@item @b{openlibrary}
 
-Open Library Search@item @b{patent search from google}
-
-Perform patent search via Google@item @b{player fm bbc rss feeds}
+Open Library Search@item @b{player fm bbc rss feeds}
 
 Player FM BBC RSS Feeds@item @b{radiotime categories}
 
@@ -20498,9 +20483,7 @@ Format is stationid+AM/FM.@item @b{tech news from cnet}
 
 Display tech news from CNET@item @b{tunein radio}
 
-Translate StreamId to playable stream.@item @b{us stock market from google }
-
-Light-weight Google US Stock Markets.@item @b{w3c irc logs}
+Translate StreamId to playable stream.@item @b{w3c irc logs}
 
 Use this to pull up the
 archived logs from the W3C IRC. You need to know the exact
@@ -20516,9 +20499,7 @@ Search WikiData.@item @b{wikipedia at point}
 
 Extract body content from Wikipedia link at point@item @b{wordnet search}
 
-Look up term in WordNet.@item @b{world cnn content}
-
-Filter down to CNN content area.@item @b{yahoo rssnews}
+Look up term in WordNet.@item @b{yahoo rssnews}
 
 News  From Yahoo As RSS.
 

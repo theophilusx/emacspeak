@@ -9,11 +9,11 @@
 ;; A speech interface to Emacs |
 ;; 
 ;;  $Revision: 4532 $ |
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;; 
 
 ;;;   Copyright:
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 
@@ -387,8 +387,7 @@ binaural beat to another."
                (cl-incf  result (/ i  sox-binaural-slider-scale))))
     result))
 
-(defun
-    sox--theme-duration-scale (theme duration)
+(defun sox--theme-duration-scale (theme duration)
   "Given a theme and a desired overall duration, compute duration scale."
   (cl-declare (special sox-binaural-slider-scale))
   (let ((steps (mapcar #'cl-second theme)))

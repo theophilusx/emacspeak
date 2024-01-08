@@ -8,12 +8,12 @@
 # A speech interface to Emacs |
 # $Date: 2007-06-24 15:56:04 -0700 (Sun, 24 Jun 2007) $ |
 #  $Revision: 4673 $ |
-# Location undetermined
+# Location https://github.com/tvraman/emacspeak
 #
 
 ###  Copyright:
 
-#Copyright (C) 1995 -- 2017, T. V. Raman
+#Copyright (C) 1995 -- 2024, T. V. Raman
 
 # Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 # All Rights Reserved.
@@ -84,7 +84,6 @@ emacspeak-annotate.elc \
 emacspeak-apt-sources.elc \
 emacspeak-arc.elc \
 emacspeak-auctex.elc \
-emacspeak-bbc.elc \
 emacspeak-bbdb.elc \
 emacspeak-bibtex.elc \
 emacspeak-bookmark.elc \

@@ -8,12 +8,12 @@
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
 ;;;  $Revision: 4532 $ |
-;;; Location undetermined
+;;; Location https://github.com/tvraman/emacspeak
 ;;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;; 

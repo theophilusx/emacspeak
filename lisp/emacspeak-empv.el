@@ -8,12 +8,12 @@
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
 ;;;  $Revision: 4532 $ |
-;;; Location undetermined
+;;; Location https://github.com/tvraman/emacspeak
 ;;;
 
 ;;;   Copyright:
 
-;; Copyright (C) 1995 -- 2022, T. V. Raman
+;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
 ;;
@@ -109,7 +109,7 @@ Interactive prefix arg plays on left ear using Alsa. "
                   emacspeak-empv-history-max)
   (let* ((args (copy-sequence empv-mpv-args))
          (empv-mpv-args args))
-    (when left (push "--audio-device=alsa/tts_quarter_left" empv-mpv-args))
+    (when left (push "--audio-channels=fl" empv-mpv-args))
     (empv-play url)))
 
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
@@ -126,11 +126,24 @@ Interactive prefix arg plays on left ear using alsa."
   (require 'empv)
   (let* ((args (copy-sequence empv-mpv-args))
          (empv-mpv-args args))
-    (when left (push "--audio-device=alsa/tts_quarter_left" empv-mpv-args))
+    (when left (push "--audio-channels=fl,fr" empv-mpv-args))
     (empv-play file)))
 
 (put 'emacspeak-empv-play-file 'repeat-map 'empv-map)
 (put 'emacspeak-empv-play-url 'repeat-map 'empv-map)
+
+(defsubst emacspeak-empv-local-file ()
+  "Return local media filename read with completion."
+  (let (( default-directory empv-audio-dir))
+      (emacspeak-media-local-resource nil)))
+
+
+(defun emacspeak-empv-play-local (file )
+  "Play a local resource  using mpv."
+  (interactive (list (emacspeak-empv-local-file)))
+  (empv-play file))
+
+(put 'emacspeak-empv-play-local 'repeat-map 'empv-map)
 
 (defun emacspeak-empv-accumulate-to-register ()
   "Accumulate media links to register u"
@@ -171,6 +184,8 @@ Interactive prefix arg plays on left ear using alsa."
   (cl-declare (special empv-map))
   (global-set-key (kbd "C-e C-;") empv-map)
   (global-set-key (kbd "C-' v") empv-map)
+  (global-set-key (kbd "C-' ;") empv-map)
+  
   (cl-loop
    for b in
    '(
@@ -178,6 +193,8 @@ Interactive prefix arg plays on left ear using alsa."
      ("'" empv-current-loop-on)
      ("/" empv-seek)
      (";" emacspeak-empv-toggle-filter)
+     ("DEL" emacspeak-empv-clear-filter)
+     ("." emacspeak-empv-toggle-custom)
      ("0" empv-volume-up)
      ("9" empv-volume-down)
      ("C-j" empv-youtube-results-play-current)
@@ -188,9 +205,7 @@ Interactive prefix arg plays on left ear using alsa."
      ("r" emacspeak-empv-relative-seek)
      ("s" emacspeak-empv-absolute-seek)
      ("u" emacspeak-empv-accumulate-to-register)
-     ("v" empv-set-volume)
-     )
-
+     ("v" empv-set-volume))
    do
    (emacspeak-keymap-update empv-map b)
    (emacspeak-keymap-update empv-youtube-results-mode-map b))
@@ -204,6 +219,13 @@ Interactive prefix arg plays on left ear using alsa."
 
 (defvar emacspeak-empv-filter-history nil
   "History of filters used.")
+(defconst emacspeak-empv-filters 
+  '(
+    "asubboost" "bs2b" "bs2b=cmoy" "bs2b=jmeier"
+    "extrastereo" "extrastereo=1.5" "haas" "headphone"
+    "stereowiden=4.25:.1:735:.8" "surround=7.1" "virtualbass"
+    )
+  "Table of MPV filters.")
 
 ;;; Experimental: Toggling Filters
 (defun emacspeak-empv-toggle-filter (filter)
@@ -211,11 +233,38 @@ Interactive prefix arg plays on left ear using alsa."
 Filter is of the  form name=arg-1:arg-2:..."
   (interactive
    (list
-    (read-from-minibuffer  "Filter:" nil nil nil
-                           'emacspeak-empv-filter-history)))
+    (completing-read   "Filter:"
+                       emacspeak-empv-filters nil nil nil
+                       'emacspeak-empv-filter-history)))
   (cl-declare (special emacspeak-empv-filter-history))
   (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
+
+
+(defun emacspeak-empv-clear-filter ()
+  "Clear all filters. "
+  (interactive)
+  (empv--send-command (list "af" "clr" "" ))
+  (message "Cleared filters")
+  (emacspeak-auditory-icon 'delete-object))
+
+(defcustom emacspeak-empv-custom-filters
+  '("extrastereo" "stereowiden=4.25:.1:735:.8")
+  "List of custom filters to turn on/off at one shot
+The default value is suitable for classical instrumental music."
+  :type '(repeat  :tag "Filters" (string :tag "Filter"))
+  :group 'emacspeak-empv)
+
+(defun emacspeak-empv-toggle-custom ()
+  "Toggle our custom filters."
+  (interactive)
+  (cl-declare (special emacspeak-empv-custom-filters))
+  (when emacspeak-empv-custom-filters
+    (mapc
+     #'(lambda (filter) (empv--send-command (list "af" "toggle" filter)))
+     emacspeak-empv-custom-filters)
+    (emacspeak-auditory-icon 'button)
+    (message "Toggled custom filters")))
 
 (provide 'emacspeak-empv)
 ;;;  end of file

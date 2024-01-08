@@ -10,12 +10,12 @@
 ;; A speech interface to Emacs |
 ;;
 ;;  $Revision: 4532 $ |
-;; Location undetermined
+;; Location https://github.com/tvraman/emacspeak
 ;;
 
 ;;;   Copyright:
 
-;; Copyright (c) 1995 -- 2022, T. V. Raman
+;; Copyright (c) 1995 -- 2024, T. V. Raman
 ;; All Rights Reserved.
 ;;
 ;; This file is not part of GNU Emacs, but the same permissions apply.
@@ -189,7 +189,7 @@ This is set to nil when playing Internet  streams.")
 ;; Dynamic playlists are one-shot, and managed directly by emacspeak,
 ;; i.e. no playlist file.
 
-(defvar emacspeak-m-player-dynamic-playlist  nil
+(defvar emacspeak-media-dynamic-playlist  nil
   "Dynamic --- lists files in the playlist.
 Reset immediately after being used.")
 
@@ -201,17 +201,17 @@ Reset immediately after being used.")
     (or
      (dired-get-filename  nil t)
      (read-file-name "MP3 File:"))))
-  (cl-declare (special emacspeak-m-player-dynamic-playlist))
+  (cl-declare (special emacspeak-media-dynamic-playlist))
   (cond
    ((file-directory-p file)
     (cl-loop
      for f in
      (directory-files-recursively file  "\\.mp3\\'") do
-     (cl-pushnew f emacspeak-m-player-dynamic-playlist))
+     (cl-pushnew f emacspeak-media-dynamic-playlist))
     (dtk-speak-and-echo
      (format "Added files from directory %s" (file-name-base file))))
    ((string-match "\\.mp3$" file)
-    (cl-pushnew file emacspeak-m-player-dynamic-playlist)
+    (cl-pushnew file emacspeak-media-dynamic-playlist)
     (dtk-speak-and-echo
      (format
       "Added %s with duration %s to dynamic playlist."
@@ -223,8 +223,8 @@ Reset immediately after being used.")
 
 (defun ems--dynamic-playlist-duration ()
   "Return duration of dynamic playlist."
-  (cl-declare (special emacspeak-m-player-dynamic-playlist))
-  (cl-assert emacspeak-m-player-dynamic-playlist t "No dynamic playlist")
+  (cl-declare (special emacspeak-media-dynamic-playlist))
+  (cl-assert emacspeak-media-dynamic-playlist t "No dynamic playlist")
   (ems-with-messages-silenced
    (let* ((result nil)
           (buff  " *soxi*")
@@ -233,7 +233,7 @@ Reset immediately after being used.")
             #'start-process
             "soxi" buff
             "soxi" "-Td"
-            emacspeak-m-player-dynamic-playlist)))
+            emacspeak-media-dynamic-playlist)))
      (accept-process-output proc 0 100)
      (with-current-buffer buff
        (goto-char (point-min))
@@ -307,7 +307,7 @@ Reset immediately after being used.")
       (set-default sym val)))
 
 (defvar emacspeak-media-directory-regexp
-  (regexp-opt '("mp3" "audio" "music"))
+  (regexp-opt '("mp3" "audio" ))
   "Pattern matching locations where we store media.")
 
 ;;;###autoload
@@ -458,9 +458,9 @@ rather than completing over all subfiles."
 (defun emacspeak-media-read-resource (&optional prefix)
   "Read resource from minibuffer.
 If a dynamic playlist exists, just use it."
-  (cl-declare (special emacspeak-m-player-dynamic-playlist
+  (cl-declare (special emacspeak-media-dynamic-playlist
                        emacspeak-m-player-hotkey-p))
-  (unless emacspeak-m-player-dynamic-playlist
+  (unless emacspeak-media-dynamic-playlist
     (cond
      (emacspeak-m-player-hotkey-p (emacspeak-media-local-resource prefix))
      (t
@@ -545,7 +545,7 @@ dynamic playlist. "
     current-prefix-arg))
   (cl-declare (special
                emacspeak-m-player-paused emacspeak-m-player-resource
-               emacspeak-m-player-dynamic-playlist
+               emacspeak-media-dynamic-playlist
                emacspeak-m-player-hotkey-p
                emacspeak-m-player-directory
                emacspeak-media-directory-regexp
@@ -565,9 +565,9 @@ dynamic playlist. "
          (and resource
               (or play-list (emacspeak-m-player-playlist-p resource))))
         (options (copy-sequence emacspeak-m-player-options))
-        (file-list  (reverse emacspeak-m-player-dynamic-playlist))
+        (file-list  (reverse emacspeak-media-dynamic-playlist))
         (duration
-         (when emacspeak-m-player-dynamic-playlist
+         (when emacspeak-media-dynamic-playlist
            (ems--dynamic-playlist-duration))))
     (when emacspeak-m-player-custom-filters
       (cl-pushnew
@@ -577,7 +577,8 @@ dynamic playlist. "
     (with-current-buffer buffer
       (emacspeak-m-player-mode)
       (setq emacspeak-m-player-resource resource
-            emacspeak-m-player-url-p (string-match "^http" resource))
+            emacspeak-m-player-url-p
+            (and resource (string-match "^http" resource)))
       (when emacspeak-m-player-url-p
         (setq emacspeak-m-player-url resource))
       (unless emacspeak-m-player-url-p
@@ -585,11 +586,11 @@ dynamic playlist. "
           (setq resource (expand-file-name resource))
           (emacspeak-speak-load-directory-settings)
           (setq emacspeak-m-player-directory (file-name-directory resource)))
-        (unless emacspeak-m-player-dynamic-playlist
+        (unless emacspeak-media-dynamic-playlist
           (if   (file-directory-p resource)
               (setq file-list (emacspeak-m-player-directory-files resource))
             (setq file-list (list resource)))))
-      (setq emacspeak-m-player-dynamic-playlist nil) ; consume it
+      (setq emacspeak-media-dynamic-playlist nil) ; consume it
       (setq options
             (cond
              ((and play-list  (listp play-list)(< 4   (car play-list)))
@@ -928,9 +929,10 @@ The time position can also be specified as HH:MM:SS."
           (unless
               (or
                emacspeak-m-player-url-p
-               (string-match
-                emacspeak-media-shortcuts-directory
-                emacspeak-m-player-resource)
+               (and emacspeak-m-player-resource
+                (string-match
+                 emacspeak-media-shortcuts-directory
+                 emacspeak-m-player-resource))
                (cl-minusp (emacspeak-m-player-get-length)))
             (emacspeak-m-player-amark-add ems--m-player-mark)
             (emacspeak-m-player-amark-save))
@@ -1485,9 +1487,6 @@ flat classical club dance full-bass full-bass-and-treble
 
 (put 'emacspeak-m-player-shuffle 'repeat-map 'emacspeak-m-player-mode-map)
 (put 'emacspeak-m-player-loop 'repeat-map 'emacspeak-m-player-mode-map)
-(put 'emacspeak-m-player-youtube-live
-     'repeat-map
-     'emacspeak-m-player-mode-map)
 (put 'emacspeak-multimedia 'repeat-map  'emacspeak-m-player-mode-map)
 (put 'emacspeak-m-player-using-openal
      'repeat-map
@@ -1528,9 +1527,9 @@ flat classical club dance full-bass full-bass-and-treble
  (define-key emacspeak-m-player-mode-map
              (kbd (format "%s" i)) 'emacspeak-m-player-volume-set))
 
-;;;  YouTube Player
+;;;  YouTube:
 
-(defvar emacspeak-m-player-youtube-dl
+(defvar ems--mp-yt-dl
   (executable-find "youtube-dl")
   "YouTube download tool")
 
@@ -1540,7 +1539,7 @@ flat classical club dance full-bass full-bass-and-treble
    (shell-command-to-string
     (format
      "%s -F '%s' | grep '^[0-9]'   |grep audio |  head -1 | cut -f 1 -d ' '"
-     emacspeak-m-player-youtube-dl url))
+     ems--mp-yt-dl url))
    0 -1))
 
 (defsubst ems--m-p-get-yt-audio-last-fmt (url)
@@ -1549,7 +1548,7 @@ flat classical club dance full-bass full-bass-and-treble
    (shell-command-to-string
     (format
      "%s -F '%s' | grep '^[0-9]'   | grep audio |tail -1 | cut -f 1 -d ' '"
-     emacspeak-m-player-youtube-dl url))
+     ems--mp-yt-dl url))
    0 -1))
 
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
@@ -1559,58 +1558,6 @@ flat classical club dance full-bass full-bass-and-treble
 (declare-function mpv-start "mpv" (&rest args))
 (declare-function
  emacspeak-empv-play-url "emacspeak-empv" (url &optional left-channel))
-
-;;;###autoload
-(defun emacspeak-m-player-youtube-player (url &optional prefix)
-  "Use youtube-dl  to stream  using mplayer.
- Optional interactive prefix arg mpv  instead. "
-  (interactive
-   (list
-    (emacspeak-eww-read-url)
-    current-prefix-arg))
-  (cl-declare (special emacspeak-m-player-youtube-dl))
-  (unless (file-executable-p emacspeak-m-player-youtube-dl)
-    (error "Please install youtube-dl first."))
-  (when (string-prefix-p (emacspeak-google-result-url-prefix) url)
-    (setq url (emacspeak-google-canonicalize-result-url url)))
-  (cond
-   ((not prefix)
-    (require 'empv)
-    (emacspeak-empv-play-url url))
-   (t
-    (let ((u
-           (string-trim
-            (shell-command-to-string
-             (format
-              "%s --youtube-skip-dash-manifest    -g '%s' 2> /dev/null"
-              emacspeak-m-player-youtube-dl
-              url)))))
-      (when (= 0 (length  u)) (error "Error retrieving Media URL "))
-      (kill-new u)
-      (emacspeak-m-player u)))))
-
-;;;###autoload
-(defun emacspeak-m-player-youtube-live (url)
-  "Use youtube-dl and mplayer to live-stream   from Youtube. "
-  (interactive
-   (list
-    (emacspeak-eww-read-url)))
-  (cl-declare (special emacspeak-m-player-youtube-dl
-                       emacspeak-m-player-options))
-  (unless (file-executable-p emacspeak-m-player-youtube-dl)
-    (error "Please install youtube-dl first."))
-  (when (string-prefix-p (emacspeak-google-result-url-prefix) url)
-    (setq url (emacspeak-google-canonicalize-result-url url)))
-  (let ((emacspeak-m-player-options
-         (append emacspeak-m-player-options (list "-loop" "0")))
-        (u
-         (string-trim
-          (shell-command-to-string
-           (format "%s -g '%s' 2> /dev/null"
-                   emacspeak-m-player-youtube-dl url)))))
-    (when (= 0 (length  u)) (error "Error retrieving Media URL "))
-    (kill-new u)
-    (emacspeak-m-player u)))
 
 ;;;  pause/resume
 
