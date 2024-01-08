@@ -535,7 +535,11 @@
 (add-hook
  'eww-mode-hook
  #'(lambda ()
+     (cl-declare (special outline-regexp outline-level outline-search-function))
      (outline-minor-mode)
+     (setq outline-regexp "^ *[•0-9]+\\.? "
+           outline-level 'outline-level
+           outline-search-function nil)
      (emacspeak-pronounce-toggle-use-of-dictionaries t)))
 
 (defvar emacspeak-eww-masquerade t
@@ -581,13 +585,11 @@ Safari/537.36"
 (defun emacspeak-eww-setup ()
   "Setup keymaps etc."
   (cl-declare (special
-               outline-regexp
                shr-external-rendering-functions emacspeak-eww-filter-renderers
                eww-mode-map eww-link-keymap eww-text-map
                shr-inhibit-images emacspeak-eww-inhibit-images
                emacspeak-pronounce-xml-ns
                emacspeak-eww-masquerade))
-  (setq outline-regexp "[•0-9]+ ")
   (ems--fastload "emacspeak-pronounce")
   (emacspeak-pronounce-augment-pronunciations
    'eww-mode emacspeak-pronounce-xml-ns)
@@ -1714,7 +1716,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 (defvar emacspeak-eww-el-nav-history nil
   "History for element navigation.")
 
-(defun emacspeak-eww-next-element (el)
+(defun emacspeak-eww-next-element (el &optional speak)
   "Move forward to the next specified element."
   (interactive
    (list
@@ -1724,12 +1726,16 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
        (completing-read
         "Element: "
         emacspeak-eww-el-cache nil 'must-match
-        nil 'emacspeak-eww-el-cache)))))
-  (cl-declare (special eww- element-cache emacspeak-eww-el-nav-history))
+        nil 'emacspeak-eww-el-cache)))
+    current-prefix-arg))
+  (cl-declare (special eww- element-cache emacspeak-eww-el-nav-history
+                       emacspeak-eww-autospeak))
   (when (eq el 'li) ;; if element is li, use shr-indentation
     (setq el 'shr-continuation-indentation))
   (let* ((start (next-single-property-change (point) el))
          (next (next-single-property-change start el)))
+    (when (or emacspeak-eww-autospeak speak)
+      (setq next (next-single-property-change next el)))
     (cond
      ((and start next)
       (goto-char start)
@@ -1737,7 +1743,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
       (emacspeak-speak-region start next))
      (t (message "Did not move.")))))
 
-(defun emacspeak-eww-previous-element (el)
+(defun emacspeak-eww-previous-element (el &optional speak)
   "Move backward  to the previous  specified element."
   (interactive
    (list
@@ -1746,12 +1752,17 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
       (intern
        (completing-read
         "Element: " emacspeak-eww-el-cache nil 'must-match
-        nil 'emacspeak-eww-ell-cache)))))
-  (cl-declare (special emacspeak-eww-el-cache emacspeak-eww-el-nav-history))
+        nil 'emacspeak-eww-ell-cache)))
+    current-prefix-arg))
+  (cl-declare (special emacspeak-eww-el-cache
+                       emacspeak-eww-el-nav-history
+                       emacspeak-eww-autospeak))
   (when (eq el 'li) ;; if element is li, use shr-indentation
     (setq el 'shr-continuation-indentation))
   (let* ((start (previous-single-property-change (point) el))
          (previous (previous-single-property-change  start  el)))
+    (when (or emacspeak-eww-autospeak speak)
+      (setq previous  (previous-single-property-change  start  el)))
     (cond
      ((and start previous)
       (goto-char previous)
@@ -1853,11 +1864,13 @@ The %s is automatically spoken if there is no user activity."
      (let ((s (intern ,(format "%s" f))))
        (when (memq s '(h1 h2 h3 h4 h))
          (emacspeak-auditory-icon 'section))
-       (when (memq s '(li))
+       (when (eq s 'li)
          (emacspeak-auditory-icon 'item))
+       (when (eq s 'p)
+         (emacspeak-auditory-icon 'paragraph))
        (when (and speak (= 16 (car speak)))
          (setq emacspeak-eww-autospeak (not emacspeak-eww-autospeak)))
-       (funcall-interactively #'emacspeak-eww-next-element s))))
+       (funcall-interactively #'emacspeak-eww-next-element s speak))))
  (eval
   `(defun ,(intern (format "emacspeak-eww-previous-%s" f)) (&optional speak)
      ,(format "Move backward to the next %s.
@@ -1871,8 +1884,10 @@ The %s is automatically spoken if there is no user activity."
      (let ((s (intern ,(format "%s" f))))
        (when (memq s '(h1 h2 h3 h4 h))
          (emacspeak-auditory-icon 'section))
-       (when (memq s '(li))
+       (when (eq s 'li)
          (emacspeak-auditory-icon 'item))
+       (when (eq s 'p)
+         (emacspeak-auditory-icon 'paragraph))
        (when (and speak (= 16 (car speak)))
          (setq emacspeak-eww-autospeak (not emacspeak-eww-autospeak)))
        (funcall-interactively #'emacspeak-eww-previous-element s)))))

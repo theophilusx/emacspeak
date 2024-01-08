@@ -909,6 +909,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 (defadvice read-passwd (before emacspeak pre act comp)
   "speak."
   (emacspeak-auditory-icon 'open-object)
+  (dtk-speak (or  (ad-get-arg 0) "password: "))
   (emacspeak-prompt "pwd"))
 
 (defvar emacspeak-read-char-prompt-cache nil
@@ -944,9 +945,8 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 ;; read-password--hide-password
 (defadvice read-password--hide-password (after emacspeak pre act comp)
-  "speak."
-  (emacspeak-auditory-icon 'repeat-active)
-  (dtk-say " dot " ))
+  "Icon."
+  (emacspeak-auditory-icon 'repeat-active))
 
 
 ;;;  advice completion functions to speak:

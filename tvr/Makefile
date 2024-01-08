@@ -18,7 +18,8 @@ org-prepare.el \
 slime-prepare.el \
 sp-prepare.el \
 sdcv-prepare.el \
-vm-prepare.el   
+vm-prepare.el    
+
 
 # We create all-prepare.el and compile our startup file.
 

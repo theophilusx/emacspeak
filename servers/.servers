@@ -4,6 +4,7 @@ cloud-dtk-soft
 cloud-espeak
 cloud-mac
 cloud-outloud
+cloud-swiftmac
 dtk-exp
 dtk-soft
 espeak
@@ -13,9 +14,8 @@ log-espeak
 log-mac
 log-outloud
 log-plain
+log-swiftmac
 mac
 null
 outloud
-ssh-dtk-exp
-ssh-outloud
 swiftmac
