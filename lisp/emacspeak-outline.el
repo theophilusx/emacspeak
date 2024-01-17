@@ -51,57 +51,30 @@
 
 ;;;   Navigating through an outline:
 
-(defadvice outline-next-heading (after emacspeak pre act comp)
-  "Speak the line."
-  (when (ems-interactive-p)
+(cl-loop
+ for f in 
+ '(
+   outline-next-heading outline-previous-heading outline-next-preface
+   outline-next-visible-heading outline-previous-visible-heading
+   outline-back-to-heading outline-up-heading
+   outline-backward-same-level outline-forward-same-level)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
     (emacspeak-auditory-icon 'section)
-    (emacspeak-speak-line)))
-
-(defadvice outline-back-to-heading (after emacspeak pre act comp)
-  "Speak the line."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
-    (emacspeak-speak-line)))
-
-(defadvice outline-next-visible-heading (after emacspeak pre act comp)
-  "Speak the line."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
-    (and (looking-at "^$")
-         (skip-syntax-backward " "))
-    (emacspeak-speak-line)))
-
-(defadvice outline-previous-visible-heading (after emacspeak pre act comp)
-  "Speak the line."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
-    (emacspeak-speak-line)))
-
-(defadvice outline-up-heading (after emacspeak pre act comp)
-  "speak."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
-    (emacspeak-speak-line)))
-
-(defadvice outline-forward-same-level (after emacspeak pre act comp)
-  "speak."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
-    (emacspeak-speak-line)))
-
-(defadvice outline-backward-same-level (after emacspeak pre act comp)
-  "speak."
-  (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'section)
-    (emacspeak-speak-line)))
+    (emacspeak-speak-line)))))
 
 ;;; outline-flag-region:
+
 ;; Handle outline hide/show directly here --- rather than relying on
 ;;overlay advice alone.
 
+(defvar ems--voiceify-overlays)
+
 (defadvice outline-flag-region (around emacspeak pre act comp)
   "Reflect hide/show via property invisible as well"
-  (defvar ems--voiceify-overlays)
   (let  ((ems--voiceify-overlays  nil)
          (beg (ad-get-arg 0))
          (end (ad-get-arg 1))
@@ -113,7 +86,27 @@
        beg end 'invisible
        (if (ad-get-arg 2) 'outline nil)))))
 
+;;; Misc Commands:
+
+(cl-loop
+ for f in 
+ '(outline-insert-heading outline-cycle-buffer outline-cycle)
+ do
+ (eval
+  `(defadvice ,f (after emacspeak pre act comp)
+     "speak."
+     (when (ems-interactive-p)
+       (emacspeak-auditory-icon 'open-object)
+       (emacspeak-speak-line)))))
+
+
 ;;;   Hiding and showing subtrees
+
+(defadvice outline-show-only-headings (after emacspeak pre act comp)
+  "Produce an auditory icon"
+  (when (ems-interactive-p)
+    (emacspeak-auditory-icon 'close-object)
+    (message "Hid the body directly following this heading")))
 
 (defadvice outline-hide-entry (after emacspeak pre act comp)
   "Produce an auditory icon"
@@ -240,6 +233,7 @@ except that the outline section is  spoken"
 (defun emacspeak-outline-speak-this-heading ()
   "Speak current outline section starting from point"
   (interactive)
+  (emacspeak-auditory-icon 'select-object)
   (let ((start (point))
         (end nil))
     (save-excursion
@@ -300,11 +294,7 @@ except that the outline section is  spoken"
 
 ;;;  silence errors to help org-mode:
 
-(defadvice outline-up-heading (around emacspeak pre act comp)
-  "Silence error messages."
-  (ems-with-errors-silenced
-   ad-do-it
-   ad-return-value))
+
 
 ;;;  foldout specific advice
 

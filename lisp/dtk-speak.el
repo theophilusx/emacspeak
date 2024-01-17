@@ -286,9 +286,10 @@ bound to \\[dtk-toggle-caps].")
   "List of  punctuation modes.")
 
 (defvar-local dtk-speech-rate
-    (if (string-match "dtk" dtk-program)
-        225 100)
-  "Speech rate.
+    100
+  "Speech rate. Default rate is set via
+    this is an internal variable; <tts-name>-default-speech-rate can
+    be customized for the engine specific default.
  Use `dtk-set-rate'
  bound to \\[dtk-set-rate].")
 
@@ -1963,7 +1964,9 @@ Designed to work with ALSA and Pulseaudio."
          (if (string-match "cloud" dtk-program) "cloud-notify" dtk-program)))
     (when (and dtk-notify-process (process-live-p dtk-notify-process))
       (delete-process dtk-notify-process))
-    (unless (and (not (string-match "cloud" dtk-program)) (zerop (length tts-notification-device)))
+    (unless
+        (and (not (string-match "cloud" dtk-program))
+             (zerop (length tts-notification-device)))
       (with-environment-variables
           ((tts-audio-env-var tts-notification-device))
         (setq  new (dtk-make-process "Notify"))

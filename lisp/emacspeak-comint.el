@@ -55,9 +55,14 @@
 
 ;;;  comint
 ;;;###autoload
-(defcustom emacspeak-comint-autospeak t
+(defcustom emacspeak-comint-autospeak nil
   "Speak comint output.
-Use \\[emacspeak-toggle-comint-autospeak] to toggle this setting."
+Use \\[emacspeak-toggle-comint-autospeak] to toggle this
+setting. Do not set this globally. Also see custom option
+`emacspeak-wizards-project-shells' for starting up
+project-specific shells that have autospeak turned on. The
+default is intentionally nil, since this option should only be
+turned on where needed."
   :group 'emacspeak-speak
   :type 'boolean)
 
@@ -127,7 +132,7 @@ Interactive PREFIX arg means toggle the global default value. ")
          (format-time-string emacspeak-speak-time-brief-format)
          (propertize (buffer-name) 'personality voice-annotate)
          (abbreviate-file-name default-directory)
-         (when emacspeak-comint-autospeak
+         (when (ems--comint-autospeak)
            (propertize "Autospeak" 'personality voice-lighten))
          (when (> (length (window-list)) 1)
            (format "%s" (length (window-list)))))))))

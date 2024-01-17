@@ -535,12 +535,28 @@
 (add-hook
  'eww-mode-hook
  #'(lambda ()
-     (cl-declare (special outline-regexp outline-level outline-search-function))
+     (cl-declare (special outline- outline-search-function))
      (outline-minor-mode)
-     (setq outline-regexp "^ *[•0-9]+\\.? "
-           outline-level 'outline-level
-           outline-search-function nil)
      (emacspeak-pronounce-toggle-use-of-dictionaries t)))
+
+
+(defun emacspeak-eww-shr-outline-toggle ()
+  "Toggle between shr and native outliner."
+  (interactive)
+  (cl-declare (special outline-regexp outline-level outline-search-function))
+  (cond
+   (outline-search-function             ;turn off emacs 30 version:
+    (setq-local outline-regexp "^ *[•0-9]+\\.? "
+          outline-level 'outline-level
+          outline-search-function nil)
+    (emacspeak-auditory-icon 'off)
+    (message "Turned off SHR specific outliner"))
+   (t                                   ; Turn on emacs 30 version:
+    (setq outline-regexp nil
+          outline-level 'shr-outline-level
+          outline-search-function 'shr-outline-search)
+    (emacspeak-auditory-icon 'on)
+    (message "Turned on SHR specific outliner"))))
 
 (defvar emacspeak-eww-masquerade t
   "Masquerade flag")
@@ -610,7 +626,7 @@ Safari/537.36"
   (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
-  (define-key eww-link-keymap ";" 'emacspeak-empv-play-url)
+  (define-key eww-link-keymap ";" 'emacspeak-m-player-url)
   (define-key eww-link-keymap "Y" 'emacspeak-eww-yt-dl)
   (define-key eww-link-keymap "U" 'emacspeak-eww-curl-play-media-at-point)
   (define-key eww-link-keymap "x" 'emacspeak-feeds-select-feed)
@@ -682,7 +698,8 @@ Safari/537.36"
      ("s" eww-readable)
      ("t" emacspeak-eww-next-table)
      ("m" emacspeak-eww-add-mark)
-     ("/" dtk-toggle-punctuation-mode))
+     ("/" dtk-toggle-punctuation-mode)
+     ( "0" emacspeak-eww-shr-outline-toggle))
    do
    (emacspeak-keymap-update eww-mode-map binding))
   (setq shr-external-rendering-functions emacspeak-eww-filter-renderers))
@@ -2574,7 +2591,7 @@ Use for large EBook buffers."
 ;;; Command: url-to-register
 ;;; youtube-dl downloader:
 
-(defvar ems--eww-yt-dl (executable-find "youtube-dl")
+(defvar emacspeak-eww-yt-dl (executable-find "youtube-dl")
   "YouTube download tool")
 
 (defun emacspeak-eww-yt-dl (url)
@@ -2582,11 +2599,11 @@ Use for large EBook buffers."
   (interactive
    (list (car (browse-url-interactive-arg "Media URL: ")))
    eww-mode)
-  (cl-declare (special ems--eww-yt-dl ))
-  (cl-assert ems--eww-yt-dl t "Install youtube-dl first.")
+  (cl-declare (special emacspeak-eww-yt-dl ))
+  (cl-assert emacspeak-eww-yt-dl t "Install youtube-dl first.")
   (let ((dir (funcall eww-download-directory)))
     (access-file dir "Cannot download here")
-    (async-shell-command (format "cd %s; %s %s" dir ems--eww-yt-dl url))))
+    (async-shell-command (format "cd %s; %s '%s'" dir emacspeak-eww-yt-dl url))))
 
 
 (defun emacspeak-eww-url-to-register ()

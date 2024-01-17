@@ -87,6 +87,9 @@ the Emacspeak desktop.")
 
 ;; DocView
 (declare-function doc-view-open-text "doc-view")
+(with-eval-after-load "gptel"
+  (cl-pushnew  'emacspeak-speak-region gptel-post-response-functions))
+
 (with-eval-after-load "doc-view"
   (add-hook 'doc-view-mode-hook #'doc-view-open-text))
 
@@ -315,11 +318,12 @@ the Emacspeak desktop.")
   "Setup programming mode."
   (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
   (ems-with-messages-silenced
-   (dtk-set-punctuations 'all)
-   (or dtk-split-caps (dtk-toggle-split-caps))
-   (or dtk-caps (dtk-toggle-caps))
-   (emacspeak-pronounce-refresh-pronunciations)
-   (or emacspeak-audio-indentation (emacspeak-toggle-audio-indentation))))
+    (dtk-set-punctuations 'all)
+    (or dtk-split-caps (dtk-toggle-split-caps))
+    (or dtk-caps (dtk-toggle-caps))
+    (emacspeak-pronounce-refresh-pronunciations)
+    (or emacspeak-audio-indentation
+        (emacspeak-toggle-audio-indentation))))
 
 (defun emacspeak-setup-programming-modes ()
   "Setup programming modes."
@@ -368,6 +372,18 @@ This cannot be set via custom; set this in your startup file before
      emacspeak-m-player-program
      (expand-file-name "emacspeak.mp3"
                        emacspeak-sounds-directory))))
+
+
+(defsubst emacspeak-easter-egg ()
+  "Easter Egg"
+  (cl-declare (special emacspeak-m-player-program))
+  (let ((f (expand-file-name "etc/ai/01-gemini.mp3" emacspeak-directory)))
+    (when
+        (and  emacspeak-play-startup-icon emacspeak-m-player-program
+              (file-exists-p f)
+              (string=                  ; anniversary
+               (format-time-string "%m-%d") (format-time-string "04-25")))
+      (start-process "mp3" nil emacspeak-m-player-program f))))
 
 (defvar emacspeak-startup-message
   (eval-when-compile
@@ -429,7 +445,8 @@ commands and options for details."
    '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (message emacspeak-startup-message)
-  (emacspeak-play-startup-icon))
+  (emacspeak-play-startup-icon)
+  (emacspeak-easter-egg))
 
 (provide 'emacspeak)
 ;;; Orca For Lock Screen:

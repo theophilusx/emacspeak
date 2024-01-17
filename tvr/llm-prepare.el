@@ -2,7 +2,7 @@
 ;;; Prepare various  LLM front-ends 
 ;;; Keys are stored in passwd-store
 
-(require 'markdown-mode)
+
 (require 'ellama)
 (require 'llm-gemini)
 (require 'gptel "gptel" 'no-error)
@@ -21,4 +21,6 @@
   (setopt
    gptel-backend
    (gptel-make-gemini
-    "Gemini" :key(auth-source-pass-get 'secret "ai.google" ) :stream t)))
+    "Gemini"
+    :key(auth-source-pass-get 'secret "ai.google" )
+    :stream t)))

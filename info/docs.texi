@@ -248,7 +248,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1150 commands and 146 options.
+This chapter documents a total of 1153 commands and 146 options.
 
 @node amixer
 @section amixer
@@ -2931,13 +2931,18 @@ directories that are used often.
 
 @defvar {User Option} emacspeak-comint-autospeak
 Speak comint output.
-Use M-x emacspeak-toggle-comint-autospeak to toggle this setting.
+Use M-x emacspeak-toggle-comint-autospeak to toggle this
+setting. Do not set this globally. Also see custom option
+‘emacspeak-wizards-project-shells’ for starting up
+project-specific shells that have autospeak turned on. The
+default is intentionally nil, since this option should only be
+turned on where needed.
 
 Default Value: 
 
 @verbatim
 
-t
+nil
 
 @end verbatim
 
@@ -3893,6 +3898,15 @@ Toggle Filter.
 Filter is of the  form name=arg-1:arg-2:...
 
 (fn FILTER)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-yt-download
+@deffn {Command} emacspeak-empv-yt-download   
+@findex emacspeak-empv-yt-download
+
+@format
+Download Youtube result.
 @end format
 @end deffn
 
@@ -6352,6 +6366,15 @@ Run specified shell command on URL at point.
 @end format
 @end deffn
 
+@subsubsection emacspeak-eww-shr-outline-toggle
+@deffn {Command} emacspeak-eww-shr-outline-toggle   
+@findex emacspeak-eww-shr-outline-toggle
+
+@format
+Toggle between shr and native outliner.
+@end format
+@end deffn
+
 @subsubsection emacspeak-eww-smart-tabs
 @deffn {Command} emacspeak-eww-smart-tabs  (char &optional define)
 @table @kbd
@@ -8085,11 +8108,12 @@ Default Value:
  ("SPC" emacspeak-eww-smart-tabs)
  ("a" emacspeak-feeds-atom-display)
  ("b" sox-binaural)
+ ("c" gptel)
  ("d" deadgrep)
  ("e" eww)
  ("f" ffip)
  ("g" rg)
- ("l" eww-open-file)
+ ("l" ellama-chat)
  ("o" emacspeak-feeds-opml-display)
  ("p" emacspeak-wizards-pdf-open)
  ("q" emacspeak-wizards-quotes)
@@ -12237,6 +12261,24 @@ This is useful when using modes like ECB or the new GDB UI where
 but quickly switch to a window by name.
 
 (fn BUFFER-NAME)
+@end format
+@end deffn
+
+@subsubsection emacspeak-selective-display
+@deffn {Command} emacspeak-selective-display  (&optional arg)
+@table @kbd
+@item C-e C-c
+@kindex C-e C-c
+@end table
+
+@findex emacspeak-selective-display
+
+@format
+Continuously adjust selective-display.
+Use ‘,’ and ‘.’ to continuously decrease/increase ‘selective-display’.
+ If not specified, ‘arg’ defaults to current-column.
+
+(fn &optional ARG)
 @end format
 @end deffn
 
@@ -20379,7 +20421,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 58 URL Templates.
+This section documents a total of 59 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20500,7 +20542,9 @@ Download specified file.@item @b{sourceforge project}
 
 Open specified project page at SourceForge.@item @b{tech news from cnet}
 
-Display tech news from CNET@item @b{tunein radio}
+Display tech news from CNET@item @b{tinyurl}
+
+@item @b{tunein radio}
 
 Translate StreamId to playable stream.@item @b{w3c irc logs}
 

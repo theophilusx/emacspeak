@@ -616,7 +616,7 @@ the sense of the filter. "
   "Show matched paren with context."
   (interactive)
   (let ((data (show-paren--default)))
-    (when data
+    (when (and data (cl-third data))
       (save-excursion
         (goto-char (cl-third  data))
         (dtk-speak
@@ -1418,6 +1418,12 @@ which-func without turning that mode on.  "
       'right-half)
      (t ""))))
 
+(defsubst ems--comint-autospeak nil
+  "Predicate to test if comint autospeak applies."
+  (and emacspeak-comint-autospeak
+       (or (derived-mode-p 'comint-mode) (eq 'vterm-mode major-mode))))
+
+
 (defun emacspeak-speak-mode-line (&optional buffer-info)
   "Speak the mode-line.
 Speaks header-line if that is set when called non-interactively.
@@ -1448,8 +1454,9 @@ Interactive prefix arg speaks buffer info."
      (t                                 ; main branch
       (let ((global-info (downcase (format-mode-line global-mode-string)))
             (window-count (length (window-list)))
-            (autospeak (when emacspeak-comint-autospeak
-                         (propertize "Autospeak" 'personality voice-lighten)))
+            (autospeak
+             (when (ems--comint-autospeak)
+               (propertize "Autospeak" 'personality voice-lighten)))
             (vc-state
              (when (and vc-mode (buffer-file-name))
                (vc-state (buffer-file-name))))
@@ -2821,6 +2828,48 @@ Filters out loopback for convenience."
     "%s: %s"
     (ems--get-essid)
     (ems--get-ip-address(cl-first  (ems--get-active-network-interfaces))))))
+
+;;; Smarter selective-display:
+
+;;;###autoload
+(defun emacspeak-selective-display (&optional arg)
+  "Continuously adjust selective-display.
+Use `,' and `.' to continuously decrease/increase `selective-display'.
+ If not specified, `arg' defaults to current-column."
+  (interactive "P")
+  (cl-declare (special selective-display))
+  (setq selective-display
+        (if arg (prefix-numeric-value arg) (current-column)))
+  (let ((key (event-basic-type last-command-event)))
+    (emacspeak-auditory-icon 'repeat-start)
+    (cl-case key
+      (?,
+       (cl-assert (numberp selective-display) t
+                  "Selective display is off")
+       (if (> selective-display 2)
+           (setq selective-display (- selective-display 2))
+         (setq selective-display nil))
+       (funcall-interactively #'set-selective-display selective-display))
+      (?.
+       (when (or (numberp selective-display) (null selective-display))
+         (if (null selective-display)
+             (setq selective-display 2)
+           (setq selective-display (+ selective-display 2)))
+         (funcall-interactively #'set-selective-display selective-display))))
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))  ; map
+       (dolist (key '("," "."))
+         (define-key
+          map key
+          (lambda ()
+            (interactive)
+            (emacspeak-selective-display selective-display))))
+       map)
+     t                                  ; continue predicate
+     (lambda nil (emacspeak-auditory-icon 'repeat-end)) ; done action
+     (propertize
+      (format "Selective Display: %s" selective-display)
+      'personality voice-bolden))))
 
 ;;; Cue window buffer change:
 
