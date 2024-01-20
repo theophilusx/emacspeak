@@ -288,6 +288,22 @@ with duplicates removed when saving as a list of string."
  nil nil
  "Google Trends"
  #'emacspeak-feeds-rss-display)
+;;; Google Emacspeak Site:
+
+(declare-function
+ emacspeak-websearch-accessible-google
+ "emacspeak-websearch" (query &optional options))
+
+
+(emacspeak-url-template-define
+ "Emacspeak Search Via Google"
+ "%s"
+ (list "Search Emacspeak Site: ") nil
+ "Search Emacspeak Site"
+ #'(lambda (q)
+     (emacspeak-websearch-accessible-google
+      (format
+       "site:tvraman.github.io+%s" q))))
 
 ;;;  utils:
 
@@ -382,14 +398,14 @@ with duplicates removed when saving as a list of string."
 
 (defun emacspeak-url-template-google-atom-news-display (feed-url)
   "View Google Atom news feed pulled using Curl."
-  (cl-declare (special emacspeak-atom-view-xsl
-                       g-curl-program g-curl-common-options))
+  (cl-declare (special emacspeak-atom-xsl
+                       emacspeak-curl g-curl-options))
   (emacspeak-eww-autospeak)
   (g-display-result
    (format
     "%s %s    '%s' 2>/dev/null"
-    g-curl-program g-curl-common-options feed-url)
-   emacspeak-atom-view-xsl))
+    emacspeak-curl g-curl-options feed-url)
+   emacspeak-atom-xsl))
 
 (emacspeak-url-template-define
  "Google News Search"

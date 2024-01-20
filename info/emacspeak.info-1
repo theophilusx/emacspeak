@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on January 15, 2024.
+last updated on January 20, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3105,6 +3105,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-z-keymap,  Prev:
 * emacspeak-pianobar::Speech-enable Pandora.
 * emacspeak-pipewire::Speech-enable PIPEWIRE.
 * emacspeak-popup::Speech-enable POPUP.
+* emacspeak-preamble::standard  include.
 * emacspeak-proced::Speech-enable PROCED.
 * emacspeak-project::Speech-enable PROJECT.
 * emacspeak-projectile::PROJECTILE.
@@ -3233,7 +3234,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1153 commands and 146 options.
+   This chapter documents a total of 1155 commands and 146 options.
 
 * Menu:
 
@@ -3385,6 +3386,7 @@ thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 * emacspeak-pianobar::
 * emacspeak-pipewire::
 * emacspeak-popup::
+* emacspeak-preamble::
 * emacspeak-proced::
 * emacspeak-project::
 * emacspeak-projectile::

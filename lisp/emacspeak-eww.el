@@ -2242,7 +2242,6 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 (defvar emacspeak-eww-url-shell-commands
   (delete nil
           (list
-                                        ;(executable-find "mpv")
            (expand-file-name "cbox" emacspeak-etc-directory)))
   "Shell commands we permit on URL under point.")
 
@@ -2591,19 +2590,16 @@ Use for large EBook buffers."
 ;;; Command: url-to-register
 ;;; youtube-dl downloader:
 
-(defvar emacspeak-eww-yt-dl (executable-find "youtube-dl")
-  "YouTube download tool")
-
 (defun emacspeak-eww-yt-dl (url)
   "Download link at point   using youtube-dl --- works with BBC Sounds. "
   (interactive
    (list (car (browse-url-interactive-arg "Media URL: ")))
    eww-mode)
-  (cl-declare (special emacspeak-eww-yt-dl ))
-  (cl-assert emacspeak-eww-yt-dl t "Install youtube-dl first.")
+  (cl-declare (special emacspeak-ytdl ))
+  (cl-assert emacspeak-ytdl t "Install youtube-dl first.")
   (let ((dir (funcall eww-download-directory)))
     (access-file dir "Cannot download here")
-    (async-shell-command (format "cd %s; %s '%s'" dir emacspeak-eww-yt-dl url))))
+    (async-shell-command (format "cd %s;%s '%s'" dir emacspeak-ytdl url))))
 
 
 (defun emacspeak-eww-url-to-register ()

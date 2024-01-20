@@ -1538,18 +1538,22 @@ program. Port defaults to dtk-local-server-port"
     (expand-file-name program emacspeak-servers-directory))))
 
 ;;;   initialize the speech process
+(defconst dtk-pamixer (executable-find "pamixer") "pamixer")
+
+(defconst dtk-pulseaudio (executable-find "pulseaudio") "Pulseaudio
+executable")
 
 (defsubst tts-notification-from-env ()
   "Compute tts-notification device from env."
   (let* ((result nil)
          (device
           (or                        ; each clause is for a given env:
-           (and (not (executable-find "pulseaudio")) ;pipewire-alsa
+           (and (not dtk-pulseaudio) ;pipewire-alsa
                 (setq result
                       (string-trim
                        (shell-command-to-string "aplay -L | grep mono_right"))))
            (and                         ; pipewire-pulse
-            (executable-find "pamixer")
+            dtk-pamixer
             (setq result
                   (split-string
                    (shell-command-to-string
@@ -1581,7 +1585,7 @@ Set to nil to disable a separate Notification stream."
 
 (defvar tts-audio-env-var
   (cond
-   ((executable-find "pulseaudio") "PULSE_SINK")
+   (dtk-pulseaudio "PULSE_SINK")
    (t "ALSA_DEFAULT"))
   "Environment  variable for TTS output; PULSE_SINK if running
   pulseaudio, otherwise ALSA_DEFAULT for both plain ALSA and
@@ -2252,6 +2256,6 @@ When called interactively, CHAR defaults to the character after point."
 ;;; dtk-unicode.el ends here
 
 (provide 'dtk-speak)
-;;;   emacs local variables
+ 
 
 ;; coding: utf-8
