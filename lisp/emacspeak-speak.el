@@ -672,7 +672,7 @@ emacspeak will generate a tone
 instead of speaking such lines when punctuation mode is set
 to some.")
 
-(defvar-local ems--speak-max-line 384
+(defvar-local ems--speak-max-length 384
   "Threshold for determining `long' lines.
 Emacspeak will ask for confirmation before speaking lines
 that are longer than this length.  This is to avoid accidentally
@@ -716,7 +716,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
                dtk-punctuation-mode dtk-cleanup-repeats
                emacspeak-speak-line-invert-filter
                emacspeak-speak-blank-line-regexp
-               ems--speak-max-line emacspeak-show-point
+               ems--speak-max-length emacspeak-show-point
                emacspeak-decoration-rule emacspeak-horizontal-rule
                emacspeak-unspeakable-rule
                emacspeak-audio-indentation))
@@ -796,7 +796,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
             (cond
              ((or                       ;speakable
                selective-display
-               (< l ems--speak-max-line)
+               (< l ems--speak-max-length)
                (get-text-property start 'speak-line))
               t)
              (t
@@ -804,7 +804,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
                 (call-interactively #'visual-line-mode))
               (unless visual-line-mode
                 (put-text-property start end 'start-line t)
-                (setq ems--speak-max-line (* 2 l)))
+                (setq ems--speak-max-length (* 2 l)))
               t))))
         (when speakable
           (when
@@ -2879,26 +2879,29 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
 (defun emacspeak-submit-bug ()
   "Function to submit a bug to the Emacspeak list"
   (interactive)
+(cl-declare (special (reporter-prompt-for-summary-p t)))
   (require 'reporter)
   (when
       (yes-or-no-p "Are you sure you want to submit a bug report? ")
-    (let ((vars
-           '(
-             window-system window-system-version emacs-version system-type
-             emacspeak-version emacspeak-show-point
-             dtk-program dtk-speech-rate dtk-character-scale
-             dtk-split-caps dtk-punctuation-mode visual-line-mode
-             emacspeak-line-echo  emacspeak-word-echo emacspeak-character-echo 
-             emacspeak-auditory-icon-function emacspeak-audio-indentation )))
-      (mapc
-       #'(lambda (x)
-           (if (not (and (boundp x) (symbol-value x)))
-               (setq vars (delq x vars))))
-       vars)
+(let ((reporter-prompt-for-summary-p t)
+      (vars
+       '(
+         window-system window-system-version emacs-version system-type
+         emacspeak-version emacspeak-show-point
+         dtk-program dtk-speech-rate dtk-character-scale
+         dtk-split-caps dtk-punctuation-mode visual-line-mode
+         emacspeak-line-echo  emacspeak-word-echo emacspeak-character-echo 
+         emacspeak-auditory-icon-function emacspeak-audio-indentation )))
+  (mapc
+   #'(lambda (x)
+       (if (not (and (boundp x) (symbol-value x)))
+           (setq vars (delq x vars))))
+   vars)
+  (when  reporter-prompt-for-summary-p ; to appease compiler
       (reporter-submit-bug-report
        emacspeak-bug-address 
        (concat "Emacspeak: " emacspeak-version)
        vars nil nil
-       "Description of Problem:"))))
+       "Description of Problem:")))))
 
 ;;;  end of file
