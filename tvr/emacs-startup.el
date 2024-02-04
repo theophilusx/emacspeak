@@ -92,12 +92,12 @@ Produce timing information as the last step."
 Configure dbus and set up tabs.
 Reset gc-cons-threshold to a smaller value  and play
 startup sound."
-  (cl-declare (special emacspeak-sounds-directory))
+  (cl-declare (special emacspeak-sounds-dir))
   (emacspeak-dbus-setup)
   (setq gc-cons-threshold 64000000)
   (start-process
    "play" nil "aplay"
-   (expand-file-name "highbells.au" emacspeak-sounds-directory))
+   (expand-file-name "highbells.au" emacspeak-sounds-dir))
   (tvr-tabs)
   (switch-to-buffer "Home")
   (message
@@ -229,6 +229,7 @@ This function loads Emacspeak. Emacs customization and library
 configuration happens via the after-init-hook. "
   (cl-declare (special emacspeak-directory ))
   (unless (featurep 'emacspeak)
+    (setopt tts-notification-device "tts_mono_right")
     (tvr-time-load                      ; load emacspeak:
         (load ;; setenv EMACSPEAK_DIR if you want to load a different version
          (expand-file-name

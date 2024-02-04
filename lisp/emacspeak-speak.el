@@ -1524,41 +1524,16 @@ Interactive prefix arg speaks buffer info."
                          (dtk-speak
                           (buffer-name))))
 
-(defsubst ems--pulse-speaker-p ()
-  "Predicate to check if we are on speaker."
-  (ems-with-messages-silenced
-   (zerop
-    (shell-command
-     "pacmd list-sinks | grep 'active port:'  | grep  Speaker"))))
-
-(defsubst ems--pulse-headphones-p ()
-  "Predicate to check if we are on Headphones."
-  (ems-with-messages-silenced
-   (zerop
-    (shell-command
-     "pacmd list-sinks | grep 'active port:'  | grep  Headphones"))))
-(defconst emacspeak-wpctl (executable-find "wpctl") "wpctl executable")
-
 (defconst ems--vol-cmd
   (eval-when-compile
-    (cond
-     (emacspeak-wpctl ; pipewire
-      "wpctl get-volume @DEFAULT_AUDIO_SINK@")
-     (t 
-      (concat
-       "pacmd list-sinks | grep -A 8 '  \\* index' | grep volume"
-       "|  cut -d ',' -f 1"
-       "| cut -d ':' -f 3"
-       "| cut -d '/' -f 2"))))
+     (when emacspeak-wpctl  "wpctl get-volume @DEFAULT_AUDIO_SINK@"))
   "Shell pipeline for getting volume.")
 
 (defsubst ems--show-current-volume ()
   "volume display in minor-mode-line"
   (cl-declare (special ems--vol-cmd))
   (propertize
-   (format
-    " %s "
-    (string-trim (shell-command-to-string ems--vol-cmd)))
+   (format " %s " (string-trim (shell-command-to-string ems--vol-cmd)))
    'personality 'voice-bolden))
 
 (defvar emacspeak-speak-show-volume nil
@@ -1788,16 +1763,14 @@ Optional interactive prefix arg `speak-rev' speaks only the Git revision."
   (let ((signature "Emacspeak "))
     (when
         (and (null speak-rev) emacspeak-use-auditory-icons
-             emacspeak-mplayer)
-      (start-process "mp3" nil "mplayer" emacspeak-icon))
+             sox-play)
+      (start-process "ogg" nil sox-play emacspeak-icon))
     (tts-with-punctuations
      'some
-     (dtk-speak-and-echo
+     (dtk-speak
       (concat
        signature
-       (if speak-rev
-           emacspeak-git-revision
-          emacspeak-version))))))
+       (if speak-rev emacspeak-git-revision emacspeak-version))))))
 
 (defun emacspeak-speak-current-kill (&optional count)
   "Speak the current kill.
@@ -2646,7 +2619,7 @@ but quickly switch to a window by name."
            (string=  (alist-get ?L data) "off-line")
            (< (string-to-number (alist-get ?p data)) 10)
            (>= (string-to-number (alist-get ?p emacspeak-battery-prev)) 10))
-    (emacspeak-prompt "battery-low")
+    (emacspeak-prompt 'battery-low)
     (setq emacspeak-battery-prev data)))
 (when (boundp 'battery-update-functions)
   (add-to-list 'battery-update-functions 'emacspeak-battery-alarm))

@@ -59,9 +59,9 @@
 ;; amixer
 
 (defconst emacspeak-amixer  (executable-find "amixer") "Amixer program")
-
-;; aplay
-(defconst emacspeak-aplay  (executable-find "aplay") "APlay program")
+;; wpctl:
+(defconst emacspeak-wpctl (executable-find "wpctl") "wpctl
+executable")
 
 ;; curl:
 (defconst emacspeak-curl (executable-find "curl") "Curl.")
@@ -98,7 +98,7 @@
   "Lisp directory.")
 
 ;;;###autoload
-(defconst emacspeak-sounds-directory
+(defconst emacspeak-sounds-dir
   (expand-file-name  "sounds/" emacspeak-directory)
   "Auditory icons directory.")
 
@@ -131,7 +131,7 @@
   "README.")
 
 (defconst emacspeak-icon
-  (expand-file-name "emacspeak.mp3" emacspeak-sounds-directory)
+  (expand-file-name "emacspeak.ogg" emacspeak-sounds-dir)
   "Emacspeak startup icon.")
 
 
