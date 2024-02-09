@@ -95,9 +95,7 @@ startup sound."
   (cl-declare (special emacspeak-sounds-dir))
   (emacspeak-dbus-setup)
   (setq gc-cons-threshold 64000000)
-  (start-process
-   "play" nil "aplay"
-   (expand-file-name "highbells.au" emacspeak-sounds-dir))
+  (emacspeak-prompt 'tvr-emacs)
   (tvr-tabs)
   (switch-to-buffer "Home")
   (message
@@ -246,6 +244,8 @@ configuration happens via the after-init-hook. "
 
 (declare-function yas--load-snippet-dirs "yasnippet" (&optional nojit))
 (declare-function emacspeak-dbus-setup "emacspeak-dbus" nil)
+(declare-function emacspeak-prompt "emacspeak-sounds" (name))
+
 (declare-function
  emacspeak-wizards-project-shells-initialize
  "emacspeak-wizards" nil)

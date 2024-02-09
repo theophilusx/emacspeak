@@ -357,9 +357,9 @@ This cannot be set via custom; set this in your startup file before
 
 (defsubst emacspeak-play-startup-icon ()
   "Play startup icon."
-  (cl-declare (special emacspeak-play-startup-icon sox-play))
-  (when (and  emacspeak-play-startup-icon sox-play)
-    (start-process "ogg" nil sox-play emacspeak-icon)))
+  (cl-declare (special emacspeak-play-startup-icon ))
+  (when (and  emacspeak-play-startup-icon )
+    (emacspeak-prompt 'emacspeak)))
 
 (defsubst emacspeak-easter-egg ()
   "Easter Egg"
@@ -419,7 +419,7 @@ commands and options for details."
   (setq ring-bell-function #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
   (emacspeak-sounds-select-theme emacspeak-sounds-current-theme)
   (emacspeak-pronounce-load-dictionaries)
-  (make-thread #'(lambda () (ems--fastload "emacspeak-advice")))
+  (ems--fastload "emacspeak-advice")
   (emacspeak-setup-programming-modes)
   (make-thread #'emacspeak-prepare-emacs)
   (setq line-number-mode nil column-number-mode nil)
@@ -430,7 +430,8 @@ commands and options for details."
    '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (message emacspeak-startup-message)
-  (emacspeak-play-startup-icon)
+  
+  (when   emacspeak-play-startup-icon (emacspeak-prompt 'emacspeak))
   (emacspeak-easter-egg))
 
 (provide 'emacspeak)

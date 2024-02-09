@@ -213,6 +213,11 @@ beginning or end of a physical line produces an  auditory icon."
         ((or line-move-visual visual-line-mode) (emacspeak-speak-visual-line))
         (t (emacspeak-speak-line)))))))
 
+(defadvice delete-horizontal-space (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p) (emacspeak-auditory-icon 'delete-object)))
+
+
 (defadvice kill-visual-line (before emacspeak pre act comp)
   "Speak line we're  to kill."
   (when (ems-interactive-p)
@@ -2767,7 +2772,7 @@ Produce an auditory icon if possible."
            (mode-line keymap
                       (mouse-1 . elisp-enable-lexical-binding)))))))))
 
-(provide 'emacspeak-advice)
+
 ;;; Spinner:
 
 (defadvice spinner-start (after emacspeak pre act comp)
@@ -2811,4 +2816,24 @@ Produce an auditory icon if possible."
      (when (ems-interactive-p)
        (emacspeak-speak-char t )))))
 
+
+;;; Speaking Spaces:
+
+(defadvice cycle-spacing (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-speak-spaces)))
+
+
+(defadvice just-one-space (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-speak-line)
+    (emacspeak-speak-spaces)))
+
+(provide 'emacspeak-advice)
+
 ;;;  end of file
+
+

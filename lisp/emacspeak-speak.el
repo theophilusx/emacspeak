@@ -58,7 +58,6 @@
 (require 'emacspeak-pronounce)
 (require 'emacspeak-sounds)
 (require 'sox-gen)
-(declare-function emacspeak-play-auditory-icon "emacspeak-sounds" (sound-name))
 (declare-function operate-on-rectangle "rect" (function start end coerce-tabs))
 (declare-function which-function "which-func" nil)
 (declare-function calendar-cursor-to-nearest-date "cal-move" nil)
@@ -625,6 +624,13 @@ the sense of the filter. "
                                 (line-end-position))))))))
 
 ;;;   Speak units of text
+
+(defun emacspeak-speak-spaces ()
+  "Speak number of spaces at point."
+  (interactive)
+  (let ((beg (save-excursion (skip-syntax-backward " ")))
+        (end (save-excursion (skip-syntax-forward " "))))
+    (dtk-notify-say  (format "%s spaces " (+ (- end beg))))))
 
 (defun emacspeak-speak-region (start end)
   "Speak region bounded by start and end. "
@@ -2416,7 +2422,7 @@ See documentation for command run-at-time for details on time-spec."
    #'(lambda (m)
        (dtk-notify-speak m)
        (when emacspeak-use-auditory-icons
-         (emacspeak-play-auditory-icon 'alarm))
+         (emacspeak-auditory-icon 'alarm))
        (sox-tones))
    message)
   (message "Set alarm for %s" time)

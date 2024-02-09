@@ -249,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1155 commands and 146 options.
+This chapter documents a total of 1156 commands and 146 options.
 
 @node amixer
 @section amixer
@@ -1213,9 +1213,11 @@ nil
 Emacspeak extends Emacs to be a fully functional audio desktop.
 This is the main emacspeak module.
 It actually does very little:
-It sets up Emacs to load package-specific
+@itemize
+@item  It sets up Emacs to load package-specific
 Emacspeak modules as each package is loaded.
-It implements function emacspeak which loads the rest of the system.
+@item  It implements function emacspeak which loads the rest of the system.
+@end itemize
 
 @subsection Emacspeak Commands
 
@@ -8304,7 +8306,8 @@ Key bindings for use with C-e v.
 Default Value: 
 @verbatim
 
-(("v" view-register))
+(("SPC" emacspeak-speak-spaces)
+ ("v" view-register))
 
 @end verbatim
 
@@ -11980,29 +11983,35 @@ Speak number of stones remaining.
 @section emacspeak-sounds
 
 This module provides the interface for generating auditory icons in
-emacspeak.
+emacspeak. It also defines sound themes for auditory icons.
 @subsection Design goal:
 
 @itemize
 @item   Auditory icons should be used to
 provide additional feedback, not as a gimmick.
 @item   The Emacspeak interface
-should be usable at all times without the icons.
+should be usable at all times with the icons turned off.
 @item  Command @code{emacspeak-toggle-auditory-icons} toggles the
-use of auditory icons.
-@item   General principle for when to use
-an icon:
+use of auditory icons. This flag is buffer-local; use an
+interactive prefix argosy @code{C-u} to turn auditory icons on/off
+globally.
+Use @code{setq-default emacspeak-use-auditory-icons nil)} to turn
+these off at startup; default is to use auditory icons globally.
+@item   General principle:
 @enumerate
 @item Convey information about events taking place in parallel.
 @item  For instance, if making a selection automatically moves the current
 focus to the next choice, We speak the next choice, while
 indicating the fact that something was selected with an auditory
 icon.
+@item Speed of interaction --- auditory icons take less time than
+the accompanying spoken feedback.
 @end enumerate
-@item This module provides  a mapping between names in the elisp world
+@item This module provides  a mapping between names in the elisp
+world (symbols)
 and actual sound files.
 @item icon-names are symbols; sound files  are fully-qualified file-names.
-@item Modules that wish to use auditory icons
+@item Modules that  use auditory icons
 should use these names and not  actual file names.
 @item Icons are played either using a local player, or by sending
 appropriate commands to the speech server (local or cloud).
@@ -13271,6 +13280,20 @@ any other key to speak entire sexp.
 
 @format
 Skim the current buffer  a paragraph at a time.
+@end format
+@end deffn
+
+@subsubsection emacspeak-speak-spaces
+@deffn {Command} emacspeak-speak-spaces   
+@table @kbd
+@item C-e v SPC
+@kindex C-e v SPC
+@end table
+
+@findex emacspeak-speak-spaces
+
+@format
+Speak number of spaces at point.
 @end format
 @end deffn
 
@@ -20500,19 +20523,19 @@ use from other modules.
 @format
 Toggle voice lock mode.
 
-This is a minor mode.  If called interactively, toggle the
-‘Voice-Lock mode’ mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
+This is a minor mode.  If called interactively, toggle the ‘Voice-Lock
+mode’ mode.  If the prefix argument is positive, enable the mode, and if
+it is zero or negative, disable the mode.
 
-If called from Lisp, toggle the mode if ARG is ‘toggle’.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
+If called from Lisp, toggle the mode if ARG is ‘toggle’.  Enable the
+mode if ARG is nil, omitted, or is a positive number.  Disable the mode
+if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
 evaluate ‘voice-lock-mode’.
 
-The mode’s hook is called both when the mode is enabled and when
-it is disabled.
+The mode’s hook is called both when the mode is enabled and when it is
+disabled.
 
 (fn &optional ARG)
 @end format
