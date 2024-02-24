@@ -45,7 +45,7 @@
 ;;; Code:
 
 
-;;;  required modules
+;;  required modules
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -109,7 +109,7 @@
       (goto-char (point-min)))
     (pop-to-buffer (help-buffer))
     (emacspeak-speak-mode-line)
-    (emacspeak-auditory-icon 'help)))
+    (emacspeak-icon 'help)))
 
 (emacspeak-websearch-set-searcher  'help
                                    'emacspeak-websearch-help)

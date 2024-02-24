@@ -45,7 +45,7 @@
 ;; using xsltproc
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -70,7 +70,6 @@
    (read-file-name "XSL Transformation: "
                    emacspeak-xslt-directory
                    emacspeak-we-xsl-transform)))
-
 
 (defvar emacspeak-xslt-options
   "--html --nonet --novalid --encoding utf-8"

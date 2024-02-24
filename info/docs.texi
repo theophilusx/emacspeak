@@ -12,7 +12,6 @@
 * emacspeak-amark::BookMarks For Audio.
 * emacspeak-analog::
 * emacspeak-annotate::Annotations.
-* emacspeak-apt-sources::speech-enable apt.
 * emacspeak-arc::Speech enable archive-mode.
 * emacspeak-auctex::Speech enable AucTeX --.
 * emacspeak-bbdb::Speech enable BBDB.
@@ -140,7 +139,6 @@
 * emacspeak-ocr::ocr Front-end desktop.
 * emacspeak-org::Speech-enable org.
 * emacspeak-orgalist::Speech-enable ORGALIST.
-* emacspeak-origami::Speech-enable ORIGAMI.
 * emacspeak-outline::Speech enable Outline.
 * emacspeak-package::Speech-enable PACKAGE.
 * emacspeak-paradox::Speech-enable PARADOX.
@@ -249,15 +247,15 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1156 commands and 146 options.
+This chapter documents a total of 1160 commands and 141 options.
 
 @node amixer
 @section amixer
 
 Provide an emacs front-end to amixer,
 the sound mixer in ALSA that is used to configure the audio device.
-
-The main entry point is command @code{emacspeak-audio-setup} bound
+Note that @code{amixer} also works on pipewire-based systems.
+The main entry point is command @code{amixer} bound
 to @kbd{C-e)}. When called for the first time, this command
 builds up a database of available controls on the default audio
 device. These control names are then available for completion in
@@ -362,20 +360,6 @@ Interactive prefix arg ‘PROMPT’ reads percentage as a number
 @end deffn
 
 @subsection amixer Options
-
-@defvar {User Option} amixer-device
-@verbatim
-ALSA Control Device.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-"default"
-
-@end verbatim
-
-@end defvar
 
 @defvar {User Option} amixer-volume-step
 @verbatim
@@ -1219,22 +1203,6 @@ Emacspeak modules as each package is loaded.
 @item  It implements function emacspeak which loads the rest of the system.
 @end itemize
 
-@subsection Emacspeak Commands
-
-@subsubsection emacspeak-orca-toggle
-@deffn {Command} emacspeak-orca-toggle   
-@table @kbd
-@item s-o
-@kindex s-o
-@end table
-
-@findex emacspeak-orca-toggle
-
-@format
-Toggle state of orca.
-@end format
-@end deffn
-
 @subsection emacspeak Options
 
 @defvar {User Option} emacspeak-soundscapes
@@ -1632,16 +1600,6 @@ Speak current field.
 
 ANNOTATE == annotate.el from melpa
 Speech-enable creation and navigation of annotations.
-
-@node emacspeak-apt-sources
-@section emacspeak-apt-sources
-
-This module speech-enables apt-sources.el
-that is included in the debian-el package
-and provides a major mode for editing
-APT's sources.list file.
-
-  Required modules
 
 @node emacspeak-arc
 @section emacspeak-arc
@@ -2986,8 +2944,6 @@ along with other custom settings. Function
 feedback, and leaves it to other frontends on
 @var{company-frontends}   to generate their own feedback.
 
-  Required modules
-
 @node emacspeak-compile
 @section emacspeak-compile
 
@@ -3063,12 +3019,11 @@ Note: this key-binding is available only if this module is loaded.
 @end itemize
 Add calls to the desired functions from the above list
 to the emacs startup file after  this module has been loaded.
+To enable all of them, add (emacspeak-dbus-setup).
 See relevant hooks for customizing behavior.
 Note that each of the  sleep/wake-up, UDisks2   and network/up-down
 can be separately enabled/disabled, and the actions customized
 via appropriately named hook functions.
-
-  Required modules
 
 @subsection Emacspeak-Dbus Commands
 
@@ -3138,6 +3093,20 @@ Enable integration with UPower. Does nothing if already enabled.
 @end format
 @end deffn
 
+@subsubsection emacspeak-orca-toggle
+@deffn {Command} emacspeak-orca-toggle   
+@table @kbd
+@item s-o
+@kindex s-o
+@end table
+
+@findex emacspeak-orca-toggle
+
+@format
+Toggle state of orca.
+@end format
+@end deffn
+
 @subsubsection emacspeak-screen-saver-mode
 @deffn {Command} emacspeak-screen-saver-mode   
 @findex emacspeak-screen-saver-mode
@@ -3185,7 +3154,6 @@ server at dict.org:2628
 @section emacspeak-diff-mode
 
 DIFF-MODE  support.
-  Required modules
 
 @node emacspeak-dired
 @section emacspeak-dired
@@ -3675,8 +3643,6 @@ EIN ==  Emacs IPython Notebook
 You can install package EIN via mELPA
 This module speech-enables EIN
 
-  Required modules
-
 @subsection Emacspeak-Ein Commands
 
 @subsubsection emacspeak-ein-speak-current-cell
@@ -3695,7 +3661,7 @@ ELFEED ==  Feed Reader for Emacs.
 Install from elpa
 M-x package-install  elfeed
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Elfeed Commands
 
@@ -3798,7 +3764,7 @@ Speak current track.
 @node emacspeak-empv
 @section emacspeak-empv
 
-EMPV ==  Another Emacs Media Player
+EMPV ==  Emacs Front-End To mpv --- the GNU media player
 Provides better Youtube integration
 
 @subsection Emacspeak-Empv Commands
@@ -3823,12 +3789,34 @@ Accumulate media links to register u
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-backward-minute
+@deffn {Command} emacspeak-empv-backward-minute  (&optional count)
+@findex emacspeak-empv-backward-minute
+
+@format
+Move back  count  minutes.
+
+(fn &optional COUNT)
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-clear-filter
 @deffn {Command} emacspeak-empv-clear-filter   
 @findex emacspeak-empv-clear-filter
 
 @format
 Clear all filters. 
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-forward-minute
+@deffn {Command} emacspeak-empv-forward-minute  (&optional count)
+@findex emacspeak-empv-forward-minute
+
+@format
+Move forward count  minutes.
+
+(fn &optional COUNT)
 @end format
 @end deffn
 
@@ -3860,6 +3848,22 @@ Interactive prefix arg plays on left ear using alsa.
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-play-last
+@deffn {Command} emacspeak-empv-play-last  (&optional left)
+@table @kbd
+@item C-e y l
+@kindex C-e y l
+@end table
+
+@findex emacspeak-empv-play-last
+
+@format
+Play most recently played URL.
+
+(fn &optional LEFT)
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-play-local
 @deffn {Command} emacspeak-empv-play-local  (file)
 @table @kbd
@@ -3887,7 +3891,7 @@ Play a local resource  using mpv.
 
 @format
 Play URL using mpv.
-Interactive prefix arg plays on left ear using Alsa. 
+Interactive prefix arg plays on left ear. 
 
 (fn URL &optional LEFT)
 @end format
@@ -3901,6 +3905,15 @@ Interactive prefix arg plays on left ear using Alsa.
 Relative seek in seconds,see ‘empv-seek’
 
 (fn TARGET)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-time-pos
+@deffn {Command} emacspeak-empv-time-pos   
+@findex emacspeak-empv-time-pos
+
+@format
+Speak time and percent position.
 @end format
 @end deffn
 
@@ -4789,8 +4802,6 @@ This module speech-enables EShell
 
 ESS == Emacs Speaks Statistics
 This module makes ESS speak.
-
-  Required modules
 
 @node emacspeak-etable
 @section emacspeak-etable
@@ -7351,7 +7362,6 @@ all
 @section emacspeak-go-mode
 
 GO-MODE ==  Go Language support in emacs
-  Required modules
 
 @node emacspeak-gomoku
 @section emacspeak-gomoku
@@ -7898,22 +7908,6 @@ the list using c-s and c-r as provided by ido Set number matches
 shown (ido-max-prospects) to 3 using Custom so you dont hear the
 entire list.
 
-@subsection emacspeak-ido Options
-
-@defvar {User Option} emacspeak-ido-typing-delay
-@verbatim
-How long we wait before speaking completions.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-0.15
-
-@end verbatim
-
-@end defvar
-
 @node emacspeak-iedit
 @section emacspeak-iedit
 
@@ -8134,8 +8128,6 @@ See https://github.com/SebastianMeisel/journalctl-mode
 JS2-mode http://js2-mode.googlecode.com/svn/trunk
 is a new, powerful Emacs mode for working with JavaScript.
 This module speech-enables js2.
-
-  Required modules
 
 @node emacspeak-keymap
 @section emacspeak-keymap
@@ -8380,6 +8372,7 @@ Default Value:
 @verbatim
 
 (("a" emacspeak-xslt-view-atom-file)
+ ("l" emacspeak-empv-play-last)
  ("p" emacspeak-pianobar)
  ("r" emacspeak-xslt-view-rss-file)
  ("x" emacspeak-xslt-view-file)
@@ -9653,7 +9646,7 @@ Default Value:
 MAGIT ==  Git interface in Emacs
 git clone git://github.com/magit/magit.git
 
-  Required modules
+  Required modules:
 
 @node emacspeak-make-mode
 @section emacspeak-make-mode
@@ -9691,7 +9684,7 @@ Speak current section
 MARKDOWN ==  Light-weight markup.
 This module speech-enables markdown.el
 
-  Required modules
+  Required modules:
 
 @node emacspeak-maths
 @section emacspeak-maths
@@ -10350,7 +10343,6 @@ The body can be accessed via ‘emacspeak-muggles-yank-pop/body’.
 @section emacspeak-muse
 
 Speech enable Muse
-  Required modules
 
 @node emacspeak-net-utils
 @section emacspeak-net-utils
@@ -11052,12 +11044,6 @@ emacspeak-org-table-speak-current-element
 
 Speech-enable orgalist --- create org-like lists everywhere.
 
-@node emacspeak-origami
-@section emacspeak-origami
-
-ORIGAMI ==  One More Flexible Folding Mechanism
-This module speech-enables origami-mode.
-
 @node emacspeak-outline
 @section emacspeak-outline
 
@@ -11121,7 +11107,7 @@ PACKAGE == package.el
 Manage Emacs packages.
 This module speech-enables package.el with a few convenience commands.
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Package Commands
 
@@ -11159,7 +11145,7 @@ PARADOX == paradox.el Improved package management interface
 Manage Emacs packages.
 This module speech-enables paradox.el with a few convenience commands.
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Paradox Commands
 
@@ -11334,7 +11320,7 @@ PROCED ==  Process Editor
 A new Task Manager for Emacs.
 Proced is part of emacs 23.
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Proced Commands
 
@@ -11982,8 +11968,8 @@ Speak number of stones remaining.
 @node emacspeak-sounds
 @section emacspeak-sounds
 
-This module provides the interface for generating auditory icons in
-emacspeak. It also defines sound themes for auditory icons.
+This module provides the interface for generating auditory icons.
+ It also defines sound themes for auditory icons.
 @subsection Design goal:
 
 @itemize
@@ -11993,39 +11979,35 @@ provide additional feedback, not as a gimmick.
 should be usable at all times with the icons turned off.
 @item  Command @code{emacspeak-toggle-auditory-icons} toggles the
 use of auditory icons. This flag is buffer-local; use an
-interactive prefix argosy @code{C-u} to turn auditory icons on/off
+interactive prefix argosy @code{C-u} to toggle auditory icons on/off
 globally.
-Use @code{setq-default emacspeak-use-auditory-icons nil)} to turn
-these off at startup; default is to use auditory icons globally.
-@item   General principle:
+@item  Use @code{setq-default emacspeak-use-auditory-icons nil)} to turn
+auditory icons  off at startup; default is to use auditory icons globally.
+@item   General principle for using auditory icons:
 @enumerate
 @item Convey information about events taking place in parallel.
 @item  For instance, if making a selection automatically moves the current
 focus to the next choice, We speak the next choice, while
 indicating the fact that something was selected with an auditory
 icon.
-@item Speed of interaction --- auditory icons take less time than
+@item Speed up task completion --- auditory icons take less time than
 the accompanying spoken feedback.
 @end enumerate
 @item This module provides  a mapping between names in the elisp
-world (symbols)
-and actual sound files.
-@item icon-names are symbols; sound files  are fully-qualified file-names.
+world and actual sound files.
+@item icon names are symbols,
+sound files  are strings ---  fully-qualified file-names.
 @item Modules that  use auditory icons
-should use these names and not  actual file names.
+ use icon names and not  actual file names.
 @item Icons are played either using a local player, or by sending
 appropriate commands to the speech server (local or cloud).
-@item  This is determined by the value of emacspeak-auditory-icon-function.
+@item  This is determined by the value of @code{emacspeak-play-program}.
 @item As of
 Emacspeak 13.0, this module defines a themes architecture for
 auditory icons.  Sound files corresponding to a given theme are
 found in appropriate subdirectories of emacspeak-sounds-dir.
-@item Contrast this with @code{prompts[ that dont belong to any theme.]}
-@item The auditory icon player is configure via
-custom option @code{emacspeak-play-program}.
-@item  That custom setting handles the mapping to various play
-backends (local or cloud)
-from audio subsystems such as Pulseaudio and Pipewire.
+@item There are two supported themes: @code{ogg-chimes} and @code{ogg-3d}.
+@item Contrast this with @code{prompts} --- they  dont belong to any theme.
 @end itemize
 @subsection Designing Auditory Icons
 Here are some notes on what I have learnt while designing and using
@@ -12044,6 +12026,9 @@ colors from  a color palette.
 @item The included themes have been optimized over years of use and
 are primarily tuned for using with headphones.
 @end enumerate
+If @code{emacspeak-play-program} is set to @code{nil},
+we serve icons, otherwise play
+them using a local player.
 
 @subsection Emacspeak-Sounds Commands
 
@@ -13926,7 +13911,7 @@ Playing SuDoku using speech output.
 Written to discover what type of feedback one needs for  this
 task.
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Sudoku Commands
 
@@ -15294,8 +15279,9 @@ you move through the buttons with the    up/down arrows.
 @subsection Browsing Contents Of transient--show
 
 When executing a command defined via Transient --- e.g. command
-Magit-dispatch and friends, press @kbd {C-z} (transient-suspend) to
-temporarily suspend   the currently active transient. Emacspeak now
+Magit-dispatch and friends,
+@code{?} twice to suspend the transient   --- this calls
+2@code{transient-suspend}. Emacspeak now
 displays a  *transient-emacspeak* buffer that displays the contents of the
 most recently displayed transient choices. Pressing @kbd {r} resumes
 the transient; Pressing @kbd{C-q} quits the transient.
@@ -18327,7 +18313,7 @@ View XKCD comics in Emacs.
 Speech enables package xkcd
 Augments it by displaying the alt text and the transcript.
 
-  Required modules
+  Required modules:
 
 @subsection Emacspeak-Xkcd Commands
 
@@ -18347,7 +18333,7 @@ XREF ==  Cross-references in source code.
 This is part of Emacs 25.
 This module speech-enables xref
 
-  Required modules
+  Required modules:
 
 @node emacspeak-xslt
 @section emacspeak-xslt
@@ -18890,38 +18876,10 @@ Used by modules like gphoto, gblogger etc.
 
 @subsection g-utils Options
 
-@defvar {User Option} g-atom-view-xsl
-@verbatim
-XSLT transform to convert Atom feed to HTML.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-"/home/raman/emacs/lisp/emacspeak/xsl/atom-view.xsl"
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} g-cookie-jar
 @verbatim
 Cookie jar used for Google services.
 Customize this to live on your local disk.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} g-curl-debug
-@verbatim
-Set to T to see Curl stderr output.
 @end verbatim
 
 Default Value: 
@@ -18942,20 +18900,6 @@ Default Value:
 @verbatim
 
 "--http1.0 --compressed --silent --location --location-trusted --max-time 4 --connect-timeout 1"
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} g-xslt-program
-@verbatim
-XSLT Processor.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-"xsltproc"
 
 @end verbatim
 
@@ -20649,7 +20593,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 62 URL Templates.
+This section documents a total of 63 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20685,7 +20629,9 @@ BBC Radio 4 Extra Schedule@item @b{bbc r4 schedule }
 
 BBC R4 Schedule@item @b{bbc sounds}
 
-Search BBC Sounds@item @b{bing news}
+Search BBC Sounds@item @b{bbc world service  schedule }
+
+BBC R4 Schedule@item @b{bing news}
 
 Bing News results as RSS feed.@item @b{business headlines from cnn}
 

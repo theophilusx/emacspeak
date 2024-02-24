@@ -7,9 +7,7 @@
 ;;; LCD Archive Entry:
 ;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
 ;;; A speech interface to Emacs |
-;;;  $Revision: 4532 $ |
-;;; Location https://github.com/tvraman/emacspeak
-;;;
+;; Location https://github.com/tvraman/emacspeak
 
 ;;;   Copyright:
 
@@ -34,15 +32,14 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;;; Commentary:
-;;; EMPV ==  Another Emacs Media Player
+;; EMPV ==  Emacs Front-End To mpv --- the GNU media player
 ;; Provides better Youtube integration
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -57,33 +54,31 @@
 
 (cl-loop
  for f in
- '(aempv-current-loop-off empv-current-loop-on
-                          empv-toggle empv-pause
-                          empv-file-loop-off empv-file-loop-on
-                          empv-playlist-loop-off empv-playlist-loop-on) do
+ '(
+   aempv-current-loop-off empv-current-loop-on
+   empv-toggle empv-pause
+   empv-file-loop-off empv-file-loop-on
+   empv-playlist-loop-off empv-playlist-loop-on) do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
        (dtk-stop 'all)
-       (emacspeak-auditory-icon 'button)))))
+       (emacspeak-icon 'button)))))
 
 (defadvice empv-exit (after emacspeak pre act comp)
-  "speak."
+  "Icon."
   (when (ems-interactive-p)
     (dtk-stop 'all)
-    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
 (defadvice empv-youtube-tabulated (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-
     (emacspeak-speak-mode-line)))
 
 ;;; Additional Commands:
-
-;;; Commands:
 
 (defvar emacspeak-empv-history nil
   "Youtube history for EMpv.")
@@ -94,23 +89,26 @@
 ;;;###autoload
 (defun emacspeak-empv-play-url (url &optional left)
   "Play URL using mpv.
-Interactive prefix arg plays on left ear using Alsa. "
+Interactive prefix arg plays on left ear. "
   (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)
                      current-prefix-arg))
   (cl-declare (special emacspeak-empv-history-max
-                       emacspeak-empv-history
-                       empv-mpv-args))
-  (require 'empv)
+                       emacspeak-empv-history empv-mpv-args))
   (when
       (and url (stringp url)
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
-  (add-to-history 'emacspeak-empv-history url
-                  emacspeak-empv-history-max)
+  (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
   (let* ((args (copy-sequence empv-mpv-args))
          (empv-mpv-args args))
     (when left (push "--audio-channels=fl" empv-mpv-args))
     (empv-play url)))
+
+(defun emacspeak-empv-play-last (&optional left)
+  "Play most recently played URL."
+  (interactive "P")
+  (cl-declare (special emacspeak-empv-history))
+  (emacspeak-empv-play-url (cl-first emacspeak-empv-history) left))
 
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
 (declare-function emacspeak-media-read-resource
@@ -123,20 +121,19 @@ Interactive prefix arg plays on left ear using alsa."
   (interactive(list (emacspeak-media-read-resource)
                     current-prefix-arg))
   (cl-declare (special empv-mpv-args))
-  (require 'empv)
   (let* ((args (copy-sequence empv-mpv-args))
          (empv-mpv-args args))
-    (when left (push "--audio-channels=fl,fr" empv-mpv-args))
+    (when left (push "--audio-channels=fl" empv-mpv-args))
     (empv-play file)))
 
 (put 'emacspeak-empv-play-file 'repeat-map 'empv-map)
 (put 'emacspeak-empv-play-url 'repeat-map 'empv-map)
+(put 'emacspeak-empv-play-last 'repeat-map 'empv-map)
 
 (defsubst emacspeak-empv-local-file ()
   "Return local media filename read with completion."
   (let (( default-directory empv-audio-dir))
-      (emacspeak-media-local-resource nil)))
-
+    (emacspeak-media-local-resource nil)))
 
 (defun emacspeak-empv-play-local (file )
   "Play a local resource  using mpv."
@@ -152,8 +149,6 @@ Interactive prefix arg plays on left ear using alsa."
                                     'empv-youtube-results--current-video-url))
 (declare-function emacspeak-eww-yt-dl "emacspeak-eww" (url))
 
-
-
 ;;;###autoload
 (defun emacspeak-empv-yt-download ()
   "Download Youtube result."
@@ -161,30 +156,55 @@ Interactive prefix arg plays on left ear using alsa."
   (emacspeak-eww-yt-dl (empv-youtube-results--current-video-url)))
 
 ;;; Seekers:
+(defun emacspeak-empv-time-pos ()
+  "Speak time and percent position."
+  (interactive)
+  (empv--let-properties '(time-pos percent-pos)
+    (message "%s %.2d%%"
+             (ems--format-clock (or .time-pos 0))
+              (or .percent-pos 0))))
 
 (defun emacspeak-empv-relative-seek (target)
   "Relative seek in seconds,see `empv-seek'"
   (interactive "nTarget:")
   (empv-seek target)
   (when (called-interactively-p 'interactive)
-    (emacspeak-auditory-icon 'button)
-    (call-interactively 'empv-display-current)))
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'large-movement)))
+
+(defun emacspeak-empv-backward-minute (&optional count)
+  "Move back  count  minutes."
+  (interactive "p")
+  (or count (setq count 1))
+  (empv-seek (* count -60))
+  (when (called-interactively-p 'interactive)
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'large-movement)))
+
+(defun emacspeak-empv-forward-minute (&optional count)
+  "Move forward count  minutes."
+  (interactive "p")
+  (or count (setq count 1))
+  (empv-seek (* count 60))
+  (when (called-interactively-p 'interactive)
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'large-movement)))
 
 (defun emacspeak-empv-absolute-seek (target)
   "Absolute seek in seconds,see `empv-seek'"
   (interactive "nTarget:")
   (empv-seek target '("absolute"))
   (when (called-interactively-p 'interactive)
-    (emacspeak-auditory-icon 'button)
-    (call-interactively 'empv-display-current)))
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'large-movement)))
 
 (defun emacspeak-empv-percentage-seek (target)
   "Percentage seek in seconds,see `empv-seek'"
   (interactive "nTarget:")
   (empv-seek target '("absolute-percent"))
   (when (called-interactively-p 'interactive)
-    (emacspeak-auditory-icon 'button)
-    (call-interactively 'empv-display-current)))
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'button)))
 
 ;;; Setup:
 
@@ -194,28 +214,31 @@ Interactive prefix arg plays on left ear using alsa."
   (global-set-key (kbd "C-e C-;") empv-map)
   (global-set-key (kbd "C-' v") empv-map)
   (global-set-key (kbd "C-' ;") empv-map)
-  
   (cl-loop
    for b in
    '(
-     ("%" emacspeak-empv-percentage-seek)
-     ("'" empv-current-loop-on)
-     ("/" empv-seek)
-     (";" emacspeak-empv-toggle-filter)
-     ("DEL" emacspeak-empv-clear-filter)
-     ("." emacspeak-empv-toggle-custom)
-     ("0" empv-volume-up)
-     ("9" empv-volume-down)
-     ("C-j" empv-youtube-results-play-current)
-     ("RET" empv-youtube-tabulated)
-     ("SPC" empv-toggle)
-     ("x" empv-exit)
-     ("k" empv-exit)
-     ("r" emacspeak-empv-relative-seek)
-     ("s" emacspeak-empv-absolute-seek)
-     ("u" emacspeak-empv-accumulate-to-register)
-     ("v" empv-set-volume)
-     ("y" emacspeak-empv-yt-download))
+  ("'" empv-current-loop-on)
+  ("." emacspeak-empv-toggle-custom)
+  ("/" empv-seek)
+  ("0" empv-volume-up)
+  ("9" empv-volume-down)
+  (";" emacspeak-empv-toggle-filter)
+  ("=" emacspeak-empv-time-pos)
+  ("C-j" empv-youtube-results-play-current)
+  ("DEL" emacspeak-empv-clear-filter)
+  ("M" emacspeak-empv-backward-minute)
+  ("RET" empv-youtube-tabulated)
+  ("SPC" empv-toggle)
+  ("k" empv-exit)
+  ("m" emacspeak-empv-forward-minute)
+  ("r" emacspeak-empv-relative-seek)
+  ("s" emacspeak-empv-absolute-seek)
+  ("u" emacspeak-empv-accumulate-to-register)
+  ("v" empv-set-volume)
+  ("x" empv-exit)
+  ("y" emacspeak-empv-yt-download)
+("%" emacspeak-empv-percentage-seek)
+  )
    do
    (emacspeak-keymap-update empv-map b)
    (emacspeak-keymap-update empv-youtube-results-mode-map b))
@@ -229,7 +252,7 @@ Interactive prefix arg plays on left ear using alsa."
 
 (defvar emacspeak-empv-filter-history nil
   "History of filters used.")
-(defconst emacspeak-empv-filters 
+(defconst emacspeak-empv-filters
   '(
     "asubboost" "bs2b" "bs2b=cmoy" "bs2b=jmeier"
     "extrastereo" "extrastereo=1.5" "haas" "headphone"
@@ -237,7 +260,7 @@ Interactive prefix arg plays on left ear using alsa."
     )
   "Table of MPV filters.")
 
-;;; Experimental: Toggling Filters
+;;;  Toggling Filters
 (defun emacspeak-empv-toggle-filter (filter)
   "Toggle Filter.
 Filter is of the  form name=arg-1:arg-2:..."
@@ -250,13 +273,12 @@ Filter is of the  form name=arg-1:arg-2:..."
   (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
 
-
 (defun emacspeak-empv-clear-filter ()
   "Clear all filters. "
   (interactive)
   (empv--send-command (list "af" "clr" "" ))
   (message "Cleared filters")
-  (emacspeak-auditory-icon 'delete-object))
+  (emacspeak-icon 'delete-object))
 
 (defcustom emacspeak-empv-custom-filters
   '("extrastereo" "stereowiden=4.25:.1:735:.8")
@@ -273,13 +295,12 @@ The default value is suitable for classical instrumental music."
     (mapc
      #'(lambda (filter) (empv--send-command (list "af" "toggle" filter)))
      emacspeak-empv-custom-filters)
-    (emacspeak-auditory-icon 'button)
+    (emacspeak-icon 'button)
     (message "Toggled custom filters")))
 
 (provide 'emacspeak-empv)
 ;;;  end of file
 
-                                        ; 
-                                        ; 
-                                        ; 
-
+                                        ;
+                                        ;
+                                        ;

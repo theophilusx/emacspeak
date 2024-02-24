@@ -62,7 +62,7 @@
 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -211,7 +211,7 @@ Optional arg `offset' (default 0) is used for getting more results."
                    emacspeak-curl g-curl-options url)))
          (books (g-json-get 'books result)))
     (unless books (message "No results."))
-    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-icon 'task-done)
     (when books
       (emacspeak-eww-autospeak)
       (add-hook

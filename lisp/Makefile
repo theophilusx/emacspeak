@@ -81,7 +81,6 @@ emacspeak-add-log.elc \
 emacspeak-amark.elc \
 emacspeak-analog.elc \
 emacspeak-annotate.elc \
-emacspeak-apt-sources.elc \
 emacspeak-arc.elc \
 emacspeak-auctex.elc \
 emacspeak-bbdb.elc \
@@ -207,7 +206,6 @@ emacspeak-nxml.elc \
 emacspeak-ocr.elc \
 emacspeak-org.elc \
 emacspeak-orgalist.elc \
-emacspeak-origami.elc \
 emacspeak-outline.elc \
 emacspeak-package.elc \
 emacspeak-paradox.elc \

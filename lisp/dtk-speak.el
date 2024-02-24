@@ -46,7 +46,7 @@
 ;;; Code:
 ;;
 
-;;;  required modules
+;;  required modules
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -56,8 +56,8 @@
 ;;;  Forward Declarations:
 
 (declare-function voice-setup-get-voice-for-face "voice-setup" (face))
-(declare-function emacspeak-auditory-icon "emacspeak-sounds.el" (icon))
-(declare-function emacspeak-queue-auditory-icon "emacspeak-sounds.el"
+(declare-function emacspeak-icon "emacspeak-sounds.el" (icon))
+(declare-function emacspeak-queue-icon "emacspeak-sounds.el"
                   (icon))
 ;;;###autoload
 (defvar dtk-program
@@ -141,6 +141,7 @@ mac for MAC TTS (default on Mac)")
 ;;;  sync
 
 (defsubst dtk-interp-sync ()
+  "Synchronize speech state with running server"
   (cl-declare (special
                dtk-speaker-process dtk-caps
                dtk-punctuation-mode dtk-speech-rate dtk-split-caps))
@@ -803,7 +804,7 @@ Argument COMPLEMENT  is the complement of separator."
                        tts-default-voice emacspeak-use-auditory-icons))
   (when (and emacspeak-use-auditory-icons
              (get-text-property start 'auditory-icon))
-    (emacspeak-queue-auditory-icon (get-text-property start 'auditory-icon)))
+    (emacspeak-queue-icon (get-text-property start 'auditory-icon)))
   (dtk-interp-queue-code (tts-voice-reset-code))
   (when-let ((pause  (get-text-property start 'pause))
              (dtk-interp-silence pause)))
@@ -893,7 +894,7 @@ this pattern if previously added.    "
           (setq ,switch (not ,switch))))
       (dtk-interp-sync)
       (when (called-interactively-p 'interactive)
-        (emacspeak-auditory-icon (if ,switch 'on 'off))
+        (emacspeak-icon (if ,switch 'on 'off))
         (message
          (format "Turned %s %s  %s."
                  (if ,switch "on" "off")
@@ -968,16 +969,16 @@ the speech rate.  Call when on a non-blank line to preview the effectt"
             ((or ?+ ?=) dtk-speech-rate-step)
             (?- (- dtk-speech-rate-step))
             (_ dtk-speech-rate-step))))
-    (emacspeak-auditory-icon 'repeat-start)
+    (emacspeak-icon 'repeat-start)
     (dtk-set-rate (+ dtk-speech-rate  step))
     (emacspeak-speak-line)
-    (emacspeak-auditory-icon (if (cl-minusp step) 'left 'right))
+    (emacspeak-icon (if (cl-minusp step) 'left 'right))
     (set-transient-map
      (let ((map (make-sparse-keymap)))
        (dolist (key '("=" "+" "-")) ;; = is often unshifted +.
          (define-key map key (lambda () (interactive) (dtk-rate-adjust ))))
        map)
-     t (lambda nil (emacspeak-auditory-icon 'repeat-end))
+     t (lambda nil (emacspeak-icon 'repeat-end))
      "Repeat with %k")))
 
 (defun dtk-set-character-scale (factor &optional prefix)
@@ -1091,7 +1092,7 @@ Interactive PREFIX arg makes the new setting global."
    ((eq 'some dtk-punctuation-mode)
     (dtk-set-punctuations-to-all prefix)))
   (when (called-interactively-p 'interactive)
-    (emacspeak-auditory-icon 'button)
+    (emacspeak-icon 'button)
     (message "set punctuation mode to %s %s"
              dtk-punctuation-mode
              (if prefix "" "locally"))))
@@ -1471,20 +1472,18 @@ Set by \\[dtk-set-punctuations].")
   "List of TTS engines that are multi capable.")
 
 (defsubst tts-multistream-p (engine)
-  "Checks if this tts-engine can support multiple s."
+  "Checks if this tts-engine can support multiple streams."
   (cl-declare (special tts-notification-device tts-multi-engines))
   (and
    (not (string= tts-notification-device "default"))
-     (cl-find-if #'(lambda (e) (string-match e engine)) tts-multi-engines)))
+   (cl-find-if #'(lambda (e) (string-match e engine)) tts-multi-engines)))
 
 (defun dtk-cloud ()
   "Select  Cloud TTS server."
   (interactive)
   (cl-declare (special dtk-cloud-server))
   (dtk-select-server dtk-cloud-server)
-  (setq emacspeak-auditory-icon-function
-        #'emacspeak-serve-auditory-icon
-        emacspeak-play-program nil)
+  (setq emacspeak-play-program nil)
   (dtk-initialize)
   (when (tts-multistream-p dtk-cloud-server)
     (dtk-notify-initialize)))
@@ -1536,8 +1535,6 @@ program. Port defaults to dtk-local-server-port"
 ;;;   initialize the speech process
 (defconst dtk-pamixer (executable-find "pamixer") "pamixer")
 
-
-
 (defcustom tts-notification-device
   nil
   "Virtual sound device to use for notifications stream.
@@ -1574,8 +1571,8 @@ If you set the device here, make sure it exists first."
                                           dtk-speaker-process))
     (setq dtk-speaker-process new)
     (when (tts-multistream-p dtk-program) (dtk-notify-initialize))
-    (when (string-match "cloud" dtk-program)
-      (setq emacspeak-auditory-icon-function 'emacspeak-serve-auditory-icon))
+    (when (string-match "cloud" dtk-program) ; we'll serve icons.
+      (setq emacspeak-play-program nil))
     ;; `voice-setup' requires us, so we can't require it at top-level.
     (require 'voice-setup)
     (voice-setup)))
@@ -1682,7 +1679,7 @@ unless   `dtk-quiet' is set to t. "
     (when selective-display
       (let ((ctrl-m (string-match "\015" text)))
         (and ctrl-m (setq text (substring text 0 ctrl-m))
-             (emacspeak-auditory-icon 'ellipses))))
+             (emacspeak-icon 'ellipses))))
     (let (                              ;snapshot relevant state
           (orig-mode major-mode)
           (char-alias  char-property-alias-alist)
@@ -1907,7 +1904,7 @@ Notification is logged in the notifications buffer unless `dont-log' is T. "
   "Play icon  on notification stream. "
   (cond
    ((dtk-notify-process)                ; we have a live notifier
-    (dtk-notify-apply #'emacspeak-auditory-icon icon))))
+    (dtk-notify-apply #'emacspeak-icon icon))))
 
 (defun dtk-notify-initialize ()
   "Initialize notification TTS stream."
@@ -2207,6 +2204,5 @@ When called interactively, CHAR defaults to the character after point."
 ;;; dtk-unicode.el ends here
 
 (provide 'dtk-speak)
- 
 
 ;; coding: utf-8

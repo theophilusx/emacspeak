@@ -73,44 +73,48 @@
 ;; @subsection Browsing Contents Of transient--show
 ;; 
 ;; When executing a command defined via Transient --- e.g. command
-;; Magit-dispatch and friends, press @kbd {C-z} (transient-suspend) to
-;; temporarily suspend   the currently active transient. Emacspeak now
+;; Magit-dispatch and friends, 
+;; @code{?} twice to suspend the transient   --- this calls
+;; 2@code{transient-suspend}. Emacspeak now
 ;; displays a  *transient-emacspeak* buffer that displays the contents of the
 ;; most recently displayed transient choices. Pressing @kbd {r} resumes
 ;; the transient; Pressing @kbd{C-q} quits the transient.
 ;; 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
 (require 'derived)
-(eval-when-compile (require 'transient nil 'noerror))
+(eval-when-compile (require 'transient))
 
 ;;; Map Faces:
 
 (voice-setup-add-map
  '(
-   (transient-separator  'inaudible)
+   (transient-active-infix voice-animate)
+   (transient-amaranth voice-animate)
    (transient-argument voice-animate)
+   (transient-blue voice-lighten)
    (transient-disabled-suffix inaudible)
    (transient-enabled-suffix voice-brighten)
    (transient-heading voice-lighten)
+   (transient-higher-level voice-brighten)
    (transient-inactive-argument inaudible)
    (transient-inactive-value inaudible)
    (transient-key voice-animate)
    (transient-mismatched-key voice-monotone-extra)
    (transient-nonstandard-key voice-monotone-extra)
+   (transient-pink voice-bolden-medium)
+   (transient-red voice-bolden)
+   (transient-separator  'inaudible)
+   (transient-teal voice-lighten-medium)
    (transient-unreachable voice-monotone-extra)
    (transient-unreachable-key voice-monotone-extra)
    (transient-value voice-brighten)
-   (transient-red voice-bolden)
-   (transient-blue voice-lighten)
-   (transient-amaranth voice-animate)
-   (transient-pink voice-bolden-medium)
-   (transient-teal voice-lighten-medium)))
+   ))
 
 ;;;  Advice Interactive Commands:
 
@@ -119,14 +123,14 @@
   (cl-declare (special transient-show-common-commands))
   (when (ems-interactive-p)
     (dtk-stop 'all)
-    (emacspeak-auditory-icon
+    (emacspeak-icon
      (if transient-show-common-commands 'on 'off))))
 
 (defadvice transient-resume (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (dtk-stop 'all)
-    (emacspeak-auditory-icon 'open-object)))
+    (emacspeak-icon 'open-object)))
 
 (cl-loop
  for f in
@@ -137,7 +141,7 @@
      "speak."
      (when (ems-interactive-p)
        (dtk-stop 'all)
-       (emacspeak-auditory-icon 'close-object)
+       (emacspeak-icon 'close-object)
        (when (eq major-mode 'emacspeak-transient-mode) (bury-buffer))
        (emacspeak-speak-mode-line)))))
 
@@ -149,7 +153,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'save-object)
+       (emacspeak-icon 'save-object)
        (dtk-stop 'all)))))
 
 (cl-loop
@@ -161,7 +165,7 @@
      "speak."
      (when (ems-interactive-p)
        (dtk-speak-list (minibuffer-contents))
-       (emacspeak-auditory-icon 'select-object)))))
+       (emacspeak-icon 'select-object)))))
 
 (define-derived-mode emacspeak-transient-mode special-mode
   "Browse current transient choices"
@@ -183,7 +187,7 @@
       (setq emacspeak-transient-cache
             (buffer-substring (point-min)  (point-max)))
       (emacspeak-speak-line)
-      (emacspeak-auditory-icon 'open-object))))
+      (emacspeak-icon 'open-object))))
 
 (defadvice transient-suspend (around emacspeak pre act comp)
   "Pop to *Transient-emacspeak* buffer where the message emitted by
@@ -195,7 +199,7 @@ Press `r' to resume the suspended transient."
     (let ((buff (get-buffer-create "*Transient-Emacspeak*"))
           (inhibit-read-only t))
       ad-do-it
-      (emacspeak-auditory-icon 'close-object)
+      (emacspeak-icon 'close-object)
       (with-current-buffer buff
         (erase-buffer)
         (insert "r to resume, C-g to quit.\n\n")
@@ -241,7 +245,7 @@ Press `r' to resume the suspended transient."
   (cl-declare (special transient--stack))
   (unless transient--stack
     (dtk-stop 'all)
-    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
 (add-hook 'transient-exit-hook 'emacspeak-transient-post-hook)
@@ -262,7 +266,7 @@ Press `r' to resume the suspended transient."
                     (start (button-start button))
                     (end (button-end button)))
            (dtk-speak (buffer-substring start end))
-           (emacspeak-auditory-icon 'button))))
+           (emacspeak-icon 'button))))
       (t ad-do-it))
      ad-return-value)))
 

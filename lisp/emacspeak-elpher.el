@@ -41,7 +41,7 @@
 ;; Let's see if we can rescue the Content-Oriented Web 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -98,7 +98,7 @@
      "speak."
      (when (ems-interactive-p)
        (emacspeak-speak-mode-line)
-       (emacspeak-auditory-icon 'open-object)))))
+       (emacspeak-icon 'open-object)))))
 
 (cl-loop
  for f in 
@@ -108,7 +108,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'large-movement)
+       (emacspeak-icon 'large-movement)
        (dtk-speak
         (car (get-text-property (point) 'elpher-page)))))))
 

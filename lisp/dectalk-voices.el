@@ -43,7 +43,7 @@
 ;; This module is Dectalk specific.
 ;;; Code:
 
-;;;  required modules
+;;  required modules
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)
@@ -372,5 +372,4 @@ and TABLE gives the values along that dimension."
    '(ascii latin-iso8859-1 latin-iso8859-15 latin-iso8859-9 eight-bit-graphic)))
 
 (provide 'dectalk-voices)
- 
 

@@ -20,7 +20,6 @@
 ;;        - Loads all-prepare.el described above.
 ;;        - Load the custom settings file.
 ;;        - Starts up things like the emacs server.
-;;        - Some of these tasks are done on a separate thread using make-thread.
 ;;        - The work of loading files etc., is done within macro tvr-time-load
 ;;        which sets up an efficient environment for loading files and
 ;;        helps in profiling.
@@ -60,6 +59,7 @@ Produce timing information as the last step."
 ;; Emacs @HEAD is broken:
 (defvar font-lock-reference-face 'font-lock-constant-face)
 (advice-add 'system-users :override #'(lambda () (list user-real-login-name)))
+;(defadvice shell-command (before o pre act comp) (message "%s" (ad-get-arg 0)))
 
 ;;;  tvr-shell-bind-keys:
 
@@ -92,12 +92,11 @@ Produce timing information as the last step."
 Configure dbus and set up tabs.
 Reset gc-cons-threshold to a smaller value  and play
 startup sound."
-  (cl-declare (special emacspeak-sounds-dir))
   (emacspeak-dbus-setup)
   (setq gc-cons-threshold 64000000)
-  (emacspeak-prompt 'tvr-emacs)
   (tvr-tabs)
   (switch-to-buffer "Home")
+  (emacspeak-icon 'tvr-emacs)
   (message
    "<Emacs started for %s in %.2f  seconds with %s gcs (%.2f seconds)>"
    user-login-name (read (emacs-init-time)) gcs-done gc-elapsed))
@@ -109,6 +108,7 @@ Use Custom to customize where possible. "
                custom-file global-mode-string outline-minor-mode-prefix
                outline-mode-prefix-map emacspeak-directory))
   (setenv "PULSE_SINK" "effect_input.spatializer") ; for mplayer
+  (load-theme 'ef-maris-dark t)
   (load-library "aster")
   ;; basic look and feel
   (setq frame-title-format '(multiple-frames "%b" ("Emacs")))
@@ -169,7 +169,6 @@ Use Custom to customize where possible. "
        abbrev-mode auto-correct-mode)))
   (setq  global-mode-string '("" display-time-string battery-mode-line-string))
   (bash-completion-setup)
-  (load-theme 'ef-maris-dark t)
   (load-library "llm-prepare"))
 
 (defun tvr-after-init ()
@@ -244,7 +243,7 @@ configuration happens via the after-init-hook. "
 
 (declare-function yas--load-snippet-dirs "yasnippet" (&optional nojit))
 (declare-function emacspeak-dbus-setup "emacspeak-dbus" nil)
-(declare-function emacspeak-prompt "emacspeak-sounds" (name))
+
 
 (declare-function
  emacspeak-wizards-project-shells-initialize

@@ -43,7 +43,7 @@
 
 ;;; Code:
 
-;;;  Required modules
+;;  Required modules: 
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)           ;For `ems--fastload'.
@@ -296,10 +296,9 @@ and TABLE gives the values along that dimension."
   (dtk-unicode-update-untouched-charsets
    '(ascii latin-iso8859-1 latin-iso8859-15 latin-iso8859-9
            eight-bit-graphic))
-  (setq emacspeak-auditory-icon-function #'emacspeak-serve-auditory-icon))
+  (setq emacspeak-play-program nil))
 
 ;;;  tts-env for Mac:
 
 (provide 'mac-voices)
- 
 

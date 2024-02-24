@@ -1,10 +1,9 @@
 # Set up prompts for bash: -*- mode: sh -*-
 export PROMPT_COMMAND=prompt
-EBA=${EMACSPEAK_DIR}/bash-utils
 
 function prompt () {
   case "$?" in
     0) pactl play-sample item ;;
-    *)pactl play-sample warn
+    *)pactl play-sample warn-user ;;
   esac
 }

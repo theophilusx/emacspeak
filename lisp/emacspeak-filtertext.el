@@ -37,7 +37,7 @@
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;  required modules
+;;  required modules
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -116,7 +116,7 @@
   (when emacspeak-filtertext-info
     (erase-buffer)
     (insert (emacspeak-filtertext-text emacspeak-filtertext-info))
-    (emacspeak-auditory-icon 'unmodified-object)
+    (emacspeak-icon 'unmodified-object)
     (message "Reverted filtered text.")))
 
 (provide 'emacspeak-filtertext)

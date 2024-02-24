@@ -45,7 +45,7 @@
 ;; relative position.
 ;; 
 
-;;;  required modules
+;;  required modules
 
 ;;; Code:
 (eval-when-compile (require 'cl-lib))
@@ -62,7 +62,7 @@
   `(defadvice  ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-icon select-object)
        (emacspeak-speak-mode-line)))))
 
 (provide 'emacspeak-windmove)

@@ -42,7 +42,7 @@
 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -71,7 +71,7 @@
 (defadvice pydoc (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'help)
+    (emacspeak-icon 'help)
     (emacspeak-speak-buffer)))
 
 (provide 'emacspeak-pydoc)

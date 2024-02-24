@@ -43,7 +43,7 @@
 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -69,7 +69,7 @@
      (when (ems-interactive-p)
        (let ((emacspeak-show-point t))
          (emacspeak-speak-line))
-       (emacspeak-auditory-icon 'large-movement)))))
+       (emacspeak-icon 'large-movement)))))
 
 (provide 'emacspeak-dumb-jump)
 ;;;  end of file

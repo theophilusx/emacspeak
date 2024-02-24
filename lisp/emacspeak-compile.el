@@ -42,7 +42,7 @@
 ;; This module makes compiling code from inside Emacs speech friendly.
 ;;; Code:
 
-;;;  Required modules
+;;  Required modules: 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -81,7 +81,7 @@
              "Speak the line containing the error. "
              (when (ems-interactive-p)
                (dtk-stop 'all)
-               (emacspeak-auditory-icon 'large-movement)
+               (emacspeak-icon 'large-movement)
                (emacspeak-compilation-speak-error)))))
 
 (cl-loop for f in 
@@ -96,7 +96,7 @@
              "Speak."
              (when (ems-interactive-p)
                (emacspeak-speak-line)
-               (emacspeak-auditory-icon 'select-object)))))
+               (emacspeak-icon 'select-object)))))
 
 ;;;  advise process filter and sentinels
 
@@ -104,16 +104,14 @@
   "provide auditory confirmation"
   (when (ems-interactive-p)
     (message "Launched compilation")
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-icon 'task-done)))
 
 (defadvice  compilation-sentinel (after emacspeak pre act comp)
   "speak"
-  (emacspeak-auditory-icon 'task-done)
+  (emacspeak-icon 'task-done)
   (message "process %s %s"
            (process-name  (ad-get-arg 0))
            (ad-get-arg 1)))
 
 (provide 'emacspeak-compile)
-
- 
 

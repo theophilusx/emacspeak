@@ -44,7 +44,7 @@
 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile  (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -107,7 +107,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'select-object)
+       (emacspeak-icon 'select-object)
        (emacspeak-combobulate-speak-line)))))
 
 (provide 'emacspeak-combobulate)

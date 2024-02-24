@@ -43,7 +43,7 @@
 ;; This module speech-enables Github Explorer.
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -64,11 +64,11 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'open-object)))))
+       (emacspeak-icon 'open-object)))))
 
 (defun ems--gh-explorer-nav (direction)
   "Move forward/back based on `direction' and speak current entry."
-  (emacspeak-auditory-icon 'select-object)
+  (emacspeak-icon 'select-object)
   (forward-line direction)
   (save-excursion
     (goto-char (line-beginning-position))

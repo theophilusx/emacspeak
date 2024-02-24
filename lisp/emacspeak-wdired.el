@@ -42,7 +42,7 @@
 ;;; Commentary:
 ;; Speech-enable wdired to permit in-place renaming of groups of files.
 
-;;;  required modules
+;;  required modules
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -56,7 +56,7 @@
           `(defadvice ,c (after emacspeak pre act comp)
              "Speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'select-object)
+               (emacspeak-icon 'select-object)
                (emacspeak-dired-speak-line)))))
 
 (defadvice wdired-upcase-word (after emacspeak pre act comp)
@@ -79,20 +79,20 @@
 (defadvice wdired-toggle-bit (after emacspeak pre act comp)
   "Speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'button)
+    (emacspeak-icon 'button)
     (dtk-speak "Toggled permission bit.")))
 
 (defadvice wdired-abort-changes (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-icon 'close-object)
     (tts-with-punctuations 'some
                            (dtk-speak "Cancelling  changes. "))))
 
 (defadvice wdired-finish-edit (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'save-object)
+    (emacspeak-icon 'save-object)
     (tts-with-punctuations 'some
                            (dtk-speak "Committed changes. "))))
 
@@ -100,7 +100,7 @@
                                                comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-icon 'open-object)
     (tts-with-punctuations 'some
                            (dtk-speak "Entering writeable dir ed mode. "))))
 

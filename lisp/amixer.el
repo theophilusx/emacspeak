@@ -23,13 +23,11 @@
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;;  introduction
-
 ;;; Commentary:
 ;; Provide an emacs front-end to amixer,
 ;; the sound mixer in ALSA that is used to configure the audio device.
-;;
-;; The main entry point is command @code{emacspeak-audio-setup} bound
+;; Note that @code{amixer} also works on pipewire-based systems.
+;; The main entry point is command @code{amixer} bound
 ;; to @kbd{C-e)}. When called for the first time, this command
 ;; builds up a database of available controls on the default audio
 ;; device. These control names are then available for completion in
@@ -40,53 +38,37 @@
 
 ;;; Code:
 
-;;;  required packages
+;;;  required Modules
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 
-;;;  Decls:
-
 ;; forward decl:
 (defvar emacspeak-speak-messages)
 
-;;;  Custom:
+(defconst amixer-alsactl  (executable-find "alsactl") "AlsaCtl program")
 
-(defcustom amixer-device "default"
-  "ALSA Control Device."
-  :type 'string
-  :group 'amixer)
+(defvar amixer-db nil "Database of  amixer settings.")
 
-
-
-(defconst amixer-alsactl  (executable-find "alsactl")
-  "AlsaCtl program")
-
-(defvar amixer-db nil
-  "Holds cached values.")
-
-(cl-defstruct amixer-control
-  numid iface name setting)
+(cl-defstruct amixer-control numid iface name setting)
 
 (cl-defstruct amixer-control-setting
   type access values
   min max step
   current)
 
-;;;  Manage amixer db:
+;;;   Amixer db:
 
 (defun amixer-populate-settings (control)
   "Populate control with its settings information."
-  (cl-declare (special  amixer-device))
   (let ((fields nil)
         (emacspeak-speak-messages nil)
         (slots nil)
         (current nil))
     (with-temp-buffer
       (shell-command
-       (format "amixer --device %s cget numid=%s"
-               amixer-device
+       (format "amixer cget numid=%s"
                (amixer-control-numid (cdr control)))
        (current-buffer))
       (goto-char (point-min))
@@ -124,7 +106,7 @@
 
 (defun amixer-build-db ()
   "Create a database of amixer controls and their settings."
-  (cl-declare (special amixer-db amixer-device emacspeak-amixer))
+  (cl-declare (special amixer-db  emacspeak-amixer))
   (unless emacspeak-amixer (error "You dont have a standard amixer."))
   (let (
         (message-log-max nil)
@@ -135,8 +117,7 @@
     (with-temp-buffer
       (shell-command
        (format
-        "amixer --device %s controls | sed -e s/\\'//g"
-        amixer-device)
+        "amixer controls | sed -e s/\\'//g")
        (current-buffer))
       (goto-char (point-min))
       (while (not (eobp))
@@ -172,14 +153,13 @@
 
 (defun amixer-get-enumerated-values(control)
   "Return list of enumerated values."
-  (cl-declare (special amixer-device))
   (let ((values nil)
         (emacspeak-speak-messages nil))
     (with-temp-buffer
       (shell-command
        (format
-        "amixer -devicec %s   cget numid=%s | grep Item | sed -e s/\\'//g"
-        amixer-device
+        "amixer    cget numid=%s | grep Item | sed -e s/\\'//g"
+
         (amixer-control-numid control))
        (current-buffer))
       (goto-char (point-min))
@@ -197,8 +177,7 @@
 
 (defvar amixer-alsactl-config-file
   (cond
-   ((file-exists-p (expand-file-name "asound.state"
-                                     user-emacs-directory))
+   ((file-exists-p (expand-file-name "asound.state" user-emacs-directory))
     (expand-file-name "asound.state" user-emacs-directory))
    ((file-exists-p "/var/lib/alsa/asound.state")
     "/var/lib/alsa/asound.state"))
@@ -278,7 +257,6 @@ Interactive prefix arg refreshes cache."
        update)
       (start-process
        "AMixer" "*Debug*"  emacspeak-amixer
-       "--device" amixer-device
        "cset"
        (format "numid=%s" (amixer-control-numid control))
        update)
@@ -308,7 +286,6 @@ Interactive prefix arg refreshes cache."
      (amixer-control-setting-current (amixer-control-setting
                                       control)))))
 
-;;;###autoload
 (defun amixer-get (name)
   "Return setting for specified control."
   (cl-declare (special amixer-db amixer-alsactl-config-file  ))
@@ -319,7 +296,6 @@ Interactive prefix arg refreshes cache."
      "%s "
      (amixer-control-setting-current (amixer-control-setting control)))))
 
-;;;###autoload
 (defun amixer-store()
   "Persist  amixer."
   (interactive)
@@ -330,7 +306,7 @@ Interactive prefix arg refreshes cache."
      "AlsaCtl" nil amixer-alsactl
      "-f"amixer-alsactl-config-file
      "store")
-    (emacspeak-auditory-icon 'task-done)
+    (emacspeak-icon 'task-done)
     (message "Persisted amixer state to %s."
              amixer-alsactl-config-file)))
 
@@ -340,7 +316,6 @@ Interactive prefix arg refreshes cache."
   :type 'integer
   :group 'emacspeak)
 
-;;;###autoload
 (defun amixer-volume-up (&optional prompt)
   "Raise Master volume by amixer-volume-step.
 Interactive prefix arg `PROMPT' reads percentage as a number"
@@ -356,9 +331,8 @@ Interactive prefix arg `PROMPT' reads percentage as a number"
                amixer-volume-step)))
     (amixer-build-db)
     (dtk-notify-speak (ems--show-current-volume))
-    (emacspeak-auditory-icon 'right)))
+    (emacspeak-icon 'right)))
 
-;;;###autoload
 (defun amixer-volume-down (&optional prompt)
   "Lower Master volume by amixer-volume-step.
 Interactive prefix arg `PROMPT' reads percentage as a number"
@@ -373,7 +347,7 @@ Interactive prefix arg `PROMPT' reads percentage as a number"
                  (read-number "Volume Step:")
                amixer-volume-step)))
     (amixer-build-db)
-    (emacspeak-auditory-icon 'left)
+    (emacspeak-icon 'left)
     (dtk-notify-speak (ems--show-current-volume))))
 ;;;###autoload
 (defun amixer-volume-adjust ()
@@ -383,7 +357,7 @@ of 3 and 4 lower or raise volume."
   (interactive )
   (cl-declare (special ems--vol-cmd))
   (let ((key (event-basic-type last-command-event)))
-    (emacspeak-auditory-icon 'repeat-start)
+    (emacspeak-icon 'repeat-start)
     (cl-case key
       (?3 (call-interactively 'amixer-volume-down))
       (?4 (call-interactively 'amixer-volume-up)))
@@ -392,7 +366,7 @@ of 3 and 4 lower or raise volume."
        (dolist (key '("3" "4"))
          (define-key map key (lambda () (interactive) (amixer-volume-adjust ))))
        map)
-     t (lambda nil (emacspeak-auditory-icon 'repeat-end))
+     t (lambda nil (emacspeak-icon 'repeat-end))
      (concat
       (propertize
        (string-trim (shell-command-to-string ems--vol-cmd))
@@ -401,4 +375,3 @@ of 3 and 4 lower or raise volume."
 
 (provide 'amixer)
 ;;;  end of file
-

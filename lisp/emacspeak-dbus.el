@@ -63,13 +63,15 @@
 ;; @end itemize
 ;; Add calls to the desired functions from the above list
 ;; to the emacs startup file after  this module has been loaded.
+;; To enable all of them, add (emacspeak-dbus-setup).
 ;; See relevant hooks for customizing behavior.
 ;; Note that each of the  sleep/wake-up, UDisks2   and network/up-down
 ;; can be separately enabled/disabled, and the actions customized
 ;; via appropriately named hook functions.
 ;; 
+;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -80,10 +82,7 @@
 (require 'emacspeak-nm "emacspeak-nm" 'no-error)
 
 ;;;  Forward Declarations:
-(declare-function jabber-connect-all "jabber-core" (&optional arg))
-(declare-function jabber-disconnect "jabber-core" (&optional arg))
-(declare-function twittering-start "ext:twittering-mode" nil)
-(declare-function twittering-stop "twittering-mode" nil)
+
 (declare-function soundscape-restart "soundscape" (&optional device))
 
 ;;;  ScreenSaver Mode:
@@ -121,7 +120,7 @@ Startup  apps that need the network."
   (dtk-notify-say
    (message "Network up: %s"
             (ems--get-essid)))
-  (emacspeak-auditory-icon 'network-up))
+  (emacspeak-icon 'network-up))
 
 (defun emacspeak-dbus-nm-disconnected ()
   "Announce  network manager disconnection.
@@ -129,7 +128,7 @@ Stop apps that use the network."
   (cl-declare (special emacspeak-speak-network-interfaces-list))
   (setq emacspeak-speak-network-interfaces-list
         (mapcar #'car (network-interface-list)))
-  (emacspeak-auditory-icon 'network-down)
+  (emacspeak-icon 'network-down)
   (dtk-notify-say "Network down")
   (message (mapconcat #'identity emacspeak-speak-network-interfaces-list "")))
 
@@ -170,11 +169,7 @@ Stop apps that use the network."
           "org.gnome.ScreenSaver" "/org/gnome/ScreenSaver"
           "org.gnome.ScreenSaver" "GetActive")
        (error
-        (progn
-          (shell-command
-           "pidof gnome-screensaver \
- && kill -9 `pidof gnome-screensaver` 2>&1 > /dev/null")
-          (start-process "screen-saver" nil "gnome-screensaver"))))
+        (start-process "screen-saver" nil "gnome-screensaver")))
      t)))
 
 (defvar emacspeak-dbus-sleep-registration nil
@@ -221,18 +216,35 @@ already disabled."
   (let ((dtk-quiet t))
     (ems-with-messages-silenced
      (emacspeak-dbus-screensaver-check)
-     (save-some-buffers t)
-     (start-process "fuser" nil  "fuser"
-                    "-k" "/dev/snd/*"))))
+     (save-some-buffers t))))
 
 (add-hook  'emacspeak-dbus-sleep-hook#'emacspeak-dbus-sleep)
+;;; Orca For Lock Screen:
+
 (defconst emacspeak-orca (executable-find "orca") "Orca executable")
+
+;; Orca Toggle:
+;; Easily start/stop orca for use with lock-screen, Chrome etc.
+
+(defvar emacspeak-orca-handle nil
+  "Orca process handle")
+;;;###autoload
+(defun emacspeak-orca-toggle ()
+  "Toggle state of orca."
+  (interactive)
+  (cl-declare (special emacspeak-orca-handle))
+  (cond
+   (emacspeak-orca-handle
+    (delete-process emacspeak-orca-handle)
+    (setq emacspeak-orca-handle  nil))
+   (t (setq emacspeak-orca-handle (start-process "Orca"nil "orca")))))
+
 (defun emacspeak-dbus-resume ()
   "Emacspeak hook for Login1-resume."
-  (cl-declare (special amixer-alsactl-config-file tts-notification-device))
+  (cl-declare (special amixer-alsactl-config-file ))
   (ems-with-messages-silenced
    (tts-restart)
-   (emacspeak-prompt 'waking-up)
+   (emacspeak-icon 'waking-up)
    (amixer-restore amixer-alsactl-config-file)
    (when emacspeak-orca (emacspeak-orca-toggle))
    (when (featurep 'soundscape) (soundscape-restart))
@@ -241,8 +253,8 @@ already disabled."
        (dbus-call-method
         :session "org.gnome.ScreenSaver" "/org/gnome/ScreenSaver"
         "org.gnome.ScreenSaver" "GetActive")
-     (emacspeak-prompt 'pwd)
-     (emacspeak-auditory-icon 'help))))
+     (emacspeak-icon 'pwd)
+     (emacspeak-icon 'help))))
 
 (add-hook 'emacspeak-dbus-resume-hook #'emacspeak-dbus-resume)
 
@@ -259,7 +271,7 @@ already disabled."
     "org.freedesktop.UDisks2" "/org/freedesktop/UDisks2"
     "org.freedesktop.DBus.ObjectManager" "InterfacesAdded"
     #'(lambda(path _props)
-        (emacspeak-auditory-icon 'open-object)
+        (emacspeak-icon 'open-object)
         (message "Added storage %s" path)))
    (dbus-register-signal
     :system
@@ -267,7 +279,7 @@ already disabled."
     "org.freedesktop.DBus.ObjectManager" "InterfacesRemoved"
     #'(lambda(path _props)
         (message "Removed storage %s" path)
-        (emacspeak-auditory-icon 'close-object)))))
+        (emacspeak-icon 'close-object)))))
 
 (defun emacspeak-dbus-udisks-enable()
   "Enable integration with UDisks2. Does nothing if already enabled."
@@ -301,7 +313,7 @@ already disabled."
     "org.freedesktop.UPower" "/org/freedesktop/UPower"
     "org.freedesktop.UPower" "DeviceAdded"
     #'(lambda(device)
-        (emacspeak-auditory-icon 'on)
+        (emacspeak-icon 'on)
         (message "Added device %s" device)))
    (dbus-register-signal
     :system
@@ -309,13 +321,13 @@ already disabled."
     "org.freedesktop.UPower" "DeviceRemoved"
     #'(lambda(device)
         (message "Removed device  %s" device)
-        (emacspeak-auditory-icon 'off)))
+        (emacspeak-icon 'off)))
    (dbus-register-signal
     :system
     "org.freedesktop.UPower" "/org/freedesktop/UPower"
     "org.freedesktop.DBus.Properties.PropertiesChanged" "OnBattery"
     #'(lambda(state)
-        (emacspeak-auditory-icon 'on)
+        (emacspeak-icon 'on)
         (message "Battery State:  %s" state)))))
 
 (defun emacspeak-dbus-upower-enable()
@@ -342,8 +354,8 @@ already disabled."
   "Lock screen using DBus."
   (interactive)
   (emacspeak-dbus-screensaver-check)
-  (emacspeak-auditory-icon 'close-object)
-  (emacspeak-prompt 'locking-up)
+  (emacspeak-icon 'close-object)
+  (emacspeak-icon 'locking-up)
   (when (featurep 'light) (light-black))
   (dbus-call-method
    :session
@@ -354,7 +366,7 @@ already disabled."
 
 (global-set-key (kbd "C-, C-d") 'emacspeak-dbus-lock-screen)
 
-;;;  Watch Screensaver:
+;;;  Watch Screen Lock:
 
 (defvar emacspeak-dbus-screen-lock-handle nil
   "Handle to DBus signal registration for watching screenlock.")
@@ -372,16 +384,16 @@ already disabled."
     #'(lambda (lock)
         (if lock
             (progn (emacspeak-screen-saver))
-          (progn(emacspeak-prompt 'desktop-login)
-            (emacspeak-prompt 'success)
-            (emacspeak-orca-toggle)
-            (light-black)
-            (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
-            (when
-                (window-configuration-p emacspeak-screen-saver-saved-conf)
-              (set-window-configuration
-               emacspeak-screen-saver-saved-conf))
-            (emacspeak-speak-mode-line)))))))
+          (progn(emacspeak-icon 'desktop-login)
+                (emacspeak-icon 'success)
+                (emacspeak-orca-toggle)
+                (light-black)
+                (when (eq major-mode 'emacspeak-screen-saver-mode)(quit-window))
+                (when
+                    (window-configuration-p emacspeak-screen-saver-saved-conf)
+                  (set-window-configuration
+                   emacspeak-screen-saver-saved-conf))
+                (emacspeak-speak-mode-line)))))))
 
 (defun emacspeak-dbus-unwatch-screen-lock ()
   "De-Register a handler to watch screen lock/unlock."

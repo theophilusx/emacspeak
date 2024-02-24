@@ -48,7 +48,7 @@
 ;; Now, some specialized searches, e.g. blog search are tbm=
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -613,7 +613,7 @@ current page."
 (defadvice gmaps (after emacspeak pre act comp)
   "Provide  auditory feedback."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-icon 'open-object)
     (emacspeak-speak-mode-line)))
 (cl-loop for f in
          '(gmaps-driving-directions
@@ -625,7 +625,7 @@ current page."
           `(defadvice ,f (after emacspeak pre act comp)
              "speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'task-done)
+               (emacspeak-icon 'task-done)
                (emacspeak-speak-rest-of-buffer)))))
 
 (defadvice gmaps-set-current-location (after emacspeak pre act comp)

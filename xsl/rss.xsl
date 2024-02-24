@@ -15,6 +15,7 @@ Only supports RSS 1.0
                 xmlns:str="http://exslt.org/strings"
                 version="1.0">
   <xsl:param name="base"/>
+  <xsl:param name="reverse"/>
   <xsl:output encoding="UTF-8" method="html" indent="yes"/>
   <!-- {rss 1.0 -->
   <!-- Nuke all itunes elements -->
@@ -56,9 +57,9 @@ Only supports RSS 1.0
       <p>
       <xsl:apply-templates
           select="description|rss:description"/>
-      
       <xsl:apply-templates
           select="enclosure|rss:enclosure|media:content"/>
+      <br/><b><xsl:value-of select="./pubDate/text()"/></b>
       </p>
   </xsl:template>
   <xsl:template match="rss:title|rss:description|title|description">

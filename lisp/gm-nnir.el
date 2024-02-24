@@ -54,7 +54,7 @@
 ;; IMap search operators, GMail search extensions.
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)
@@ -147,7 +147,7 @@ See https://support.google.com/mail/answer/7190?hl=en for syntax.
       (gnus-group-read-ephemeral-search-group
        nil                              ; no parse
        `(nnir-specs (nnir-query-spec (query ,q))))
-      (emacspeak-auditory-icon 'open-object)
+      (emacspeak-icon 'open-object)
       (emacspeak-speak-mode-line))
      (t (error "Not on a group.")))))
 

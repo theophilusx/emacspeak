@@ -37,7 +37,7 @@
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;   Required modules
+;;   Required modules:
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -57,34 +57,34 @@
                                                act comp)
   "provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-icon 'select-object)
     (emacspeak-describe-tapestry winring-name)))
 
 (defadvice winring-next-configuration(after emacspeak pre
                                             act comp)
   "provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-icon 'select-object)
     (emacspeak-describe-tapestry winring-name)))
 
 (defadvice winring-prev-configuration(after emacspeak pre
                                             act comp)
   "provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-icon 'select-object)
     (emacspeak-describe-tapestry winring-name)))
 
 (defadvice winring-new-configuration(after emacspeak pre
                                            act comp)
   "provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'select-object)
+    (emacspeak-icon 'select-object)
     (emacspeak-speak-mode-line)))
 (defadvice winring-delete-configuration(after emacspeak pre
                                               act comp)
   "provide auditory feedback"
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'delete-object)
+    (emacspeak-icon 'delete-object)
     (emacspeak-speak-mode-line)))
 
 (provide 'emacspeak-winring)

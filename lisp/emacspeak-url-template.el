@@ -51,7 +51,7 @@
 
 ;;; Code:
 
-;;;  required modules
+;;  required modules
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
@@ -68,7 +68,6 @@
 ;;; Appease Emacs-30:
 
 (declare-function iimage-recenter "iimage" (&optional arg))
-
 
 ;;;  structures
 
@@ -238,6 +237,14 @@ with duplicates removed when saving as a list of string."
  nil
  #'emacspeak-eww-next-h3
  "BBC Radio 5 Live  Schedule")
+
+(emacspeak-url-template-define
+ "BBC World Service  Schedule "
+"https://www.bbc.co.uk/sounds/schedules/bbc_world_service " 
+ nil
+ #'emacspeak-eww-next-h3
+ "BBC R4 Schedule")
+
 (emacspeak-url-template-define
  "BBC r4 Schedule "
  "https://www.bbc.co.uk/sounds/schedules/bbc_radio_fourfm "
@@ -300,7 +307,6 @@ with duplicates removed when saving as a list of string."
  emacspeak-websearch-accessible-google
  "emacspeak-websearch" (query &optional options))
 
-
 (emacspeak-url-template-define
  "Emacspeak Search Via Google"
  "%s"
@@ -328,7 +334,7 @@ with duplicates removed when saving as a list of string."
  #'(lambda nil
      (search-forward "Search Tools")
      (forward-line 1)
-     (emacspeak-auditory-icon 'open-object)
+     (emacspeak-icon 'open-object)
      (emacspeak-speak-windowful))
  "Light-weight Google weather.")
 
@@ -349,7 +355,7 @@ with duplicates removed when saving as a list of string."
          (?o "nasdaq")
          (error "O: nasdaq N: nyse")))))
  #'(lambda nil
-     (emacspeak-auditory-icon 'open-object)
+     (emacspeak-icon 'open-object)
      (search-forward "Most Active")
      (emacspeak-speak-windowful))
  "Lookup ticker on Google Finance.")
@@ -359,7 +365,7 @@ with duplicates removed when saving as a list of string."
  "https://finance.google.com"
  nil
  #'(lambda nil
-     (emacspeak-auditory-icon 'open-object)
+     (emacspeak-icon 'open-object)
      (search-forward "Most Active")
      (emacspeak-speak-windowful))
  "Display top stocks  from Google Finance.")
@@ -389,7 +395,7 @@ with duplicates removed when saving as a list of string."
  "Dictionary Lookup"
  #'(lambda (url)
      (emacspeak-xslt-without-xsl
-         (browse-url url))))
+      (browse-url url))))
 
 ;;;  google OverviewOfNews
 
@@ -496,10 +502,9 @@ name of the list.")
      #'(lambda (s) (flush-lines s (point-min) (point-max)))
      '("WATCHLIST" "^52 High" "^Last " "RT Quote " "^quote price arrow "
        "^Volume" "^$"))
-    (emacspeak-pronounce-add-buffer-local-dictionary-entry (emacspeak-stock-tickers) "portfolio")
     (goto-char (point-min))
     (forward-line 1)
-    (emacspeak-auditory-icon 'open-object)
+    (emacspeak-icon 'open-object)
     (rename-buffer "Portfolio" 'unique)
     (emacspeak-speak-line)))
 
@@ -667,7 +672,6 @@ If on a URL, replace it with the shortened version. If on a link
 in EWW, use it. Otherwise prompt for a URL to shorten and insert
 the result at point.")
 
-
 ;;; Hoogle
 (declare-function emacspeak-eww-next-h1 "emacspeak-eww" (&optional speak))
 
@@ -797,7 +801,7 @@ the result at point.")
                    (point-max)))
     (help-print-return-message))
   (emacspeak-speak-help)
-  (emacspeak-auditory-icon 'help))
+  (emacspeak-icon 'help))
 (defun emacspeak-url-template-generate-name-setter (name)
   "Generate a setter that sets emacspeak-eww-url-template
 to specified name for use as a callback."
@@ -902,7 +906,7 @@ Each URL template carries out the following steps:
  "" nil nil
  "Extract body content from Wikipedia link at point"
  #'(lambda (_)
-     (emacspeak-auditory-icon 'open-object)
+     (emacspeak-icon 'open-object)
      (emacspeak-eww-autospeak)
      (emacspeak-we-extract-by-id "bodyContent" (shr-url-at-point nil))))
 
@@ -926,7 +930,7 @@ Each URL template carries out the following steps:
     (setq add
           (replace-regexp-in-string "download/detail" "wishlist/add" book))
     (message "Updating  book in  wishlist.")
-    (emacspeak-auditory-icon 'progress)
+    (emacspeak-icon 'progress)
     (eww add)))
 
 (emacspeak-url-template-define
@@ -1123,7 +1127,6 @@ template."
        "ci/content/\\(.*\\)\\.html*"
        "print/\\1"
        (shr-url-at-point nil)))))
-
 
 (emacspeak-url-template-define
  "ESPN Cricinfo Search"

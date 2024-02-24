@@ -470,6 +470,7 @@
   '(
     ("p" emacspeak-pianobar)
     ("a" emacspeak-xslt-view-atom-file)
+    ("l" emacspeak-empv-play-last)
     ("r" emacspeak-xslt-view-rss-file)
     ("x" emacspeak-xslt-view-file)
     ("y" emacspeak-empv-play-url)
@@ -753,5 +754,4 @@
 (global-set-key (kbd "C-x r e") 'emacspeak-eww-open-mark)
 
 (provide 'emacspeak-keymap)
- 
 

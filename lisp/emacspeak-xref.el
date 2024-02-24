@@ -43,7 +43,8 @@
 ;; This is part of Emacs 25.
 ;; This module speech-enables xref
 
-;;;   Required modules
+;;   Required modules:
+;;; Code:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -64,7 +65,7 @@
      "speak."
      (when (ems-interactive-p)
        (emacspeak-speak-line)
-       (emacspeak-auditory-icon 'large-movement)))))
+       (emacspeak-icon 'large-movement)))))
 
 (cl-loop
  for f in 
@@ -77,13 +78,13 @@
      "speak."
      (when (ems-interactive-p)
        (message "Displayed cross-reference.")
-       (emacspeak-auditory-icon 'select-object)))))
+       (emacspeak-icon 'select-object)))))
 
 (defadvice xref-find-references (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'task-done)))
+    (emacspeak-icon 'task-done)))
 
 (provide 'emacspeak-xref)
 ;;;  end of file

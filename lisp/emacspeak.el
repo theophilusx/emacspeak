@@ -49,7 +49,7 @@
 ;; @end itemize
 ;;; Code:
 
-;;;  Required modules
+;;  Required modules: 
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -96,7 +96,11 @@ the Emacspeak desktop.")
 
 (with-eval-after-load "gptel"
   (cl-declare (special gptel-post-response-functions))
-  (cl-pushnew  'emacspeak-speak-region gptel-post-response-functions))
+  (setopt gptel-post-stream-hook
+          #'(lambda nil (emacspeak-icon 'tick-tick)))
+  
+  (setopt gptel-post-response-functions
+          (cl-pushnew  'emacspeak-speak-region gptel-post-response-functions)))
 
 ;;;  Setup package extensions
 (defvar emacspeak-packages-to-prepare
@@ -106,7 +110,6 @@ the Emacspeak desktop.")
     ("add-log" emacspeak-add-log)
     ("analog" emacspeak-analog)
     ("annotate" emacspeak-annotate)
-    ("apt-sources" emacspeak-apt-sources)
     ("arc-mode" emacspeak-arc)
     ("bbdb" emacspeak-bbdb)
     ("bibtex" emacspeak-bibtex)
@@ -221,7 +224,6 @@ the Emacspeak desktop.")
     ("nxml-mode" emacspeak-nxml)
     ("org" emacspeak-org)
     ("orgalist" emacspeak-orgalist)
-    ("origami" emacspeak-origami)
     ("outline" emacspeak-outline)
     ("package"emacspeak-package)
     ("paradox"emacspeak-paradox)
@@ -323,12 +325,12 @@ the Emacspeak desktop.")
   "Setup programming mode."
   (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
   (ems-with-messages-silenced
-    (dtk-set-punctuations 'all)
-    (or dtk-split-caps (dtk-toggle-split-caps))
-    (or dtk-caps (dtk-toggle-caps))
-    (emacspeak-pronounce-refresh-pronunciations)
-    (or emacspeak-audio-indentation
-        (emacspeak-toggle-audio-indentation))))
+   (dtk-set-punctuations 'all)
+   (or dtk-split-caps (dtk-toggle-split-caps))
+   (or dtk-caps (dtk-toggle-caps))
+   (emacspeak-pronounce-refresh-pronunciations)
+   (or emacspeak-audio-indentation
+       (emacspeak-toggle-audio-indentation))))
 
 (defun emacspeak-setup-programming-modes ()
   "Setup programming modes."
@@ -359,7 +361,7 @@ This cannot be set via custom; set this in your startup file before
   "Play startup icon."
   (cl-declare (special emacspeak-play-startup-icon ))
   (when (and  emacspeak-play-startup-icon )
-    (emacspeak-prompt 'emacspeak)))
+    (emacspeak-icon 'emacspeak)))
 
 (defsubst emacspeak-easter-egg ()
   "Easter Egg"
@@ -372,7 +374,7 @@ This cannot be set via custom; set this in your startup file before
                (format-time-string "%m-%d") (format-time-string "04-25")))
       (start-process "ogg" nil sox-play f))))
 
-(defvar emacspeak-startup-message
+(defvar emacspeak-startup
   (eval-when-compile
     (format
      "  Press %s to get an   overview of emacspeak  %s. \
@@ -390,16 +392,18 @@ This cannot be set via custom; set this in your startup file before
 ;;;###autoload
 (defun emacspeak()
   "Start the Emacspeak Audio Desktop.
-Use Emacs as you normally would, emacspeak provides
- spoken feedback.  Emacspeak also provides commands
-for having parts of the current buffer, the mode-line etc to be
-spoken.
+Use Emacs as you normally would, emacspeak provides spoken feedback.
+Emacspeak also provides commands for having parts of the current buffer,
+the mode-line etc to be spoken.
 
- Emacspeak commands use \\[emacspeak-keymap] as a prefix
-key.  You can configure TTS  with
-\\[emacspeak-dtk-submap] as a prefix.
+With prefix \\`C-e'
 
 \\{emacspeak-keymap}
+
+With prefix \\`C-e d'
+
+
+\\{emacspeak-dtk-submap}
 
 Emacspeak provides a set of additional keymaps to give easy access to
 its extensive facilities.
@@ -415,42 +419,28 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
+  (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (dtk-initialize)
-  (setq ring-bell-function #'(lambda nil (emacspeak-auditory-icon 'warn-user)))
+  (setq ring-bell-function #'(lambda nil (emacspeak-icon 'warn-user)))
+  (emacspeak-sounds-cache-prompts)
   (emacspeak-sounds-select-theme emacspeak-sounds-current-theme)
   (emacspeak-pronounce-load-dictionaries)
-  (ems--fastload "emacspeak-advice")
+  (make-thread #'(lambda nil  (ems--fastload "emacspeak-advice")))
   (emacspeak-setup-programming-modes)
   (make-thread #'emacspeak-prepare-emacs)
   (setq line-number-mode nil column-number-mode nil)
   (global-visual-line-mode -1)
   (transient-mark-mode -1)
-  (add-to-list
-   'minor-mode-alist
-   '(emacspeak-speak-show-volume (:eval (ems--show-current-volume))))
-  (setenv "EMACSPEAK_DIR" emacspeak-directory)
-  (message emacspeak-startup-message)
-  
-  (when   emacspeak-play-startup-icon (emacspeak-prompt 'emacspeak))
-  (emacspeak-easter-egg))
+  (when emacspeak-wpctl
+    (add-to-list
+     'minor-mode-alist
+     '(emacspeak-speak-show-volume (:eval (ems--show-current-volume)))))
+  (message emacspeak-startup)
+  (when   emacspeak-play-startup-icon (emacspeak-icon 'emacspeak)
+          (emacspeak-easter-egg)))
 
 (provide 'emacspeak)
-;;; Orca For Lock Screen:
 
-;; Orca Toggle:
-;; Easily start/stop orca for use with lock-screen, Chrome etc.
-
-(defvar emacspeak-orca-handle nil
-  "Orca process handle")
-;;;###autoload
-(defun emacspeak-orca-toggle ()
-  "Toggle state of orca."
-  (interactive)
-  (cl-declare (special emacspeak-orca-handle))
-  (cond
-   (emacspeak-orca-handle (delete-process emacspeak-orca-handle)
-                          (setq emacspeak-orca-handle  nil))
-   (t (setq emacspeak-orca-handle (start-process "Orca"nil "orca")))))
 ;;;  end of file
 
 ;;; emacspeak.el ends here

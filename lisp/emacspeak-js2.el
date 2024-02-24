@@ -42,8 +42,10 @@
 ;; JS2-mode http://js2-mode.googlecode.com/svn/trunk
 ;; is a new, powerful Emacs mode for working with JavaScript.
 ;; This module speech-enables js2.
+;;; Code:
 
-;;;   Required modules
+
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -76,14 +78,14 @@
   "speak."
   (when (ems-interactive-p)
     (let ((emacspeak-show-point  t))
-      (emacspeak-auditory-icon 'large-movement)
+      (emacspeak-icon 'large-movement)
       (emacspeak-speak-line))
     ))
 
 (defadvice js2-mark-defun  (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-icon 'mark-object)
     (emacspeak-speak-line)))
 
 (cl-loop for f in
@@ -94,7 +96,7 @@
              "speak."
              (when (ems-interactive-p)
                (let ((emacspeak-show-point t))
-                 (emacspeak-auditory-icon 'large-movement)
+                 (emacspeak-icon 'large-movement)
                  (emacspeak-speak-line))))))
 
 (cl-loop for f in
@@ -123,7 +125,7 @@
           `(defadvice ,f (after emacspeak pre act comp)
              "speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'close-object)
+               (emacspeak-icon 'close-object)
                (message "Hid %s"
                         ,(substring (symbol-name f)
                                     (length "js2-mode-hide-")))))))
@@ -136,7 +138,7 @@
           `(defadvice ,f (after emacspeak pre act comp)
              "speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'open-object)
+               (emacspeak-icon 'open-object)
                (message "Showed %s"
                         ,(substring (symbol-name f)
                                     (length "js2-mode-show-")))))))
@@ -152,20 +154,20 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'button)
+       (emacspeak-icon 'button)
        (message "Toggled %s"
                 ,(substring (symbol-name f)
                             (length "js2-mode-toggle-")))))))
 (defadvice js2-narrow-to-defun (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-icon 'mark-object)
     (message "Narrowed to current function.")))
 
 (defadvice js2-next-error (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'large-movement)
+    (emacspeak-icon 'large-movement)
     (emacspeak-speak-line)))
 
 ;;;  js2-mode hook

@@ -43,7 +43,7 @@
 ;; This module is IBM ViaVoice Outloud specific.
 ;;; Code:
 
-;;;  Required modules
+;;  Required modules: 
 
 (eval-when-compile (require 'cl-lib))
 (require 'emacspeak-preamble)           ;For `ems--fastload'.
@@ -303,5 +303,4 @@
            eight-bit-graphic)))
 
 (provide 'outloud-voices)
- 
 

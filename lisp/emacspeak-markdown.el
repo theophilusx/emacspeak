@@ -42,7 +42,8 @@
 ;; MARKDOWN ==  Light-weight markup.
 ;; This module speech-enables markdown.el
 
-;;;   Required modules
+;;   Required modules:
+;;; Code:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -165,7 +166,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'large-movement)
+       (emacspeak-icon 'large-movement)
        (emacspeak-speak-line)))))
 
 (cl-loop
@@ -179,7 +180,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'task-done)
+       (emacspeak-icon 'task-done)
        (emacspeak-speak-line)))))
 
 (cl-loop
@@ -192,7 +193,7 @@
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
      (when (ems-interactive-p)
-       (emacspeak-auditory-icon 'complete)
+       (emacspeak-icon 'complete)
        (emacspeak-speak-line)))))
 ;;; Eepeat-mode:
 (cl-declaim (special markdown-mode-map))

@@ -43,7 +43,7 @@
 
 ;;; Code:
 
-;;;  required modules 
+;;  required modules 
 
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
@@ -66,14 +66,14 @@
              "speak."
              (when (ems-interactive-p)
                (emacspeak-speak-line)
-               (emacspeak-auditory-icon 'paragraph)))))
+               (emacspeak-icon 'paragraph)))))
 
 ;;;  Advice insertion and electric:
 
 (defadvice ruby-insert-end (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'close-object)
+    (emacspeak-icon 'close-object)
     (save-excursion
       (ruby-beginning-of-block)
       (emacspeak-speak-line))))
@@ -92,7 +92,7 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-speak-line)
-    (emacspeak-auditory-icon 'fill-object)))
+    (emacspeak-icon 'fill-object)))
 (unless (and (boundp 'post-self-insert-hook)
              post-self-insert-hook
              (memq 'emacspeak-post-self-insert-hook post-self-insert-hook))
@@ -118,9 +118,8 @@ Cue electric insertion with a tone."
           `(defadvice ,command (after emacspeak pre act comp)
              "speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'select-object)
+               (emacspeak-icon 'select-object)
                (emacspeak-speak-line)))))
 
 (provide  'emacspeak-ruby)
-  
 

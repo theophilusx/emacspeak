@@ -44,7 +44,7 @@
 
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -56,12 +56,12 @@
   "Speech-enabled by emacspeak."
   (when (ems-interactive-p)
     (dtk-speak (car  kill-ring))
-    (emacspeak-auditory-icon 'delete-object)))
+    (emacspeak-icon 'delete-object)))
 
 (defadvice ciel-co (after emacspeak pre act comp)
   "Speech-enabled by emacspeak."
   (when (ems-interactive-p)
-    (emacspeak-auditory-icon 'mark-object)
+    (emacspeak-icon 'mark-object)
     (dtk-speak (format "Copied: %s " (car  kill-ring)))))
 
 (provide 'emacspeak-ciel)

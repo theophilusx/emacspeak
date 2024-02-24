@@ -43,7 +43,7 @@
 ;; RSS
 ;; Provides functionality similar to amphetadesk --but in pure elisp
 
-;;;  required modules
+;;  required modules
 
 ;;; Code:
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -95,7 +95,7 @@
           `(defadvice ,f (after emacspeak pre act comp)
              "Speak."
              (when (ems-interactive-p)
-               (emacspeak-auditory-icon 'large-movement)
+               (emacspeak-icon 'large-movement)
                (emacspeak-newsticker-summarize-item)))))
 
 ;;;   silence auto activity

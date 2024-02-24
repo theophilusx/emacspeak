@@ -91,14 +91,14 @@ This moves them into the Spam folder."
     (make-thread
      #'(lambda ()
          (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/Spam")
-         (emacspeak-auditory-icon 'task-done))))
+         (emacspeak-icon 'task-done))))
   (defun gmail-unspam ()
     "Move incorrectly marked spam to inbox"
     (interactive)
     (make-thread
      #'(lambda ()
          (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/inbox")
-         (emacspeak-auditory-icon 'task-done))))
+         (emacspeak-icon 'task-done))))
 
   (define-key gnus-summary-mode-map "$" 'gmail-report-spam)
   
@@ -109,7 +109,7 @@ This moves them into the Spam folder."
     (cl-declare (special auth-source-xoauth2-creds))
     (kill-buffer (find-file-noselect auth-source-xoauth2-creds))
     (dtk-stop)
-    (emacspeak-auditory-icon 'task-done))
+    (emacspeak-icon 'task-done))
 
   (when (keymapp emacspeak-z-keymap )
     (define-key emacspeak-z-keymap "u" 'tvr-unlock-xoauth))
@@ -143,8 +143,7 @@ Uses the go oauth tool found in the xoauth git repo."
 
 ;;; Jump to Emacs Git Logs At HEAD:
 (defalias 'tvr-km-emacs-log
-  (kmacro
-   "C-c 3 g i t SPC p <return> C-; d l l C-a "))
+  (kmacro "C-c 3 C-; d F u C-; d l l n"))
 (define-key emacspeak-y-keymap "3" 'tvr-km-emacs-log)
 (defalias 'tvr-km-morning
   (kmacro "C-<tab> C-e g b h <tab> <return> n n e c"))

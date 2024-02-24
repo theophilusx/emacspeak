@@ -40,7 +40,7 @@
 ;; Speech-enable creation and navigation of annotations.
 ;;; Code:
 
-;;;   Required modules
+;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -74,7 +74,7 @@
      "speak."
      (when (ems-interactive-p)
        (let ((o (cl-first (overlays-at (point)))))
-         (emacspeak-auditory-icon 'large-movement)
+         (emacspeak-icon 'large-movement)
          (emacspeak-speak-line)
          (dtk-notify-speak (overlay-get o 'annotation)))))))
 
