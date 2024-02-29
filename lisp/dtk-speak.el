@@ -890,8 +890,7 @@ this pattern if previously added.    "
        (prefix
         (setq-default ,switch (not ,switch))
         (setq ,switch (default-value ',switch)))
-       (t (make-local-variable ',switch)
-          (setq ,switch (not ,switch))))
+       (t (setq ,switch (not ,switch))))
       (dtk-interp-sync)
       (when (called-interactively-p 'interactive)
         (emacspeak-icon (if ,switch 'on 'off))
@@ -1703,7 +1702,7 @@ unless   `dtk-quiet' is set to t. "
           (mode dtk-punctuation-mode)
           (voice-lock voice-lock-mode)) ; done snapshotting
       (with-current-buffer dtk-scratch-buffer
-        (setq buffer-undo-list t)
+        (setq buffer-undo-list  t)
         (erase-buffer)
         (when (eq orig-mode 'org-mode)
           (setq org-link-descriptive links-desc)
@@ -1792,7 +1791,7 @@ grouping"
         (inhibit-read-only t))
     (save-current-buffer
       (set-buffer dtk-scratch-buffer)
-      (setq buffer-undo-list t)
+      (setq buffer-undo-list  t)
       (erase-buffer)
       (cl-loop
        for element in text do

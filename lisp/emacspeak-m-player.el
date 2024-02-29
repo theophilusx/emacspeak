@@ -115,7 +115,7 @@
   "Major mode for m-player interaction. \n\n
 \\{emacspeak-m-player-mode-map}"
   (progn
-    (setq ems--media-data (make-ems--media-data)
+    (setq-local ems--media-data (make-ems--media-data)
           buffer-undo-list t
           buffer-read-only nil)))
 
@@ -223,13 +223,6 @@ Reset immediately after being used.")
 (defgroup emacspeak-m-player nil
   "Emacspeak media player."
   :group 'emacspeak)
-
-;;;###autoload
-(defcustom emacspeak-mplayer
-  (executable-find "mplayer")
-  "Media player program."
-  :type 'string
-  :group 'emacspeak-m-player)
 
 (defvar emacspeak-m-player-openal-options
   '("-ao" "openal")
@@ -578,7 +571,7 @@ dynamic playlist. "
              (file-list (nconc options file-list))
              (t
               (nconc options (list resource)))))
-      (setq buffer-undo-list t)
+      (setq buffer-undo-list  t)
       (setq emacspeak-m-player-process
             (apply
              #'start-process "MPLayer" buffer

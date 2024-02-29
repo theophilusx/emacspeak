@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on February 21, 2024.
+last updated on February 28, 2024.
 
 
 File: emacspeak.info,  Node: emacspeak-exwm,  Next: emacspeak-feeds,  Prev: emacspeak-extras,  Up: Emacspeak Commands And Options
@@ -1307,7 +1307,7 @@ found on laptops is denoted <fn>
       ("i" ibuffer)
       ("m" mspools-show)
       ("o" emacspeak-wizards-occur-header-lines)
-      ("p" paradox-list-packages)
+      ("p" list-packages)
       ("t" emacspeak-speak-telephone-directory)
       ("u" emacspeak-wizards-units)
       ("v" emacspeak-wizards-vc-viewer)
@@ -2353,14 +2353,6 @@ you can achieve the same by pressing ‘C-e ; v’.  Press ‘C-h b’ in the
      nil
      
 
- -- Variable: User Option emacspeak-mplayer
-     Media player program.
-
-     Default Value:
-     
-     "/usr/local/bin/mplayer"
-     
-
 
 File: emacspeak.info,  Node: emacspeak-magit,  Next: emacspeak-make-mode,  Prev: emacspeak-m-player,  Up: Emacspeak Commands And Options
 
@@ -2599,17 +2591,6 @@ File: emacspeak.info,  Node: emacspeak-message,  Next: emacspeak-metapost,  Prev
 ========================
 
 advice for posting message commands
-
-12.125.1 emacspeak-message Options
-----------------------------------
-
- -- Variable: User Option emacspeak-message-punctuation-mode
-     Pronunciation mode to use for message buffers.
-
-     Default Value:
-     
-     all
-     
 
 
 File: emacspeak.info,  Node: emacspeak-metapost,  Next: emacspeak-midge,  Prev: emacspeak-message,  Up: Emacspeak Commands And Options
@@ -3373,14 +3354,6 @@ an OCR engine that can take acquired images and produce text.
      Default Value:
      
      "cjpeg"
-     
-
- -- Variable: User Option emacspeak-ocr-scan-image
-     Name of image acquisition program.
-
-     Default Value:
-     
-     "scanimage"
      
 
  -- Variable: User Option emacspeak-ocr-scan-image-options
@@ -5648,27 +5621,6 @@ of emacspeak from becoming dependent on the speech server modules
      nil
      
 
- -- Variable: User Option emacspeak-character-echo
-     If t, then emacspeak echoes characters  as you type.
-     You can
-     use C-e d k to toggle this
-     setting.
-
-     Default Value:
-     
-     t
-     
-
- -- Variable: User Option emacspeak-line-echo
-     If t, then emacspeak echoes lines as you type.
-     You can use C-e d l to set this
-     option.
-
-     Default Value:
-     
-     nil
-     
-
  -- Variable: User Option emacspeak-mail-alert
       If t, emacspeak will alert you about newly arrived mail
      with an auditory icon when
@@ -5716,18 +5668,6 @@ of emacspeak from becoming dependent on the speech server modules
      "/home/raman/.emacspeak/.filters"
      
 
- -- Variable: User Option emacspeak-speak-messages
-     Option indicating if messages are spoken.  If nil,
-     emacspeak will not speak messages as they are echoed to the
-     message area.  You can use command
-     ‘emacspeak-toggle-speak-messages’ bound to
-     C-e C-M-q.
-
-     Default Value:
-     
-     t
-     
-
  -- Variable: User Option emacspeak-speak-time-brief-format
      Format for time in brief.
 
@@ -5752,16 +5692,6 @@ of emacspeak from becoming dependent on the speech server modules
      Default Value:
      
      "/usr/share/zoneinfo/"
-     
-
- -- Variable: User Option emacspeak-word-echo
-     If t, then emacspeak echoes words as you type.
-     You can use C-e d w to toggle this
-     option.
-
-     Default Value:
-     
-     t
      
 
 
@@ -9670,14 +9600,6 @@ gblogger etc.
      Default Value:
      
      nil
-     
-
- -- Variable: User Option g-curl-options
-     Common options to pass to all Curl invocations.
-
-     Default Value:
-     
-     "--http1.0 --compressed --silent --location --location-trusted --max-time 4 --connect-timeout 1"
      
 
 
