@@ -254,7 +254,7 @@ mac for MAC TTS (default on Mac)")
   "Flag indicating whether to use split caps.
  Use   `dtk-toggle-split-caps'bound to \\[dtk-toggle-split-caps].")
 
-(defcustom dtk-cleanup-repeats
+(defvar dtk-cleanup-repeats
   (list
    ". " "." "_" "-" "=" "/" "+" "*" ":" ";" "%"
    "\\/" "/\\" "{" "}" "~" "$" ")" "#" "<>" "^" "<" ">")
@@ -264,9 +264,7 @@ Use `dtk-add-cleanup-pattern'
 
 More than 3 consecutive occurrences
 of a  pattern   is
-replaced with a repeat count. "
-  :type '(repeat (string :tag "pattern"))
-  :group 'tts)
+replaced with a repeat count. ")
 
 ;;;   internal variables
 
@@ -1659,7 +1657,7 @@ unless   `dtk-quiet' is set to t. "
                inhibit-modification-hooks
                voice-lock-mode dtk-punctuation-mode
                dtk-split-caps
-               emacspeak-pronounce-pronunciation-table
+               emacspeak-pronounce-table
                selective-display))
   ;; ensure text is a  string
   (unless (stringp text) (when text (setq text (format "%s" text))))
@@ -1687,7 +1685,7 @@ unless   `dtk-quiet' is set to t. "
           (inhibit-modification-hooks t)
           (invisibility-spec buffer-invisibility-spec)
           (syntax-table (syntax-table))
-          (pron-table emacspeak-pronounce-pronunciation-table)
+          (pron-table emacspeak-pronounce-table)
           (pron-personality emacspeak-pronounce-personality)
           (chunk-sep dtk-chunk-separator-syntax)
           (inherit-speak-nonprinting-chars dtk-speak-nonprinting-chars)
@@ -1711,7 +1709,7 @@ unless   `dtk-quiet' is set to t. "
         (setq                           ; mirror snapshot
          yank-excluded-properties dtk-yank-excluded-properties
          char-property-alias-alist  char-alias
-         emacspeak-pronounce-pronunciation-table pron-table
+         emacspeak-pronounce-table pron-table
          emacspeak-pronounce-personality pron-personality
          buffer-invisibility-spec invisibility-spec
          dtk-chunk-separator-syntax chunk-sep

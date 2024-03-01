@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on February 28, 2024.
+last updated on March 1, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3236,7 +3236,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1160 commands and 133 options.
+   This chapter documents a total of 1159 commands and 128 options.
 
 * Menu:
 
@@ -3980,41 +3980,6 @@ Defines the TTS interface.  Here, prefix dtk is synonymous with tts.
      #("cap" 0 3 (personality acss-p3-s1-r3))
      
 
- -- Variable: User Option dtk-cleanup-repeats
-     List of repeating patterns to clean up.
-     Use ‘dtk-add-cleanup-pattern’
-      bound to C-e d a  to add  patterns.
-     
-     More than 3 consecutive occurrences
-     of a  pattern   is
-     replaced with a repeat count. 
-
-     Default Value:
-     
-     (". " "."
-      "_"
-      "-"
-      "="
-      "/"
-      "+"
-      "*"
-      ":"
-      ";"
-      "%"
-      "\\/"
-      "/\\"
-      "{"
-      "}"
-      "~"
-      "$"
-      ")"
-      "#"
-      "<>"
-      "^"
-      "<"
-      ">")
-     
-
  -- Variable: User Option dtk-cloud-server
      Set this to your preferred cloud TTS server.
 
@@ -4150,6 +4115,22 @@ the main emacspeak module.  It actually does very little:
 
  -- Variable: User Option emacspeak-soundscapes
      Whether we should turn on soundscapes on startup.
+
+     Default Value:
+     
+     nil
+     
+
+ -- Variable: User Option emacspeak-speak-messages-filter
+     List of strings used to filter spoken messages.
+
+     Default Value:
+     
+     ("Decrypting" "psession" "auto saving")
+     
+
+ -- Variable: User Option emacspeak-speak-tooltips
+     Enable to get tooltips spoken.
 
      Default Value:
      
@@ -4299,25 +4280,6 @@ I violate this at present by advising completion.  Note that we needed
 to advice a lot more for Emacs 19 and Emacs 20 than we do for Emacs 21
 and Emacs 22.  As of August 2007, this file is being purged of advice
 forms not needed in Emacs 22.
-
-12.9.1 emacspeak-advice Options
--------------------------------
-
- -- Variable: User Option emacspeak-speak-messages-filter
-     List of strings used to filter spoken messages.
-
-     Default Value:
-     
-     ("Decrypting" "psession" "auto saving")
-     
-
- -- Variable: User Option emacspeak-speak-tooltips
-     Enable to get tooltips spoken.
-
-     Default Value:
-     
-     nil
-     
 
 
 File: emacspeak.info,  Node: emacspeak-amark,  Next: emacspeak-analog,  Prev: emacspeak-advice,  Up: Emacspeak Commands And Options
@@ -8921,17 +8883,7 @@ Infrequently used wizards archived for posterity.
 
      Display a buffer with sample text in the defined voices.
 
-12.75.1.15 emacspeak-wizards-tramp-open-location
-................................................
-
- -- Command: emacspeak-wizards-tramp-open-location (name)
-     ‘C-; C-t’
-     ‘C-x @ h C-t’
-
-     Open specified tramp location.
-     Location is specified by name.
-
-12.75.1.16 emacspeak-wizards-voice-sampler
+12.75.1.15 emacspeak-wizards-voice-sampler
 ..........................................
 
  -- Command: emacspeak-wizards-voice-sampler (personality)
@@ -8957,16 +8909,5 @@ Infrequently used wizards archived for posterity.
      Default Value:
      
      "/home/raman/.curl-cookies"
-     
-
- -- Variable: User Option emacspeak-wizards-tramp-locations
-     Tramp locations used by Emacspeak tramp wizard.
-     Locations added here via custom can be opened using command
-     emacspeak-wizards-tramp-open-location
-     bound to C-x @@ h C-t.
-
-     Default Value:
-     
-     nil
      
 

@@ -1537,18 +1537,15 @@ Auditory highlight indicates position of point."
  '(newline newline-and-indent electric-newline-and-maybe-indent)
  do
  (eval
-  `(defadvice ,f (around emacspeak pre act comp)
+  `(defadvice ,f (after emacspeak pre act comp)
      "Speak the previous line if line echo is on.
 See command \\[emacspeak-toggle-line-echo]. Otherwise cue the user to
 the newly created  line."
      (cl-declare (special emacspeak-line-echo))
-     (cond
-      ((ems-interactive-p)
-       (cond
-        (emacspeak-line-echo (emacspeak-speak-line))
-        (t (dtk-tone 225 75 'force)))))
-     ad-do-it
-     ad-return-value)))
+     (when (ems-interactive-p)
+       (if emacspeak-line-echo
+           (emacspeak-read-previous-line)
+         (dtk-tone 225 75 'force))))))
 
 (cl-loop
  for f in
@@ -2178,29 +2175,35 @@ Produce an auditory icon if possible."
 (add-hook 'text-mode-hook #'emacspeak-speak-adjust-clause-boundaries)
 
 ;;;  setup minibuffer hooks:
+(cl-declaim (special emacspeak-media-shortcuts))
+(defvar emacspeak-minibuffer-dictionary
+  (let ((table (make-hash-table)))
+    (puthash emacspeak-media-shortcuts "Media: " table)
+    (puthash emacspeak-directory "emacspeak:" table)
+    table)
+  "Dictionary used in minibuffer.")
 
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with emacspeak running."
-  (cl-declare (special minibuffer-exit-hook minibuffer-default))
+  (cl-declare (special
+               minibuffer-exit-hook minibuffer-default
+               emacspeak-pronounce-table emacspeak-minibuffer-dictionary))
   (dtk-stop 'all)
   (let ((inhibit-field-text-motion t))
     (unless (memq 'emacspeak-minibuffer-exit-hook minibuffer-exit-hook)
       (add-hook 'minibuffer-exit-hook #'emacspeak-minibuffer-exit-hook))
+    (setq emacspeak-pronounce-table emacspeak-minibuffer-dictionary)
+    (emacspeak-pronounce-add-local-entry default-directory "")
     (emacspeak-icon 'open-object)
-    (emacspeak-pronounce-add-buffer-local-dictionary-entry
-     "(yes or no) " " y/n ")
-    (emacspeak-pronounce-toggle-use-of-dictionaries t)
     (when minibuffer-default (emacspeak-icon 'help))
-    (emacspeak-pronounce-add-buffer-local-dictionary-entry
-     default-directory "")
     (tts-with-punctuations
-     'all
-     (dtk-notify-speak
-      (concat
-       (buffer-string)
-       (if (stringp minibuffer-default)
-           minibuffer-default
-         ""))))))
+        'all
+      (dtk-notify-speak
+       (concat
+        (buffer-string)
+        (if (stringp minibuffer-default)
+            minibuffer-default
+          ""))))))
 
 (add-hook 'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook 'at-end)
 

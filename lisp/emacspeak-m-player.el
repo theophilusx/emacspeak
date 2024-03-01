@@ -119,7 +119,7 @@
           buffer-undo-list t
           buffer-read-only nil)))
 
-(defconst  emacspeak-media-shortcuts-directory
+(defconst  emacspeak-media-shortcuts
   (expand-file-name "media/radio/" emacspeak-directory)
   "Directory where we organize   and media shortcuts. ")
 
@@ -353,7 +353,7 @@ plays result as a directory." directory)
   (cl-declare (special ido-case-fold))
   (let ((ido-case-fold t)
         (emacspeak-m-player-hotkey-p t)
-        (emacspeak-media-shortcuts-directory (expand-file-name directory)))
+        (emacspeak-media-shortcuts (expand-file-name directory)))
     (call-interactively #'emacspeak-multimedia)
     (emacspeak-icon 'select-object)))
 
@@ -361,18 +361,20 @@ plays result as a directory." directory)
   "Guess default directory.
 If default directory matches emacspeak-media-directory-regexp,
 use it.  If default directory contains media files, then use it.
-Otherwise use emacspeak-media-directory as the fallback."
+If default directory contains directory emacspeak-media --- then use it.
+Otherwise use emacspeak-media-shortcuts as the fallback."
   (cl-declare (special emacspeak-media-directory-regexp
-                       emacspeak-m-player-hotkey-p))
+                       emacspeak-media emacspeak-m-player-hotkey-p))
   (let ((case-fold-search t))
     (cond
      ((or (eq major-mode 'dired-mode) (eq major-mode 'locate-mode)) nil)
-     (emacspeak-m-player-hotkey-p   emacspeak-media-shortcuts-directory)
+     (emacspeak-m-player-hotkey-p   emacspeak-media-shortcuts)
      ((or                               ;  dir  contains media:
        (string-match emacspeak-media-directory-regexp default-directory)
        (directory-files default-directory   nil emacspeak-media-extensions))
       default-directory)
-     (t   emacspeak-media-shortcuts-directory))))
+     ((file-in-directory-p emacspeak-media default-directory) emacspeak-media)
+     (t   emacspeak-media-shortcuts))))
 
 ;;;###autoload
 (defun emacspeak-m-player-url (url &optional playlist-p)
@@ -429,17 +431,22 @@ rather than completing over all subfiles."
 If a dynamic playlist exists, just use it."
   (cl-declare (special emacspeak-media-dynamic-playlist
                        emacspeak-m-player-hotkey-p))
-  (unless emacspeak-media-dynamic-playlist
+  (unless emacspeak-media-dynamic-playlist ; do nothing if dynamic playlist
     (cond
      (emacspeak-m-player-hotkey-p (emacspeak-media-local-resource prefix))
-     (t
+     (t ; not hotkey, not dynamic playlist
       (let ((completion-ignore-case t)
             (read-file-name-completion-ignore-case t)
             (filename
              (when (memq major-mode '(dired-mode locate-mode))
                (dired-get-filename 'local 'no-error)))
             (dir (emacspeak-media-guess-directory)))
-        (expand-file-name  (read-file-name "Media: " dir filename t)))))))
+        (or
+         filename 
+         (expand-file-name
+          (completing-read
+           "Media: "
+           (directory-files-recursively dir emacspeak-media-extensions)))))))))
 
 (defun emacspeak-m-player-data-refresh ()
   "Populate metadata fields from current  stream."
@@ -518,7 +525,7 @@ dynamic playlist. "
                emacspeak-m-player-hotkey-p
                emacspeak-m-player-directory
                emacspeak-media-directory-regexp
-               emacspeak-media-shortcuts-directory emacspeak-m-player-process
+               emacspeak-media-shortcuts emacspeak-m-player-process
                emacspeak-mplayer emacspeak-m-player-options
                emacspeak-m-player-url emacspeak-m-player-url-p
                emacspeak-m-player-custom-filters))
@@ -900,7 +907,7 @@ The time position can also be specified as HH:MM:SS."
                emacspeak-m-player-url-p
                (and emacspeak-m-player-resource
                     (string-match
-                     emacspeak-media-shortcuts-directory
+                     emacspeak-media-shortcuts
                      emacspeak-m-player-resource))
                (cl-minusp (emacspeak-m-player-get-length)))
             (emacspeak-m-player-amark-add ems--m-player-mark)

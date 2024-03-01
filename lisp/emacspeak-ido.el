@@ -44,9 +44,9 @@
 ;; Challenge: What is the most efficient means of conveying a
 ;; dynamically updating set of choices?  current strategy is to walk
 ;; the list using c-s and c-r as provided by ido Set number matches
-;; shown (ido-max-prospects) to 3 using Custom so you dont hear the
+;; shown (ido-max-prospects) to 2 or 3 using Custom so you dont hear the
 ;; entire list.
-
+;; See @url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html}.
 ;;; Code:
 
 
@@ -63,6 +63,7 @@
 
 (defadvice ido-set-current-directory (before emacspeak pre act comp)
   "Cache previous value of ido-current-directory."
+  (emacspeak-icon 'item)
   (setq emacspeak-ido-cache ido-current-directory))
 
 (defgroup emacspeak-ido nil
@@ -78,16 +79,13 @@
       (when  (and ido-matches (sit-for emacspeak-ido-typing-delay))
         (dtk-notify-speak
          (concat
-          (if (bound-and-true-p ido--overlay)
-              (overlay-get ido--overlay 'after-string)
-            (minibuffer-contents))
+            (minibuffer-contents)
           (format " %d choices: "  (length ido-matches))
           (if
               (or (null ido-current-directory)
                   (string-equal ido-current-directory emacspeak-ido-cache))
               " "
-            (format "In directory: %s"
-                    (abbreviate-file-name ido-current-directory))))))
+            (format "In %s" (abbreviate-file-name ido-current-directory))))))
     (error (dtk-initialize))))
 
 ;;;  speech-enable interactive commands:
@@ -191,8 +189,8 @@ The default value of 12 is too high for using ido effectively with speech. "
  '(
    (ido-virtual voice-smoothen)
    (ido-first-match voice-bolden)
-   (ido-only-match voice-bolden-extra)
-   (ido-subdir voice-lighten)
+   (ido-only-match voice-lighten)
+   (ido-subdir voice-monotone)
    (ido-indicator voice-brighten)
    (ido-incomplete-regexp voice-monotone-extra)
    (flx-highlight-face voice-animate)))
@@ -205,10 +203,9 @@ The default value of 12 is too high for using ido effectively with speech. "
   (when (boundp 'ido-common-completion-map)
     (define-key  ido-common-completion-map
                  (kbd "C-z") 'emacspeak-z-keymap)
-    (define-key ido-common-completion-map "\C-f" 'ido-enter-find-file)
+    (define-key ido-common-completion-map (kbd "C-f") 'ido-enter-find-file)
     (define-key ido-common-completion-map "^" 'ido-up-directory)
-    (define-key ido-common-completion-map
-                emacspeak-prefix 'emacspeak-keymap)
+    (define-key ido-common-completion-map emacspeak-prefix 'emacspeak-keymap)
     (define-key ido-common-completion-map (kbd "M-e")  'ido-edit-input)))
 
 (emacspeak-ido-keys)

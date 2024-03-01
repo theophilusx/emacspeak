@@ -247,7 +247,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1160 commands and 133 options.
+This chapter documents a total of 1159 commands and 128 options.
 
 @node amixer
 @section amixer
@@ -979,47 +979,6 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} dtk-cleanup-repeats
-@verbatim
-List of repeating patterns to clean up.
-Use ‘dtk-add-cleanup-pattern’
- bound to C-e d a  to add  patterns.
-
-More than 3 consecutive occurrences
-of a  pattern   is
-replaced with a repeat count. 
-@end verbatim
-
-Default Value: 
-@verbatim
-
-(". " "."
- "_"
- "-"
- "="
- "/"
- "+"
- "*"
- ":"
- ";"
- "%"
- "\\/"
- "/\\"
- "{"
- "}"
- "~"
- "$"
- ")"
- "#"
- "<>"
- "^"
- "<"
- ">")
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} dtk-cloud-server
 @verbatim
 Set this to your preferred cloud TTS server.
@@ -1219,6 +1178,34 @@ nil
 
 @end defvar
 
+@defvar {User Option} emacspeak-speak-messages-filter
+@verbatim
+List of strings used to filter spoken messages.
+@end verbatim
+
+Default Value: 
+@verbatim
+
+("Decrypting" "psession" "auto saving")
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} emacspeak-speak-tooltips
+@verbatim
+Enable to get tooltips spoken.
+@end verbatim
+
+Default Value: 
+@verbatim
+
+nil
+
+@end verbatim
+
+@end defvar
+
 @node emacspeak-2048
 @section emacspeak-2048
 
@@ -1376,36 +1363,6 @@ Note that we needed to advice a lot more for Emacs 19 and
 Emacs 20 than we do for Emacs 21 and Emacs 22.
 As of August 2007, this file is being purged of advice forms
 not needed in Emacs 22.
-
-@subsection emacspeak-advice Options
-
-@defvar {User Option} emacspeak-speak-messages-filter
-@verbatim
-List of strings used to filter spoken messages.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-("Decrypting" "psession" "auto saving")
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-speak-tooltips
-@verbatim
-Enable to get tooltips spoken.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
 
 @node emacspeak-amark
 @section emacspeak-amark
@@ -6772,23 +6729,6 @@ Display a buffer with sample text in the defined voices.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-tramp-open-location
-@deffn {Command} emacspeak-wizards-tramp-open-location  (name)
-@table @kbd
-@item C-; C-t
-@kindex C-; C-t
-@item C-x @@ h C-t
-@kindex C-x @@ h C-t
-@end table
-
-@findex emacspeak-wizards-tramp-open-location
-
-@format
-Open specified tramp location.
-Location is specified by name.
-@end format
-@end deffn
-
 @subsubsection emacspeak-wizards-voice-sampler
 @deffn {Command} emacspeak-wizards-voice-sampler  (personality)
 @findex emacspeak-wizards-voice-sampler
@@ -6825,23 +6765,6 @@ Default Value:
 @verbatim
 
 "/home/raman/.curl-cookies"
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-wizards-tramp-locations
-@verbatim
-Tramp locations used by Emacspeak tramp wizard.
-Locations added here via custom can be opened using command
-emacspeak-wizards-tramp-open-location
-bound to C-x @@ h C-t.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
 
 @end verbatim
 
@@ -7905,8 +7828,9 @@ value-add provided by package ido.el is visual feedback.  Speech UI
 Challenge: What is the most efficient means of conveying a
 dynamically updating set of choices?  current strategy is to walk
 the list using c-s and c-r as provided by ido Set number matches
-shown (ido-max-prospects) to 3 using Custom so you dont hear the
+shown (ido-max-prospects) to 2 or 3 using Custom so you dont hear the
 entire list.
+See @url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html}.
 
 @node emacspeak-iedit
 @section emacspeak-iedit
@@ -10154,11 +10078,6 @@ Toggle between lispy and smartparens.
 
 @subsubsection emacspeak-muggles-maths-navigator/body
 @deffn {Command} emacspeak-muggles-maths-navigator/body   
-@table @kbd
-@item s-SPC
-@kindex s-SPC
-@end table
-
 @findex emacspeak-muggles-maths-navigator/body
 
 @format
@@ -11398,25 +11317,12 @@ lists for a given file.
 
 @subsection Emacspeak-Pronounce Commands
 
-@subsubsection emacspeak-pronounce-clear-dictionaries
-@deffn {Command} emacspeak-pronounce-clear-dictionaries   
-@findex emacspeak-pronounce-clear-dictionaries
+@subsubsection emacspeak-pronounce-clear
+@deffn {Command} emacspeak-pronounce-clear   
+@findex emacspeak-pronounce-clear
 
 @format
 Clear all current pronunciation dictionaries.
-@end format
-@end deffn
-
-@subsubsection emacspeak-pronounce-define-local-pronunciation
-@deffn {Command} emacspeak-pronounce-define-local-pronunciation  (word pron)
-@findex emacspeak-pronounce-define-local-pronunciation
-
-@format
-Define buffer local pronunciation.
-Argument ‘word’ specified the word to be pronounced.
-Argument ‘pron’ specifies the new pronunciation. 
-
-(fn WORD PRON)
 @end format
 @end deffn
 
@@ -13613,42 +13519,6 @@ Send this command to the TTS directly.
 
 @subsection emacspeak-speak Options
 
-@defvar {User Option} emacspeak-audio-indentation
-@verbatim
-Option indicating if line indentation is cued.
-You can use  command ‘emacspeak-toggle-audio-indentation’ bound
-to C-e d i to toggle this
-setting.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-mail-alert
-@verbatim
- If t, emacspeak will alert you about newly arrived mail
-with an auditory icon when
-displaying the mode line.
-You can use command
-‘emacspeak-toggle-mail-alert’ bound to
-C-e M-m to set this option. 
-@end verbatim
-
-Default Value: 
-@verbatim
-
-t
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} emacspeak-mail-alert-interval
 @verbatim
 Interval in seconds between mail alerts for the same pending
@@ -13693,20 +13563,6 @@ Default Value:
 
 @end defvar
 
-@defvar {User Option} emacspeak-speak-filter-persistent-store
-@verbatim
-File where emacspeak filters are persisted.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-"/home/raman/.emacspeak/.filters"
-
-@end verbatim
-
-@end defvar
-
 @defvar {User Option} emacspeak-speak-time-brief-format
 @verbatim
 Format for time in brief.
@@ -13732,20 +13588,6 @@ Default Value:
 @verbatim
 
 "%l %M%p on %A %B %_e"
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-speak-zoneinfo-directory
-@verbatim
-Directory containing timezone data.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-"/usr/share/zoneinfo/"
 
 @end verbatim
 
@@ -17987,6 +17829,25 @@ Toggle pronunciation of yyyymmdd  dates.
 @end format
 @end deffn
 
+@subsubsection emacspeak-wizards-tramp-open-location
+@deffn {Command} emacspeak-wizards-tramp-open-location  (name)
+@table @kbd
+@item C-; C-t
+@kindex C-; C-t
+@item C-x @@ h C-t
+@kindex C-x @@ h C-t
+@end table
+
+@findex emacspeak-wizards-tramp-open-location
+
+@format
+Open specified tramp location.
+Location is specified by name.
+
+(fn NAME)
+@end format
+@end deffn
+
 @subsubsection emacspeak-wizards-tune-in-radio-browse
 @deffn {Command} emacspeak-wizards-tune-in-radio-browse  (&optional category)
 @table @kbd
@@ -18184,6 +18045,23 @@ Default Value:
 @verbatim
 
 ""
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} emacspeak-wizards-tramp-locations
+@verbatim
+Tramp locations used by Emacspeak tramp wizard.
+Locations added here via custom can be opened using command
+emacspeak-wizards-tramp-open-location
+bound to C-x @@ h C-t.
+@end verbatim
+
+Default Value: 
+@verbatim
+
+nil
 
 @end verbatim
 

@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on February 28, 2024.
+last updated on March 1, 2024.
 
 
 File: emacspeak.info,  Node: emacspeak-exwm,  Next: emacspeak-feeds,  Prev: emacspeak-extras,  Up: Emacspeak Commands And Options
@@ -920,7 +920,8 @@ value-add provided by package ido.el is visual feedback.  Speech UI
 Challenge: What is the most efficient means of conveying a dynamically
 updating set of choices?  current strategy is to walk the list using c-s
 and c-r as provided by ido Set number matches shown (ido-max-prospects)
-to 3 using Custom so you dont hear the entire list.
+to 2 or 3 using Custom so you dont hear the entire list.  See
+<https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html>.
 
 
 File: emacspeak.info,  Node: emacspeak-iedit,  Next: emacspeak-indium,  Prev: emacspeak-ido,  Up: Emacspeak Commands And Options
@@ -2832,7 +2833,6 @@ binds ‘s’ to this command.
 .................................................
 
  -- Command: emacspeak-muggles-maths-navigator/body
-     ‘s-SPC’
 
      Call the body in the "emacspeak-muggles-maths-navigator" hydra.
 
@@ -3893,25 +3893,14 @@ given file.
 12.151.2 Emacspeak-Pronounce Commands
 -------------------------------------
 
-12.151.2.1 emacspeak-pronounce-clear-dictionaries
-.................................................
+12.151.2.1 emacspeak-pronounce-clear
+....................................
 
- -- Command: emacspeak-pronounce-clear-dictionaries
+ -- Command: emacspeak-pronounce-clear
 
      Clear all current pronunciation dictionaries.
 
-12.151.2.2 emacspeak-pronounce-define-local-pronunciation
-.........................................................
-
- -- Command: emacspeak-pronounce-define-local-pronunciation (word pron)
-
-     Define buffer local pronunciation.
-     Argument ‘word’ specified the word to be pronounced.
-     Argument ‘pron’ specifies the new pronunciation.
-
-     (fn WORD PRON)
-
-12.151.2.3 emacspeak-pronounce-define-pronunciation
+12.151.2.2 emacspeak-pronounce-define-pronunciation
 ...................................................
 
  -- Command: emacspeak-pronounce-define-pronunciation
@@ -3920,7 +3909,7 @@ given file.
      Default term to define is delimited by region.
      First loads any persistent dictionaries if not already loaded.
 
-12.151.2.4 emacspeak-pronounce-define-template-pronunciation
+12.151.2.3 emacspeak-pronounce-define-template-pronunciation
 ............................................................
 
  -- Command: emacspeak-pronounce-define-template-pronunciation
@@ -3929,7 +3918,7 @@ given file.
      Default term to define is delimited by region.
      First loads any persistent dictionaries if not already loaded.
 
-12.151.2.5 emacspeak-pronounce-dispatch
+12.151.2.4 emacspeak-pronounce-dispatch
 .......................................
 
  -- Command: emacspeak-pronounce-dispatch
@@ -3937,7 +3926,7 @@ given file.
 
      Pronounce Frontend
 
-12.151.2.6 emacspeak-pronounce-edit-pronunciations
+12.151.2.5 emacspeak-pronounce-edit-pronunciations
 ..................................................
 
  -- Command: emacspeak-pronounce-edit-pronunciations (key)
@@ -3947,7 +3936,7 @@ given file.
 
      (fn KEY)
 
-12.151.2.7 emacspeak-pronounce-load-dictionaries
+12.151.2.6 emacspeak-pronounce-load-dictionaries
 ................................................
 
  -- Command: emacspeak-pronounce-load-dictionaries (&optional filename)
@@ -3958,7 +3947,7 @@ given file.
 
      (fn &optional FILENAME)
 
-12.151.2.8 emacspeak-pronounce-merge-dictionaries
+12.151.2.7 emacspeak-pronounce-merge-dictionaries
 .................................................
 
  -- Command: emacspeak-pronounce-merge-dictionaries (from into)
@@ -3967,21 +3956,21 @@ given file.
 
      (fn FROM INTO)
 
-12.151.2.9 emacspeak-pronounce-refresh-pronunciations
+12.151.2.8 emacspeak-pronounce-refresh-pronunciations
 .....................................................
 
  -- Command: emacspeak-pronounce-refresh-pronunciations
 
      Refresh pronunciation table for current buffer.
 
-12.151.2.10 emacspeak-pronounce-save-dictionaries
-.................................................
+12.151.2.9 emacspeak-pronounce-save-dictionaries
+................................................
 
  -- Command: emacspeak-pronounce-save-dictionaries
 
      Saves  pronunciation dictionaries.
 
-12.151.2.11 emacspeak-pronounce-toggle-use-of-dictionaries
+12.151.2.10 emacspeak-pronounce-toggle-use-of-dictionaries
 ..........................................................
 
  -- Command: emacspeak-pronounce-toggle-use-of-dictionaries (&optional
@@ -3991,7 +3980,7 @@ given file.
 
      (fn &optional STATE)
 
-12.151.2.12 emacspeak-pronounce-toggle-voice
+12.151.2.11 emacspeak-pronounce-toggle-voice
 ............................................
 
  -- Command: emacspeak-pronounce-toggle-voice
@@ -5610,30 +5599,6 @@ of emacspeak from becoming dependent on the speech server modules
 12.178.2 emacspeak-speak Options
 --------------------------------
 
- -- Variable: User Option emacspeak-audio-indentation
-     Option indicating if line indentation is cued.
-     You can use  command ‘emacspeak-toggle-audio-indentation’ bound
-     to C-e d i to toggle this
-     setting.
-
-     Default Value:
-     
-     nil
-     
-
- -- Variable: User Option emacspeak-mail-alert
-      If t, emacspeak will alert you about newly arrived mail
-     with an auditory icon when
-     displaying the mode line.
-     You can use command
-     ‘emacspeak-toggle-mail-alert’ bound to
-     C-e M-m to set this option. 
-
-     Default Value:
-     
-     t
-     
-
  -- Variable: User Option emacspeak-mail-alert-interval
      Interval in seconds between mail alerts for the same pending
        message.
@@ -5660,14 +5625,6 @@ of emacspeak from becoming dependent on the speech server modules
      (emacspeak-m-player-pause-or-resume emacspeak-emms-pause-or-resume)
      
 
- -- Variable: User Option emacspeak-speak-filter-persistent-store
-     File where emacspeak filters are persisted.
-
-     Default Value:
-     
-     "/home/raman/.emacspeak/.filters"
-     
-
  -- Variable: User Option emacspeak-speak-time-brief-format
      Format for time in brief.
 
@@ -5684,14 +5641,6 @@ of emacspeak from becoming dependent on the speech server modules
      Default Value:
      
      "%l %M%p on %A %B %_e"
-     
-
- -- Variable: User Option emacspeak-speak-zoneinfo-directory
-     Directory containing timezone data.
-
-     Default Value:
-     
-     "/usr/share/zoneinfo/"
      
 
 
@@ -8945,7 +8894,19 @@ Contains various wizards for the Emacspeak desktop.
 
      Toggle pronunciation of yyyymmdd  dates.
 
-12.214.1.95 emacspeak-wizards-tune-in-radio-browse
+12.214.1.95 emacspeak-wizards-tramp-open-location
+.................................................
+
+ -- Command: emacspeak-wizards-tramp-open-location (name)
+     ‘C-; C-t’
+     ‘C-x @ h C-t’
+
+     Open specified tramp location.
+     Location is specified by name.
+
+     (fn NAME)
+
+12.214.1.96 emacspeak-wizards-tune-in-radio-browse
 ..................................................
 
  -- Command: emacspeak-wizards-tune-in-radio-browse (&optional category)
@@ -8957,7 +8918,7 @@ Contains various wizards for the Emacspeak desktop.
 
      (fn &optional CATEGORY)
 
-12.214.1.96 emacspeak-wizards-tune-in-radio-search
+12.214.1.97 emacspeak-wizards-tune-in-radio-search
 ..................................................
 
  -- Command: emacspeak-wizards-tune-in-radio-search
@@ -8966,7 +8927,7 @@ Contains various wizards for the Emacspeak desktop.
 
      Search Tune-In Radio.
 
-12.214.1.97 emacspeak-wizards-units
+12.214.1.98 emacspeak-wizards-units
 ...................................
 
  -- Command: emacspeak-wizards-units
@@ -8974,15 +8935,15 @@ Contains various wizards for the Emacspeak desktop.
 
      Run units.
 
-12.214.1.98 emacspeak-wizards-vc-n
+12.214.1.99 emacspeak-wizards-vc-n
 ..................................
 
  -- Command: emacspeak-wizards-vc-n
 
      Accelerator for VC viewer.
 
-12.214.1.99 emacspeak-wizards-vc-view-mode
-..........................................
+12.214.1.100 emacspeak-wizards-vc-view-mode
+...........................................
 
  -- Command: emacspeak-wizards-vc-view-mode
 
@@ -8996,7 +8957,7 @@ Contains various wizards for the Emacspeak desktop.
      run, this mode runs the hook ‘emacspeak-wizards-vc-view-mode-hook’, as
      the final or penultimate step during initialization.
 
-12.214.1.100 emacspeak-wizards-vc-viewer
+12.214.1.101 emacspeak-wizards-vc-viewer
 ........................................
 
  -- Command: emacspeak-wizards-vc-viewer (console)
@@ -9006,21 +8967,21 @@ Contains various wizards for the Emacspeak desktop.
 
      (fn CONSOLE)
 
-12.214.1.101 emacspeak-wizards-vc-viewer-refresh
+12.214.1.102 emacspeak-wizards-vc-viewer-refresh
 ................................................
 
  -- Command: emacspeak-wizards-vc-viewer-refresh
 
      Refresh view of VC we’re viewing.
 
-12.214.1.102 emacspeak-wizards-view-buffers-filtered-by-m-player-mode
+12.214.1.103 emacspeak-wizards-view-buffers-filtered-by-m-player-mode
 .....................................................................
 
  -- Command: emacspeak-wizards-view-buffers-filtered-by-m-player-mode
 
      Buffer menu filtered by  m-player mode.
 
-12.214.1.103 emacspeak-wizards-view-buffers-filtered-by-this-mode
+12.214.1.104 emacspeak-wizards-view-buffers-filtered-by-this-mode
 .................................................................
 
  -- Command: emacspeak-wizards-view-buffers-filtered-by-this-mode
@@ -9073,6 +9034,17 @@ Contains various wizards for the Emacspeak desktop.
      Default Value:
      
      ""
+     
+
+ -- Variable: User Option emacspeak-wizards-tramp-locations
+     Tramp locations used by Emacspeak tramp wizard.
+     Locations added here via custom can be opened using command
+     emacspeak-wizards-tramp-open-location
+     bound to C-x @@ h C-t.
+
+     Default Value:
+     
+     nil
      
 
 
@@ -10207,4 +10179,127 @@ email, IM, ...  map to the same _mood_.
      
      ("-m" "0.3")
      
+
+
+File: emacspeak.info,  Node: sox,  Next: sox-gen,  Prev: soundscape,  Up: Emacspeak Commands And Options
+
+12.233 sox
+==========
+
+This module defines a convenient speech-enabled interface for editing
+mp3 and wav files using SoX.
+
+   Launching M-x sox creates a special interaction buffer that provides
+single keystroke commands for editing and applying effects to a selected
+sound file.  For adding mp3 support to sox, do
+
+   sudo apt-get libsox-fmt-mp3 install
+
+   This module provides support for ladspa effects using module
+ladspa.el.  To use ladspa effects with SoX, you need a relatively new
+build of Sox; The stock SoX that is package for Debian/Ubuntu does not
+always work.  This module can be used independent of Emacspeak.
+
+12.233.1 Sox Commands
+---------------------
+
+12.233.1.1 sox-add-effect
+.........................
+
+ -- Command: sox-add-effect (name)
+
+     Adds  effect at the end of the effect list
+
+     (fn NAME)
+
+12.233.1.2 sox-delete-effect-at-point
+.....................................
+
+ -- Command: sox-delete-effect-at-point
+
+     Delete effect at point.
+
+     This function has :around advice: ‘ad-Advice-sox-delete-effect-at-point’.
+
+     (fn)
+
+12.233.1.3 sox-edit-effect-at-point
+...................................
+
+ -- Command: sox-edit-effect-at-point
+
+     Edit effect at point.
+
+12.233.1.4 sox-mode
+...................
+
+ -- Command: sox-mode
+
+     An audio workbench for the Emacspeak desktop.
+
+     In addition to any hooks its parent mode ‘special-mode’ might have
+     run, this mode runs the hook ‘sox-mode-hook’, as the final or
+     penultimate step during initialization.
+
+
+12.233.1.5 sox-open-file
+........................
+
+ -- Command: sox-open-file (snd-file)
+
+     Open specified snd-file on the Audio Workbench.
+
+     This function has :around advice: ‘ad-Advice-sox-open-file’.
+
+     (fn SND-FILE)
+
+12.233.1.6 sox-play
+...................
+
+ -- Command: sox-play
+
+     Play sound .
+
+12.233.1.7 sox-refresh
+......................
+
+ -- Command: sox-refresh
+
+     Redraw Audio Workbench.
+
+     This function has :around advice: ‘ad-Advice-sox-refresh’.
+
+     (fn)
+
+12.233.1.8 sox-save
+...................
+
+ -- Command: sox-save (save-file)
+
+     Save context to  file after prompting.
+
+     (fn SAVE-FILE)
+
+12.233.1.9 sox-set-effect
+.........................
+
+ -- Command: sox-set-effect (name)
+
+     Set effect.
+
+     (fn NAME)
+
+12.233.1.10 sox-show-timestamp
+..............................
+
+ -- Command: sox-show-timestamp
+
+     Show timestamp   in stream.
+
+12.233.1.11 sox-stop
+....................
+
+ -- Command: sox-stop
+
+     Stop currently playing  sound from current context.
 
