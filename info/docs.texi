@@ -48,6 +48,7 @@
 * emacspeak-dismal::Speech enable Dismal.
 * emacspeak-dumb-jump::DUMB-JUMP.
 * emacspeak-eat::Speech-enable EAT.
+* emacspeak-ebuku::Speech-enable EBUKU.
 * emacspeak-ecb::speech-enable ECB.
 * emacspeak-ediff::Speech enable  ediff.
 * emacspeak-eglot::Speech-enable EGLOT.
@@ -247,7 +248,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1159 commands and 128 options.
+This chapter documents a total of 1165 commands and 128 options.
 
 @node amixer
 @section amixer
@@ -1178,34 +1179,6 @@ nil
 
 @end defvar
 
-@defvar {User Option} emacspeak-speak-messages-filter
-@verbatim
-List of strings used to filter spoken messages.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-("Decrypting" "psession" "auto saving")
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-speak-tooltips
-@verbatim
-Enable to get tooltips spoken.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
-
-@end verbatim
-
-@end defvar
-
 @node emacspeak-2048
 @section emacspeak-2048
 
@@ -1363,6 +1336,36 @@ Note that we needed to advice a lot more for Emacs 19 and
 Emacs 20 than we do for Emacs 21 and Emacs 22.
 As of August 2007, this file is being purged of advice forms
 not needed in Emacs 22.
+
+@subsection emacspeak-advice Options
+
+@defvar {User Option} emacspeak-speak-messages-filter
+@verbatim
+List of strings used to filter spoken messages.
+@end verbatim
+
+Default Value: 
+@verbatim
+
+("Decrypting" "psession" "auto saving")
+
+@end verbatim
+
+@end defvar
+
+@defvar {User Option} emacspeak-speak-tooltips
+@verbatim
+Enable to get tooltips spoken.
+@end verbatim
+
+Default Value: 
+@verbatim
+
+nil
+
+@end verbatim
+
+@end defvar
 
 @node emacspeak-amark
 @section emacspeak-amark
@@ -3498,6 +3501,11 @@ This module speech-enables dumb-jump
 
 EAT ==  Emacs Terminal Emulator
 
+@node emacspeak-ebuku
+@section emacspeak-ebuku
+
+EBUKU ==  Emacs Buku front-end to manage bookmarks.
+
 @node emacspeak-ecb
 @section emacspeak-ecb
 
@@ -3597,7 +3605,7 @@ EGLOT ==  LSP Support for emacs
 @section emacspeak-ein
 
 EIN ==  Emacs IPython Notebook
-You can install package EIN via mELPA
+You can install package EIN via Melpa
 This module speech-enables EIN
 
 @subsection Emacspeak-Ein Commands
@@ -3728,6 +3736,11 @@ Provides better Youtube integration
 
 @subsubsection emacspeak-empv-absolute-seek
 @deffn {Command} emacspeak-empv-absolute-seek  (target)
+@table @kbd
+@item s-SPC s
+@kindex s-SPC s
+@end table
+
 @findex emacspeak-empv-absolute-seek
 
 @format
@@ -3746,8 +3759,55 @@ Accumulate media links to register u
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-backward-10-minutes
+@deffn {Command} emacspeak-empv-backward-10-minutes   
+@table @kbd
+@item s-SPC <up>
+@kindex s-SPC <up>
+@end table
+
+@findex emacspeak-empv-backward-10-minutes
+
+@format
+Move backward by 10 minutes
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-backward-30-minutes
+@deffn {Command} emacspeak-empv-backward-30-minutes   
+@table @kbd
+@item s-SPC <prior>
+@kindex s-SPC <prior>
+@end table
+
+@findex emacspeak-empv-backward-30-minutes
+
+@format
+Move backward by 30 minutes
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-backward-5-minutes
+@deffn {Command} emacspeak-empv-backward-5-minutes   
+@table @kbd
+@item s-SPC <left>
+@kindex s-SPC <left>
+@end table
+
+@findex emacspeak-empv-backward-5-minutes
+
+@format
+Move backward by 5 minutes
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-backward-minute
 @deffn {Command} emacspeak-empv-backward-minute  (&optional count)
+@table @kbd
+@item s-SPC M
+@kindex s-SPC M
+@end table
+
 @findex emacspeak-empv-backward-minute
 
 @format
@@ -3759,6 +3819,11 @@ Move back  count  minutes.
 
 @subsubsection emacspeak-empv-clear-filter
 @deffn {Command} emacspeak-empv-clear-filter   
+@table @kbd
+@item s-SPC DEL
+@kindex s-SPC DEL
+@end table
+
 @findex emacspeak-empv-clear-filter
 
 @format
@@ -3766,8 +3831,55 @@ Clear all filters.
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-forward-10-minutes
+@deffn {Command} emacspeak-empv-forward-10-minutes   
+@table @kbd
+@item s-SPC <down>
+@kindex s-SPC <down>
+@end table
+
+@findex emacspeak-empv-forward-10-minutes
+
+@format
+Move forward by 10 minutes
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-forward-30-minutes
+@deffn {Command} emacspeak-empv-forward-30-minutes   
+@table @kbd
+@item s-SPC <next>
+@kindex s-SPC <next>
+@end table
+
+@findex emacspeak-empv-forward-30-minutes
+
+@format
+Move forward by 30 minutes
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-forward-5-minutes
+@deffn {Command} emacspeak-empv-forward-5-minutes   
+@table @kbd
+@item s-SPC <right>
+@kindex s-SPC <right>
+@end table
+
+@findex emacspeak-empv-forward-5-minutes
+
+@format
+Move forward by 5 minutes
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-forward-minute
 @deffn {Command} emacspeak-empv-forward-minute  (&optional count)
+@table @kbd
+@item s-SPC m
+@kindex s-SPC m
+@end table
+
 @findex emacspeak-empv-forward-minute
 
 @format
@@ -3779,6 +3891,11 @@ Move forward count  minutes.
 
 @subsubsection emacspeak-empv-percentage-seek
 @deffn {Command} emacspeak-empv-percentage-seek  (target)
+@table @kbd
+@item s-SPC %
+@kindex s-SPC %
+@end table
+
 @findex emacspeak-empv-percentage-seek
 
 @format
@@ -3856,6 +3973,11 @@ Interactive prefix arg plays on left ear.
 
 @subsubsection emacspeak-empv-relative-seek
 @deffn {Command} emacspeak-empv-relative-seek  (target)
+@table @kbd
+@item s-SPC r
+@kindex s-SPC r
+@end table
+
 @findex emacspeak-empv-relative-seek
 
 @format
@@ -3867,6 +3989,11 @@ Relative seek in seconds,see ‘empv-seek’
 
 @subsubsection emacspeak-empv-time-pos
 @deffn {Command} emacspeak-empv-time-pos   
+@table @kbd
+@item s-SPC =
+@kindex s-SPC =
+@end table
+
 @findex emacspeak-empv-time-pos
 
 @format
@@ -3876,6 +4003,11 @@ Speak time and percent position.
 
 @subsubsection emacspeak-empv-toggle-custom
 @deffn {Command} emacspeak-empv-toggle-custom   
+@table @kbd
+@item s-SPC .
+@kindex s-SPC .
+@end table
+
 @findex emacspeak-empv-toggle-custom
 
 @format
@@ -3885,6 +4017,11 @@ Toggle our custom filters.
 
 @subsubsection emacspeak-empv-toggle-filter
 @deffn {Command} emacspeak-empv-toggle-filter  (filter)
+@table @kbd
+@item s-SPC ;
+@kindex s-SPC ;
+@end table
+
 @findex emacspeak-empv-toggle-filter
 
 @format
@@ -3897,6 +4034,11 @@ Filter is of the  form name=arg-1:arg-2:...
 
 @subsubsection emacspeak-empv-yt-download
 @deffn {Command} emacspeak-empv-yt-download   
+@table @kbd
+@item s-SPC y
+@kindex s-SPC y
+@end table
+
 @findex emacspeak-empv-yt-download
 
 @format
@@ -5517,6 +5659,9 @@ transforms like @code{sort-tables}.
 @subsection Miscellaneous Commands
 
 @table @kbd
+@item ;
+ @command{emacspeak-eww-play-audio/video}
+When on an audio element, plays audio under point.
 @item  C-RET
 @command {emacspeak-eww-fillin-form-field}
 When on an input field, insert  username/password information
@@ -7829,8 +7974,11 @@ Challenge: What is the most efficient means of conveying a
 dynamically updating set of choices?  current strategy is to walk
 the list using c-s and c-r as provided by ido Set number matches
 shown (ido-max-prospects) to 2 or 3 using Custom so you dont hear the
-entire list.
-See @url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html}.
+entire list. You can also customize @var{ido-decorations} to taste.
+See
+@url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html},
+for an article on how to reason about designing  good auditory
+interfaces for these types of situations.
 
 @node emacspeak-iedit
 @section emacspeak-iedit
@@ -8223,6 +8371,7 @@ Default Value:
 @verbatim
 
 (("SPC" emacspeak-speak-spaces)
+ ("b" ebuku)
  ("v" view-register))
 
 @end verbatim
@@ -8274,7 +8423,7 @@ Default Value:
  ("i" ibuffer)
  ("m" mspools-show)
  ("o" emacspeak-wizards-occur-header-lines)
- ("p" list-packages)
+ ("p" paradox-list-packages)
  ("t" emacspeak-speak-telephone-directory)
  ("u" emacspeak-wizards-units)
  ("v" emacspeak-wizards-vc-viewer)
@@ -11187,6 +11336,7 @@ POPUP ==  popup.el from MELPA
 Module that is preloaded by every emacspeak module.
 1.  Defines key macros.
 2. Defines location-related variables.
+Define locations of executables.;;; Code:
 
 @node emacspeak-proced
 @section emacspeak-proced
@@ -11416,9 +11566,9 @@ Saves  pronunciation dictionaries.
 @end format
 @end deffn
 
-@subsubsection emacspeak-pronounce-toggle-use-of-dictionaries
-@deffn {Command} emacspeak-pronounce-toggle-use-of-dictionaries  (&optional state)
-@findex emacspeak-pronounce-toggle-use-of-dictionaries
+@subsubsection emacspeak-pronounce-toggle-dictionaries
+@deffn {Command} emacspeak-pronounce-toggle-dictionaries  (&optional state)
+@findex emacspeak-pronounce-toggle-dictionaries
 
 @format
 Toggle  pronunciation dictionaries. 
@@ -12546,7 +12696,7 @@ Property search for face at point see M-x text-property-search-backward
 @findex emacspeak-speak-face-browse
 
 @format
-Use C-f and C-b to browse by current face.
+Use C-f and C-b or left/right arrows to browse by current face.
 @end format
 @end deffn
 
@@ -20346,7 +20496,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 63 URL Templates.
+This section documents a total of 64 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20414,7 +20564,9 @@ Lookup ticker on Google Finance.@item @b{finance summary from google}
 
 Display top stocks  from Google Finance.@item @b{freesound}
 
-Search FreeSound.@item @b{google news search}
+Search FreeSound.@item @b{gita}
+
+Open specific chapter/verse in the Gita @item @b{google news search}
 
 Search Google news.@item @b{google scholar}
 

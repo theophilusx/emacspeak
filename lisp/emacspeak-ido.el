@@ -45,8 +45,11 @@
 ;; dynamically updating set of choices?  current strategy is to walk
 ;; the list using c-s and c-r as provided by ido Set number matches
 ;; shown (ido-max-prospects) to 2 or 3 using Custom so you dont hear the
-;; entire list.
-;; See @url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html}.
+;; entire list. You can also customize @var{ido-decorations} to taste.
+;; See
+;; @url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html},
+;; for an article on how to reason about designing  good auditory
+;; interfaces for these types of situations.
 ;;; Code:
 
 
@@ -75,18 +78,19 @@
 
 (defadvice ido-exhibit (after emacspeak pre act comp)
   "Speak ido minibuffer intelligently."
-  (condition-case nil
-      (when  (and ido-matches (sit-for emacspeak-ido-typing-delay))
-        (dtk-notify-speak
-         (concat
-            (minibuffer-contents)
-          (format " %d choices: "  (length ido-matches))
-          (if
-              (or (null ido-current-directory)
-                  (string-equal ido-current-directory emacspeak-ido-cache))
-              " "
-            (format "In %s" (abbreviate-file-name ido-current-directory))))))
-    (error (dtk-initialize))))
+  (when   ido-matches 
+    (when (> (length ido-matches) ido-max-prospects) (emacspeak-icon
+                                                      'ellipses))
+    (dtk-notify-speak
+     (concat
+      (minibuffer-contents)
+      (format " %d choices: "  (length ido-matches))
+      (if
+          (or (null ido-current-directory)
+              (string-equal ido-current-directory emacspeak-ido-cache))
+          " "
+        (format "In %s" (abbreviate-file-name
+                         ido-current-directory)))))))
 
 ;;;  speech-enable interactive commands:
 

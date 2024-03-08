@@ -117,7 +117,7 @@ Startup  apps that need the network."
   (cl-declare (special emacspeak-speak-network-interfaces-list))
   (setq emacspeak-speak-network-interfaces-list
         (ems--get-active-network-interfaces))
-  (dtk-notify-say
+  (dtk-notify-speak
    (message "Network up: %s"
             (ems--get-essid)))
   (emacspeak-icon 'network-up))
@@ -129,8 +129,8 @@ Stop apps that use the network."
   (setq emacspeak-speak-network-interfaces-list
         (mapcar #'car (network-interface-list)))
   (emacspeak-icon 'network-down)
-  (dtk-notify-say "Network down")
-  (message (mapconcat #'identity emacspeak-speak-network-interfaces-list "")))
+  (message (mapconcat #'identity emacspeak-speak-network-interfaces-list ""))
+  (dtk-notify-speak "Network down"))
 
 (add-hook 'nm-connected-hook 'emacspeak-dbus-nm-connected)
 (add-hook 'nm-disconnected-hook 'emacspeak-dbus-nm-disconnected)

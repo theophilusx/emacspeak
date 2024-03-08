@@ -40,12 +40,13 @@
 ;; Module that is preloaded by every emacspeak module.
 ;; 1.  Defines key macros.
 ;; 2. Defines location-related variables.
-;;; Code:
+;; Define locations of executables.;;; Code:
 
 ;;;  cl:
 
-(eval-when-compile (require 'cl-lib)
-                   (require 'subr-x))
+(eval-when-compile
+  (require 'cl-lib)
+  (require 'subr-x))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (cl-pushnew (file-name-directory load-file-name) load-path :test #'string=)
 
@@ -53,19 +54,53 @@
 (put 'defadvice 'byte-obsolete-info nil)
 (setq ad-redefinition-action 'accept)
 
-;;;   Define locations
-;; Variable names: emacspeak-<prog> as far as possible
-;; defconst, not defcustom unless absolutely necessary.
-;; amixer
+;;;   Define locations:
 
-(defconst emacspeak-amixer  (executable-find "amixer") "Amixer program")
-;; wpctl:
-(defconst emacspeak-wpctl (executable-find "wpctl") "wpctl
-executable")
+(defconst emacspeak-directory
+  (expand-file-name "../" (file-name-directory load-file-name))
+  "emacspeak directory")
+
+(defconst emacspeak-lisp-directory
+  (expand-file-name  "lisp/" emacspeak-directory)
+  "Lisp directory.")
+
+(defconst emacspeak-sounds-dir
+  (expand-file-name  "sounds/" emacspeak-directory)
+  "Auditory icons directory.")
+
+(defconst emacspeak-xslt-directory
+  (expand-file-name "xsl/" emacspeak-directory)
+  "XSLT.")
+
+(defconst emacspeak-etc-directory
+  (expand-file-name  "etc/" emacspeak-directory)
+  "Misc.")
+
+(defconst emacspeak-servers-directory
+  (expand-file-name  "servers/" emacspeak-directory)
+  "Speech servers.")
+
+(defconst emacspeak-info-directory
+  (expand-file-name  "info/" emacspeak-directory)
+  "Info")
+
+(defconst emacspeak-user-directory (expand-file-name "~/.emacspeak/")
+  "Resources.")
+
+(defconst emacspeak-readme-file
+  (expand-file-name "README" emacspeak-directory)
+  "README.")
+
+(defconst emacspeak-icon
+  (expand-file-name "emacspeak.ogg" emacspeak-sounds-dir)
+  "Emacspeak startup icon.")
+
 ;; local media dir
 (defconst emacspeak-media (getenv "XDG_MUSIC_DIR")
   "Local media directory.")
-
+(defconst  emacspeak-media-shortcuts
+  (expand-file-name "media/radio/" emacspeak-directory)
+  "Directory where we organize   and media shortcuts. ")
 (defconst emacspeak-media-extensions
   (eval-when-compile
     (let
@@ -79,6 +114,24 @@ executable")
        (regexp-opt ext)
        "$")))
   "Media Extensions.")
+
+(defconst  emacspeak-playlist-pattern
+  (eval-when-compile
+    (concat
+     (regexp-opt
+      (list ".m3u" ".asx" ".pls"  ".ram"))
+     "$"))
+  "Playlist pattern.")
+
+;;; Executable Variable names:
+;; emacspeak-<prog> as far as possible
+
+;; amixer
+(defconst emacspeak-amixer  (executable-find "amixer") "Amixer program")
+
+;; wpctl:
+(defconst emacspeak-wpctl (executable-find "wpctl") "wpctl executable")
+
 ;; curl:
 (defconst emacspeak-curl (executable-find "curl") "Curl.")
 
@@ -102,80 +155,8 @@ executable")
 
 ;; youtube-dl
 (defconst emacspeak-ytdl (executable-find "youtube-dl") "Youtube DL Executable")
-;; where we live:
 
-;;;###autoload
-(defconst emacspeak-directory
-  (expand-file-name "../" (file-name-directory load-file-name))
-  "emacspeak directory")
-
-;;;###autoload
-(defconst emacspeak-lisp-directory
-  (expand-file-name  "lisp/" emacspeak-directory)
-  "Lisp directory.")
-
-;;;###autoload
-(defconst emacspeak-sounds-dir
-  (expand-file-name  "sounds/" emacspeak-directory)
-  "Auditory icons directory.")
-
-;;;###autoload
-(defconst emacspeak-xslt-directory
-  (expand-file-name "xsl/" emacspeak-directory)
-  "XSLT.")
-
-;;;###autoload
-(defconst emacspeak-etc-directory
-  (expand-file-name  "etc/" emacspeak-directory)
-  "Misc.")
-
-;;;###autoload
-(defconst emacspeak-servers-directory
-  (expand-file-name  "servers/" emacspeak-directory)
-  "Speech servers.")
-
-;;;###autoload
-(defconst emacspeak-info-directory
-  (expand-file-name  "info/" emacspeak-directory)
-  "Info")
-
-;;;###autoload
-(defconst emacspeak-user-directory (expand-file-name "~/.emacspeak/")
-  "Resources.")
-
-(defconst emacspeak-readme-file
-  (expand-file-name "README" emacspeak-directory)
-  "README.")
-
-(defconst emacspeak-icon
-  (expand-file-name "emacspeak.ogg" emacspeak-sounds-dir)
-  "Emacspeak startup icon.")
-
-;;;###autoload
-(defconst emacspeak-media-extensions
-  (eval-when-compile
-    (let
-        ((ext
-          '("m3u" "pls"                 ; incorporate playlist ext
-            "flac" "m4a" "m4b"
-            "aiff" "aac" "opus" "mkv"
-            "ogv" "oga" "ogg" "mp3"  "mp4" "webm" "wav")))
-      (concat
-       "\\."
-       (regexp-opt ext)
-       "$")))
-  "Media Extensions.")
-
-;;;###autoload
-(defconst  emacspeak-playlist-pattern
-  (eval-when-compile
-    (concat
-     (regexp-opt
-      (list ".m3u" ".asx" ".pls"  ".ram"))
-     "$"))
-  "Playlist pattern.")
-
-;;;   xslt Environment:
+;;   xslt Environment:
 (defsubst emacspeak-xslt-get (style)
   "Return  stylesheet path."
   (expand-file-name style emacspeak-xslt-directory))
@@ -191,6 +172,7 @@ executable")
 (defconst emacspeak-atom-xsl
   (eval-when-compile  (emacspeak-xslt-get "atom.xsl"))
   "XSL stylesheet used for viewing Atom Feeds.")
+
 ;;; Git Revision:
 (defun emacspeak-get-revision ()
   "Get SHA checksum of current revision that is suitable for spoken output."
@@ -199,8 +181,7 @@ executable")
              (file-exists-p (expand-file-name ".git" emacspeak-directory)))
         (propertize
          (substring
-          (shell-command-to-string "git show -s --pretty=format:%h
-  HEAD ")
+          (shell-command-to-string "git show -s --pretty=format:%h HEAD ")
           0 7)
          'personality 'acss-s4-r6)
       "")))
@@ -210,6 +191,7 @@ executable")
   "Git Revision")
 
 ;;; Pull in core libraries:
+(provide 'emacspeak-preamble) ; avoid recursion
 (mapc
  #'require
  '(
@@ -288,4 +270,3 @@ FN-NAME to our stored value of ems--interactive-fn-name."
     (load file)))
 
 (provide  'emacspeak-preamble)
-

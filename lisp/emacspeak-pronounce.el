@@ -138,21 +138,11 @@ the match  being passed to the func which returns  the new pronunciation."
 (defun emacspeak-pronounce-add-local-entry (string pronunciation)
   "Add  pronunciation for current buffer. "
   (cl-declare (special emacspeak-pronounce-table))
-  (cond
-   ((not (boundp 'emacspeak-pronounce-table)) ;first time
-    (set (make-local-variable 'emacspeak-pronounce-table)
-         (emacspeak-pronounce-compose-table))
-    (when (called-interactively-p 'interactive)(emacspeak-icon 'on)))
-   (emacspeak-pronounce-table ;already on --
-    (when (called-interactively-p 'interactive)(emacspeak-icon 'on)))
-   (t                                   ;turn it on
-    (setq emacspeak-pronounce-table
-          (emacspeak-pronounce-compose-table))))
-  (puthash string pronunciation
-           emacspeak-pronounce-table)
+  (unless emacspeak-pronounce-table
+    (setq emacspeak-pronounce-table (emacspeak-pronounce-compose-table)))
+  (puthash string pronunciation emacspeak-pronounce-table)
   (when (called-interactively-p 'interactive)
-    (message "Added local pronunciation in buffer %s"
-             (buffer-name))))
+    (message "Added local pronunciation in buffer %s" (buffer-name))))
 
 ;;; mode hierarchy per define-derived-mode:
 
@@ -417,8 +407,7 @@ Returns a pair of the form (key-type . key)."
       (or key (error "No directory associated with current buffer"))
       (setq key (intern key)))
      ((eq key-type 'mode)
-      (setq key
-            major-mode)
+      (setq key major-mode)
       (or key (error "No major mode found for current buffer")))
      (t (error "Cannot define pronunciations with key type %s" key-type)))
     (cons key-type key)))
@@ -486,24 +475,18 @@ First loads any persistent dictionaries if not already loaded."
   emacspeak-pronounce-table)
 
 ;;;###autoload
-(defun emacspeak-pronounce-toggle-use-of-dictionaries (&optional state)
+(defun emacspeak-pronounce-toggle-dictionaries (&optional state)
   "Toggle  pronunciation dictionaries. "
   (interactive "P")
   (cl-declare (special emacspeak-pronounce-table))
-  (unless state (setq state (not emacspeak-pronounce-table)))
+  (unless state (setq state (not emacspeak-pronounce-table))) ; toggle
   (cond
    (state
-    (unless emacspeak-pronounce-table
-      (setq emacspeak-pronounce-table
-            (emacspeak-pronounce-compose-table))))
-   ((null state)                        ;already on --turn it off
-    (setq emacspeak-pronounce-table nil)))
+    (setq emacspeak-pronounce-table (emacspeak-pronounce-compose-table)))
+   ((null state) (setq emacspeak-pronounce-table nil)))
   (when (called-interactively-p 'interactive)
-    (emacspeak-icon
-     (if emacspeak-pronounce-table 'on 'off))
-    (message
-     "Pronunciations %s."
-     (if emacspeak-pronounce-table " on " " off "))))
+    (emacspeak-icon (if emacspeak-pronounce-table 'on 'off))
+    (message "Pronunciations %s" (if emacspeak-pronounce-table "on" "off"))))
 
 (defun emacspeak-pronounce-refresh-pronunciations ()
   "Refresh pronunciation table for current buffer. "
@@ -588,7 +571,7 @@ First loads any persistent dictionaries if not already loaded."
   "Edit dictionary for given key"
   (cl-declare (special emacspeak-pronounce-dictionaries))
   (unless emacspeak-pronounce-table
-    (emacspeak-pronounce-toggle-use-of-dictionaries))
+    (emacspeak-pronounce-toggle-dictionaries))
   (let ((value (gethash key emacspeak-pronounce-dictionaries))
         (notify (emacspeak-pronounce-edit-generate-callback key))
         (buffer (get-buffer-create (format "*Dict: %s" key)))
@@ -680,7 +663,7 @@ specified pronunciation dictionary key."
       (?r (call-interactively 'emacspeak-pronounce-refresh-pronunciations))
       (?s (call-interactively 'emacspeak-pronounce-save-dictionaries))
       (?t (call-interactively
-           'emacspeak-pronounce-toggle-use-of-dictionaries))
+           'emacspeak-pronounce-toggle-dictionaries))
       (?v (call-interactively 'emacspeak-pronounce-toggle-voice))
       (otherwise (message emacspeak-pronounce-help)))
     (emacspeak-icon 'close-object)))

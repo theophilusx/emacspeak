@@ -505,6 +505,7 @@ name of the list.")
     (goto-char (point-min))
     (forward-line 1)
     (emacspeak-icon 'open-object)
+    (setq header-line-format "Portfolio")
     (rename-buffer "Portfolio" 'unique)
     (emacspeak-speak-line)))
 
@@ -557,6 +558,15 @@ name of the list.")
      (setq
       emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
  "Money Headlines From CNN")
+
+;;; Gita:
+
+(emacspeak-url-template-define
+ "Gita"
+ "https://www.holy-bhagavad-gita.org/chapter/%s/verse/%s"
+ (list "Chapter" "Verse")
+ 'emacspeak-eww-next-h
+ "Open specific chapter/verse in the Gita ")
 
 ;;;  sourceforge
 

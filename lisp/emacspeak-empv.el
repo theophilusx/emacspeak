@@ -71,6 +71,7 @@
   (when (ems-interactive-p)
     (dtk-stop 'all)
     (emacspeak-icon 'close-object)
+    (repeat-exit)
     (emacspeak-speak-mode-line)))
 
 (defadvice empv-youtube-tabulated (after emacspeak pre act comp)
@@ -164,39 +165,57 @@ Interactive prefix arg plays on left ear using alsa."
              (ems--format-clock (or .time-pos 0))
               (or .percent-pos 0))))
 
+(defsubst emacspeak-empv-post-nav ()
+  "Post nav action"
+  (when (called-interactively-p 'interactive)
+    (call-interactively 'emacspeak-empv-time-pos)
+    (emacspeak-icon 'tick-tick)))
+
 (defun emacspeak-empv-relative-seek (target)
   "Relative seek in seconds,see `empv-seek'"
   (interactive "nTarget:")
   (empv-seek target)
-  (when (called-interactively-p 'interactive)
-    (call-interactively 'emacspeak-empv-time-pos)
-    (emacspeak-icon 'large-movement)))
+  (emacspeak-empv-post-nav))
+
+(defun emacspeak-empv-absolute-seek (target)
+  "Absolute seek in seconds,see `empv-seek'"
+  (interactive "nTarget:")
+  (empv-seek target '("absolute"))
+  (emacspeak-empv-post-nav))
 
 (defun emacspeak-empv-backward-minute (&optional count)
   "Move back  count  minutes."
   (interactive "p")
   (or count (setq count 1))
   (empv-seek (* count -60))
-  (when (called-interactively-p 'interactive)
-    (call-interactively 'emacspeak-empv-time-pos)
-    (emacspeak-icon 'large-movement)))
+  (emacspeak-empv-post-nav))
 
 (defun emacspeak-empv-forward-minute (&optional count)
   "Move forward count  minutes."
   (interactive "p")
   (or count (setq count 1))
   (empv-seek (* count 60))
-  (when (called-interactively-p 'interactive)
-    (call-interactively 'emacspeak-empv-time-pos)
-    (emacspeak-icon 'large-movement)))
+  (emacspeak-empv-post-nav))
 
-(defun emacspeak-empv-absolute-seek (target)
-  "Absolute seek in seconds,see `empv-seek'"
-  (interactive "nTarget:")
-  (empv-seek target '("absolute"))
-  (when (called-interactively-p 'interactive)
-    (call-interactively 'emacspeak-empv-time-pos)
-    (emacspeak-icon 'large-movement)))
+;; Generate other navigators:
+
+(defun ems--empv-gen-nav (duration)
+  "Generate time navigator."
+  (eval
+   `(defun ,(intern  (format "emacspeak-empv-forward-%s-minutes" duration)) ()
+      ,(format "Move forward by %s minutes" duration )
+      (interactive )
+      (funcall-interactively 'emacspeak-empv-forward-minute ,duration)))
+  (eval
+   `(defun ,(intern  (format "emacspeak-empv-backward-%s-minutes" duration)) ()
+      ,(format "Move backward by %s minutes" duration )
+      (interactive )
+      (funcall-interactively 'emacspeak-empv-backward-minute
+                             ,duration))))
+
+
+;; Use it:
+(mapc #'ems--empv-gen-nav '(5 10 30))
 
 (defun emacspeak-empv-percentage-seek (target)
   "Percentage seek in seconds,see `empv-seek'"
@@ -211,37 +230,34 @@ Interactive prefix arg plays on left ear using alsa."
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
   (cl-declare (special empv-map))
-  (global-set-key (kbd "C-e C-;") empv-map)
-  (global-set-key (kbd "C-' v") empv-map)
-  (global-set-key (kbd "C-' ;") empv-map)
+  (global-set-key (kbd "s-SPC") empv-map)
   (cl-loop
    for b in
    '(
-  ("'" empv-current-loop-on)
-  ("." emacspeak-empv-toggle-custom)
-  ("/" empv-seek)
-  ("0" empv-volume-up)
-  ("9" empv-volume-down)
-  (";" emacspeak-empv-toggle-filter)
-  ("=" emacspeak-empv-time-pos)
-  ("C-j" empv-youtube-results-play-current)
-  ("DEL" emacspeak-empv-clear-filter)
-  ("M" emacspeak-empv-backward-minute)
-  ("RET" empv-youtube-tabulated)
-  ("SPC" empv-toggle)
-  ("k" empv-exit)
-  ("m" emacspeak-empv-forward-minute)
-  ("r" emacspeak-empv-relative-seek)
-  ("s" emacspeak-empv-absolute-seek)
-  ("u" emacspeak-empv-accumulate-to-register)
-  ("v" empv-set-volume)
-  ("x" empv-exit)
-  ("y" emacspeak-empv-yt-download)
-("%" emacspeak-empv-percentage-seek)
-  )
+     ("%" emacspeak-empv-percentage-seek)
+     ("'" empv-current-loop-on)
+     ("." emacspeak-empv-toggle-custom)
+     ("0" empv-volume-up)
+     ("9" empv-volume-down)
+     (";" emacspeak-empv-toggle-filter)
+     ("<down>" emacspeak-empv-forward-10-minutes)
+     ("<left>" emacspeak-empv-backward-5-minutes)
+     ("<next>" emacspeak-empv-forward-30-minutes)
+     ("<prior>" emacspeak-empv-backward-30-minutes)
+     ("<right>" emacspeak-empv-forward-5-minutes)
+     ("<up>" emacspeak-empv-backward-10-minutes)
+     ("=" emacspeak-empv-time-pos)
+     ("DEL" emacspeak-empv-clear-filter)
+     ("M" emacspeak-empv-backward-minute)
+     ("SPC" empv-toggle)
+     ("m" emacspeak-empv-forward-minute)
+     ("r" emacspeak-empv-relative-seek)
+     ("s" emacspeak-empv-absolute-seek)
+     ("v" empv-set-volume)
+     ("x" empv-exit)
+     ("y" emacspeak-empv-yt-download))
    do
-   (emacspeak-keymap-update empv-map b)
-   (emacspeak-keymap-update empv-youtube-results-mode-map b))
+   (emacspeak-keymap-update empv-map b))
   (map-keymap
    (lambda (_key cmd)
      (when (symbolp cmd)

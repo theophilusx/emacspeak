@@ -56,7 +56,7 @@ Produce timing information as the last step."
               gcs-done gc-elapsed)))
 
 ;;;  Fixups:
-
+(setq y-or-n-p-use-read-key t)
 ;; Emacs @HEAD is broken:
 (defvar font-lock-reference-face 'font-lock-constant-face)
 (advice-add 'system-users :override #'(lambda () (list user-real-login-name)))
@@ -82,7 +82,7 @@ Produce timing information as the last step."
 
 (defsubst tvr-tabs ()
   "Set up  tab-bar"
-  (tab-bar-rename-tab "Home")
+  (tab-bar-rename-tab "Home") ; home, books 
   (tab-bar-switch-to-tab "Books")
   (tab-bar-switch-to-tab "Home"))
 
@@ -113,20 +113,18 @@ Use Custom to customize where possible. "
   (load-library "aster")
   ;; basic look and feel
   (setq frame-title-format '(multiple-frames "%b" ("Emacs")))
-  (mapc                                 ; not a novie:
+  (mapc                                 ; not a novice:
    #'(lambda (f) (put f 'disabled nil))
    '(list-threads narrow-to-page list-timers upcase-region
                   downcase-region  narrow-to-region eval-expression ))
+  (global-set-key (kbd "M-z") 'execute-extended-command-for-buffer)
   (global-set-key (kbd "C-l") ctl-x-map)
   (global-set-key[remap dabbrev-expand] 'hippie-expand)
-  (global-set-key (kbd "<insert>") empv-map)
-  (global-set-key (kbd "s-SPC") empv-map)
   (cl-loop ;; global key-bindings
    for key in
    '(
      (  "C-x r a"  append-to-register)
      ("C-x r p"  prepend-to-register)
-     ("C-x v ." magit-commit-create)
      ("<f3>" bury-buffer)
      ("<f4>" emacspeak-kill-buffer-quietly)
      ("<f2>" set-selective-display)
@@ -183,12 +181,13 @@ Use Custom to customize where possible. "
     (yas--load-snippet-dirs)
     (yas-global-mode 1)
     (diminish 'yas-minor-mode ""))
-  (tvr-customize)
-  (load "emacspeak-muggles")
+  (tvr-time-load
+   (tvr-customize)
+   (load "emacspeak-muggles"))
   (emacspeak-wizards-project-shells-initialize))
 
 (declare-function
- emacspeak-pronounce-toggle-use-of-dictionaries
+ emacspeak-pronounce-toggle-dictionaries
  "emacspeak-pronounce" (&optional state))
 
 (defun tvr-text-mode-hook ()
@@ -196,7 +195,7 @@ Use Custom to customize where possible. "
   (cl-declare (special auto-correct-predicate))
   (outline-minor-mode 1)
   (auto-fill-mode)
-  (emacspeak-pronounce-toggle-use-of-dictionaries t)
+  (emacspeak-pronounce-toggle-dictionaries t)
   (setq auto-correct-predicate #'(lambda (&rest _) t))
   ;; company-wordfreq setup:
   (setq-local company-backends '(company-wordfreq))
@@ -242,6 +241,7 @@ configuration happens via the after-init-hook. "
 (tvr-emacs)
 
 ;;;  Forward Function Declarations:
+(declare-function emacspeak-icon "emacspeak-sounds" (icon))
 
 (declare-function yas--load-snippet-dirs "yasnippet" (&optional nojit))
 (declare-function emacspeak-dbus-setup "emacspeak-dbus" nil)

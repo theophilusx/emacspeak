@@ -152,7 +152,7 @@ Speech flushes as you type."
     (let ((display (get-char-property (1- (point)) 'display)))
       (dtk-stop 'all)
       (cond
-       ((stringp display) (dtk-say display))
+       ((stringp display) (dtk-speak display))
        ((and emacspeak-word-echo
              (= (char-syntax last-command-event)32))
         (save-excursion
@@ -293,7 +293,7 @@ normally bound to \\[emacspeak-table-display-table-in-region]."
         (dtk-chunk-on-white-space-and-punctuations)
         (next-completion 1)
         (tts-with-punctuations
-         'all (emacspeak-speak-rest-of-buffer))))
+         'all (emacspeak-speak-windowful))))
      (t (emacspeak-speak-line)))))
 
 ;;;   Macros
@@ -616,19 +616,25 @@ the sense of the filter. "
   (interactive)
   (let ((beg (save-excursion (skip-syntax-backward " ")))
         (end (save-excursion (skip-syntax-forward " "))))
-    (dtk-notify-say  (format "%s spaces " (+ (- end beg))))))
+    (dtk-notify-speak  (format "%s spaces " (+ (- end beg))))))
+
+(defvar ems--large-text-size 20000
+  "Upper limit on what we attempt to speak in one shot.")
 
 (defun emacspeak-speak-region (start end)
   "Speak region bounded by start and end. "
   (interactive "r")
-  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs))
+  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs
+                       ems--large-text-size))
   (let ((inhibit-modification-hooks t)
         (deactivate-mark nil))
-    (when (not emacspeak-speak-voice-annotated-paragraphs)
+    (when (and  (< (abs (- start end )) ems--large-text-size) (not emacspeak-speak-voice-annotated-paragraphs))
       (save-restriction
         (narrow-to-region start end)
         (emacspeak-speak-voice-annotate-paragraphs)))
-    (dtk-speak (buffer-substring start end))))
+    (if (< (abs (- start end )) ems--large-text-size)
+        (dtk-speak (buffer-substring start end))
+      (emacspeak-speak-windowful))))
 
 (defun emacspeak-speak-extent (beg end &optional no-case)
   "Speak extent delimited by beg and end.
@@ -1158,8 +1164,9 @@ Negative prefix arg will read from start of current paragraph to point. "
 With prefix ARG, speaks the rest of the buffer from point.
 Negative prefix arg speaks from start of buffer to point. "
   (interactive "P")
-  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs))
-  (let () (when (not emacspeak-speak-voice-annotated-paragraphs)
+  (cl-declare (special emacspeak-speak-voice-annotated-paragraphs
+                       ems--large-text-size))
+  (when (and (< (buffer-size) ems--large-text-size) (not emacspeak-speak-voice-annotated-paragraphs))
             (emacspeak-speak-voice-annotate-paragraphs))
        (when (listp arg) (setq arg (car arg)))
        (dtk-stop 'all)
@@ -1174,7 +1181,9 @@ Negative prefix arg speaks from start of buffer to point. "
                  end (point-max)))
           (t (setq start (point-min)
                    end (point))))
-         (dtk-speak (buffer-substring start end)))))
+         (if (< (abs (- start end )) ems--large-text-size)
+             (dtk-speak (buffer-substring start end))
+           (emacspeak-speak-windowful))))
 
 (defun emacspeak-speak-other-buffer (buffer)
   "Speak specified buffer.
@@ -1681,7 +1690,7 @@ Optional second arg `set' sets the TZ environment variable as well."
   "Time in brief"
   (interactive)
   (cl-declare (special emacspeak-speak-time-brief-format))
-  (dtk-say
+  (dtk-speak
    (format-time-string emacspeak-speak-time-brief-format)))
 
 (defun emacspeak-speak-time (&optional world)
@@ -1699,7 +1708,7 @@ Second interactive prefix sets clock to new timezone."
     (let ((time-string
            (format-time-string emacspeak-speak-time-format
                                (current-time) (getenv "TZ"))))
-      (dtk-notify-say time-string)))))
+      (dtk-notify-speak time-string)))))
 
 (defsubst ems--seconds-to-duration (sec)
   "Return seconds formatted as time if valid, otherwise return as is."
@@ -1890,15 +1899,15 @@ location of the mark is indicated by an aural highlight. "
 ;;; Face Ranges:
 
 (defun emacspeak-speak-face-browse ()
-  "Use C-f and C-b to browse by current face."
+  "Use C-f and C-b or left/right arrows to browse by current face."
   (interactive )
   (call-interactively #'emacspeak-speak-range)
   (while t
-    (let ((key (read-key-sequence "")))
+    (let ((key (read-key "" t)))
       (cond
-       ((string= key "\C-f")
+       ((memq key '(right 6))
         (funcall-interactively #'emacspeak-speak-face-forward))
-       ((string= key "\C-b")
+       ((memq key '(left 2))
         (funcall-interactively #'emacspeak-speak-face-backward))
        (t (keyboard-quit))))))
 
@@ -2431,8 +2440,7 @@ See documentation for command run-at-time for details on time-spec."
    time nil
    #'(lambda (m)
        (dtk-notify-speak m)
-       (when emacspeak-use-auditory-icons
-         (emacspeak-icon 'alarm))
+       (when emacspeak-use-auditory-icons (emacspeak-icon 'alarm))
        (sox-tones))
    message)
   (message "Set alarm for %s" time)

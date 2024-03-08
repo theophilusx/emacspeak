@@ -243,7 +243,7 @@ mac for MAC TTS (default on Mac)")
 
 (defcustom dtk-speech-rate-step
   (if (string-match "dtk" dtk-program) 50 8)
-  "Speech rate step used by `dtk-set-predefined-speech-rate'."
+  "Speech rate step used by `dtk-set-predefined-rate'."
   :type 'integer
   :group 'tts)
 
@@ -924,7 +924,7 @@ current local  value to the result."
                rate
                (if prefix "" "locally")))))
 
-(defun dtk-set-predefined-speech-rate (&optional prefix)
+(defun dtk-set-predefined-rate (&optional prefix)
   "Set speech rate to one of nine predefined levels.
 Interactive PREFIX arg says to set the rate globally.
 Formula used is:
@@ -976,7 +976,7 @@ the speech rate.  Call when on a non-blank line to preview the effectt"
          (define-key map key (lambda () (interactive) (dtk-rate-adjust ))))
        map)
      t (lambda nil (emacspeak-icon 'repeat-end))
-     "Repeat with %k")))
+     (format "%s: Repeat with %%k" dtk-speech-rate))))
 
 (defun dtk-set-character-scale (factor &optional prefix)
   "Set character scale FACTOR for   speech rate.
@@ -1757,11 +1757,9 @@ unless   `dtk-quiet' is set to t. "
            (inhibit-message t))
        ,@body)))
 
-(defun dtk-speak-and-echo (message)
+(defsubst dtk-speak-and-echo (message)
   "Speak message and echo it."
-  (ems-with-messages-silenced
-   (dtk-speak (format "%s" message))
-   (message (format "%s" message))))
+  (message message))
 
 (defun dtk-speak-list (text &optional group)
   "Speak a  list of strings.
@@ -1820,25 +1818,6 @@ grouping"
   (unless dtk-quiet
     (when (process-live-p dtk-speaker-process)
       (dtk-interp-letter letter))))
-
-(defun dtk-say (words)
-  "Say these WORDS."
-  (cl-declare (special dtk-speaker-process dtk-stop-immediately
-                       dtk-quiet))
-                                        ; ensure words is a  string
-  (unless (stringp words) (setq words (format "%s" words)))
-  ;; I won't talk if you dont want me to
-  (unless
-      (or dtk-quiet (string-equal words ""))
-    (or (eq 'run (process-status dtk-speaker-process))
-        (eq 'open (process-status dtk-speaker-process))
-        (dtk-initialize))
-    (when (process-live-p dtk-speaker-process)
-      (when dtk-stop-immediately
-        (when (process-live-p dtk-notify-process) (dtk-notify-stop))
-        (dtk-stop))
-      (dtk-interp-say words))))
-
 ;;;  Notify:
 
 (defun dtk-notify-process ()
@@ -1877,25 +1856,6 @@ Notification is logged in the notifications buffer unless `dont-log' is T. "
     (dtk-notify-apply #'dtk-speak text))
    (t (dtk-speak text)))
   text)
-
-(defun dtk-notify-say (text &optional dont-log)
-  "Say text on notification stream. "
-  (cl-declare (special dtk-speaker-process emacspeak-last-message))
-  (unless (stringp text) (setq text (format "%s" text)))
-  (unless dont-log (emacspeak-log-notification text))
-  (setq emacspeak-last-message text)
-  (cond
-   ((dtk-notify-process)                ; we have a live notifier
-    (dtk-notify-apply #'dtk-say text))
-   (t (dtk-say text)))
-  text)
-
-(defun dtk-notify-letter (letter)
-  "Speak letter on notification stream. "
-  (cond
-   ((dtk-notify-process)                ; we have a live notifier
-    (dtk-notify-apply #'dtk-letter letter))
-   (t (dtk-letter letter))))
 
 (defun dtk-notify-icon (icon)
   "Play icon  on notification stream. "

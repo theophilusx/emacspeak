@@ -119,9 +119,7 @@
           buffer-undo-list t
           buffer-read-only nil)))
 
-(defconst  emacspeak-media-shortcuts
-  (expand-file-name "media/radio/" emacspeak-directory)
-  "Directory where we organize   and media shortcuts. ")
+
 
 (defvar emacspeak-m-player-process nil
   "Process handle to m-player.")
@@ -1830,7 +1828,7 @@ Optional interactive prefix arg prompts for name to use for  player."
        'unique))
     (when (called-interactively-p 'interactive)
       (emacspeak-icon 'task-done)
-      (dtk-notify-say
+      (dtk-notify-speak
        "persisted current process. You can now start another player."))))
 
 (defun emacspeak-m-player-restore-process ()

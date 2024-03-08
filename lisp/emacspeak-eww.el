@@ -290,6 +290,9 @@
 ;; @subsection Miscellaneous Commands
 
 ;; @table @kbd
+;; @item ;
+;;  @command{emacspeak-eww-play-audio/video}
+;; When on an audio element, plays audio under point.
 ;; @item  C-RET
 ;; @command {emacspeak-eww-fillin-form-field}
 ;; When on an input field, insert  username/password information
@@ -537,7 +540,7 @@
  #'(lambda ()
      (cl-declare (special outline- outline-search-function))
      (outline-minor-mode)
-     (emacspeak-pronounce-toggle-use-of-dictionaries t)))
+     (emacspeak-pronounce-toggle-dictionaries t)))
 
 (defun emacspeak-eww-shr-outline-toggle ()
   "Toggle between shr and native outliner."
@@ -634,6 +637,8 @@ Safari/537.36"
    for binding  in
    '(
      ("M-o" org-eww-copy-for-org-mode)
+     ("M-;" emacspeak-eww-previous-audio/video)
+     (";" emacspeak-eww-next-audio/video)
      (":" emacspeak-eww-tags-at-point)
      ("\"" emacspeak-eww-reading-settings)
      ("V" eww-view-source)
@@ -967,15 +972,14 @@ Retain previously set punctuations  mode."
  '(shr-next-link shr-previous-link)
  do
  (eval
-  `(defadvice ,f (around emacspeak pre act comp)
+  `(defadvice ,f (after emacspeak pre act comp)
      "speak."
-     (ems-with-messages-silenced ad-do-it)
      (when (ems-interactive-p)
        (let ((host
               (condition-case nil
                   (url-host
-                   (url-generic-parse-url (funcall
-                                           emacspeak-eww-url-at-point)))
+                   (url-generic-parse-url
+                    (funcall emacspeak-eww-url-at-point)))
                 (error ""))))
          (cond                          ; smarter icon:
           ((or
@@ -1180,6 +1184,35 @@ Note that the Web browser should reset this hook after using it.")
     (setq emacspeak-eww-cache-updated t)))
 
 ;;;  Filter DOM:
+(defvar emacspeak-eww-audio-keymap
+  (let  ((map (make-sparse-keymap)))
+    (define-key map ";" 'emacspeak-eww-play-audio/video)
+    map)
+  "Keymap used on audio elements.")
+
+(defun emacspeak-eww-tag-audio (dom)
+  "Tag audio , then render."
+  (cl-declare (special emacspeak-eww-audio-keymap))
+  (let ((start (point)))
+    (shr-tag-audio dom)
+    (add-text-properties
+     start (point)
+     (list
+      'keymap emacspeak-eww-audio-keymap
+      'help-echo "; to play"
+      'audio 'shr-tag))))
+
+(defun emacspeak-eww-tag-video (dom)
+  "Tag video tag, then render."
+  (cl-declare (special emacspeak-eww-audio-keymap))
+  (let ((start (point)))
+    (shr-tag-video dom)
+    (add-text-properties
+     start (point)
+     (list
+      'keymap emacspeak-eww-audio-keymap
+      'help-echo "; to play"
+      'video 'shr-tag))))
 
 (defun emacspeak-eww-tag-article (dom)
   "Tag article, then render."
@@ -1207,7 +1240,9 @@ Note that the Web browser should reset this hook after using it.")
 ;;;###autoload
 (defvar emacspeak-eww-shr-renderers
   '((article . emacspeak-eww-tag-article)
+    (audio . emacspeak-eww-tag-audio)
     (title . eww-tag-title)
+    (video . emacspeak-eww-tag-video)
     (form . eww-tag-form)
     (input . eww-tag-input)
     (textarea . eww-tag-textarea)
@@ -1728,6 +1763,30 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
   (eww-display-dom-filter-helper #'dom-by-role-list  role-list))
 
 ;;;  Element Navigation:
+
+(defun emacspeak-eww-next-audio/video ()
+  "Next audio element."
+  (interactive)
+  (let ((target
+         (or (next-single-property-change (point) 'audio)
+             (next-single-property-change (point) 'video))))
+    (cl-assert target t "No  audio elements")
+    (goto-char target)
+    (emacspeak-speak-line)
+    (dtk-notify-speak "Press ; to play")
+    (emacspeak-icon 'large-movement)))
+
+(defun emacspeak-eww-previous-audio/video ()
+  "Previous audio element."
+  (interactive)
+  (let ((target
+         (or (previous-single-property-change (point) 'audio)
+             (previous-single-property-change (point) 'video))))
+    (cl-assert target t "No  audio elements")
+    (goto-char target)
+    (emacspeak-speak-line)
+    (dtk-notify-speak "Press ; to play")
+    (emacspeak-icon 'large-movement)))
 
 (defvar emacspeak-eww-el-nav-history nil
   "History for element navigation.")
@@ -2604,7 +2663,19 @@ Use for large EBook buffers."
   "Accumulate  URL in register `u'"
   (interactive)
   (emacspeak-accumulate-to-register ?u #'(lambda () (shr-url-at-point nil))))
+;;; Audio element at point:
 
+(defun emacspeak-eww-play-audio/video ()
+  "Play audio/video tag at point"
+  (interactive)
+  (emacspeak-icon 'button)
+  (let ((url (get-text-property (point ) 'shr-url)))
+    (if url
+        (emacspeak-empv-play-url url)
+      (message "No URL here to play"))))
+
+(put 'emacspeak-eww-play-audio/video 'repeat-map 'empv-map)
 (provide 'emacspeak-eww)
+
 ;;;  end of file
 
