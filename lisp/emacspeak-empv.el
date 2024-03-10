@@ -1,5 +1,5 @@
 ;;; emacspeak-empv.el --- Speech-enable EMPV  -*- lexical-binding: t; -*-
-;;; $Author: tv.raman.tv $
+;;; $Author: tv.raman.tv $s-mo
 ;;; Description:  Speech-enable EMPV An Emacs Interface to empv
 ;;; Keywords: Emacspeak,  Audio Desktop empv
 ;;;   LCD Archive entry:
@@ -66,18 +66,27 @@
        (dtk-stop 'all)
        (emacspeak-icon 'button)))))
 
-(defadvice empv-exit (after emacspeak pre act comp)
-  "Icon."
-  (when (ems-interactive-p)
-    (dtk-stop 'all)
-    (emacspeak-icon 'close-object)
-    (repeat-exit)
-    (emacspeak-speak-mode-line)))
-
-(defadvice empv-youtube-tabulated (after emacspeak pre act comp)
+(defadvice empv-youtube-results-inspect (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-speak-mode-line)))
+    (emacspeak-icon 'open-object)
+    (emacspeak-speak-mode-line)
+    ))
+
+
+
+(defadvice empv-youtube-tabulated (before emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-icon 'button)
+    ))
+
+(defadvice empv-exit (after emacspeak pre act comp)
+  "Icon."
+  (repeat-exit)
+  (when (ems-interactive-p)
+    (dtk-stop 'all)
+    (emacspeak-icon 'close-object)))
 
 ;;; Additional Commands:
 
@@ -122,14 +131,11 @@ Interactive prefix arg plays on left ear using alsa."
   (interactive(list (emacspeak-media-read-resource)
                     current-prefix-arg))
   (cl-declare (special empv-mpv-args))
+  (dtk-notify-speak (file-name-base file))
   (let* ((args (copy-sequence empv-mpv-args))
          (empv-mpv-args args))
     (when left (push "--audio-channels=fl" empv-mpv-args))
     (empv-play file)))
-
-(put 'emacspeak-empv-play-file 'repeat-map 'empv-map)
-(put 'emacspeak-empv-play-url 'repeat-map 'empv-map)
-(put 'emacspeak-empv-play-last 'repeat-map 'empv-map)
 
 (defsubst emacspeak-empv-local-file ()
   "Return local media filename read with completion."
@@ -163,7 +169,7 @@ Interactive prefix arg plays on left ear using alsa."
   (empv--let-properties '(time-pos percent-pos)
     (message "%s %.2d%%"
              (ems--format-clock (or .time-pos 0))
-              (or .percent-pos 0))))
+             (or .percent-pos 0))))
 
 (defsubst emacspeak-empv-post-nav ()
   "Post nav action"
@@ -210,9 +216,7 @@ Interactive prefix arg plays on left ear using alsa."
    `(defun ,(intern  (format "emacspeak-empv-backward-%s-minutes" duration)) ()
       ,(format "Move backward by %s minutes" duration )
       (interactive )
-      (funcall-interactively 'emacspeak-empv-backward-minute
-                             ,duration))))
-
+      (funcall-interactively 'emacspeak-empv-backward-minute ,duration))))
 
 ;; Use it:
 (mapc #'ems--empv-gen-nav '(5 10 30))
@@ -226,11 +230,21 @@ Interactive prefix arg plays on left ear using alsa."
     (emacspeak-icon 'button)))
 
 ;;; Setup:
+(add-hook
+ 'empv-youtube-results-mode-hook
+ #'(lambda nil
+     (emacspeak-icon 'open-object)
+     (dtk-notify-speak
+      (format "%s results"
+              (length empv--last-youtube-candidates)))))
 
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
-  (cl-declare (special empv-map))
+  (cl-declare (special empv-map
+                       empv-youtube-results-mode-map))
   (global-set-key (kbd "s-SPC") empv-map)
+  (define-key empv-youtube-results-mode-map
+              "o" 'empv-youtube-results-play-current)
   (cl-loop
    for b in
    '(
@@ -257,14 +271,26 @@ Interactive prefix arg plays on left ear using alsa."
      ("x" empv-exit)
      ("y" emacspeak-empv-yt-download))
    do
-   (emacspeak-keymap-update empv-map b))
-  (map-keymap
-   (lambda (_key cmd)
-     (when (symbolp cmd)
-       (put cmd 'repeat-map 'empv-map)))
-   empv-map))
+   (emacspeak-keymap-update empv-map b)))
 
 (emacspeak-empv-setup)
+
+;; Repeat:
+(mapc
+ #'(lambda (c) (put c 'repeat-map 'empv-map))
+ '(
+   emacspeak-empv-play-last emacspeak-empv-play-url
+   emacspeak-empv-play-file emacspeak-empv-play-local
+   emacspeak-empv-forward-minute emacspeak-empv-backward-minute
+   emacspeak-empv-forward-5-minutes emacspeak-empv-backward-5-minutes
+   emacspeak-empv-forward-10-minutes emacspeak-empv-backward-10-minutes
+   emacspeak-empv-forward-15-minutes emacspeak-empv-backward-15-minutes
+   emacspeak-empv-forward-30-minutes emacspeak-empv-backward-30-minutes
+   emacspeak-empv-time-pos emacspeak-empv-clear-filter
+    emacspeak-empv-toggle-custom emacspeak-empv-toggle-filter
+emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek 
+emacspeak-empv-relative-seek))
+ 
 
 (defvar emacspeak-empv-filter-history nil
   "History of filters used.")

@@ -1757,9 +1757,7 @@ unless   `dtk-quiet' is set to t. "
            (inhibit-message t))
        ,@body)))
 
-(defsubst dtk-speak-and-echo (message)
-  "Speak message and echo it."
-  (message message))
+(defalias 'dtk-speak-and-echo 'message)
 
 (defun dtk-speak-list (text &optional group)
   "Speak a  list of strings.

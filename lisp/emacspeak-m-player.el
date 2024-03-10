@@ -291,8 +291,7 @@ Controls media playback when already playing.
          (buffer-live-p (process-buffer emacspeak-m-player-process)))
     (with-current-buffer (process-buffer emacspeak-m-player-process)
       (call-interactively #'emacspeak-m-player-command)))
-   (t
-    (call-interactively #'emacspeak-m-player))))
+   (t (call-interactively #'emacspeak-m-player))))
 
 (defun emacspeak-m-player-pop-to-player ()
   "Pop to m-player buffer."
@@ -533,6 +532,7 @@ dynamic playlist. "
            (y-or-n-p "Stop "))
     (emacspeak-m-player-quit)
     (setq emacspeak-m-player-process nil))
+  (dtk-notify-speak (file-name-base resource))
   (let ((buffer (get-buffer-create "*M-Player*"))
         (process-connection-type nil)
         (playlist-p
@@ -593,7 +593,7 @@ dynamic playlist. "
         (emacspeak-amark-load))
       (when (called-interactively-p 'interactive)
         (message
-         "Playing   %s"
+         "%s"
          (cond
           ((null resource)
            (format
@@ -602,7 +602,7 @@ dynamic playlist. "
           ((file-directory-p resource)
            (car (last (split-string resource "/" t))))
           (t
-           (abbreviate-file-name (file-name-nondirectory resource)))))))))
+           (file-name-base  resource))))))))
 
 ;;;###autoload
 (defun emacspeak-m-player-using-openal ()
@@ -1019,7 +1019,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
   (let ((a
          (read
           (cl-second (split-string (ems--mp-send "get_time_length") "=")))))
-    (dtk-speak-and-echo a)
+    (dtk-speak-and-echo (format "%s" a))
     a))
 
 (defconst emacspeak-m-player-display-cmd
@@ -1350,7 +1350,7 @@ arg `reset' starts with all filters set to 0."
        emacspeak-m-player-equalizer))
     (emacspeak-icon 'close-object)
     (push "equalizer" emacspeak-m-player-active-filters))
-   (t (message "No stream playing at present."))))
+   (t (message "No stream playing"))))
 
 (defun emacspeak-m-player-eq-preset  (name)
   "Prompts for  and apply equalizer preset.
@@ -1732,7 +1732,7 @@ As the default, use current position."
         (filter-spec nil)
         (filter nil))
     (unless (process-live-p emacspeak-m-player-process)
-      (error "No media playing  currently."))
+      (error "No media playing"))
     (unless ladspa
       (setq ladspa (setenv "LADSPA_PATH" "/usr/lib/ladspa")))
     (unless (file-exists-p (expand-file-name "tap_reverb.so" ladspa))
