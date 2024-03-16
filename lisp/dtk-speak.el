@@ -247,6 +247,10 @@ mac for MAC TTS (default on Mac)")
   :type 'integer
   :group 'tts)
 
+(defvar dtk-handle-unicode nil
+  "convert unicode characters if the speech server doesn't support it.
+  This variable shouldn't usually be set")
+
 (defvar-local dtk-quiet nil
   "Silence speech ")
 
@@ -410,20 +414,13 @@ bound to \\[dtk-toggle-caps].")
       (dtk-interp-silence duration
                           (if force "\nd" "")))))
 
-(defcustom dtk-use-tones t
-  "Toggle tones. "
-  :type 'boolean
-  :group 'tts)
-
 (defun dtk-tone (pitch duration &optional force)
   "Produce a tone.
  Pitch   is  in hertz.
  Duration  is  in milliseconds.
 Uses a 5ms fade-in and fade-out. "
-  (cl-declare (special dtk-quiet dtk-speaker-process dtk-use-tones))
-  (unless
-      (or dtk-quiet (not dtk-use-tones)
-          (not (process-live-p dtk-speaker-process) ))
+  (cl-declare (special dtk-quiet dtk-speaker-process))
+  (unless (or dtk-quiet (not (process-live-p dtk-speaker-process)))
     (dtk-interp-tone pitch duration force)))
 
 (defun dtk-set-language (lang)
@@ -1726,7 +1723,7 @@ unless   `dtk-quiet' is set to t. "
         (dtk--delete-invisible-text)
         (dtk-handle-repeating-patterns mode)
         (when pron-table (tts-apply-pronunciations pron-table))
-        (dtk-unicode-replace-chars mode)
+        (when dtk-handle-unicode (dtk-unicode-replace-chars mode))
         (dtk-quote mode)
         (goto-char (point-min))         ; text is ready to be spoken
         (skip-syntax-forward "-")       ;skip leading whitespace

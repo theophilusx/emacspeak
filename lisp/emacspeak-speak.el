@@ -628,7 +628,9 @@ the sense of the filter. "
                        ems--large-text-size))
   (let ((inhibit-modification-hooks t)
         (deactivate-mark nil))
-    (when (and  (< (abs (- start end )) ems--large-text-size) (not emacspeak-speak-voice-annotated-paragraphs))
+    (when (and
+           (< (abs (- start end )) ems--large-text-size)
+           (not emacspeak-speak-voice-annotated-paragraphs))
       (save-restriction
         (narrow-to-region start end)
         (emacspeak-speak-voice-annotate-paragraphs)))
@@ -1032,7 +1034,7 @@ char is assumed to be one of a--z."
   (when char
     (cond
      ((emacspeak-is-alpha-p char) (dtk-letter (char-to-string char)))
-     ((> char 128) (emacspeak-speak-char-name char))
+     ((and dtk-handle-unicode (> char 128)) (emacspeak-speak-char-name char))
      (t (dtk-dispatch (dtk-char-to-speech char))))))
 
 (defun emacspeak-speak-char (&optional prefix)
@@ -1049,7 +1051,6 @@ Pronounces character phonetically unless  called with a PREFIX arg."
     (when char
       (cond
        ((stringp display) (dtk-speak display))
-       ((> char 128) (emacspeak-speak-char-name char))
        ((and (not prefix)
              (emacspeak-is-alpha-p char))
         (dtk-speak (emacspeak-get-phonetic-string char)))
@@ -1166,7 +1167,10 @@ Negative prefix arg speaks from start of buffer to point. "
   (interactive "P")
   (cl-declare (special emacspeak-speak-voice-annotated-paragraphs
                        ems--large-text-size))
-  (when (and (< (buffer-size) ems--large-text-size) (not emacspeak-speak-voice-annotated-paragraphs))
+  (when
+      (and
+       (< (buffer-size) ems--large-text-size)
+       (not emacspeak-speak-voice-annotated-paragraphs))
             (emacspeak-speak-voice-annotate-paragraphs))
        (when (listp arg) (setq arg (car arg)))
        (dtk-stop 'all)
@@ -2783,8 +2787,6 @@ p emacspeak-cycle-to-previous-buffer
      t (lambda nil (emacspeak-icon 'repeat-end))
      "Repeat with %k")))
 
-(provide 'emacspeak-speak)
-
 ;;; Network Utils:
 
 (defun ems--get-ip-address (dev)
@@ -2854,21 +2856,15 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
       (format "Selective Display: %s" selective-display)
       'personality voice-bolden))))
 
-;;; Cue window buffer change:
+;;; Pip: Use Piper if available.
+;; Uses pip if piper loaded, otherwise falls back to notifications
 
-;; Help set up a buffer local window change hook:
+(defun emacspeak-pip (text)
+  "Speak text, either using piper or regular notification stream."
+  (cond
+   ((featurep 'pip) (pip-speak text))
+   (t (dtk-notify-speak text))))
 
-(defun ems--add-window-buffer-change-hook (&optional buffer)
-  "Setup buffer-local window-buffer-change-functions  in buffer
-`BUFFER'."
-  (with-current-buffer
-      (or buffer (current-buffer))
-    (add-hook
-     'window-buffer-change-functions
-     #'(lambda (w)
-         (with-current-buffer (window-buffer w)
-           (emacspeak-speak-windowful))
-         (sox-multiwindow 'swap 1.25)) 0 'local)))
 
 ;;; Bug Reporter:
 (defconst emacspeak-bug-address "emacspeak@emacspeak.net" "List address")
@@ -2900,5 +2896,6 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
          (concat "Emacspeak: " emacspeak-version)
          vars nil nil
          "Description of Problem:")))))
+(provide 'emacspeak-speak)
 
 ;;;  end of file

@@ -231,6 +231,7 @@
 * mac-voices::Define  Mac tags.
 * omaps::Open street  Maps.
 * outloud-voices::Define  OutLoud tags.
+* pip::Interface To Piper TTS.
 * plain-voices::No Voice lock voices.
 * soundscape::Soundscapes.
 * sox::An Audio Work-Bench.
@@ -248,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1165 commands and 128 options.
+This chapter documents a total of 1179 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -1116,20 +1117,6 @@ Default Value:
 @verbatim
 
 (ascii latin-iso8859-1)
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} dtk-use-tones
-@verbatim
-Toggle tones. 
-@end verbatim
-
-Default Value: 
-@verbatim
-
-t
 
 @end verbatim
 
@@ -7976,7 +7963,8 @@ the list using c-s and c-r as provided by ido Set number matches
 shown (ido-max-prospects) to 2 or 3 using Custom so you dont hear the
 entire list. You can also customize @var{ido-decorations} to taste.
 See
-@url{https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html},
+@url{https://emacspeak.blogspot.com/2018/06/\
+effective-suggest-and-complete-in-eyes.html},
 for an article on how to reason about designing  good auditory
 interfaces for these types of situations.
 
@@ -12044,7 +12032,7 @@ them using a local player.
 @subsection Emacspeak-Sounds Commands
 
 @subsubsection emacspeak-sounds-select-theme
-@deffn {Command} emacspeak-sounds-select-theme  (theme)
+@deffn {Command} emacspeak-sounds-select-theme  (&optional theme)
 @table @kbd
 @item C-e )
 @kindex C-e )
@@ -12055,7 +12043,7 @@ them using a local player.
 @format
 Select theme for auditory icons.
 
-(fn THEME)
+(fn &optional THEME)
 @end format
 @end deffn
 
@@ -19293,6 +19281,81 @@ Default Value:
 @end verbatim
 
 @end defvar
+
+@node pip
+@section pip
+
+Piper TTS is an Open Source neural-net TTS engine.
+This module exposes Piper TTS to Emacs.
+
+ @section Piper TTS
+@enumerate
+@item Sandbox for @url{https://github.com/rhasspy/piper}
+@item pipx install piper-tts
+@item Set location of voice data in  @code{pip-data-dir}.
+@item Create the data directory above if needed.
+@item Run piper there  using the --update-voices flag once for each desired voice to get the voices.
+@item @code{M-x pip-speak} to speak.
+@item At present @code{piper} is not suitable for use as a primary TTS
+engine for Emacspeak, given its high latency.
+@item However it might be interesting to use it for lower-priority
+speech where quality trumps latency.
+@end enumerate
+
+@subsection Pip Commands
+
+@subsubsection pip-device-select
+@deffn {Command} pip-device-select  (device)
+@findex pip-device-select
+
+@format
+Select default from available choices.
+Restarts piper pipeline if already running.
+
+(fn DEVICE)
+@end format
+@end deffn
+
+@subsubsection pip-model-select
+@deffn {Command} pip-model-select  (voice)
+@findex pip-model-select
+
+@format
+Select default from available choices.
+Restarts piper pipeline if already running.
+
+(fn VOICE)
+@end format
+@end deffn
+
+@subsubsection pip-speak
+@deffn {Command} pip-speak  (text)
+@findex pip-speak
+
+@format
+Speak text
+
+(fn TEXT)
+@end format
+@end deffn
+
+@subsubsection pip-start
+@deffn {Command} pip-start   
+@findex pip-start
+
+@format
+Start the Piper process
+@end format
+@end deffn
+
+@subsubsection pip-stop
+@deffn {Command} pip-stop   
+@findex pip-stop
+
+@format
+Stop Piper TTS
+@end format
+@end deffn
 
 @node plain-voices
 @section plain-voices

@@ -390,6 +390,16 @@ This cannot be set via custom; set this in your startup file before
   :type 'boolean
   :group 'emacspeak)
 
+(defcustom emacspeak-pip-enable
+  (executable-find "piper")
+  "Load pip if available and supported."
+  :type 'boolean
+  :set
+  #'(lambda (sym val)
+      (set-default sym val )
+      (when val (require 'pip)))
+  :group 'emacspeak)
+
 ;;;###autoload
 (defun emacspeak()
   "Start the Emacspeak Audio Desktop.
@@ -421,14 +431,12 @@ Press C-, to access keybindings in emacspeak-alt-keymap:
 See the online documentation \\[emacspeak-open-info] for individual
 commands and options for details."
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
-  (add-hook ; silence messages when quitting
+  (add-hook                           ; silence messages when quitting
    'kill-emacs-hook
    #'(lambda nil (setq-default emacspeak-speak-messages nil))
    -10)
   (dtk-initialize)
-  (setq ring-bell-function #'(lambda nil (emacspeak-icon 'warn-user)))
-  (emacspeak-sounds-cache-prompts)
-  (emacspeak-sounds-select-theme emacspeak-sounds-current-theme)
+  (make-thread #'emacspeak-sounds-select-theme)
   (emacspeak-pronounce-load-dictionaries)
   (make-thread #'(lambda nil  (ems--fastload "emacspeak-advice")))
   (emacspeak-setup-programming-modes)
@@ -441,8 +449,9 @@ commands and options for details."
      'minor-mode-alist
      '(emacspeak-speak-show-volume (:eval (ems--show-current-volume)))))
   (message emacspeak-startup)
-  (when   emacspeak-play-startup-icon (emacspeak-icon 'emacspeak)
-          (emacspeak-easter-egg)))
+  (when   emacspeak-play-startup-icon
+    (emacspeak-icon 'emacspeak)
+    (emacspeak-easter-egg)))
 
 (provide 'emacspeak)
 

@@ -176,35 +176,44 @@ icon-name as string."
   "Rebuild sound cache for theme, a directory containing sound files."
   (when (file-exists-p theme)
     (cl-loop
-     for f in (directory-files theme 'full "\\.ogg$")
-     do
-     (emacspeak-sounds-cache-put
-      (intern
-       (string-trim (shell-command-to-string (format "basename %s .ogg" f))))
-      f))))
+     for f in (directory-files theme 'full "\\.ogg$") do
+     (emacspeak-sounds-cache-put (intern (file-name-base f)) f))))
+
 (defsubst ems--upload-pulse-samples ()
   "Upload samples to Pulse"
   (cl-loop
-   for key being the hash-keys of emacspeak-sounds-cache do
-   (shell-command
-    (format "%s upload-sample %s %s"
-            emacspeak-pactl (gethash key emacspeak-sounds-cache) key))))
+   for k being the hash-keys of emacspeak-sounds-cache
+   using (hash-values v) do
+   (call-process emacspeak-pactl nil 0 nil
+                 "upload-sample" v (symbol-name  k))))
+
+(defsubst ems--samples-not-loaded-p (sample)
+  "Verify if sample loaded"
+  (= 1 (call-process emacspeak-pactl nil nil nil "play-sample" sample)))
 
 ;;;###autoload
-(defun emacspeak-sounds-select-theme  ( theme)
+(defun emacspeak-sounds-select-theme  ( &optional theme)
   "Select theme for auditory icons."
   (interactive
    (list
     (expand-file-name
-     (completing-read "Theme: " '("ogg-3d" "ogg-chimes") nil 'must-match)
+     (completing-read
+      "Theme: " '("ogg-3d" "ogg-chimes")
+      nil 'must-match nil nil "ogg-chimes")
      emacspeak-sounds-dir)))
   (cl-declare (special emacspeak-play-program emacspeak-sounds-dir))
+  (setq theme (or theme (expand-file-name "ogg-chimes"
+                                          emacspeak-sounds-dir)))
+  (emacspeak-sounds-cache-prompts)
   (emacspeak-sounds-cache-rebuild theme)
-  (when
+  (when                                 ; upload samples if needed
       (and
        emacspeak-play-program           ; avoid nil nil comparison
        (string= emacspeak-play-program emacspeak-pactl)
-       (called-interactively-p 'interactive)) 
+       (or
+        (called-interactively-p 'interactive) ; upload on theme change
+        (ems--samples-not-loaded-p "item")
+        (ems--samples-not-loaded-p "waking-up"))) 
     (ems--upload-pulse-samples))
   (setq emacspeak-sounds-current-theme theme)
   (emacspeak-icon 'button))
