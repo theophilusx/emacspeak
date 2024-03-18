@@ -430,11 +430,11 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      "Speak next screenful."
      (when (ems-interactive-p)
        (emacspeak-icon 'scroll)
-       (dtk-speak (emacspeak-get-window-contents))
        (dtk-notify-speak
-        (propertize
-         (format "%s " (emacspeak-get-current-percentage-into-buffer))
-         'personality voice-smoothen))))))
+          (propertize
+           (format "%s " (emacspeak-get-current-percentage-into-buffer))
+           'personality voice-smoothen))
+         (dtk-speak (emacspeak-get-window-contents))))))
 
 ;;;  Advise modify case commands to speak
 

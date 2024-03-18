@@ -99,8 +99,12 @@ the Emacspeak desktop.")
   (setopt gptel-post-stream-hook
           #'(lambda nil (emacspeak-icon 'tick-tick)))
   
-  (setopt gptel-post-response-functions
-          (cl-pushnew  'emacspeak-speak-region gptel-post-response-functions)))
+  (setopt
+   gptel-post-response-functions
+   (cl-pushnew
+    #'(lambda (start end)
+        (emacspeak-pip (buffer-substring-no-properties start end)))
+    gptel-post-response-functions)))
 
 ;;;  Setup package extensions
 (defvar emacspeak-packages-to-prepare
@@ -305,6 +309,7 @@ the Emacspeak desktop.")
   (cl-declare (special emacspeak-packages-to-prepare
                        Info-file-list-for-emacs
                        emacspeak-soundscapes))
+  (unless (boundp 'Info-file-list-for-emacs) (require 'info))
   (push "emacspeak" Info-file-list-for-emacs)
   (setq-default line-move-visual nil)
   (setq use-dialog-box nil)
@@ -314,7 +319,8 @@ the Emacspeak desktop.")
    #'(lambda (pair)
        (emacspeak-do-package-setup  (cl-first pair) (cl-second pair)))
    emacspeak-packages-to-prepare)
-  (when emacspeak-soundscapes (soundscape-toggle)))
+  (when emacspeak-soundscapes (soundscape-toggle))
+  (message "emacspeak-prepare-emacs: done"))
 
 ;;;  setup programming modes
 
@@ -392,7 +398,7 @@ This cannot be set via custom; set this in your startup file before
 
 (defcustom emacspeak-pip-enable
   (executable-find "piper")
-  "Load pip if available and supported."
+  "Load pip if Piper-TTS is available."
   :type 'boolean
   :set
   #'(lambda (sym val)

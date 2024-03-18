@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on March 16, 2024.
+last updated on March 18, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -3238,7 +3238,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1179 commands and 127 options.
+   This chapter documents a total of 1179 commands and 128 options.
 
 * Menu:
 
@@ -4108,6 +4108,14 @@ the main emacspeak module.  It actually does very little:
 
 12.5.1 emacspeak Options
 ------------------------
+
+ -- Variable: User Option emacspeak-pip-enable
+     Load pip if Piper-TTS is available.
+
+     Default Value:
+     
+     "/home/raman/.local/bin/piper"
+     
 
  -- Variable: User Option emacspeak-soundscapes
      Whether we should turn on soundscapes on startup.
@@ -6502,13 +6510,13 @@ Youtube integration
 12.61.1.13 emacspeak-empv-play-file
 ...................................
 
- -- Command: emacspeak-empv-play-file (file &optional left)
+ -- Command: emacspeak-empv-play-file (file &optional prefix)
      ‘C-e '’
 
      Play file using mpv.
-     Interactive prefix arg plays on left ear using alsa.
+     Interactive prefix arg plays directory.
 
-     (fn FILE &optional LEFT)
+     (fn FILE &optional PREFIX)
 
 12.61.1.14 emacspeak-empv-play-last
 ...................................
