@@ -355,11 +355,11 @@ plays result as a directory." directory)
     (emacspeak-icon 'select-object)))
 
 (defun emacspeak-media-guess-directory ()
-  "Guess default directory.
-If default directory matches emacspeak-media-directory-regexp,
-use it.  If default directory contains media files, then use it.
-If default directory contains directory emacspeak-media --- then use it.
-Otherwise use emacspeak-media-shortcuts as the fallback."
+  "Guess media directory.
+1. If default directory matches emacspeak-media-directory-regexp,use it.
+2.  If default directory contains media files, then use it.
+3. If default directory contains directory emacspeak-media --- then use it.
+4. Otherwise use emacspeak-media-shortcuts as the fallback."
   (cl-declare (special emacspeak-media-directory-regexp
                        emacspeak-media emacspeak-m-player-hotkey-p))
   (let ((case-fold-search t))
@@ -1503,25 +1503,6 @@ flat classical club dance full-bass full-bass-and-treble
  (define-key emacspeak-m-player-mode-map
              (kbd (format "%s" i)) 'emacspeak-m-player-volume-set))
 
-;;;  YouTube:
-
-(defsubst ems--m-p-get-yt-audio-first-fmt (url)
-  "First available audio format code for   YT URL"
-  (substring
-   (shell-command-to-string
-    (format
-     "%s -F '%s' | grep '^[0-9]'   |grep audio |  head -1 | cut -f 1 -d ' '"
-     emacspeak-ytdl url))
-   0 -1))
-
-(defsubst ems--m-p-get-yt-audio-last-fmt (url)
-  "Last  available (best audio format code for   YT URL"
-  (substring
-   (shell-command-to-string
-    (format
-     "%s -F '%s' | grep '^[0-9]'   | grep audio |tail -1 | cut -f 1 -d ' '"
-     emacspeak-ytdl url))
-   0 -1))
 
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
 ;; yt player using mplayer is broken  due to xml manifests

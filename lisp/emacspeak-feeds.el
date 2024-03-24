@@ -62,15 +62,16 @@
 (defvar emacspeak-feeds-feeds-table (make-hash-table :test #'equal)
   "Hash table to enable efficient feed look up when adding feeds.")
 
-(defun emacspeak-feeds-cache-feeds ()
-  "Cache feeds in emacspeak-feeds in a hash table."
+(defun emacspeak-feeds-cache-feeds (&optional feeds)
+  "Cache feeds in  `feeds' in a hash table."
   (cl-declare (special emacspeak-feeds))
+  (or feeds (setq feeds emacspeak-feeds))
   (cl-loop
-   for f in emacspeak-feeds
+   for f in feeds
    do
    (set-text-properties 0 (length (cl-second f)) nil (cl-second f))
    (puthash
-    (cl-second f); strip props 
+    (cl-second f)                       ; URL is the key
     f emacspeak-feeds-feeds-table)))
 
 (defcustom emacspeak-feeds
@@ -81,22 +82,29 @@
     )
   "Table of RSS/Atom feeds.
 The feed list is persisted to file saved-feeds on exit."
-  :type '(repeat
-          (list :tag "Feed"
-                (string :tag "Title")
-                (string :tag "URI")
-                (choice :tag "Type"
-                        (const :tag "RSS" rss)
-                        (const :tag "opml" opml)
-                        (const :tag "Atom" atom))))
+  :type
+  '(repeat
+    (list :tag "Feed"
+          (string :tag "Title")
+          (string :tag "URI")
+          (choice
+           :tag "Type"
+           (const :tag "RSS" rss)
+           (const :tag "opml" opml)
+           (const :tag "Atom" atom))))
   :initialize  'custom-initialize-reset
   :set
   #'(lambda (sym val)
       (set-default
        sym
-       (sort val #'(lambda (a b)
-                     (string-lessp (cl-first a) (cl-first b)))))
-      (emacspeak-feeds-cache-feeds))
+       (sort
+        val
+        #'(lambda (a b)
+            (string-lessp
+             (downcase (string-trim (cl-first a)))
+             (downcase (string-trim (cl-first b)))))))
+      (setq emacspeak-feeds-feeds-table (make-hash-table :test #'equal))
+      (emacspeak-feeds-cache-feeds val))
   :group 'emacspeak-feeds)
 
 (add-hook
@@ -112,6 +120,7 @@ The feed list is persisted to file saved-feeds on exit."
   "Check if this feed has been added before."
   (cl-declare (special emacspeak-feeds-feeds-table))
   (gethash feed-url emacspeak-feeds-feeds-table))
+
 ;;;###autoload
 (defun emacspeak-feeds-add-feed (title url type)
   "Add specified feed to our feed store."
@@ -126,13 +135,23 @@ The feed list is persisted to file saved-feeds on exit."
   (cl-declare (special emacspeak-feeds))
   (let ((found (emacspeak-feeds-added-p url)))
     (cond
-     (found
-      (message "Feed already present  as %s" (cl-first found)))
+     (found (message "Feed already present  as %s" (cl-first found)))
      (t (push (list title url type) emacspeak-feeds)
-        (let ((dtk-quiet t))
-          (customize-save-variable 'emacspeak-feeds emacspeak-feeds))
-        (ems-with-messages-silenced
-         (message "Added feed as %s" title))))))
+          (setopt emacspeak-feeds emacspeak-feeds)
+        (message "Added feed as %s" title)))))
+
+
+(defun emacspeak-feeds-delete-feed (title)
+  "Delete specified feed from our feed store."
+  (interactive
+   (list (completing-read "Delete:" (mapcar #'cl-first emacspeak-feeds))))
+  (cl-declare (special emacspeak-feeds))
+  (setq emacspeak-feeds
+        (cl-remove-if
+         #'(lambda (f) (string= title (cl-first f)))
+         emacspeak-feeds))
+          (setopt emacspeak-feeds emacspeak-feeds)
+        (message "Deleted %s" title))
 
 (defvar emacspeak-feeds-archive-file
   (expand-file-name "feeds.el" emacspeak-user-directory)
@@ -160,25 +179,14 @@ Archiving is useful when synchronizing feeds across multiple machines."
   "Restore list of subscribed fees from  personal resource directory.
 Archiving is useful when synchronizing feeds across multiple machines."
   (interactive)
-  (cl-declare (special emacspeak-feeds-archive-file
-                       emacspeak-feeds))
+  (cl-declare (special emacspeak-feeds-archive-file emacspeak-feeds))
   (unless (file-exists-p emacspeak-feeds-archive-file)
-    (error "No archived feeds to restore. "))
-  (let ((buffer (find-file-noselect emacspeak-feeds-archive-file))
-        (feeds  nil))
-    (ems-with-messages-silenced
-     (with-current-buffer buffer
-       (goto-char (point-min))
-       (setq feeds (read buffer))))
-    (kill-buffer buffer)
-    (cl-loop for f in feeds
-             do
-             (apply #'emacspeak-feeds-add-feed f))
-    (when
-        (y-or-n-p
-         (format "After restoring %d feeds, we have a total of %d feeds. Save? "
-                 (length feeds) (length emacspeak-feeds)))
-      (customize-save-variable 'emacspeak-feeds emacspeak-feeds))))
+    (user-error "No archived feeds to restore. "))
+  (with-current-buffer (find-file-noselect emacspeak-feeds-archive-file)
+    (goto-char (point-min))
+    (setq emacspeak-feeds (read (current-buffer))))
+  (emacspeak-feeds-cache-feeds)
+  (setopt emacspeak-feeds emacspeak-feeds))
 
 (defun emacspeak-feeds-fastload-feeds ()
   "Fast load list of feeds from archive.

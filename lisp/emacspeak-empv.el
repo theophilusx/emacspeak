@@ -103,28 +103,23 @@
   "Max number of history to preserve.")
 
 ;;;###autoload
-(defun emacspeak-empv-play-url (url &optional left)
-  "Play URL using mpv.
-Interactive prefix arg plays on left ear. "
-  (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)
-                     current-prefix-arg))
+(defun emacspeak-empv-play-url (url)
+  "Play URL using mpv. "
+  (interactive (list (emacspeak-eww-read-url 'emacspeak-empv-history)))
   (cl-declare (special emacspeak-empv-history-max
-                       emacspeak-empv-history empv-mpv-args))
+                       emacspeak-empv-history))
   (when
       (and url (stringp url)
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
   (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
-  (let* ((args (copy-sequence empv-mpv-args))
-         (empv-mpv-args args))
-    (when left (push "--audio-channels=fl" empv-mpv-args))
-    (empv-play url)))
+    (empv-play url))
 
-(defun emacspeak-empv-play-last (&optional left)
+(defun emacspeak-empv-play-last ()
   "Play most recently played URL."
-  (interactive "P")
+  (interactive )
   (cl-declare (special emacspeak-empv-history))
-  (emacspeak-empv-play-url (cl-first emacspeak-empv-history) left))
+  (emacspeak-empv-play-url (cl-first emacspeak-empv-history)))
 
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
 (declare-function emacspeak-media-read-resource
@@ -141,18 +136,13 @@ Interactive prefix arg plays directory."
   (dtk-notify-speak (file-name-base file))
     (empv-play file))
 
-(defsubst emacspeak-empv-local-file ()
-  "Return local media filename read with completion."
-  (let (( default-directory empv-audio-dir))
-    (emacspeak-media-local-resource nil)))
 
-(defun emacspeak-empv-play-local (file )
-  "Play a local resource  using mpv."
-  (interactive (list (emacspeak-empv-local-file)))
-  (empv-play file))
-
-(put 'emacspeak-empv-play-local 'repeat-map 'empv-map)
-
+(defun emacspeak-empv-radio ()
+  "Play Internet stream"
+  (interactive)
+  (emacspeak-empv-play-file
+   (let ((default-directory emacspeak-media-shortcuts))
+     (emacspeak-media-read-resource))))
 (defun emacspeak-empv-accumulate-to-register ()
   "Accumulate media links to register u"
   (interactive)
@@ -171,7 +161,7 @@ Interactive prefix arg plays directory."
   "Speak time and percent position."
   (interactive)
   (empv--let-properties '(time-pos percent-pos)
-    (message "%s %.2d%%"
+    (message "%s.  %.2d%%"
              (ems--format-clock (or .time-pos 0))
              (or .percent-pos 0))))
 
@@ -183,7 +173,7 @@ Interactive prefix arg plays directory."
 
 (defun emacspeak-empv-relative-seek (target)
   "Relative seek in seconds,see `empv-seek'"
-  (interactive "nTarget:")
+  (interactive (list (read-number "Target:" 30 )))
   (empv-seek target)
   (emacspeak-empv-post-nav))
 
@@ -268,11 +258,11 @@ Interactive prefix arg plays directory."
      ("DEL" emacspeak-empv-clear-filter)
      ("M" emacspeak-empv-backward-minute)
      ("SPC" empv-toggle)
+     ("b" emacspeak-empv-toggle-balance)
      ("m" emacspeak-empv-forward-minute)
      ("r" emacspeak-empv-relative-seek)
      ("s" emacspeak-empv-absolute-seek)
      ("v" empv-set-volume)
-     ("x" empv-exit)
      ("y" emacspeak-empv-yt-download))
    do
    (emacspeak-keymap-update empv-map b)))
@@ -283,6 +273,7 @@ Interactive prefix arg plays directory."
 (mapc
  #'(lambda (c) (put c 'repeat-map 'empv-map))
  '(
+   empv-set-volume empv-display-current  empv-toggle
    emacspeak-empv-play-last emacspeak-empv-play-url
    emacspeak-empv-play-file emacspeak-empv-play-local
    emacspeak-empv-forward-minute emacspeak-empv-backward-minute
@@ -291,9 +282,9 @@ Interactive prefix arg plays directory."
    emacspeak-empv-forward-15-minutes emacspeak-empv-backward-15-minutes
    emacspeak-empv-forward-30-minutes emacspeak-empv-backward-30-minutes
    emacspeak-empv-time-pos emacspeak-empv-clear-filter
-    emacspeak-empv-toggle-custom emacspeak-empv-toggle-filter
-emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek 
-emacspeak-empv-relative-seek))
+   emacspeak-empv-toggle-custom emacspeak-empv-toggle-filter
+   emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek 
+   emacspeak-empv-relative-seek))
  
 
 (defvar emacspeak-empv-filter-history nil
@@ -302,7 +293,10 @@ emacspeak-empv-relative-seek))
   '(
     "asubboost" "bs2b" "bs2b=cmoy" "bs2b=jmeier"
     "extrastereo" "extrastereo=1.5" "haas" "headphone"
-    "stereowiden=4.25:.1:735:.8" "surround=7.1" "virtualbass"
+    "stereowiden=4.25:.1:735:.8"
+    "stereotools=mutel=true"
+    "stereotools=muter=true"
+    "surround=7.1" "virtualbass"
     )
   "Table of MPV filters.")
 
@@ -318,6 +312,14 @@ Filter is of the  form name=arg-1:arg-2:..."
   (cl-declare (special emacspeak-empv-filter-history))
   (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
+
+
+(defun emacspeak-empv-toggle-balance (value)
+  "Set balance to value --- range is -1.0..1.0 "
+  (interactive (list (read-minibuffer "Balance: ")))
+  (funcall-interactively #'emacspeak-empv-toggle-filter
+                         (format "stereotools=balance_out=%f" value)))
+
 
 (defun emacspeak-empv-clear-filter ()
   "Clear all filters. "

@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on March 18, 2024.
+last updated on March 23, 2024.
 
 
 File: emacspeak.info,  Node: emacspeak-exwm,  Next: emacspeak-feeds,  Prev: emacspeak-extras,  Up: Emacspeak Commands And Options
@@ -91,7 +91,16 @@ This module provides Feeds support for Emacspeak required modules
 
      (fn FEED)
 
-12.78.1.6 emacspeak-feeds-fastload-feeds
+12.78.1.6 emacspeak-feeds-delete-feed
+.....................................
+
+ -- Command: emacspeak-feeds-delete-feed (title)
+
+     Delete specified feed from our feed store.
+
+     (fn TITLE)
+
+12.78.1.7 emacspeak-feeds-fastload-feeds
 ........................................
 
  -- Command: emacspeak-feeds-fastload-feeds
@@ -101,18 +110,17 @@ This module provides Feeds support for Emacspeak required modules
      than adding those entries to the current set of subscribed
      feeds.
 
-12.78.1.7 emacspeak-feeds-opml-display
+12.78.1.8 emacspeak-feeds-opml-display
 ......................................
 
  -- Command: emacspeak-feeds-opml-display (feed-url)
-     ‘C-, o’
-     ‘C-x @ a o’
+     ‘C-e v o’
 
      Display OPML feed.
 
      (fn FEED-URL)
 
-12.78.1.8 emacspeak-feeds-restore-feeds
+12.78.1.9 emacspeak-feeds-restore-feeds
 .......................................
 
  -- Command: emacspeak-feeds-restore-feeds
@@ -120,8 +128,8 @@ This module provides Feeds support for Emacspeak required modules
      Restore list of subscribed fees from  personal resource directory.
      Archiving is useful when synchronizing feeds across multiple machines.
 
-12.78.1.9 emacspeak-feeds-rss-display
-.....................................
+12.78.1.10 emacspeak-feeds-rss-display
+......................................
 
  -- Command: emacspeak-feeds-rss-display (feed-url)
      ‘C-, r’
@@ -131,7 +139,7 @@ This module provides Feeds support for Emacspeak required modules
 
      (fn FEED-URL)
 
-12.78.1.10 emacspeak-feeds-select-feed
+12.78.1.11 emacspeak-feeds-select-feed
 ......................................
 
  -- Command: emacspeak-feeds-select-feed (feed-type)
@@ -1160,7 +1168,6 @@ found on laptops is denoted <fn>
       ("f" ffip)
       ("g" rg)
       ("l" eww-open-file)
-      ("o" emacspeak-feeds-opml-display)
       ("p" emacspeak-wizards-pdf-open)
       ("q" emacspeak-wizards-quotes)
       ("r" emacspeak-feeds-rss-display)
@@ -1262,8 +1269,7 @@ found on laptops is denoted <fn>
       ("r" soundscape-restart)
       ("s" soundscape)
       ("t" soundscape-toggle)
-      ("u" soundscape-update-mood)
-      ("y" empv-youtube-tabulated))
+      ("u" soundscape-update-mood))
      
 
  -- Variable: User Option emacspeak-v-keys
@@ -1272,8 +1278,12 @@ found on laptops is denoted <fn>
      Default Value:
      
      (("SPC" emacspeak-speak-spaces)
+      ("a" emacspeak-xslt-view-atom-file)
       ("b" ebuku)
-      ("v" view-register))
+      ("o" emacspeak-feeds-opml-display)
+      ("r" emacspeak-xslt-view-rss-file)
+      ("v" view-register)
+      ("x" emacspeak-xslt-view-file))
      
 
  -- Variable: User Option emacspeak-windows-keys
@@ -1327,11 +1337,10 @@ found on laptops is denoted <fn>
 
      Default Value:
      
-     (("a" emacspeak-xslt-view-atom-file)
-      ("l" emacspeak-empv-play-last)
-      ("p" emacspeak-pianobar)
-      ("r" emacspeak-xslt-view-rss-file)
-      ("x" emacspeak-xslt-view-file)
+     (("l" emacspeak-empv-play-last)
+      ("p" empv-youtube-playlist)
+      ("r" emacspeak-empv-radio)
+      ("t" empv-youtube-tabulated)
       ("y" emacspeak-empv-play-url))
      
 
@@ -3681,7 +3690,6 @@ Pianobar prefix key (‘C-e '’) followed by keys from ‘pianobar-key-map’.
  -- Command: emacspeak-pianobar
      ‘C-e C-'’
      ‘C-' '’
-     ‘C-e y p’
 
      Start or control Emacspeak Pianobar player.
 
@@ -5634,7 +5642,7 @@ of emacspeak from becoming dependent on the speech server modules
 
      Default Value:
      
-     "%l %M%p"
+     "%l %M"
      
 
  -- Variable: User Option emacspeak-speak-time-format
@@ -9117,7 +9125,7 @@ transformations using xsltproc
 ........................................
 
  -- Command: emacspeak-xslt-view-atom-file (file)
-     ‘C-e y a’
+     ‘C-e v a’
 
      View Atom file.
 
@@ -9127,7 +9135,7 @@ transformations using xsltproc
 ...................................
 
  -- Command: emacspeak-xslt-view-file (style file)
-     ‘C-e y x’
+     ‘C-e v x’
 
      Transform ‘file’ using ‘style’ and preview via browse-url.
 
@@ -9147,7 +9155,7 @@ transformations using xsltproc
 .......................................
 
  -- Command: emacspeak-xslt-view-rss-file (file)
-     ‘C-e y r’
+     ‘C-e v r’
 
      View RSS file.
 

@@ -27,28 +27,6 @@
 @item C-w  emacspeak-speak-window-information
 @item C-x  emacspeak-speak-header-line
 @item SPC  emacspeak-speak-windowful
-@item "  emacspeak-empv-play-local
-@item !  emacspeak-speak-run-shell-command
-@item $  flyspell-mode
-@item %  emacspeak-speak-current-percentage
-@item &  emacspeak-wizards-shell-command-on-current-file
-@item '  emacspeak-empv-play-file
-@item (  amixer
-@item )  emacspeak-sounds-select-theme
-@item ,  emacspeak-buffer-select
-@item .  emacspeak-buffer-select
-@item /  emacspeak-websearch-dispatch
-@item 1  emacspeak-speak-this-window
-@item 2  emacspeak-speak-other-window
-@item 3  amixer-volume-adjust
-@item =  emacspeak-speak-current-column
-@item ?  emacspeak-websearch-dispatch
-@item @@  emacspeak-speak-message-at-time
-@item A  emacspeak-appt-repeat-announcement
-@item B  emacspeak-speak-buffer-interactively
-@item C  emacspeak-customize
-@item 4  amixer-volume-adjust
-@item ;  emacspeak-multimedia
 @item L  emacspeak-speak-line-interactively
 @item M  emacspeak-speak-minor-mode-line
 @item N  emacspeak-view-emacspeak-news
@@ -83,6 +61,27 @@
 @item u  emacspeak-url-template-fetch
 @item w  emacspeak-speak-word
 @item |  emacspeak-speak-line-set-column-filter
+@item !  emacspeak-speak-run-shell-command
+@item $  flyspell-mode
+@item %  emacspeak-speak-current-percentage
+@item &  emacspeak-wizards-shell-command-on-current-file
+@item '  emacspeak-empv-play-file
+@item (  amixer
+@item )  emacspeak-sounds-select-theme
+@item ,  emacspeak-buffer-select
+@item .  emacspeak-buffer-select
+@item /  emacspeak-websearch-dispatch
+@item 1  emacspeak-speak-this-window
+@item 2  emacspeak-speak-other-window
+@item 3  amixer-volume-adjust
+@item =  emacspeak-speak-current-column
+@item ?  emacspeak-websearch-dispatch
+@item @@  emacspeak-speak-message-at-time
+@item A  emacspeak-appt-repeat-announcement
+@item B  emacspeak-speak-buffer-interactively
+@item C  emacspeak-customize
+@item 4  amixer-volume-adjust
+@item ;  emacspeak-multimedia
 @end table
 
 @node Emacspeak Keybindings On emacspeak-dtk-submap
@@ -192,7 +191,6 @@
 @item s  soundscape
 @item t  soundscape-toggle
 @item u  soundscape-update-mood
-@item y  empv-youtube-tabulated
 @end table
 
 @node Emacspeak Keybindings On emacspeak-alt-keymap
@@ -210,7 +208,6 @@
 @item f  ffip
 @item g  rg
 @item l  eww-open-file
-@item o  emacspeak-feeds-opml-display
 @item p  emacspeak-wizards-pdf-open
 @item q  emacspeak-wizards-quotes
 @item r  emacspeak-feeds-rss-display
@@ -239,8 +236,12 @@
 
 @table @kbd
 @item SPC  emacspeak-speak-spaces
+@item a  emacspeak-xslt-view-atom-file
 @item b  ebuku
+@item o  emacspeak-feeds-opml-display
+@item r  emacspeak-xslt-view-rss-file
 @item v  view-register
+@item x  emacspeak-xslt-view-file
 @end table
 
 @node Emacspeak Keybindings On emacspeak-x-keymap
@@ -282,11 +283,10 @@
  @section Emacspeak Keybindings On emacspeak-y-keymap
 
 @table @kbd
-@item a  emacspeak-xslt-view-atom-file
 @item l  emacspeak-empv-play-last
-@item p  emacspeak-pianobar
-@item r  emacspeak-xslt-view-rss-file
-@item x  emacspeak-xslt-view-file
+@item p  empv-youtube-playlist
+@item r  emacspeak-empv-radio
+@item t  empv-youtube-tabulated
 @item y  emacspeak-empv-play-url
 @end table
 

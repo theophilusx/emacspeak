@@ -256,7 +256,6 @@
    ("V" emacspeak-speak-version)
    ("W" emacspeak-select-window-by-name)
    ("[" emacspeak-speak-paragraph)
-   ("\"" emacspeak-empv-play-local)
    ("\\" emacspeak-toggle-speak-line-invert-filter)
    ("]" emacspeak-speak-page)
    ("^" emacspeak-filtertext)
@@ -374,8 +373,12 @@
 (defcustom emacspeak-v-keys
   '(
     ("SPC" emacspeak-speak-spaces)
+    ("a" emacspeak-xslt-view-atom-file)
     ("b" ebuku)
+    ("o" emacspeak-feeds-opml-display)
+    ("r" emacspeak-xslt-view-rss-file)
     ("v" view-register)
+    ("x" emacspeak-xslt-view-file)
     )
   "Key bindings for use with C-e v. "
   :group 'emacspeak
@@ -467,11 +470,10 @@
 
 (defcustom emacspeak-y-keys
   '(
-    ("p" emacspeak-pianobar)
-    ("a" emacspeak-xslt-view-atom-file)
     ("l" emacspeak-empv-play-last)
-    ("r" emacspeak-xslt-view-rss-file)
-    ("x" emacspeak-xslt-view-file)
+    ("p" empv-youtube-playlist)
+    ("r" emacspeak-empv-radio)
+    ("t" empv-youtube-tabulated)
     ("y" emacspeak-empv-play-url)
     )
   "Key bindings for use with C-e y. "
@@ -615,8 +617,7 @@
     ("r" soundscape-restart)
     ("s" soundscape)
     ("t" soundscape-toggle)
-    ("u" soundscape-update-mood)
-    ("y" empv-youtube-tabulated))
+    ("u" soundscape-update-mood))
   "Super key bindings. "
   :group 'emacspeak
   :type '(repeat
@@ -653,7 +654,6 @@
     ("g" rg)
     ("C-l" ellama-chat)
     ("l" eww-open-file)
-    ("o" emacspeak-feeds-opml-display)
     ("p" emacspeak-wizards-pdf-open)
     ("q" emacspeak-wizards-quotes)
     ("r" emacspeak-feeds-rss-display)

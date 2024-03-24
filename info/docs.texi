@@ -249,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1179 commands and 128 options.
+This chapter documents a total of 1181 commands and 128 options.
 
 @node amixer
 @section amixer
@@ -3924,7 +3924,7 @@ Interactive prefix arg plays directory.
 @end deffn
 
 @subsubsection emacspeak-empv-play-last
-@deffn {Command} emacspeak-empv-play-last  (&optional left)
+@deffn {Command} emacspeak-empv-play-last   
 @table @kbd
 @item C-e y l
 @kindex C-e y l
@@ -3934,29 +3934,11 @@ Interactive prefix arg plays directory.
 
 @format
 Play most recently played URL.
-
-(fn &optional LEFT)
-@end format
-@end deffn
-
-@subsubsection emacspeak-empv-play-local
-@deffn {Command} emacspeak-empv-play-local  (file)
-@table @kbd
-@item C-e "
-@kindex C-e "
-@end table
-
-@findex emacspeak-empv-play-local
-
-@format
-Play a local resource  using mpv.
-
-(fn FILE)
 @end format
 @end deffn
 
 @subsubsection emacspeak-empv-play-url
-@deffn {Command} emacspeak-empv-play-url  (url &optional left)
+@deffn {Command} emacspeak-empv-play-url  (url)
 @table @kbd
 @item C-e y y
 @kindex C-e y y
@@ -3965,10 +3947,23 @@ Play a local resource  using mpv.
 @findex emacspeak-empv-play-url
 
 @format
-Play URL using mpv.
-Interactive prefix arg plays on left ear. 
+Play URL using mpv. 
 
-(fn URL &optional LEFT)
+(fn URL)
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-radio
+@deffn {Command} emacspeak-empv-radio   
+@table @kbd
+@item C-e y r
+@kindex C-e y r
+@end table
+
+@findex emacspeak-empv-radio
+
+@format
+Play Internet stream
 @end format
 @end deffn
 
@@ -3999,6 +3994,22 @@ Relative seek in seconds,see ‘empv-seek’
 
 @format
 Speak time and percent position.
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-toggle-balance
+@deffn {Command} emacspeak-empv-toggle-balance  (value)
+@table @kbd
+@item s-SPC b
+@kindex s-SPC b
+@end table
+
+@findex emacspeak-empv-toggle-balance
+
+@format
+Set balance to value --- range is -1.0..1.0 
+
+(fn VALUE)
 @end format
 @end deffn
 
@@ -7012,6 +7023,17 @@ Browse   feed.
 @end format
 @end deffn
 
+@subsubsection emacspeak-feeds-delete-feed
+@deffn {Command} emacspeak-feeds-delete-feed  (title)
+@findex emacspeak-feeds-delete-feed
+
+@format
+Delete specified feed from our feed store.
+
+(fn TITLE)
+@end format
+@end deffn
+
 @subsubsection emacspeak-feeds-fastload-feeds
 @deffn {Command} emacspeak-feeds-fastload-feeds   
 @findex emacspeak-feeds-fastload-feeds
@@ -7027,10 +7049,8 @@ feeds.
 @subsubsection emacspeak-feeds-opml-display
 @deffn {Command} emacspeak-feeds-opml-display  (feed-url)
 @table @kbd
-@item C-, o
-@kindex C-, o
-@item C-x @@ a o
-@kindex C-x @@ a o
+@item C-e v o
+@kindex C-e v o
 @end table
 
 @findex emacspeak-feeds-opml-display
@@ -8230,7 +8250,6 @@ Default Value:
  ("f" ffip)
  ("g" rg)
  ("l" eww-open-file)
- ("o" emacspeak-feeds-opml-display)
  ("p" emacspeak-wizards-pdf-open)
  ("q" emacspeak-wizards-quotes)
  ("r" emacspeak-feeds-rss-display)
@@ -8356,8 +8375,7 @@ Default Value:
  ("r" soundscape-restart)
  ("s" soundscape)
  ("t" soundscape-toggle)
- ("u" soundscape-update-mood)
- ("y" empv-youtube-tabulated))
+ ("u" soundscape-update-mood))
 
 @end verbatim
 
@@ -8372,8 +8390,12 @@ Default Value:
 @verbatim
 
 (("SPC" emacspeak-speak-spaces)
+ ("a" emacspeak-xslt-view-atom-file)
  ("b" ebuku)
- ("v" view-register))
+ ("o" emacspeak-feeds-opml-display)
+ ("r" emacspeak-xslt-view-rss-file)
+ ("v" view-register)
+ ("x" emacspeak-xslt-view-file))
 
 @end verbatim
 
@@ -8445,11 +8467,10 @@ Key bindings for use with C-e y.
 Default Value: 
 @verbatim
 
-(("a" emacspeak-xslt-view-atom-file)
- ("l" emacspeak-empv-play-last)
- ("p" emacspeak-pianobar)
- ("r" emacspeak-xslt-view-rss-file)
- ("x" emacspeak-xslt-view-file)
+(("l" emacspeak-empv-play-last)
+ ("p" empv-youtube-playlist)
+ ("r" emacspeak-empv-radio)
+ ("t" empv-youtube-tabulated)
  ("y" emacspeak-empv-play-url))
 
 @end verbatim
@@ -11233,8 +11254,6 @@ keys from @code{pianobar-key-map}.
 @kindex C-e C-'
 @item C-' '
 @kindex C-' '
-@item C-e y p
-@kindex C-e y p
 @end table
 
 @findex emacspeak-pianobar
@@ -13722,7 +13741,7 @@ Format for time in brief.
 Default Value: 
 @verbatim
 
-"%l %M%p"
+"%l %M"
 
 @end verbatim
 
@@ -18277,8 +18296,8 @@ Browse URL with specified XSL style.
 @subsubsection emacspeak-xslt-view-atom-file
 @deffn {Command} emacspeak-xslt-view-atom-file  (file)
 @table @kbd
-@item C-e y a
-@kindex C-e y a
+@item C-e v a
+@kindex C-e v a
 @end table
 
 @findex emacspeak-xslt-view-atom-file
@@ -18293,8 +18312,8 @@ View Atom file.
 @subsubsection emacspeak-xslt-view-file
 @deffn {Command} emacspeak-xslt-view-file  (style file)
 @table @kbd
-@item C-e y x
-@kindex C-e y x
+@item C-e v x
+@kindex C-e v x
 @end table
 
 @findex emacspeak-xslt-view-file
@@ -18320,8 +18339,8 @@ Browse XML region with specified XSL style.
 @subsubsection emacspeak-xslt-view-rss-file
 @deffn {Command} emacspeak-xslt-view-rss-file  (file)
 @table @kbd
-@item C-e y r
-@kindex C-e y r
+@item C-e v r
+@kindex C-e v r
 @end table
 
 @findex emacspeak-xslt-view-rss-file
@@ -19304,16 +19323,18 @@ This module exposes Piper TTS to Emacs.
 
  @section Piper TTS
 @enumerate
-@item Sandbox for @url{https://github.com/rhasspy/piper}
-@item pipx install piper-tts
-@item Set location of voice data in  @code{pip-data-dir}.
-@item Create the data directory above if needed.
-@item Run piper there  using the --update-voices flag once for each desired voice to get the voices.
-@item @code{M-x pip-speak} to speak.
-@item At present @code{piper} is not suitable for use as a primary TTS
-engine for Emacspeak, given its high latency.
-@item However it might be interesting to use it for lower-priority
-speech where quality trumps latency.
+ @item  Sandbox for
+@url{https://github.com/rhasspy/piper} @item pipx install piper-tts
+@item Set location of voice data in @code{pip-data-dir}.  @item
+Create the data directory above if needed.
+  @item Run piper there
+using the --update-voices flag once for each desired voice to get
+the voices.
+@item @code{M-x pip-speak} to speak.  @item At present
+@code{piper} is not suitable for use as a primary TTS engine for
+Emacspeak, given its high latency.  @item However it might be
+interesting to use it for lower-priority speech where quality
+trumps latency.
 @end enumerate
 
 @subsection Pip Commands
