@@ -115,6 +115,18 @@
   (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
     (empv-play url))
 
+
+(defadvice empv-play (before emacspeak pre act comp)
+  "Record history."
+  (cl-declare (special emacspeak-empv-history-max
+                       emacspeak-empv-history))
+  (let ((url (ad-get-arg 0)))
+    (when
+        (and url (stringp url)
+             (string-prefix-p (emacspeak-google-result-url-prefix) url))
+      (setq url  (emacspeak-google-canonicalize-result-url url)))
+    (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)))
+
 (defun emacspeak-empv-play-last ()
   "Play most recently played URL."
   (interactive )
@@ -275,7 +287,7 @@ Interactive prefix arg plays directory."
  '(
    empv-set-volume empv-display-current  empv-toggle
    emacspeak-empv-play-last emacspeak-empv-play-url
-   emacspeak-empv-play-file emacspeak-empv-play-local
+   emacspeak-empv-radio emacspeak-empv-play-file emacspeak-empv-play-local
    emacspeak-empv-forward-minute emacspeak-empv-backward-minute
    emacspeak-empv-forward-5-minutes emacspeak-empv-backward-5-minutes
    emacspeak-empv-forward-10-minutes emacspeak-empv-backward-10-minutes

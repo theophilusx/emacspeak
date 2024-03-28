@@ -464,6 +464,7 @@
   "Placed on org-mode-hook to do Emacspeak setup."
   (cl-declare (special org-mode-map org-multi-keymap ))
   (emacspeak-org-update-keys)
+  (define-key org-mode-map (kbd "C-o a") 'tvr-org-alphabetize)
   (define-key org-mode-map (kbd "C-o e") 'tvr-org-enumerate)
   (define-key org-mode-map (kbd "C-o i") 'tvr-org-itemize)
   (define-key outline-minor-mode-map (kbd "C-o i") 'tvr-org-itemize)
@@ -564,31 +565,31 @@
   (let ((field (org-table-get-field)))
     (cond
      ((string-match "^ *$" field) (dtk-speak "space"))
-     (t (dtk-speak-and-echo field)))))
+     (t (message field)))))
 
 (defun emacspeak-org-table-speak-column-header ()
   "echoes column header"
   (interactive)
-  (dtk-speak-and-echo
+  (message
    (propertize (org-table-get 1 nil) 'face 'bold)))
 
 (defun emacspeak-org-table-speak-row-header ()
   "echoes row header"
   (interactive)
-  (dtk-speak-and-echo
+  (message
    (propertize (org-table-get nil 1) 'face 'italic)))
 
 (defun emacspeak-org-table-speak-coordinates ()
   "echoes coordinates"
   (interactive)
-  (dtk-speak-and-echo
+  (message
    (concat "row " (number-to-string (org-table-current-line))
            ", column " (number-to-string (org-table-current-column)))))
 
 (defun emacspeak-org-table-speak-both-headers-and-element ()
   "echoes both row and col headers."
   (interactive)
-  (dtk-speak-and-echo
+  (message
    (concat
     (propertize (org-table-get nil 1) 'face 'italic)
     " "
@@ -598,7 +599,7 @@
 (defun emacspeak-org-table-speak-row-header-and-element ()
   "echoes row header and element"
   (interactive)
-  (dtk-speak-and-echo
+  (message
    (concat
     (propertize (org-table-get nil 1) 'face 'italic)
     " "
@@ -608,8 +609,8 @@
   "echoes col header and element"
   (interactive)
   (if (eq (org-table-current-line) 1) ;; we're on the header line, 
-      (dtk-speak-and-echo (org-table-get-field))
-    (dtk-speak-and-echo
+      (message (org-table-get-field))
+    (message
      (concat
       (propertize (org-table-get  1 nil) 'face 'bold)
       " "
@@ -760,6 +761,14 @@ arg just opens the file"
   (interactive)
   (forward-line 0)
   (insert "  1.  ")
+  (emacspeak-speak-line)
+  (emacspeak-icon 'item))
+
+(defun tvr-org-alphabetize ()
+  "Start an alphabetized   list."
+  (interactive)
+  (forward-line 0)
+  (insert "  A.  ")
   (emacspeak-speak-line)
   (emacspeak-icon 'item))
 
