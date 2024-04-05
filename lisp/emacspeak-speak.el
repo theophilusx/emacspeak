@@ -58,6 +58,7 @@
 (require 'emacspeak-pronounce)
 (require 'emacspeak-sounds)
 (require 'sox-gen)
+(require 'shr)
 (declare-function operate-on-rectangle "rect" (function start end coerce-tabs))
 (declare-function which-function "which-func" nil)
 (declare-function calendar-cursor-to-nearest-date "cal-move" nil)
@@ -77,6 +78,14 @@
   "Adjust clause boundaries so that newlines dont delimit clauses."
   (cl-declare (special dtk-chunk-separator-syntax))
   (setq dtk-chunk-separator-syntax ".)$\""))
+;;; Helper: Read URL
+
+
+(defun ems--read-url (&optional history)
+  (or
+   (shr-url-at-point nil)
+   (read-string "URL:" (browse-url-url-at-point) history)))
+
 ;;; Helpers: subdirs
 
 
@@ -219,39 +228,6 @@ message area.  You can use command
       (dtk-speak (buffer-string)))))
 
 ;;;  Utility command to run and tabulate shell output
-
-(defun emacspeak-speak-run-shell-command (command &optional read-as-csv)
-  "Invoke shell COMMAND and display its output as a table. The
-results are placed in a buffer in Emacspeak's table browsing
-mode. Optional interactive prefix arg read-as-csv interprets the
-result as csv. . Use this for running shell commands that produce
-tabulated output. This command should be used for shell commands
-that produce tabulated output that works with Emacspeak's table
-recognizer. Verify this first by running the command in a shell
-and executing command `emacspeak-table-display-table-in-region'
-normally bound to \\[emacspeak-table-display-table-in-region]."
-  (interactive
-   (list
-    (read-from-minibuffer "Shell command: ")
-    current-prefix-arg))
-  (let ((buffer-name (format "%s" command))
-        (start nil)
-        (end nil))
-    (shell-command command buffer-name)
-    (save-current-buffer
-      (set-buffer buffer-name)
-      (untabify (point-min) (point-max))
-      (setq start (point-min)
-            end (1- (point-max)))
-      (condition-case
-          nil
-          (cond
-           (read-as-csv
-            (emacspeak-table-view-csv-buffer (current-buffer)))
-           (t (emacspeak-table-display-table-in-region start end)))
-        (error (message "Output could not be tabulated correctly")))
-      (emacspeak-icon 'open-object)
-      (emacspeak-speak-mode-line))))
 
 ;;;  Notifications:
 
@@ -1612,9 +1588,9 @@ Displays name of current buffer.")
     (let ((window-count (length (window-list))))
       (emacspeak-icon 'item)
       (when (> window-count 1) (emacspeak--sox-multiwindow))
-      (dtk-speak (format-mode-line header-line-format))))
+      (dtk-notify-speak (format-mode-line header-line-format))))
    (t
-    (dtk-speak
+    (dtk-notify-speak
      (concat
       (propertize (buffer-name) 'personality voice-smoothen)
       (format-time-string emacspeak-speak-time-brief-format))))))
@@ -2751,7 +2727,6 @@ Appended entries are separated by newlines."
       (when (with-current-buffer buf (eq mode major-mode))
         (throw 'cl-loop buf)))))
 
-;;;###autoload
 (defun emacspeak-cycle-to-previous-buffer ()
   "Cycles to previous buffer having same mode."
   (interactive)
@@ -2761,7 +2736,6 @@ Appended entries are separated by newlines."
       (funcall-interactively #'switch-to-buffer prev))
      (t (error "No previous buffer in mode %s" major-mode)))))
 
-;;;###autoload
 (defun emacspeak-cycle-to-next-buffer ()
   "Cycles to next buffer having same mode."
   (interactive)
@@ -2853,7 +2827,6 @@ Filters out loopback for convenience."
 
 ;;; Smarter selective-display:
 
-;;;###autoload
 (defun emacspeak-selective-display (&optional arg)
   "Continuously adjust selective-display.
 Use `,' and `.' to continuously decrease/increase `selective-display'.

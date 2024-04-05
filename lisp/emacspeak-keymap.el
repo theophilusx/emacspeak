@@ -183,6 +183,7 @@
    ("4" amixer-volume-adjust)
    (";" emacspeak-multimedia)
    ("<XF86WakeUp>" emacspeak-speak-brief-time)
+   ("<delete>" empv-toggle)
    ("<down>" emacspeak-read-next-line)
    ("<f11>" emacspeak-wizards-shell-toggle)
    ("<f1>" emacspeak-learn-emacs)
@@ -238,7 +239,6 @@
    ("M-d" emacspeak-pronounce-dispatch)
    ("M-e" emacspeak-speak-extent)
    ("M-h" emacspeak-speak-hostname)
-   ("M-i" emacspeak-table-display-table-in-region)
    ("M-l" emacspeak-speak-overlay-properties)
    ("M-m" emacspeak-toggle-mail-alert)
    ("M-o" emacspeak-toggle-comint-output-monitor)
@@ -601,7 +601,6 @@
   '(
     ("SPC"  scratch-buffer)
     ("." emacspeak-wizards-shell-directory-reset)
-    ("C-n" emacspeak-wizards-google-headlines)
     ("R" emacspeak-webspace-feed-reader)
     ("b" eww-list-buffers)
     ("c" calculator)

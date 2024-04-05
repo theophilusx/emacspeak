@@ -1,35 +1,35 @@
 ;;; emacspeak-feeds.el --- Atom, RSS -*- lexical-binding: t; -*-
 ;; $Id:$
 ;; $Author: tv.raman.tv $
-;; Description:  Emacspeak Feeds Support 
+;; Description:  Emacspeak Feeds Support
 ;; Keywords: Emacspeak, RSS, Atom
 ;;;   LCD Archive entry:
 
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; 
+;;
 ;;  $Revision: 4634 $ |
 ;; Location https://github.com/tvraman/emacspeak
-;; 
+;;
 
 ;;;   Copyright:
 
 ;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; All Rights Reserved.
-;; 
+;;
 ;; This file is not part of GNU Emacs, but the same permissions apply.
-;; 
+;;
 ;; GNU Emacs is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
@@ -137,9 +137,8 @@ The feed list is persisted to file saved-feeds on exit."
     (cond
      (found (message "Feed already present  as %s" (cl-first found)))
      (t (push (list title url type) emacspeak-feeds)
-          (setopt emacspeak-feeds emacspeak-feeds)
+        (setopt emacspeak-feeds emacspeak-feeds)
         (message "Added feed as %s" title)))))
-
 
 (defun emacspeak-feeds-delete-feed (title)
   "Delete specified feed from our feed store."
@@ -150,8 +149,8 @@ The feed list is persisted to file saved-feeds on exit."
         (cl-remove-if
          #'(lambda (f) (string= title (cl-first f)))
          emacspeak-feeds))
-          (setopt emacspeak-feeds emacspeak-feeds)
-        (message "Deleted %s" title))
+  (setopt emacspeak-feeds emacspeak-feeds)
+  (message "Deleted %s" title))
 
 (defvar emacspeak-feeds-archive-file
   (expand-file-name "feeds.el" emacspeak-user-directory)
@@ -234,7 +233,7 @@ feeds."
        'emacspeak-eww-post-process-hook
        #'(lambda ()
            (setq eww-current-url feed-url
-                 emacspeak-eww-feed t 
+                 emacspeak-eww-feed t
                  emacspeak-eww-style style)
            (plist-put eww-data :url feed-url)))
       (goto-char (point-min))
@@ -245,14 +244,14 @@ feeds."
        style (point-min) (point-max)
        (list (cons "base" (format "\"'%s'\"" feed-url))))
       (setq eww-current-url feed-url
-            emacspeak-eww-feed t 
+            emacspeak-eww-feed t
             emacspeak-eww-style style)
       (emacspeak-xslt-without-xsl (browse-url-of-buffer)))))
 
 ;;;###autoload
 (defun emacspeak-feeds-rss-display (feed-url)
   "Display RSS feed."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (cl-declare (special emacspeak-rss-xsl))
   (emacspeak-icon 'open-object)
   (emacspeak-feeds-feed-display feed-url emacspeak-rss-xsl 'speak))
@@ -260,7 +259,7 @@ feeds."
 ;;;###autoload
 (defun emacspeak-feeds-opml-display (feed-url)
   "Display OPML feed."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (cl-declare (special emacspeak-opml-xsl))
   (emacspeak-feeds-feed-display feed-url emacspeak-opml-xsl 'speak))
 
@@ -279,7 +278,7 @@ feeds."
 ;;;###autoload
 (defun emacspeak-feeds-atom-display (feed-url)
   "Display ATOM feed."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (cl-declare (special emacspeak-atom-xsl))
   (emacspeak-icon 'open-object)
   (emacspeak-feeds-feed-display feed-url emacspeak-atom-xsl 'speak))
@@ -318,8 +317,8 @@ Argument `feed' is a feed structure (label url type)."
 
 (define-button-type 'emacspeak-feeds-feed-button
   'follow-link t
-  'action 'emacspeak-feeds-feed-button-action 
-  'link nil ;site url 
+  'action 'emacspeak-feeds-feed-button-action
+  'link nil ;site url
   'url nil; site url
   )
 
@@ -329,7 +328,7 @@ Argument `feed' is a feed structure (label url type)."
         (url (button-get button 'url))
         (link (button-get button 'link)))
     (cond
-     ((zerop (length url)) ; missing feed url 
+     ((zerop (length url)) ; missing feed url
       (browse-url link))
      ((string-match "atom" url)
       (emacspeak-feeds-atom-display url))
@@ -339,46 +338,5 @@ Argument `feed' is a feed structure (label url type)."
       (emacspeak-feeds-rss-display url))
      (t (emacspeak-feeds-rss-display url)))))
 
-;;; Awesome RSS
-
-(defcustom emacspeak-feeds-awesome-rss
-  (expand-file-name "~/sourceforge/awesome-rss-feeds/")
-  "Location of Awesome RSS"
-  :type 'directory
-  :group 'emacspeak-feeds)
-
-(defvar emacspeak-feeds-awesome-rss-map nil
-  "Hash table that holds OPML Names->Files map.")
-
-;;;###autoload
-(defun emacspeak-feeds-awesome-rss ()
-  "Display Awesome RSS OPML file read with completion.
-See etc/fixup-awesome-rss  for first-time  for instructions."
-  (interactive)
-  (cl-declare (special emacspeak-feeds-awesome-rss-map
-                       emacspeak-feeds-awesome-rss
-                       emacspeak-opml-xsl))
-  (unless (file-exists-p emacspeak-feeds-awesome-rss) 
-    (error
-     "Download awesome-rss from Github, \
-and run the awesome-rss-fixup.sh script found  in %s"
-     emacspeak-etc-directory))
-  (unless emacspeak-feeds-awesome-rss-map ;;; first time
-    (setq emacspeak-feeds-awesome-rss-map (make-hash-table :test #'equal))
-    (cl-loop
-     for f in
-     (directory-files-recursively emacspeak-feeds-awesome-rss "\\.opml\\'")
-     do
-     (puthash
-      (substring (file-name-nondirectory f) 0 -5)
-      f emacspeak-feeds-awesome-rss-map)))
-  (let ((feed
-         (gethash 
-          (completing-read "OPML: " emacspeak-feeds-awesome-rss-map nil t)
-          emacspeak-feeds-awesome-rss-map)))
-    (emacspeak-eww-autospeak)
-    (emacspeak-xslt-view-file emacspeak-opml-xsl feed)))
-
 (provide 'emacspeak-feeds)
 ;;;  end of file
-

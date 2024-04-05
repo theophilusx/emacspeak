@@ -56,6 +56,7 @@
   (require 'light)
   (require 'let-alist))
 (require 'g-utils)
+(require 'gmaps)
 (require 'find-func)
 (require 'comint)
 (require 'shell)
@@ -141,9 +142,9 @@
   (interactive)
   (cl-declare (special emacspeak-etc-directory))
   (emacspeak-xslt-without-xsl
-   (browse-url
-    (format "file:///%stips.html"
-            emacspeak-etc-directory)))
+      (browse-url
+       (format "file:///%stips.html"
+               emacspeak-etc-directory)))
   (emacspeak-icon 'help)
   (emacspeak-speak-mode-line))
 
@@ -374,14 +375,14 @@ command."
 To leave, press \\[keyboard-quit]."
   (interactive)
   (ems-with-messages-silenced
-   (let ((continue t))
-     (while continue
-       (call-interactively 'describe-key-briefly)
-       (sit-for 4)
-       (when (and (numberp last-input-event)
-                  (= last-input-event 7))
-         (setq continue nil)))
-     (message "Leaving learn mode "))))
+    (let ((continue t))
+      (while continue
+        (call-interactively 'describe-key-briefly)
+        (sit-for 4)
+        (when (and (numberp last-input-event)
+                   (= last-input-event 7))
+          (setq continue nil)))
+      (message "Leaving learn mode "))))
 
 (defun emacspeak-describe-emacspeak ()
   "Give a brief overview of emacspeak."
@@ -393,7 +394,6 @@ To leave, press \\[keyboard-quit]."
 
 ;;;  Frame Nav:
 
-;;;###autoload
 (defun emacspeak-next-frame-or-buffer (&optional frame)
   "Move to next buffer.
 With optional interactive prefix arg `frame', move to next frame instead."
@@ -402,7 +402,6 @@ With optional interactive prefix arg `frame', move to next frame instead."
    (frame (funcall-interactively #'other-frame 1))
    (t (call-interactively #'next-buffer))))
 
-;;;###autoload
 (defun emacspeak-previous-frame-or-buffer (&optional frame)
   "Move to previous buffer.
 With optional interactive prefix arg `frame', move to previous frame instead."
@@ -858,26 +857,26 @@ Ubuntu and Debian this is group `tty'.")
                        emacspeak-wizards-vc-console
                        temporary-file-directory))
   (ems-with-messages-silenced
-   (let ((command
-          (format emacspeak-wizards-vc-viewer-command
-                  console
-                  (expand-file-name
-                   (format "vc-%s.dump" console)
-                   temporary-file-directory)))
-         (buffer (get-buffer-create
-                  (format "*vc-%s*" console))))
-     (shell-command command buffer)
-     (switch-to-buffer buffer)
-     (kill-all-local-variables)
-     (insert-file-contents
-      (expand-file-name
-       (format "vc-%s.dump" console)
-       temporary-file-directory))
-     (set-buffer-modified-p nil)
-     (emacspeak-wizards-vc-view-mode)
-     (setq emacspeak-wizards-vc-console console)
-     (goto-char (point-min))
-     (when (called-interactively-p 'interactive) (emacspeak-speak-line)))))
+    (let ((command
+           (format emacspeak-wizards-vc-viewer-command
+                   console
+                   (expand-file-name
+                    (format "vc-%s.dump" console)
+                    temporary-file-directory)))
+          (buffer (get-buffer-create
+                   (format "*vc-%s*" console))))
+      (shell-command command buffer)
+      (switch-to-buffer buffer)
+      (kill-all-local-variables)
+      (insert-file-contents
+       (expand-file-name
+        (format "vc-%s.dump" console)
+        temporary-file-directory))
+      (set-buffer-modified-p nil)
+      (emacspeak-wizards-vc-view-mode)
+      (setq emacspeak-wizards-vc-console console)
+      (goto-char (point-min))
+      (when (called-interactively-p 'interactive) (emacspeak-speak-line)))))
 
 (defun emacspeak-wizards-vc-viewer-refresh ()
   "Refresh view of VC we're viewing."
@@ -1039,9 +1038,9 @@ Moves to the shortest line when called interactively."
     (read-from-minibuffer "ISO DateTime:"
                           (word-at-point))))
   (ems-with-messages-silenced
-   (let ((time (emacspeak-pronounce-decode-iso-datetime iso)))
-     (tts-with-punctuations 'some (dtk-speak time))
-     (message time))))
+    (let ((time (emacspeak-pronounce-decode-iso-datetime iso)))
+      (tts-with-punctuations 'some (dtk-speak time))
+      (message time))))
 
 ;;;  date pronouncer wizard
 (defvar emacspeak-wizards-mm-dd-yyyy-date-pronounce nil
@@ -1280,14 +1279,14 @@ of the source buffer."
   (cl-loop
    for entry in (reverse emacspeak-wizards-project-shells) do
    (ems-with-messages-silenced
-    (let* ((dtk-quiet t)
-           (name (cl-first entry))
-           (dir (cl-second entry))
-           (auto (cl-third entry))
-           (default-directory dir))
-      (with-current-buffer (shell name)
-        (setq emacspeak-comint-autospeak auto)
-        (setq emacspeak-wizards--project-shell-directory dir)))))
+     (let* ((dtk-quiet t)
+            (name (cl-first entry))
+            (dir (cl-second entry))
+            (auto (cl-third entry))
+            (default-directory dir))
+       (with-current-buffer (shell name)
+         (setq emacspeak-comint-autospeak auto)
+         (setq emacspeak-wizards--project-shell-directory dir)))))
   (emacspeak-wizards--build-shells-table))
 
 (defun emacspeak-wizards-shell-directory-set ()
@@ -1448,8 +1447,8 @@ interactive prompt."
   "Speak line using espeak polyglot wizard."
   (interactive)
   (ems-with-messages-silenced
-   (emacspeak-wizards-espeak-region
-    (line-beginning-position) (line-end-position))))
+    (emacspeak-wizards-espeak-region
+     (line-beginning-position) (line-end-position))))
 
 ;;;  Emacs Dev utilities
 
@@ -2146,7 +2145,7 @@ and pops to a buffer that describes the colors used in that palette."
       (erase-buffer)
       (insert (format "%s\n" palette))
       (cl-loop
-       for p in  (symbol-value palette) 
+       for p in  (symbol-value palette)
        when (stringp (cl-second p)) do
        (let ((c (ems--color-name (cl-second p))))
          (insert (format "%s:\t%s\t%s\n" (cl-first p) c (cl-second p))))))
@@ -2187,11 +2186,11 @@ updating custom settings for a specific package or group of packages."
     (when (not found) (user-error "No saved user options matching %s"
                                   pattern))
     (ems-with-messages-silenced
-     (emacspeak-icon 'progress)
-     (custom-buffer-create
-      (custom-sort-items found t nil)
-      (format "*Customize %d Saved options Matching %s*" (length
-                                                          found) pattern)))
+      (emacspeak-icon 'progress)
+      (custom-buffer-create
+       (custom-sort-items found t nil)
+       (format "*Customize %d Saved options Matching %s*" (length
+                                                           found) pattern)))
     (emacspeak-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
@@ -2352,12 +2351,6 @@ external package."
      (,emacspeak-we-xsl-junk "//menu|//*[contains(@role,\"button\")]"))
    "https://news.google.com"
    'speak))
-
-;;;###autoload
-(defun emacspeak-wizards-google-headlines ()
-  "Display just the headlines from Google News."
-  (interactive)
-  (emacspeak-we-xslt-filter "//h3" "https://news.google.com" 'speak))
 
 ;;;  Use Threads To Call Command Asynchronously:
 
@@ -2581,7 +2574,6 @@ before brightness is checked.")
       (when emacspeak-brightness-autoblack (light-black))
       (message "Brightness %s." (light-get)))))
 
-;;;###autoload
 (defun emacspeak-brightness-alert-toggle ()
   "Toggle brightness alert."
   (interactive)
@@ -2601,7 +2593,6 @@ before brightness is checked.")
     (emacspeak-icon
      (if emacspeak-brightness-timer 'on 'off))))
 
-;;;###autoload
 (defun emacspeak-brightness-autoblack-toggle ()
   "Toggle brightness autoblack."
   (interactive)
@@ -2680,4 +2671,3 @@ Bug: First run fails to bind keys.   Works on subsequent runs."
 ;;;  end of file
 
 ;; byte-compile-warnings: (noruntime )
-

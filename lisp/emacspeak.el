@@ -96,8 +96,9 @@ the Emacspeak desktop.")
 
 (with-eval-after-load "gptel"
   (cl-declare (special gptel-post-response-functions))
-  (setopt gptel-post-stream-hook
-          #'(lambda nil (emacspeak-icon 'tick-tick)))
+  (add-hook
+   'gptel-post-stream-hook
+   #'(lambda nil (emacspeak-icon 'tick-tick)))
   
   (setopt
    gptel-post-response-functions
@@ -406,7 +407,7 @@ This cannot be set via custom; set this in your startup file before
       (when val (require 'pip)))
   :group 'emacspeak)
 
-;;;###autoload
+
 (defun emacspeak()
   "Start the Emacspeak Audio Desktop.
 Use Emacs as you normally would, emacspeak provides spoken feedback.

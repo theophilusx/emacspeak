@@ -38,8 +38,6 @@
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;  introduction
-
 ;;; Commentary:
 
 ;; EWW == Emacs Web Browser
@@ -239,11 +237,6 @@
 ;; Play media URL under point using @code{emacs-m-player}.
 ;; Handles URL fragment as time-stamp where we resume; use @kbd{J} in
 ;; M-Player to jump to that offset.
-;; @item U
-;; @command{emacspeak-eww-curl-play-media-at-point}
-;; Play media url under point by first downloading the URL using
-;; CURL. This is useful for sites that do multiple redirects before
-;; returning the actual media stream URL.
 ;; @item u
 ;; @command{emacspeak-eww-url-to-register}
 ;;Accumulate url under point to register@code{u}.
@@ -294,7 +287,7 @@
 ;;  @command{emacspeak-eww-play-audio/video}
 ;; When on an audio element, plays audio under point.
 ;; @item  C-RET
-;; @command {emacspeak-eww-fillin-form-field}
+;; @command {emacspeak-eww-fillin-field}
 ;; When on an input field, insert  username/password information
 ;; accessed via auth-source.
 ;; @item '
@@ -455,7 +448,7 @@
 
 ;;; Code:
 
-;;  Required modules: 
+;;  Required modules:
 
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
@@ -484,11 +477,6 @@
   (cl-assert  (eq major-mode 'eww-mode) t (error "Not in EWW")))
 
 ;; Return URL under point or URL read from minibuffer.
-;;;###autoload
-(defun emacspeak-eww-read-url (&optional history)
-  (or
-   (shr-url-at-point nil)
-   (read-string "URL:" (browse-url-url-at-point) history)))
 
 ;; Generate functions emacspeak-eww-current-title and friends:
 
@@ -525,14 +513,14 @@
 (defvar emacspeak-eww-url-at-point
   #'(lambda ()
       (ems-with-messages-silenced
-       (let ((url (shr-url-at-point nil)))
-         (cond
-          ((and url ;;; google  Result
-                (stringp url)
-                (string-prefix-p (emacspeak-google-result-url-prefix) url))
-           (emacspeak-google-canonicalize-result-url url))
-          ((and url (stringp url))url)
-          (t (error "No URL under point."))))))
+        (let ((url (shr-url-at-point nil)))
+          (cond
+           ((and url ;;; google  Result
+                 (stringp url)
+                 (string-prefix-p (emacspeak-google-result-url-prefix) url))
+            (emacspeak-google-canonicalize-result-url url))
+           ((and url (stringp url))url)
+           (t (error "No URL under point."))))))
   "EWW Url At point that also handle google specialities.")
 
 (add-hook
@@ -595,6 +583,7 @@ Safari/537.36"
 (defcustom emacspeak-eww-inhibit-images nil
   "Turn this on to avoid rendering images."
   :type 'boolean
+
   :group 'emacspeak)
 
 (declare-function emacspeak-feeds-feed-display
@@ -608,9 +597,7 @@ Safari/537.36"
                shr-inhibit-images emacspeak-eww-inhibit-images
                emacspeak-pronounce-xml-ns
                emacspeak-eww-masquerade))
-  (ems--fastload "emacspeak-pronounce")
-  (emacspeak-pronounce-augment-pronunciations
-   'eww-mode emacspeak-pronounce-xml-ns)
+  (emacspeak-pronounce-augment 'eww-mode emacspeak-pronounce-xml-ns)
   (emacspeak-pronounce-add-dictionary-entry
    'eww-mode
    emacspeak-pronounce-rfc-3339-datetime-pattern
@@ -623,14 +610,12 @@ Safari/537.36"
    '("I" "o")
    do
    (keymap-unset eww-link-keymap c 'remove))
-  (define-key eww-text-map  [C-return]
-              'emacspeak-eww-fillin-form-field)
+  (define-key eww-text-map  [C-return] 'emacspeak-eww-fillin-field)
   (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
   (define-key eww-link-keymap ";" 'emacspeak-m-player-url)
   (define-key eww-link-keymap "Y" 'emacspeak-eww-yt-dl)
-  (define-key eww-link-keymap "U" 'emacspeak-eww-curl-play-media-at-point)
   (define-key eww-link-keymap "x" 'emacspeak-feeds-select-feed)
   (define-key eww-link-keymap  "y" 'emacspeak-empv-play-url)
   (cl-loop
@@ -707,8 +692,7 @@ Safari/537.36"
    do
    (emacspeak-keymap-update eww-mode-map binding))
   (setq shr-external-rendering-functions emacspeak-eww-filter-renderers))
-
-(emacspeak-eww-setup)
+  (emacspeak-eww-setup)
 
 ;;; play media:
 
@@ -731,23 +715,6 @@ second interactive prefix arg adds mplayer option
      emacspeak-m-player-media-history :test #'string=)
     (message " Playing url under point")
     (emacspeak-m-player-url url playlist-p)))
-
-(defun emacspeak-eww-curl-play-media-at-point ()
-  "Use Curl to pull a URL, then pass
-the first line to MPlayer as a playlist.
-Useful in handling double-redirect from TuneIn."
-  (interactive)
-  (let ((url
-         (if emacspeak-eww-url-at-point
-             (funcall emacspeak-eww-url-at-point)
-           (browse-url-url-at-point))))
-    (setq url
-          (cl-first
-           (split-string
-            (shell-command-to-string (format "curl --silent '%s'" url))
-            "\n")))
-    (message "Playing redirected media  URL under point: %s" url)
-    (emacspeak-m-player url t)))
 
 ;;;  Inline Helpers:
 
@@ -898,6 +865,7 @@ Retain previously set punctuations  mode."
 
 (defun emacspeak-eww-after-render-hook ()
   "Setup Emacspeak for rendered buffer. "
+  (cl-declare (special  emacspeak-eww-post-process-hook))
   (let ((title (emacspeak-eww-current-title))
         (alt (dom-alternate-links (emacspeak-eww-current-dom))))
     (when (= 0 (length title)) (setq title "EWW: Untitled"))
@@ -907,8 +875,8 @@ Retain previously set punctuations  mode."
     (emacspeak-speak-voice-annotate-paragraphs)
     (cond
      (emacspeak-eww-post-process-hook
-      (emacspeak-eww-run-post-process-hook))
-     (t (emacspeak-speak-mode-line)))))
+      (emacspeak-eww-run-post-process-hook)))
+    (emacspeak-speak-header-line)))
 
 (add-hook 'eww-after-render-hook 'emacspeak-eww-after-render-hook)
 
@@ -1026,7 +994,7 @@ Retain previously set punctuations  mode."
 ;;;###autoload
 (defvar emacspeak-eww-pre-process-hook nil
   "Pre-process hook -- to be used for XSL preprocessing etc.")
-;;;###autoload
+
 (defun emacspeak-eww-run-pre-process-hook (&rest _ignore)
   "Run web pre process hook."
   (cl-declare (special emacspeak-eww-pre-process-hook))
@@ -1041,21 +1009,17 @@ Retain previously set punctuations  mode."
 
 ;;;  web-post-process
 
-;;;###autoload
 (defvar emacspeak-eww-post-process-hook nil
   "Set locally to a  site specific post processor.
 Note that the Web browser should reset this hook after using it.")
 
-;;;###autoload
 (defun emacspeak-eww-run-post-process-hook (&rest _ignore)
   "Run web post process hook."
   (cl-declare (special emacspeak-eww-post-process-hook))
   (when     emacspeak-eww-post-process-hook
-    (condition-case
-        nil
+    (condition-case nil
         (let ((inhibit-read-only t))
-          (run-hooks
-           'emacspeak-eww-post-process-hook))
+          (run-hooks 'emacspeak-eww-post-process-hook))
       ((debug error)  (message "Caught error  in post-process hook.")
        (setq emacspeak-eww-post-process-hook nil)))
     (setq emacspeak-eww-post-process-hook nil)))
@@ -1259,7 +1223,8 @@ Note that the Web browser should reset this hook after using it.")
   (let ((copy (copy-sequence emacspeak-eww-shr-renderers)))
     (cl-pushnew (cons 'em 'emacspeak-eww-em-with-space) copy)
     (cl-pushnew (cons 'strong 'emacspeak-eww-strong-with-space) copy)
-    (cl-pushnew (cons 'span 'emacspeak-eww-span-with-space) copy) copy)
+    (cl-pushnew (cons 'span 'emacspeak-eww-span-with-space) copy)
+    copy)
   "Renderers used when filtering.")
 
 (defun eww-dom-keep-if (dom predicate)
@@ -1682,7 +1647,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
     (cond
      (                                 ; filter by text:
       (setq dom
-            (funcall transform 
+            (funcall transform
                      (cl-remove-if-not
                       #'(lambda (node)
                           (string-match text (dom-texts node " ")))
@@ -1984,28 +1949,28 @@ The %s is automatically spoken if there is no user activity."
 (defadvice shr-copy-url (around emacspeak pre act comp)
   "Canonicalize Google URLs"
   (ems-with-messages-silenced
-   ad-do-it
-   (when (ems-interactive-p)
-     (emacspeak-icon 'delete-object)
-     (let ((u (car kill-ring)))
-       (when
-           (and u (stringp u)
-                (string-prefix-p (emacspeak-google-result-url-prefix) u))
-         (kill-new  (emacspeak-google-canonicalize-result-url u))))
-     (emacspeak-speak-current-kill))))
+    ad-do-it
+    (when (ems-interactive-p)
+      (emacspeak-icon 'delete-object)
+      (let ((u (car kill-ring)))
+        (when
+            (and u (stringp u)
+                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
+          (kill-new  (emacspeak-google-canonicalize-result-url u))))
+      (emacspeak-speak-current-kill))))
 
 (defadvice shr-maybe-probe-and-copy-url (around emacspeak pre act comp)
   "Canonicalize Google URLs"
   (ems-with-messages-silenced
-   ad-do-it
-   (when (ems-interactive-p)
-     (emacspeak-icon 'delete-object)
-     (let ((u (car kill-ring)))
-       (when
-           (and u (stringp u)
-                (string-prefix-p (emacspeak-google-result-url-prefix) u))
-         (kill-new  (emacspeak-google-canonicalize-result-url u))))
-     (emacspeak-speak-current-kill))))
+    ad-do-it
+    (when (ems-interactive-p)
+      (emacspeak-icon 'delete-object)
+      (let ((u (car kill-ring)))
+        (when
+            (and u (stringp u)
+                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
+          (kill-new  (emacspeak-google-canonicalize-result-url u))))
+      (emacspeak-speak-current-kill))))
 
 ;;;  Speech-enable EWW buffer list:
 
@@ -2394,7 +2359,7 @@ with an interactive prefix arg. "
 
 ;;; Form filling:
 
-(defun emacspeak-eww-fillin-form-field ()
+(defun emacspeak-eww-fillin-field ()
   "Fill in user or passwd field using auth-source backend."
   (interactive)
   (emacspeak-eww-browser-check)
@@ -2610,42 +2575,17 @@ With interactive prefix arg, move to the start of the table."
     (emacspeak-eww-view-helper
      (dom-html-from-nodes (list dom) (eww-current-url)))))
 
-;;; Open With External Browser: EAF, Chrome
-
-(declare-function eaf-open-browser "eaf-browser" (url &optional args))
-;;;###autoload
-(defun emacspeak-eww-browse-eaf  (url)
-  "Launch async EAF browser."
-  (interactive (list (emacspeak-eww-read-url)))
-  (unless(require 'eaf)
-    (error "Install Emacs Application Framework"))
-  (require 'eaf-browser)
-  (eaf-open-browser url))
+;;; Open With External Browser:  Chrome
 
 (defun emacspeak-eww-browse-chrome (url)
   "Open with Chrome."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (browse-url-chrome url))
 
 ;;; Repeat Support:
 (put 'emacspeak-eww-play-media-at-point
      'repeat-map  'emacspeak-m-player-mode-map)
 
-;;; Command: eww-cleanup:
-
-;;; Command to cleanup dom and source for large web pages: e.g. ebooks
-
-(defun emacspeak-eww-cleanup-eww-data ()
-  "Clean up DOM and Source from eww-data.
-Use for large EBook buffers."
-  (interactive)
-  (cl-declare (special eww-data))
-  (plist-put eww-data :source nil)
-  (plist-put eww-data :dom nil)
-  (when  (called-interactively-p 'interactive)
-    (emacspeak-icon 'task-done)))
-
-;;; Command: url-to-register
 ;;; youtube-dl downloader:
 
 (defun emacspeak-eww-yt-dl (url)
@@ -2678,4 +2618,3 @@ Use for large EBook buffers."
 (provide 'emacspeak-eww)
 
 ;;;  end of file
-

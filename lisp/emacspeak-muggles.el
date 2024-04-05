@@ -89,6 +89,7 @@
 (require 'ido)
 (require 'emacspeak-maths nil 'no-error)
 (require 'emacspeak-outline)
+(require 'emacspeak-dired)
 (require 'smartparens "smartparens" 'no-error)
 (require 'browse-kill-ring "browse-kill-ring" 'no-error)
 (require 'xbacklight)
@@ -122,7 +123,6 @@
    :post emacspeak-hydra-post)
   "Brightness "
   ("?" (emacspeak-hydra-self-help "emacspeak-muggles-brightness") "Help")
-  ("b" emacspeak-brightness-alert-toggle "Alert" )
   ("s" light-set "set")
   ("g" light-get "Get")
   ("t" emacspeak-hydra-toggle-talkative)

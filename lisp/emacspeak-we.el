@@ -101,7 +101,6 @@ a rewrite rule even if one is already defined."
     (browse-url (or redirect url))))
 
 ;;;  url expand and execute
-;;;###autoload
 (defvar emacspeak-we-url-executor nil
   "URL expand/execute function  to use in current buffer.")
 
@@ -139,7 +138,6 @@ a rewrite rule even if one is already defined."
                emacspeak-we-url-executor))))))
 
 ;;;  applying XSL transforms before displaying
-;;;###autoload
 (define-prefix-command 'emacspeak-we-xsl-map)
 
 (defvar emacspeak-we-xsl-filter
@@ -152,16 +150,13 @@ a rewrite rule even if one is already defined."
 (defgroup emacspeak-we nil
   "Emacspeak WebEdit"
   :group 'emacspeak)
-;;;###autoload
 (defvar emacspeak-we-xsl-p nil
   "T means we apply XSL before displaying HTML.")
-;;;###autoload
 (defvar emacspeak-we-xsl-transform
   nil
   "Specifies transform to use before displaying a page.
 Default is to apply sort-tables.")
 
-;;;###autoload
 (defvar emacspeak-we-xsl-params nil
   "XSL params if any to pass to emacspeak-xslt-region.")
 
@@ -210,7 +205,7 @@ Default is to apply sort-tables.")
   "Count matches for locator  in Web page."
   (interactive
    (list
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (read-from-minibuffer "XPath locator: ")))
   (read
    (emacspeak-xslt-url
@@ -221,12 +216,12 @@ Default is to apply sort-tables.")
 
 (defun emacspeak-we-count-nested-tables (url)
   "Count nested tables in Web page."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (emacspeak-we-count-matches url "'//table//table'"))
 
 (defun emacspeak-we-count-tables (url)
   "Count  tables in Web page."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (emacspeak-we-count-matches url "//table"))
 
 (defvar emacspeak-we-xsl-keep-result nil
@@ -248,14 +243,14 @@ Default is to apply sort-tables.")
   :type  'boolean
   :group 'emacspeak-we)
 (declare-function emacspeak-eww-reading-settings "emacspeak-eww")
-;;;###autoload
+
 (defun emacspeak-we-xslt-filter (path    url  &optional _speak)
   "Extract elements matching specified XPath path locator
 from Web page -- default is the current page being viewed."
   (interactive
    (list
     (read-from-minibuffer "XPath: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     current-prefix-arg))
   (cl-declare (special emacspeak-we-xsl-filter
                        emacspeak-we-filters-rename-buffer))
@@ -287,7 +282,7 @@ Each filter is a list of the form
   (interactive
    (list
     (read-from-minibuffer "XPath: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (called-interactively-p 'interactive)))
   (cl-declare (special emacspeak-we-xsl-junk))
   (let ((params (emacspeak-xslt-params-from-xpath  path url)))
@@ -311,7 +306,7 @@ Each filter is a list of the form
   (interactive
    (list
     (read-from-minibuffer "Pattern: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (called-interactively-p 'interactive)))
   (let ((filter
          (format
@@ -319,7 +314,6 @@ Each filter is a list of the form
           pattern)))
     (emacspeak-we-xslt-filter filter url speak)))
 
-;;;###autoload
 (defun emacspeak-we-extract-nested-table (index   url &optional speak)
   "Extract nested table specified by `table-index'. Default is to
 operate on current web page when in a browser buffer; otherwise
@@ -328,7 +322,7 @@ spoken automatically."
   (interactive
    (list
     (read-from-minibuffer "Table Index: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (emacspeak-we-xslt-filter
    (format "(//table//table)[%s]" index)
@@ -369,13 +363,12 @@ Empty value finishes the list."
         (setq done t)))
     result))
 
-;;;###autoload
 (defun emacspeak-we-extract-nested-table-list (tables url &optional speak)
   "Extract specified list of tables from a Web page."
   (interactive
    (list
     (emacspeak-we-get-table-list)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter
          (mapconcat
@@ -385,7 +378,6 @@ Empty value finishes the list."
           " | ")))
     (emacspeak-we-xslt-filter filter url speak)))
 
-;;;###autoload
 (defun emacspeak-we-extract-table-by-position (pos   url
                                                      &optional speak)
   "Extract table at specified pos.
@@ -393,7 +385,7 @@ Default is to extract from current page."
   (interactive
    (list
     (read-from-minibuffer "Extract Table: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (emacspeak-we-xslt-filter
    (format "/descendant::table[%s]"
@@ -401,7 +393,6 @@ Default is to extract from current page."
    url
    speak))
 
-;;;###autoload
 (defun emacspeak-we-extract-tables-by-position-list (positions url
                                                                &optional speak)
   "Extract specified list of nested tables from a WWW page.
@@ -410,7 +401,7 @@ Tables are specified by their position in the list
   (interactive
    (list
     (emacspeak-we-get-table-list)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter
          (mapconcat
@@ -424,14 +415,13 @@ Tables are specified by their position in the list
      (or (called-interactively-p 'interactive)
          speak))))
 
-;;;###autoload
 (defun emacspeak-we-extract-table-by-match (match   url &optional speak)
   "Extract table containing  specified match.
  Optional arg url specifies the page to extract content from."
   (interactive
    (list
     (read-from-minibuffer "Tables Matching: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (emacspeak-we-xslt-filter
    (format "(/descendant::table[contains(., \"%s\")])[last()]"
@@ -440,7 +430,6 @@ Tables are specified by their position in the list
    (or (called-interactively-p 'interactive)
        speak)))
 
-;;;###autoload
 (defun emacspeak-we-extract-tables-by-match-list (match-list
                                                   url &optional speak)
   "Extract specified  tables from a WWW page.
@@ -449,7 +438,7 @@ Tables are specified by containing  match pattern
   (interactive
    (list
     (emacspeak-we-get-table-match-list)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter
          (mapconcat
@@ -540,7 +529,6 @@ Tables are specified by containing  match pattern
                  ',(copy-sequence values)))))
     (kill-buffer content)))
 
-;;;###autoload
 (defun emacspeak-we-extract-by-class (class    url &optional speak)
   "Extract elements having specified class attribute from HTML. Extracts
 specified elements from current WWW page and displays it in a separate
@@ -549,7 +537,7 @@ buffer. Interactive use provides list of class values as completion."
    (list
     (completing-read "Class: "
                      emacspeak-we-buffer-class-cache)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter (format "//*[contains(@class,\"%s\")]" class)))
     (emacspeak-we-xslt-filter filter
@@ -561,7 +549,7 @@ buffer. Interactive use provides list of class values as completion."
   "Extract elements having class`speakable' from HTML. "
   (interactive
    (list
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (emacspeak-we-extract-by-class "speakable" url speak))
 
@@ -573,7 +561,7 @@ buffer. Interactive use provides list of role values as completion."
    (list
     (completing-read "Role: "
                      emacspeak-we-buffer-role-cache)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter (format "//*[contains(@role,\"%s\")]" role)))
     (emacspeak-we-xslt-filter filter
@@ -581,7 +569,6 @@ buffer. Interactive use provides list of role values as completion."
                               (or (called-interactively-p 'interactive)
                                   speak))))
 
-;;;###autoload
 (defun emacspeak-we-junk-by-class (class    url &optional speak)
   "Extract elements not having specified class attribute from HTML. Extracts
 specified elements from current WWW page and displays it in a separate
@@ -590,7 +577,7 @@ buffer. Interactive use provides list of class values as completion."
    (list
     (completing-read "Class: "
                      emacspeak-we-buffer-class-cache)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     current-prefix-arg))
   (let ((filter (format "//*[contains(@class,\"%s\")]" class)))
     (emacspeak-we-xslt-junk filter
@@ -634,7 +621,6 @@ Empty value finishes the list."
         (setq done t)))
     result))
 
-;;;###autoload
 (defun emacspeak-we-extract-by-class-list(classes   url &optional
                                                     speak)
   "Extract elements having class specified in list `classes' from HTML.
@@ -645,7 +631,7 @@ values as completion. "
    (list
     (let ((completion-ignore-case t))
       (emacspeak-we-css-get-class-list))
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter
          (mapconcat
@@ -657,7 +643,6 @@ values as completion. "
      (format "//*[%s]" filter)
      url
      (or (called-interactively-p 'interactive) speak))))
-;;;###autoload
 (defun emacspeak-we-junk-by-class-list(classes   url &optional
                                                  speak)
   "Extract elements not having class specified in list `classes' from HTML.
@@ -668,7 +653,7 @@ values as completion. "
    (list
     (let ((completion-ignore-case t))
       (emacspeak-we-css-get-class-list))
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     current-prefix-arg))
   (let ((filter
          (mapconcat
@@ -680,8 +665,6 @@ values as completion. "
      (format "//*[%s]" filter)
      url
      (or (called-interactively-p 'interactive) speak))))
-
-;;;###autoload
 (defun emacspeak-we-extract-by-id (id   url &optional speak)
   "Extract elements having specified id attribute from HTML. Extracts
 specified elements from current WWW page and displays it in a
@@ -691,7 +674,7 @@ completion."
    (list
     (let ((completion-ignore-case t))
       (completing-read "Id: " emacspeak-we-buffer-id-cache))
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg))
    current-prefix-arg)
   (emacspeak-we-xslt-filter
@@ -699,8 +682,6 @@ completion."
            id)
    url
    speak))
-
-;;;###autoload
 (defun emacspeak-we-extract-by-id-list(ids   url &optional speak)
   "Extract elements having id specified in list `ids' from HTML.
 Extracts specified elements from current WWW page and displays it in a
@@ -708,7 +689,7 @@ separate buffer. Interactive use provides list of id values as completion. "
   (interactive
    (list
     (emacspeak-we-get-id-list)
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     (or (called-interactively-p 'interactive) current-prefix-arg)))
   (let ((filter
          (mapconcat
@@ -722,7 +703,6 @@ separate buffer. Interactive use provides list of id values as completion. "
      (or (called-interactively-p 'interactive)
          speak))))
 
-;;;###autoload
 (defvar emacspeak-we-url-rewrite-rule nil
   "URL rewrite rule to use in current buffer.")
 
@@ -732,7 +712,6 @@ separate buffer. Interactive use provides list of id values as completion. "
 
 (make-variable-buffer-local 'emacspeak-we-class-filter)
 
-;;;###autoload
 (defun emacspeak-we-class-follow-and-filter (class url &optional _prompt)
   "Follow url and point, and filter the result by specified class.
 Class can be set locally for a buffer, and overridden with an
@@ -749,7 +728,7 @@ used as well."
              "Class: "
              nil nil nil nil
              "article"))))
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     current-prefix-arg))
   (cl-declare (special
                emacspeak-we-class-filter emacspeak-we-url-rewrite-rule))
@@ -771,7 +750,6 @@ used as well."
 
 (make-variable-buffer-local 'emacspeak-we-id-filter)
 
-;;;###autoload
 (defun emacspeak-we-follow-and-filter-by-id (id _prompt)
   "Follow url and point, and filter the result by specified id.
 Id can be set locally for a buffer, and overridden with an
@@ -804,7 +782,6 @@ used as well."
      (or redirect url)
      'speak)))
 
-;;;###autoload
 (defun emacspeak-we-style-filter (style   url &optional speak)
   "Extract elements matching specified style
 from HTML.  Extracts specified elements from current WWW
@@ -813,7 +790,7 @@ specifies the page to extract contents  from."
   (interactive
    (list
     (read-from-minibuffer "Style: ")
-    (emacspeak-eww-read-url)
+    (ems--read-url)
     current-prefix-arg))
   (emacspeak-we-xslt-filter
    (format "//*[contains(@style,  \"%s\")]" style)
@@ -821,7 +798,6 @@ specifies the page to extract contents  from."
    (or (called-interactively-p 'interactive) speak)))
 
 ;;;  xpath  filter
-;;;###autoload
 (defvar emacspeak-we-recent-xpath-filter
   "//p"
   "Caches most recently used xpath filter.")
@@ -841,12 +817,10 @@ urls.")
 
 (make-variable-buffer-local 'emacspeak-we-xpath-filter)
 
-;;;###autoload
 (defvar emacspeak-we-paragraphs-xpath-filter
   "//p"
   "Filter paragraphs.")
 
-;;;###autoload
 (defun emacspeak-we-xpath-follow-and-filter (&optional prompt)
   "Follow url and point, and filter the result by specified xpath.
 XPath can be set locally for a buffer, and overridden with an
@@ -899,7 +873,6 @@ urls.")
   nil
   "Caches most recently used class filter.")
 
-;;;###autoload
 (defun emacspeak-we-class-follow-and-filter-link (&optional prompt)
   "Follow url and point, and filter the result by specified class.
 Class can be set locally for a buffer, and overridden with an
@@ -946,7 +919,6 @@ used as well."
 (defvar emacspeak-we-recent-xpath-junk
   nil
   "Caches last XPath used to junk elements.")
-;;;###autoload
 (defun emacspeak-we-xpath-junk-and-follow (&optional prompt)
   "Follow url and point, and filter the result by junking
 elements specified by xpath.

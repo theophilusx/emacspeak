@@ -54,6 +54,7 @@
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'derived))
 (require 'emacspeak-preamble)
+(require 'emacspeak-we)
 (require 'gweb)
 
 ;;;  Data Structures
@@ -854,7 +855,7 @@ results, default is 1."
 
 (defun emacspeak-google-yt-feed (url)
   "Turn YT Channel or Playlist url into an RSS feed and open it."
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (let ((r "https://www.youtube.com/feeds/videos.xml?%s=%s")
         (u (url-generic-parse-url url))
         (params nil)

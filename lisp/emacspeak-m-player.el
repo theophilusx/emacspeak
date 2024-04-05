@@ -76,6 +76,7 @@
 (require 'emacspeak-preamble)
 (require 'dired)
 (require 'emacspeak-dired)
+(require 'emacspeak-amark)
 (require 'ladspa)
 (require 'emacspeak-amark)
 
@@ -604,7 +605,7 @@ dynamic playlist. "
           (t
            (file-name-base  resource))))))))
 
-;;;###autoload
+
 (defun emacspeak-m-player-using-openal ()
   "Use openal.  "
   (interactive)
@@ -619,7 +620,7 @@ dynamic playlist. "
   '("-af" "hrtf=s" "-af" "resample=48000")
   "Additional options to use built-in HRTF.")
 
-;;;###autoload
+
 (defun emacspeak-m-player-using-hrtf ()
   "Add af resample=48000,hrtf to startup options.
 This will work if the soundcard is set to 48000."
@@ -640,7 +641,7 @@ This will work if the soundcard is set to 48000."
          (append emacspeak-m-player-options (list "-shuffle"))))
     (call-interactively #'emacspeak-m-player)))
 
-;;;###autoload
+
 (defun emacspeak-m-player-loop (&optional raw)
   "M-Player with repeat indefinitely  turned on.
 Interactive prefix `raw' reads a raw URL."
@@ -1160,7 +1161,7 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
 
 (defun emacspeak-m-player-rem-history (url)
   "Remove URL from media history"
-  (interactive (list (emacspeak-eww-read-url)))
+  (interactive (list (ems--read-url)))
   (cl-declare (special emacspeak-m-player-media-history))
   (setq emacspeak-m-player-media-history
         (cl-remove-if
@@ -1740,7 +1741,7 @@ As the default, use current position."
   "Play an RSS stream."
   (interactive
    (list
-    (emacspeak-eww-read-url)))
+    (ems--read-url)))
   (let* ((file (make-temp-file  "rss-media" nil ".m3u"))
          (buffer (find-file-noselect file)))
     (message "Retrieving playlist.")
