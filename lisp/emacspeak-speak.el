@@ -1734,9 +1734,9 @@ Second interactive prefix sets clock to new timezone."
           (split-string (if sign (substring d 1) d) ":")))))
     (* (if sign -1 1)
        (+
-        (* 3600 (cl-first v))
-        (* 60 (cl-second v))
-        (cl-third v)))))
+        (* 3600 (or  (cl-first v) 0))
+        (* 60 (or  (cl-second v) 0))
+        (or  (cl-third v) 0)))))
 
 
 

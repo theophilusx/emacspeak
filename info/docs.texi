@@ -1382,7 +1382,7 @@ to bookmarks. Amarks are stored in a .amarks.am file in the working
 directory.  It also provides a simple AMark Browser to use from a
 directory containing mp3 files where Amarks have been created --
 see @command{emacspeak-amarks-browse}.
- @command{emacspeak-amarks-bookshelf} brings up a @emph{AmarksBookshelf}
+ @command{emacspeak-amarks-bookshelf} brings up a @strong{AmarksBookshelf}
 that can be used to  browse available Amark files.
 
 @subsection Emacspeak-Amark Commands
@@ -1688,8 +1688,8 @@ This module implements an Emacspeak Bookshare client.
 @subsection Usage
 The main entry point is command
 @code{emacspeak-bookshare} bound to @kbd{C-e C-b}.
-This creates a special @emph{Bookshare Interaction} buffer that is
-placed in @emph{emacspeak-bookshare-mode}.
+This creates a special @strong{Bookshare Interaction} buffer that is
+placed in @strong{emacspeak-bookshare-mode}.
 Se the help for that mode on detailed usage instructions and key-bindings.
 
 @subsection Sample Interaction
@@ -1891,6 +1891,11 @@ Download content  to target location.
 
 @subsubsection emacspeak-bookshare-eww
 @deffn {Command} emacspeak-bookshare-eww  (directory)
+@table @kbd
+@item C-e y b
+@kindex C-e y b
+@end table
+
 @findex emacspeak-bookshare-eww
 
 @format
@@ -2492,7 +2497,7 @@ last is most useful when the game is an end-state.
 @code{piece} is similar to the previously listed command.
 @end itemize
 You can obtain views of the board along the rows and diagonals, as
-well as a @emph{knight's perspective }:
+well as a @strong{knight's perspective }:
 @itemize @bullet
 @item Viewers: @kbd{v} followed by the directional navigation keys
 speaks the squares in that direction from the current
@@ -2505,11 +2510,11 @@ or file.
 @end itemize
 @subsection Examining Games
 
-Package @emph{Chess} allows one to browse through a game using
+Package @strong{Chess} allows one to browse through a game using
 @kbd{,} and @kbd{.}  --- @code{chess-display-move-backward} and
 @code{chess-display-move-forward}.  Emacspeak speech-enables these
 commands to speak the move that led to the currently displayed
-state of the game. Finally, @kbd{m} speaks the @emph{current move}
+state of the game. Finally, @kbd{m} speaks the @strong{current move}
 being displayed.
 
 @subsection Emacspeak-Chess Commands
@@ -3729,18 +3734,94 @@ Speak current track.
 @node emacspeak-empv
 @section emacspeak-empv
 
-EMPV ==  Emacs Front-End To mpv --- the GNU media player
-Provides better Youtube integration
+@code{EMPV}  ==  Emacs Front-End To @code{mpv}  --- the GNU media player ---
+Provides better Youtube integration.
+
+This section documents Emacspeak extensions to @code{EMPV} , the Emacs
+interface of choice to the GNU @code{MPV}  media player.
+This section should be read alongside the @code{EMPV}  documentation; Install
+@code{EMPV}  from ELPA.
+
+@subsection Interactive Commands
+
+Emacspeak adds a few convenience commands to the those provided by
+package @code{empv}:
+
+@enumerate
+@item
+Command  @code{emacspeak-empv-play-url to play}
+a URL using @code{MPV} .
+@item
+Adds history tracking to our @code{EMPV}  commands.
+@item
+Command empv-play-last-url to play from our @code{EMPV}  history.
+@item
+Command  @code{emacspeak-empv-play-file  to play  local media and}
+Internet streams.
+@item
+Command  @code{emacspeak-empv-radio to play from Emacspeak's library}
+of Internet streams.
+@end enumerate
+
+@subsection Navigating In Time
+
+Emacspeak defines additional convenience commands to seek in  streams
+at different time granularities, the names are self-documenting and
+bound  in the empv-map.
+
+@itemize
+@item
+ @code{emacspeak-empv-absolute-seek}
+@item
+ @code{emacspeak-empv-backward-10-minutes}
+@item
+ @code{emacspeak-empv-backward-10-seconds}
+@item
+ @code{emacspeak-empv-backward-30-minutes}
+@item
+ @code{emacspeak-empv-backward-5-minutes}
+@item
+ @code{emacspeak-empv-backward-minute}
+@item
+ @code{emacspeak-empv-forward-10-minutes}
+@item
+ @code{emacspeak-empv-forward-10-seconds}
+@item
+ @code{emacspeak-empv-forward-30-minutes}
+@item
+ @code{emacspeak-empv-forward-5-minutes}
+@item
+ @code{emacspeak-empv-forward-minute}
+@item
+ @code{emacspeak-empv-percentage-seek}
+@item
+ @code{emacspeak-empv-relative-seek}
+@end itemize
+
+@subsection Toggling Filters
+
+Command @code{mpv}  provides a number of audio filters. Emacspeak exposes a
+select few for interactive use.
+
+@enumerate
+@item
+Toggle active filter:  @code{emacspeak-empv-toggle-filter}
+@item
+Toggle Audio Balance:  @code{emacspeak-empv-toggle-balance}
+@item
+Clear any active filters:  @code{emacspeak-empv-clear-filter}
+@item
+Toggle our custom filter:  @code{emacspeak-empv-toggle-custom}
+@item
+Toggle left output:  @code{emacspeak-empv-toggle-left}
+@item
+Toggle right output:  @code{emacspeak-empv-toggle-right}
+@end enumerate
 
 @subsection Emacspeak-Empv Commands
 
 @subsubsection emacspeak-empv-absolute-seek
 @deffn {Command} emacspeak-empv-absolute-seek  (target)
-@table @kbd
-@item s-SPC s
-@kindex s-SPC s
-@end table
-
 @findex emacspeak-empv-absolute-seek
 
 @format
@@ -3761,11 +3842,6 @@ Accumulate media links to register u
 
 @subsubsection emacspeak-empv-backward-10-minutes
 @deffn {Command} emacspeak-empv-backward-10-minutes   
-@table @kbd
-@item s-SPC <up>
-@kindex s-SPC <up>
-@end table
-
 @findex emacspeak-empv-backward-10-minutes
 
 @format
@@ -3775,11 +3851,6 @@ Move backward by 10 minutes
 
 @subsubsection emacspeak-empv-backward-10-seconds
 @deffn {Command} emacspeak-empv-backward-10-seconds  (&optional count)
-@table @kbd
-@item s-SPC <
-@kindex s-SPC <
-@end table
-
 @findex emacspeak-empv-backward-10-seconds
 
 @format
@@ -3791,11 +3862,6 @@ Move back  count  slices of 10 seconds.
 
 @subsubsection emacspeak-empv-backward-30-minutes
 @deffn {Command} emacspeak-empv-backward-30-minutes   
-@table @kbd
-@item s-SPC <prior>
-@kindex s-SPC <prior>
-@end table
-
 @findex emacspeak-empv-backward-30-minutes
 
 @format
@@ -3805,11 +3871,6 @@ Move backward by 30 minutes
 
 @subsubsection emacspeak-empv-backward-5-minutes
 @deffn {Command} emacspeak-empv-backward-5-minutes   
-@table @kbd
-@item s-SPC <left>
-@kindex s-SPC <left>
-@end table
-
 @findex emacspeak-empv-backward-5-minutes
 
 @format
@@ -3819,11 +3880,6 @@ Move backward by 5 minutes
 
 @subsubsection emacspeak-empv-backward-minute
 @deffn {Command} emacspeak-empv-backward-minute  (&optional count)
-@table @kbd
-@item s-SPC M
-@kindex s-SPC M
-@end table
-
 @findex emacspeak-empv-backward-minute
 
 @format
@@ -3835,11 +3891,6 @@ Move back  count  minutes.
 
 @subsubsection emacspeak-empv-clear-filter
 @deffn {Command} emacspeak-empv-clear-filter   
-@table @kbd
-@item s-SPC DEL
-@kindex s-SPC DEL
-@end table
-
 @findex emacspeak-empv-clear-filter
 
 @format
@@ -3849,11 +3900,6 @@ Clear all filters.
 
 @subsubsection emacspeak-empv-forward-10-minutes
 @deffn {Command} emacspeak-empv-forward-10-minutes   
-@table @kbd
-@item s-SPC <down>
-@kindex s-SPC <down>
-@end table
-
 @findex emacspeak-empv-forward-10-minutes
 
 @format
@@ -3863,11 +3909,6 @@ Move forward by 10 minutes
 
 @subsubsection emacspeak-empv-forward-10-seconds
 @deffn {Command} emacspeak-empv-forward-10-seconds  (&optional count)
-@table @kbd
-@item s-SPC >
-@kindex s-SPC >
-@end table
-
 @findex emacspeak-empv-forward-10-seconds
 
 @format
@@ -3879,11 +3920,6 @@ Move forward count  chunks of 10 seconds.
 
 @subsubsection emacspeak-empv-forward-30-minutes
 @deffn {Command} emacspeak-empv-forward-30-minutes   
-@table @kbd
-@item s-SPC <next>
-@kindex s-SPC <next>
-@end table
-
 @findex emacspeak-empv-forward-30-minutes
 
 @format
@@ -3893,11 +3929,6 @@ Move forward by 30 minutes
 
 @subsubsection emacspeak-empv-forward-5-minutes
 @deffn {Command} emacspeak-empv-forward-5-minutes   
-@table @kbd
-@item s-SPC <right>
-@kindex s-SPC <right>
-@end table
-
 @findex emacspeak-empv-forward-5-minutes
 
 @format
@@ -3907,11 +3938,6 @@ Move forward by 5 minutes
 
 @subsubsection emacspeak-empv-forward-minute
 @deffn {Command} emacspeak-empv-forward-minute  (&optional count)
-@table @kbd
-@item s-SPC m
-@kindex s-SPC m
-@end table
-
 @findex emacspeak-empv-forward-minute
 
 @format
@@ -3923,11 +3949,6 @@ Move forward count  minutes.
 
 @subsubsection emacspeak-empv-percentage-seek
 @deffn {Command} emacspeak-empv-percentage-seek  (target)
-@table @kbd
-@item s-SPC %
-@kindex s-SPC %
-@end table
-
 @findex emacspeak-empv-percentage-seek
 
 @format
@@ -3949,6 +3970,7 @@ Percentage seek in seconds,see ‘empv-seek’
 @format
 Play file using mpv.
 Interactive prefix arg plays directory.
+If already playing, then read an empv key and invoke its command.
 
 (fn FILE &optional PREFIX)
 @end format
@@ -4000,11 +4022,6 @@ Play Internet stream
 
 @subsubsection emacspeak-empv-relative-seek
 @deffn {Command} emacspeak-empv-relative-seek  (target)
-@table @kbd
-@item s-SPC r
-@kindex s-SPC r
-@end table
-
 @findex emacspeak-empv-relative-seek
 
 @format
@@ -4016,11 +4033,6 @@ Relative seek in seconds,see ‘empv-seek’
 
 @subsubsection emacspeak-empv-time-pos
 @deffn {Command} emacspeak-empv-time-pos   
-@table @kbd
-@item s-SPC =
-@kindex s-SPC =
-@end table
-
 @findex emacspeak-empv-time-pos
 
 @format
@@ -4030,11 +4042,6 @@ Speak time and percent position.
 
 @subsubsection emacspeak-empv-toggle-balance
 @deffn {Command} emacspeak-empv-toggle-balance  (value)
-@table @kbd
-@item s-SPC b
-@kindex s-SPC b
-@end table
-
 @findex emacspeak-empv-toggle-balance
 
 @format
@@ -4046,11 +4053,6 @@ Set balance to value --- range is -1.0..1.0
 
 @subsubsection emacspeak-empv-toggle-custom
 @deffn {Command} emacspeak-empv-toggle-custom   
-@table @kbd
-@item s-SPC \
-@kindex s-SPC \
-@end table
-
 @findex emacspeak-empv-toggle-custom
 
 @format
@@ -4060,11 +4062,6 @@ Toggle our custom filters.
 
 @subsubsection emacspeak-empv-toggle-filter
 @deffn {Command} emacspeak-empv-toggle-filter  (filter)
-@table @kbd
-@item s-SPC ;
-@kindex s-SPC ;
-@end table
-
 @findex emacspeak-empv-toggle-filter
 
 @format
@@ -4077,11 +4074,6 @@ Filter is of the  form name=arg-1:arg-2:...
 
 @subsubsection emacspeak-empv-toggle-left
 @deffn {Command} emacspeak-empv-toggle-left   
-@table @kbd
-@item s-SPC ,
-@kindex s-SPC ,
-@end table
-
 @findex emacspeak-empv-toggle-left
 
 @format
@@ -4091,11 +4083,6 @@ Toggle output to being just on the left.
 
 @subsubsection emacspeak-empv-toggle-right
 @deffn {Command} emacspeak-empv-toggle-right   
-@table @kbd
-@item s-SPC .
-@kindex s-SPC .
-@end table
-
 @findex emacspeak-empv-toggle-right
 
 @format
@@ -4114,7 +4101,7 @@ The default value is suitable for classical instrumental music.
 Default Value: 
 @verbatim
 
-("extrastereo" "stereowiden=4.25:.1:735:.8")
+("extrastereo" "stereowiden=4.25:.1:735:.8" "haas")
 
 @end verbatim
 
@@ -4247,9 +4234,9 @@ support epub3 some time in the future.
 The main entry point is command @command{emacspeak-epub} bound to
 @kbd{C-e g}. This command opens a new bookshelf buffer unless the
 user has previously opened a specific bookshelf. A
-@emph{bookshelf} is a buffer that lists books placed on a given
-bookshelf --- these are listed by @emph{title} and
-@emph{author}. The bookshelf buffer is in a special mode that
+@strong{bookshelf} is a buffer that lists books placed on a given
+bookshelf --- these are listed by @strong{title} and
+@strong{author}. The bookshelf buffer is in a special mode that
 provides single-key commands for adding, removing and finding
 books, as well as for opening the selected book using Emacs'
 built-in Web browser (@command{eww}).
@@ -4320,7 +4307,7 @@ collections.  Read the Calibre documentation for organizing and
 indexing your EBook library.  See user options named
 @code{emacspeak-epub-calibre-*} for customizing emacspeak to work
 with Calibre.  Once set up, Calibre integration provides the
-following commands from the @emph{bookshelf} buffer:
+following commands from the @strong{bookshelf} buffer:
 
 @table @kbd
 @item /
@@ -4382,8 +4369,8 @@ final or penultimate step during initialization.
 @subsubsection emacspeak-epub
 @deffn {Command} emacspeak-epub   
 @table @kbd
-@item C-e g
-@kindex C-e g
+@item C-e M-e
+@kindex C-e M-e
 @end table
 
 @findex emacspeak-epub
@@ -4597,6 +4584,11 @@ Delete EPub under point.
 
 @subsubsection emacspeak-epub-eww
 @deffn {Command} emacspeak-epub-eww  (epub-file &optional use-ncx)
+@table @kbd
+@item C-e y E
+@kindex C-e y E
+@end table
+
 @findex emacspeak-epub-eww
 
 @format
@@ -5636,7 +5628,7 @@ are available via completion.
 @subsection Diving Into (Focusing) On Specific Content
 
 Contrast this with filtering described in the previous section.
-There, we discussed commands that @emph{filter} the DOM to render
+There, we discussed commands that @strong{filter} the DOM to render
 specific types of elements. For HTML as spoken on the Web, there
 is a separate use-case that is helpful as a dual to filtering,
 namely, displaying a specific portion of a page, typically the
@@ -5650,7 +5642,7 @@ point in a separate buffer
  As with the filtering commands, @kbd{l} returns to the
 buffer where these commands were executed.
 Long-term users of Emacspeak who still remember Emacs-W3 will
-recognize this as the @emph{focus} command implemented by
+recognize this as the @strong{focus} command implemented by
 Emacspeak for W3.
 @subsection Updated  Commands For Following  Links
 
@@ -5708,7 +5700,7 @@ next table cell respectively. The latter commands also move to the
 cell being spoken.  You can get a sense of the table's size via
 @kbd{M-,} which speaks the number of rows and cells in the
 table. This works for plain tables, not nested tables; for nested
-tables, first have then @emph{unnested} using one of the XSLT
+tables, first have then @strong{unnested} using one of the XSLT
 transforms like @code{sort-tables}.
 
 @subsection Miscellaneous Commands
@@ -5817,7 +5809,7 @@ Filters out elements having specified class value.
 @command{emacspeak-we-url-expand-and-execute}
 Follow link under point, but pass the result to a custom executor.
 Availability of special executors for link under point is indicated
-by auditory icon @emph{item} instead of @emph{button}
+by auditory icon @strong{item} instead of @strong{button}
 You can then experiment by pressing @code{RET} or @code {e e}.
 Special executors are available for Reddit Links, Wikipedia Links etc.
 @item f
@@ -8453,7 +8445,9 @@ Key bindings for use with C-e y.
 Default Value: 
 @verbatim
 
-(("l" emacspeak-empv-play-last)
+(("E" emacspeak-epub-eww)
+ ("b" emacspeak-bookshare-eww)
+ ("l" emacspeak-empv-play-last)
  ("p" empv-youtube-playlist)
  ("r" emacspeak-empv-radio)
  ("t" empv-youtube-tabulated)
@@ -12037,7 +12031,7 @@ the bundled themes as a guide.
 the basic level.
 @item  Even more important is the nature of the sound and what it sounds
 like in the context of the overall speech output  where that sound is used.
-@item This is why  the gain of icons  @emph{should never be} normalized in
+@item This is why  the gain of icons  @strong{should never be} normalized in
 my view---  tuning icons is as complex as picking
 colors from  a color palette.
 @item The included themes have been optimized over years of use and
@@ -12667,8 +12661,8 @@ Seconds value is also placed in the kill-ring.
 @subsubsection emacspeak-speak-extent
 @deffn {Command} emacspeak-speak-extent  (beg end &optional no-case)
 @table @kbd
-@item C-e M-e
-@kindex C-e M-e
+@item C-e M-r
+@kindex C-e M-r
 @end table
 
 @findex emacspeak-speak-extent
@@ -19381,11 +19375,11 @@ mode. Active Soundscape  are displayed as part of the minor-mode-alist.
 Command emacspeak-speak-minor-mode-line can be used to have this spoken.
 
 Thus, SoundScapes can be thought of as reflecting the
-@emph{mood} of the current @emph{mode}.
+@strong{mood} of the current @strong{mode}.
 This package defines a single @var{soundscape-default-theme}
 that is loaded using @code{(soundscape-load soundscape-default-theme)}.
 Emacs modes that provide similar functionality e.g.,
-communication == email, IM, ... map to  the same @emph{mood}.
+communication == email, IM, ... map to  the same @strong{mood}.
 
 @subsection Soundscape Commands
 
@@ -19754,30 +19748,30 @@ binaural beats.
 
 @itemize
 @item @command{sox-rev-up}: A set of binaural beats designed for  use
-at the start of the day. Transitions from @emph{Dream} -> @emph{Think}
-->@emph{Act} -> @emph{Focus}.
+at the start of the day. Transitions from @strong{Dream} -> @strong{Think}
+->@strong{Act} -> @strong{Focus}.
 @item @command{sox-wind-down}: A  set of binaural beats for winding down
 at the end of the day. This can be thought of as the reverse of
-@command{sox-rev-up} and the sequence transitions from @emph{Act} ->
-@emph{Think} -> @emph{Dream} ->@emph{Sleep}.
+@command{sox-rev-up} and the sequence transitions from @strong{Act} ->
+@strong{Think} -> @strong{Dream} ->@strong{Sleep}.
 @item @command{sox-turn-down}: Designed for falling asleep.
-This sequence starts with a short period of @emph{Dream} before moving
-to @emph{Sleep}.
+This sequence starts with a short period of @strong{Dream} before moving
+to @strong{Sleep}.
 @item @command{sox-relax}:  A variant of the previous sequence,
-@code{sox-relax} spends equal time in @emph{Dream} and @emph{Sleep}.
+@code{sox-relax} spends equal time in @strong{Dream} and @strong{Sleep}.
 @item @command{sox-binaural}: Provide a completion-based front-end to
-playing any one of the predefined binaural effects (@emph{Delta},
-@emph{Theta}, @emph{Alpha}, @emph{Beta}, or @emph{Gamma}. The previously
+playing any one of the predefined binaural effects (@strong{Delta},
+@strong{Theta}, @strong{Alpha}, @strong{Beta}, or @strong{Gamma}. The previously
 defined sequences are built up using these effects.
 @item @command{sox-beats-binaural}: Plays a collection of binaural
 beats, prompting for carrier and beat frequencies for each tone. The
 predefined sequences listed earlier were created after first generating
 experimental beat-sequences using this command.
 @item @command{sox-slide-binaural}: Prompts for two binaural effects
-(see above) and generates a binaural beat that @emph{slides} from the
+(see above) and generates a binaural beat that @strong{slides} from the
 first effect to the second over a specified duration.
 @item @command{sox-chakras}: Pick  amongst one of a predefined set of
-sequences designed for @emph{Chakra} meditation.
+sequences designed for @strong{Chakra} meditation.
 @item @command{sox-tone-binaural}: Generate a simple binaural beat
 with a single carrier frequency.
 @item @command{sox-tone-slide-binaural}: Generate a  tone that slides
@@ -19971,8 +19965,8 @@ conceptualized as pairs.
 In addition, we define @code{bolden-and-animate} as an auditory
 analog of @code{bold-italic}.
 The two additional voices @code{indent} and @code{annotate}
-predate the above and are retained  as two @emph{softer} voices.
-Finally, there are 4 @emph{overlay} voices, corresponding  to the
+predate the above and are retained  as two @strong{softer} voices.
+Finally, there are 4 @strong{overlay} voices, corresponding  to the
 4 dimensions; these each set one of the dimensions to @code{8}.
 Thus, we have a total of 25 unique voices defined in this module.
 @subsection Things to note

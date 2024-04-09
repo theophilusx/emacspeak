@@ -53,8 +53,8 @@
 ;; @subsection Usage
 ;; The main entry point is command
 ;; @code{emacspeak-bookshare} bound to @kbd{C-e C-b}.
-;; This creates a special @emph{Bookshare Interaction} buffer that is
-;; placed in @emph{emacspeak-bookshare-mode}.
+;; This creates a special @strong{Bookshare Interaction} buffer that is
+;; placed in @strong{emacspeak-bookshare-mode}.
 ;; Se the help for that mode on detailed usage instructions and key-bindings.
 ;; 
 ;; @subsection Sample Interaction
@@ -327,7 +327,8 @@ Optional argument `no-auth' says we dont need a user auth."
     emacspeak-bookshare-categories
     (let ((result
            (dom-by-tag
-            (emacspeak-bookshare-api-call "reference/category/list" "" 'no-auth)
+            (emacspeak-bookshare-api-call
+             "reference/category/list" "" 'no-auth)
             'result)))
       (cl-loop
        for r in result collect
@@ -724,7 +725,7 @@ b Browse
         (setq
          directory (emacspeak-bookshare-generate-directory author title)
          target (emacspeak-bookshare-generate-target author title))
-                                        ;Render result with formatted properties
+                                        ;Render  with formatted properties
         (cond
          ((file-exists-p directory)
           (setq face 'highlight
@@ -808,7 +809,8 @@ b Browse
 (declare-function emacspeak-bookshare-get-author    "emacspeak-bookshare" nil)
 (declare-function emacspeak-bookshare-get-title    "emacspeak-bookshare" nil)
 (declare-function emacspeak-bookshare-get-id    "emacspeak-bookshare" nil)
-(declare-function emacspeak-bookshare-get-metadata    "emacspeak-bookshare" nil)
+(declare-function emacspeak-bookshare-get-metadata
+                  "emacspeak-bookshare" nil)
 (declare-function emacspeak-bookshare-get-target    "emacspeak-bookshare" nil)
 (declare-function emacspeak-bookshare-get-directory "emacspeak-bookshare" nil)
 
@@ -1284,19 +1286,25 @@ Useful for fulltext search in a book."
     (emacspeak-speak-mode-line)))
 (defvar-local emacspeak-bookshare-this-book nil
   "Record current book in buffer where it is rendered.")
-
+;;;###autoload
 (defun emacspeak-bookshare-eww (directory)
   "Render  book using EWW"
   (interactive
    (list
-    (or (emacspeak-bookshare-get-directory)
+    (or
+     (emacspeak-bookshare-get-directory)
+        (when (eq major-mode 'dired-mode) (dired-get-filename))
         (let ((completion-ignore-case t)
               (emacspeak-speak-messages nil)
               (read-file-name-completion-ignore-case t))
-          (read-directory-name "Book: "
-                               (when (eq major-mode 'dired-mode)
-                                 (dired-get-filename))
-                               emacspeak-bookshare-directory)))))
+          (completing-read
+           "Book: "
+           (ems--subdirs-recursively emacspeak-bookshare-directory)
+           #'(lambda (d)
+               (cl-some
+                #'(lambda (f) (string-match "\\.ncx$" f))
+                (directory-files d))
+               ))))))
   (cl-declare (special eww-data
                        emacspeak-xslt emacspeak-bookshare-directory
                        emacspeak-speak-directory-settings

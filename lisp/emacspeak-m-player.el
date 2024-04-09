@@ -376,14 +376,14 @@ plays result as a directory." directory)
 (defun emacspeak-m-player-url (url &optional playlist-p)
   "Call emacspeak-m-player on  URL.
 URL fragment specifies optional start position."
-  (interactive
-   (list (car (browse-url-interactive-arg "Media URL: "))))
+  (interactive (list (car (browse-url-interactive-arg "Media URL: "))))
   (cl-declare (special emacspeak-m-player-options))
   (ems-with-messages-silenced
    (cl-multiple-value-bind
        (link offset ) (split-string url "#")
      (cond
-      (offset
+      ((and  offset
+             (string-match "[[:digit:].]+" offset))
        (let ((emacspeak-m-player-options
               (append emacspeak-m-player-options (list "-ss" offset))))
          (emacspeak-m-player link playlist-p)))
@@ -699,9 +699,9 @@ necessary."
   "Return list (position filename length)  to use as an amark. "
   (cl-declare (special emacspeak-m-player-process))
   (with-current-buffer (process-buffer emacspeak-m-player-process)
-    ;; dispatch command twice to avoid flakiness in mplayer
-    (ems--mp-send
-     "get_time_pos\nget_file_name\nget_time_length\n")
+    ;; try accept-process-output instead of
+    ;; dispatching  command twice to avoid flakiness in mplayer
+    (accept-process-output emacspeak-m-player-process 0.1)
     (let* ((output
             (ems--mp-send
              "get_time_pos\nget_file_name\nget_time_length\n") )
@@ -897,7 +897,7 @@ The time position can also be specified as HH:MM:SS."
                (format
                 "%s#%s"
                 (cl-first (split-string emacspeak-m-player-url "#"))
-                time)
+                (or time "0"))
                emacspeak-m-player-media-history
                :test #'string=)))
           ;;dont amark shortcut streams
@@ -1181,7 +1181,13 @@ Interactive prefix arg toggles automatic cueing of ICY info updates."
    ((and prefix emacspeak-m-player-media-history) 
     (call-interactively 'emacspeak-m-player-browse-history))
    (emacspeak-m-player-media-history
-    (emacspeak-m-player-url (car emacspeak-m-player-media-history )))
+    (let ((url (car emacspeak-m-player-media-history ))
+          (fields nil))
+      (when (string-match "#" url)
+        (setq fields (split-string url "#"))
+        (unless (string-match "[[:digit:].]+" (cl-second fields))
+          (setq url (cl-first fields))))
+      (emacspeak-m-player-url url)))
    (t (error "No media history"))))
 
 (defvar emacspeak-m-player-history-map

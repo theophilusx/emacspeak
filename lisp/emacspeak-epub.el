@@ -54,9 +54,9 @@
 ;; The main entry point is command @command{emacspeak-epub} bound to
 ;; @kbd{C-e g}. This command opens a new bookshelf buffer unless the
 ;; user has previously opened a specific bookshelf. A
-;; @emph{bookshelf} is a buffer that lists books placed on a given
-;; bookshelf --- these are listed by @emph{title} and
-;; @emph{author}. The bookshelf buffer is in a special mode that
+;; @strong{bookshelf} is a buffer that lists books placed on a given
+;; bookshelf --- these are listed by @strong{title} and
+;; @strong{author}. The bookshelf buffer is in a special mode that
 ;; provides single-key commands for adding, removing and finding
 ;; books, as well as for opening the selected book using Emacs'
 ;; built-in Web browser (@command{eww}).
@@ -127,7 +127,7 @@
 ;; indexing your EBook library.  See user options named
 ;; @code{emacspeak-epub-calibre-*} for customizing emacspeak to work
 ;; with Calibre.  Once set up, Calibre integration provides the
-;; following commands from the @emph{bookshelf} buffer:
+;; following commands from the @strong{bookshelf} buffer:
 ;; 
 ;; @table @kbd
 ;; @item /
@@ -169,6 +169,7 @@
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
+(require 'dired)
 (require 'emacspeak-xslt)
 (require 'eww)
 (require 'emacspeak-eww)
@@ -845,7 +846,7 @@ Filename may need to  be shell-quoted when called from Lisp."
   "EPub handle.")
 
 (declare-function eww-update-header-line-format "eww" nil)
-
+;;;###autoload
 (defun emacspeak-epub-eww (epub-file &optional use-ncx)
   "Display entire book  using EWW from EPub.
 Use content listed in toc.ncx  if prefix-arg use-ncx is true.
@@ -855,7 +856,16 @@ in the epub file."
    (list
     (or
      (get-text-property (point) 'epub)
-     (read-file-name "EPub: " emacspeak-epub-library-directory))
+     (when (eq major-mode 'dired-mode) (dired-get-filename))
+        (let ((completion-ignore-case t)
+              (emacspeak-speak-messages nil)
+              (read-file-name-completion-ignore-case t))
+          (shell-quote-argument
+           (completing-read
+            "Book: "
+            (directory-files-recursively
+             emacspeak-epub-library-directory
+             "\\.epub$" 'include-dirs)))))
     current-prefix-arg))
   (cl-declare (special emacspeak-speak-directory-settings eww-data
                        epub-this-epub emacspeak-epub-this-epub))

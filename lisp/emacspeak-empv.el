@@ -1,12 +1,12 @@
 ;;; emacspeak-empv.el --- Speech-enable EMPV  -*- lexical-binding: t; -*-
-;;; $Author: tv.raman.tv $s-mo
-;;; Description:  Speech-enable EMPV An Emacs Interface to empv
-;;; Keywords: Emacspeak,  Audio Desktop empv
-;;;   LCD Archive entry:
+;; $Author: tv.raman.tv $s-mo
+;; Description:  Speech-enable EMPV An Emacs Interface to empv
+;; Keywords: Emacspeak,  Audio Desktop empv
+;;   LCD Archive entry:
 
-;;; LCD Archive Entry:
-;;; emacspeak| T. V. Raman |raman@cs.cornell.edu
-;;; A speech interface to Emacs |
+;; LCD Archive Entry:
+;; emacspeak| T. V. Raman |raman@cs.cornell.edu
+;; A speech interface to Emacs |
 ;; Location https://github.com/tvraman/emacspeak
 
 ;;;   Copyright:
@@ -35,8 +35,92 @@
 
 
 ;;; Commentary:
-;; EMPV ==  Emacs Front-End To mpv --- the GNU media player
-;; Provides better Youtube integration
+;; @code{EMPV}  ==  Emacs Front-End To @code{mpv}  --- the GNU media player ---
+;; Provides better Youtube integration.
+;; 
+;; This section documents Emacspeak extensions to @code{EMPV} , the Emacs
+;; interface of choice to the GNU @code{MPV}  media player.
+;; This section should be read alongside the @code{EMPV}  documentation; Install
+;; @code{EMPV}  from ELPA.
+;; 
+;; @subsection Interactive Commands
+;; 
+;; Emacspeak adds a few convenience commands to the those provided by
+;; package @code{empv}:
+;; 
+;; @enumerate
+;; @item
+;; Command  @code{emacspeak-empv-play-url to play} 
+;; a URL using @code{MPV} .
+;; @item
+;; Adds history tracking to our @code{EMPV}  commands.
+;; @item
+;; Command empv-play-last-url to play from our @code{EMPV}  history.
+;; @item
+;; Command  @code{emacspeak-empv-play-file  to play  local media and} 
+;; Internet streams.
+;; @item
+;; Command  @code{emacspeak-empv-radio to play from Emacspeak's library} 
+;; of Internet streams.
+;; @end enumerate
+;; 
+;; @subsection Navigating In Time 
+;; 
+;; Emacspeak defines additional convenience commands to seek in  streams
+;; at different time granularities, the names are self-documenting and
+;; bound  in the empv-map.
+;; 
+;; @itemize
+;; @item
+;;  @code{emacspeak-empv-absolute-seek}  
+;; @item
+;;  @code{emacspeak-empv-backward-10-minutes} 
+;; @item
+;;  @code{emacspeak-empv-backward-10-seconds}  
+;; @item
+;;  @code{emacspeak-empv-backward-30-minutes} 
+;; @item
+;;  @code{emacspeak-empv-backward-5-minutes} 
+;; @item
+;;  @code{emacspeak-empv-backward-minute}  
+;; @item
+;;  @code{emacspeak-empv-forward-10-minutes} 
+;; @item
+;;  @code{emacspeak-empv-forward-10-seconds}  
+;; @item
+;;  @code{emacspeak-empv-forward-30-minutes} 
+;; @item
+;;  @code{emacspeak-empv-forward-5-minutes} 
+;; @item
+;;  @code{emacspeak-empv-forward-minute}  
+;; @item
+;;  @code{emacspeak-empv-percentage-seek}  
+;; @item
+;;  @code{emacspeak-empv-relative-seek}  
+;; @end itemize
+;; 
+;; @subsection Toggling Filters
+;; 
+;; Command @code{mpv}  provides a number of audio filters. Emacspeak exposes a
+;; select few for interactive use.
+;; 
+;; @enumerate
+;; @item
+;; Toggle active filter:  @code{emacspeak-empv-toggle-filter}  
+;; @item
+;; Toggle Audio Balance:  @code{emacspeak-empv-toggle-balance}  
+;; @item
+;; Clear any active filters:  @code{emacspeak-empv-clear-filter}  
+;; @item
+;; Toggle our custom filter:  @code{emacspeak-empv-toggle-custom}  
+;; @item
+;; Toggle left output:  @code{emacspeak-empv-toggle-left}  
+;; @item
+;; Toggle right output:  @code{emacspeak-empv-toggle-right}  
+;; @end enumerate
+;; 
+;; 
+
 ;;; Code:
 
 ;;   Required modules:
@@ -55,7 +139,7 @@
 (cl-loop
  for f in
  '(
-   aempv-current-loop-off empv-current-loop-on
+   aempv-current-loop-off empv-current-loop-on empv-lyrics-current
    empv-toggle empv-pause
    empv-file-loop-off empv-file-loop-on
    empv-playlist-loop-off empv-playlist-loop-on) do
@@ -66,26 +150,27 @@
        (dtk-stop 'all)
        (emacspeak-icon 'button)))))
 
+(defadvice empv-lyrics-display-mode (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-icon 'open-object)
+    (emacspeak-speak-mode-line)))
+
+
 (defadvice empv-youtube-results-play-current (before emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p) (emacspeak-icon 'button)))
-
-
 
 (defadvice empv-youtube-results-inspect (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon 'open-object)
-    (emacspeak-speak-mode-line)
-    ))
-
-
+    (emacspeak-speak-mode-line)))
 
 (defadvice empv-youtube-tabulated (before emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (emacspeak-icon 'button)
-    ))
+    (emacspeak-icon 'button)))
 
 (defadvice empv-exit (after emacspeak pre act comp)
   "Icon."
@@ -113,8 +198,7 @@
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
     (setq url  (emacspeak-google-canonicalize-result-url url)))
   (add-to-history 'emacspeak-empv-history url emacspeak-empv-history-max)
-    (empv-play url))
-
+  (empv-play url))
 
 (defadvice empv-play (before emacspeak pre act comp)
   "Record history."
@@ -140,14 +224,20 @@
 ;;;###autoload
 (defun emacspeak-empv-play-file (file &optional _prefix)
   "Play file using mpv.
-Interactive prefix arg plays directory."
+Interactive prefix arg plays directory.
+If already playing, then read an empv key and invoke its command."
   (interactive
-   (list (emacspeak-media-read-resource current-prefix-arg)
-         current-prefix-arg))
-  (cl-declare (special empv-mpv-args))
-  (dtk-notify-speak (file-name-base file))
-    (empv-play file))
-
+   (list
+    (unless (and empv--process (process-live-p empv--process))
+      (emacspeak-media-read-resource current-prefix-arg))
+    current-prefix-arg))
+  (cl-declare (special  empv--process))
+  (cond
+   ((null file)                         ; we're already playing
+    (call-interactively
+     (lookup-key  empv-map  (read-key-sequence "EMpv Key:"))))
+   (t (dtk-notify-speak (file-name-base file))
+      (empv-play file))))
 
 (defun emacspeak-empv-radio ()
   "Play Internet stream"
@@ -161,6 +251,15 @@ Interactive prefix arg plays directory."
   (emacspeak-accumulate-to-register ?u
                                     'empv-youtube-results--current-video-url))
 (declare-function emacspeak-eww-yt-dl "emacspeak-eww" (url))
+
+;;; Lyrics:
+;; Let's use our Google searcher:
+(declare-function emacspeak-websearch-accessible-google "emacspeak-empv" t)
+(with-no-warnings
+  (defadvice empv--lyrics-on-not-found (around emacspeak pre act comp)
+    "Override to use our own implementation."
+    (setq ad-return-value nil)
+    (funcall #'emacspeak-websearch-accessible-google (ad-get-arg 0))))
 
 ;;; Seekers:
 (defun emacspeak-empv-time-pos ()
@@ -204,7 +303,6 @@ Interactive prefix arg plays directory."
   (emacspeak-empv-post-nav))
 
 ;; Generate other navigators:
-
 
 (defun emacspeak-empv-backward-minute (&optional count)
   "Move back  count  minutes."
@@ -259,7 +357,6 @@ Interactive prefix arg plays directory."
   "Emacspeak setup for empv."
   (cl-declare (special empv-map
                        empv-youtube-results-mode-map))
-  (global-set-key (kbd "s-SPC") empv-map)
   (define-key empv-youtube-results-mode-map
               "o" 'empv-youtube-results-play-current)
   (cl-loop
@@ -286,6 +383,7 @@ Interactive prefix arg plays directory."
      ("M" emacspeak-empv-backward-minute)
      ("SPC" empv-toggle)
      ("b" emacspeak-empv-toggle-balance)
+     ("l" empv-lyrics-current)
      ("m" emacspeak-empv-forward-minute)
      ("r" emacspeak-empv-relative-seek)
      ("s" emacspeak-empv-absolute-seek)
@@ -314,9 +412,9 @@ Interactive prefix arg plays directory."
    emacspeak-empv-time-pos emacspeak-empv-clear-filter
    emacspeak-empv-toggle-custom emacspeak-empv-toggle-filter
    emacspeak-empv-toggle-left emacspeak-empv-toggle-right
-   emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek 
+   emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek
    emacspeak-empv-relative-seek))
- 
+
 
 (defvar emacspeak-empv-filter-history nil
   "History of filters used.")
@@ -344,13 +442,11 @@ Filter is of the  form name=arg-1:arg-2:..."
   (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
 
-
 (defun emacspeak-empv-toggle-balance (value)
   "Set balance to value --- range is -1.0..1.0 "
   (interactive (list (read-minibuffer "Balance: ")))
   (funcall-interactively #'emacspeak-empv-toggle-filter
                          (format "stereotools=balance_out=%f" value)))
-
 
 (defun emacspeak-empv-clear-filter ()
   "Clear all filters. "
@@ -360,7 +456,7 @@ Filter is of the  form name=arg-1:arg-2:..."
   (emacspeak-icon 'delete-object))
 
 (defcustom emacspeak-empv-custom-filters
-  '("extrastereo" "stereowiden=4.25:.1:735:.8")
+  '("extrastereo" "stereowiden=4.25:.1:735:.8" "haas")
   "List of custom filters to turn on/off at one shot
 The default value is suitable for classical instrumental music."
   :type '(repeat  :tag "Filters" (string :tag "Filter"))
@@ -377,14 +473,12 @@ The default value is suitable for classical instrumental music."
     (emacspeak-icon 'button)
     (message "Toggled custom filters")))
 
-
 (defun emacspeak-empv-toggle-left ()
   "Toggle output to being just on the left."
   (interactive)
   (empv--send-command (list "af" "toggle" "stereotools=muter=true"))
   (emacspeak-icon 'button)
   (message "Toggled output left"))
-
 
 (defun emacspeak-empv-toggle-right ()
   "Toggle output to being just on the right."

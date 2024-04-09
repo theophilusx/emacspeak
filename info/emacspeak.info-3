@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on April 5, 2024.
+last updated on April 8, 2024.
 
 
 File: emacspeak.info,  Node: sox,  Next: sox-gen,  Prev: soundscape,  Up: Emacspeak Commands And Options
@@ -181,29 +181,29 @@ These commands can be called directly to play one of the predefined
 binaural beats.
 
    • ‘sox-rev-up’: A set of binaural beats designed for use at the start
-     of the day.  Transitions from _Dream_ -> _Think_ ->_Act_ ->
-     _Focus_.
+     of the day.  Transitions from *Dream* -> *Think* ->*Act* ->
+     *Focus*.
    • ‘sox-wind-down’: A set of binaural beats for winding down at the
      end of the day.  This can be thought of as the reverse of
-     ‘sox-rev-up’ and the sequence transitions from _Act_ -> _Think_ ->
-     _Dream_ ->_Sleep_.
+     ‘sox-rev-up’ and the sequence transitions from *Act* -> *Think* ->
+     *Dream* ->*Sleep*.
    • ‘sox-turn-down’: Designed for falling asleep.  This sequence starts
-     with a short period of _Dream_ before moving to _Sleep_.
+     with a short period of *Dream* before moving to *Sleep*.
    • ‘sox-relax’: A variant of the previous sequence, ‘sox-relax’ spends
-     equal time in _Dream_ and _Sleep_.
+     equal time in *Dream* and *Sleep*.
    • ‘sox-binaural’: Provide a completion-based front-end to playing any
-     one of the predefined binaural effects (_Delta_, _Theta_, _Alpha_,
-     _Beta_, or _Gamma_.  The previously defined sequences are built up
+     one of the predefined binaural effects (*Delta*, *Theta*, *Alpha*,
+     *Beta*, or *Gamma*.  The previously defined sequences are built up
      using these effects.
    • ‘sox-beats-binaural’: Plays a collection of binaural beats,
      prompting for carrier and beat frequencies for each tone.  The
      predefined sequences listed earlier were created after first
      generating experimental beat-sequences using this command.
    • ‘sox-slide-binaural’: Prompts for two binaural effects (see above)
-     and generates a binaural beat that _slides_ from the first effect
+     and generates a binaural beat that *slides* from the first effect
      to the second over a specified duration.
    • ‘sox-chakras’: Pick amongst one of a predefined set of sequences
-     designed for _Chakra_ meditation.
+     designed for *Chakra* meditation.
    • ‘sox-tone-binaural’: Generate a simple binaural beat with a single
      carrier frequency.
    • ‘sox-tone-slide-binaural’: Generate a tone that slides from one
@@ -369,8 +369,8 @@ effects, which can be conceptualized as pairs.
   C. brighten, smoothen
    In addition, we define ‘bolden-and-animate’ as an auditory analog of
 ‘bold-italic’.  The two additional voices ‘indent’ and ‘annotate’
-predate the above and are retained as two _softer_ voices.  Finally,
-there are 4 _overlay_ voices, corresponding to the 4 dimensions; these
+predate the above and are retained as two *softer* voices.  Finally,
+there are 4 *overlay* voices, corresponding to the 4 dimensions; these
 each set one of the dimensions to ‘8’.  Thus, we have a total of 25
 unique voices defined in this module.
 
@@ -1261,7 +1261,7 @@ developing a speech server, see
 ========================
 
 The TTS server reads commands from standard input, and script
-_speech-server_ can be used to cause a TTS server to communicate via a
+*speech-server* can be used to cause a TTS server to communicate via a
 TCP socket.  Speech server commands are used by the client application
 to make specific requests of the server; the server listens for these
 requests in a non-blocking read loop and executes requests as they
@@ -1269,28 +1269,28 @@ become available.  Requests can be classified as follows:
 
    • Commands that send text to be spoken.
 
-   • Commands that set _state_ of the TTS server.
+   • Commands that set *state* of the TTS server.
 
    All commands are of the form
 
      commandWord {arguments}
 
    The braces are optional if the command argument contains no white
-space.  The speech server maintains a _current state_ that determines
+space.  The speech server maintains a *current state* that determines
 various characteristics of spoken output such as speech rate,
 punctuations mode etc.  (see set of commands that manipulate speech
-state for complete list).  The client application _queues_ The text and
+state for complete list).  The client application *queues* The text and
 non-speech audio output to be produced before asking the server to
-_dispatch_ the set of queued requests, i.e.  start producing output.
+*dispatch* the set of queued requests, i.e.  start producing output.
 
    Once the server has been asked to produce output, it removes items
 from the front of the queue, sends the requisite commands to the
 underlying TTS engine, and waits for the engine to acknowledge that the
 request has been completely processed.  This is a non-blocking
 operation, i.e., if the client application generates additional
-requests, these are processed _immediately_.
+requests, these are processed *immediately*.
 
-   The above design allows the Emacspeak TTS server to be _highly_
+   The above design allows the Emacspeak TTS server to be *highly*
 responsive; Client applications can queue large amounts of text
 (typically queued a clause at a time to achieve the best prosody), ask
 the TTS server to start speaking, and interrupt the spoken output at any
@@ -1305,11 +1305,11 @@ on the queue are clearly marked.
 
      version
 
-   Speaks the _version_ of the TTS engine.  Produces output immediately.
+   Speaks the *version* of the TTS engine.  Produces output immediately.
 
      tts_say text
 
-   Speaks the specified _text_ immediately.  The text is not
+   Speaks the specified *text* immediately.  The text is not
 pre-processed in any way, contrast this with the primary way of speaking
 text which is to queue text before asking the server to process the
 queue.
@@ -1319,20 +1319,20 @@ morpheme boundaries ‘[*]’.  The ‘[*]’ syntax is specific to the Dectalk
 family of synthesizers; servers for other TTS engines need to map this
 pattern to the engine-specific code for each engine.  As an example, see
 ‘servers/outloud’ A morpheme boundary results in synthesizing compound
-words such as _left bracket_ with the right intonation; using a space
+words such as *left bracket* with the right intonation; using a space
 would result in that phrase being synthesized as two separate words.
 
      l c
 
-   Speak _c_ a single character, as a letter.  The character is spoken
+   Speak *c* a single character, as a letter.  The character is spoken
 immediately.  This command uses the TTS engine's capability to speak a
-single character with the ability to flush speech _immediately_.  Client
+single character with the ability to flush speech *immediately*.  Client
 applications wishing to produce character-at-a-time output, e.g., when
 providing character echo during keyboard input should use this command.
 
      d
 
-   This command is used to _dispatch_ all queued requests.  It was
+   This command is used to *dispatch* all queued requests.  It was
 renamed to a single character command (like many of the commonly used
 TTS server commands) to work more effectively over slow (9600) dialup
 lines.  The effect of calling this command is for the TTS server to
@@ -1340,13 +1340,13 @@ start processing items that have been queued via earlier requests.
 
      s
 
-   Stop speech _immediately_.  Spoken output is interrupted, and all
+   Stop speech *immediately*.  Spoken output is interrupted, and all
 pending requests are flushed from the queue.
 
      q text
 
    Queues text to be spoken.  No spoken output is produced until a
-_dispatch_ request is received via execution of command _d_.
+*dispatch* request is received via execution of command *d*.
 
      c codes
 
@@ -1362,7 +1362,7 @@ ogg format.
 
      p filename
 
-   _dispatch_ play the audio file identified by filename for playing.
+   *dispatch* play the audio file identified by filename for playing.
 Must support ogg format.
 
      t freq length
@@ -1381,7 +1381,7 @@ milliseconds.
 
      tts_reset
 
-   _Immediately_ reset TTS engine to default settings.  Stops all speech
+   *Immediately* reset TTS engine to default settings.  Stops all speech
 and clears the queue.
 
      tts_set_punctuations mode
@@ -1393,7 +1393,7 @@ Typically, TTS servers provide at least three modes:
 
    • Some: Speak some punctuation characters.  Used for English prose.
 
-   • All: Speak out _all_ punctuation characters; useful in programming
+   • All: Speak out *all* punctuation characters; useful in programming
      modes.
 
      tts_set_speech_rate rate
@@ -1405,16 +1405,16 @@ typically engine specific.
 
    Queues changing the scale factor.  Scale factor applied to speech
 rate when speaking individual characters.Thus, setting speech rate to
-500 and character scale to 1.2 will cause command _l_ to use a speech
-rate of _500 * 1.2 = 600_.
+500 and character scale to 1.2 will cause command *l* to use a speech
+rate of *500 * 1.2 = 600*.
 
      tts_split_caps flag
 
-   Queues changing of the state of _split caps_ processing.  Turn this
+   Queues changing of the state of *split caps* processing.  Turn this
 on to speak mixed-case (AKA Camel Case) identifiers.
 
      tts_sync_state punct  splitcaps caps rate
-   This ensures _atomicity_ i.e., all state settings in the TTS engine
+   This ensures *atomicity* i.e., all state settings in the TTS engine
 happen at one shot.  Note that failure to do this might result in some
 utterances being spoken with a partially set state.
    • punct: see tts_set_punctuations
@@ -1427,20 +1427,20 @@ utterances being spoken with a partially set state.
 
      set_next_lang say_it
 
-   _Immediately_ switch to the next language on the server, maintained
+   *Immediately* switch to the next language on the server, maintained
 internally on the TTS server.  If say_it is non-nil say the language
 change via the TTS.
 
      set_previous_lang say_it
 
-   _Immediately_ switch to the previous language on the server,
+   *Immediately* switch to the previous language on the server,
 maintained internally on the TTS server.  If say_it is non-nil say the
 language change via the TTS.
 
-     set_lang langauge:voice say_it
+     set_lang language:voice say_it
 
-   _Immediately_ switch to the requested language and/or voice,
-seperated by a colon.  Examples
+   *Immediately* switch to the requested language and/or voice,
+separated by a colon.  Examples
 
    • set_lang "en"
 
@@ -1448,12 +1448,12 @@ seperated by a colon.  Examples
 
    • set_lang ":whisper"
 
-   If say_it is non-nil, speak via the TTS the langauge and voice
+   If say_it is non-nil, speak via the TTS the language and voice
 selected.
 
      set_preferred_lang alias lang
 
-   _Immediately_ set an alias in the TTS server mapping for example "en"
+   *Immediately* set an alias in the TTS server mapping for example "en"
 to "en_GB". This can later be used by set_lang.
 
 
@@ -2426,7 +2426,7 @@ File: emacspeak.info,  Node: Key Index,  Next: Variable Index,  Prev: Concept In
 * C-e ?:                                 emacspeak-websearch.
                                                              (line   52)
 * C-e .:                                 emacspeak-speak.    (line   37)
-* C-e ':                                 emacspeak-empv.     (line  140)
+* C-e ':                                 emacspeak-empv.     (line  179)
 * C-e (:                                 amixer.             (line   24)
 * C-e ):                                 emacspeak-sounds.   (line   74)
 * C-e [:                                 Reading.            (line  121)
@@ -2619,7 +2619,6 @@ File: emacspeak.info,  Node: Key Index,  Next: Variable Index,  Prev: Concept In
 * C-e <DOWN>:                            Reading.            (line   49)
 * C-e f:                                 Status Information. (line   43)
 * C-e f <1>:                             emacspeak-speak.    (line  266)
-* C-e g:                                 emacspeak-epub.     (line  145)
 * C-e h:                                 Status Information. (line   50)
 * C-e h <1>:                             emacspeak-speak.    (line  448)
 * C-e i:                                 emacspeak-speak.    (line  769)
@@ -2639,12 +2638,13 @@ File: emacspeak.info,  Node: Key Index,  Next: Variable Index,  Prev: Concept In
 * C-e M-c:                               emacspeak-wizards.  (line   30)
 * C-e M-d:                               emacspeak-pronounce.
                                                              (line   56)
-* C-e M-e:                               emacspeak-speak.    (line  398)
+* C-e M-e:                               emacspeak-epub.     (line  145)
 * C-e M-h:                               emacspeak-wizards.  (line  202)
 * C-e M-l:                               emacspeak-speak.    (line  653)
 * C-e M-m:                               emacspeak-speak.    (line 1012)
 * C-e M-o:                               emacspeak-comint.   (line   26)
 * C-e M-p:                               emacspeak-wizards.  (line  150)
+* C-e M-r:                               emacspeak-speak.    (line  398)
 * C-e M-s:                               emacspeak-wizards.  (line  268)
 * C-e M-SPC:                             emacspeak-speak.    (line  311)
 * C-e M-t:                               emacspeak-speak.    (line   83)
@@ -2742,9 +2742,12 @@ File: emacspeak.info,  Node: Key Index,  Next: Variable Index,  Prev: Concept In
 * C-e x u:                               emacspeak-wizards.  (line 1003)
 * C-e x v:                               emacspeak-wizards.  (line 1033)
 * C-e x w:                               emacspeak-wizards.  (line  704)
-* C-e y l:                               emacspeak-empv.     (line  151)
-* C-e y r:                               emacspeak-empv.     (line  169)
-* C-e y y:                               emacspeak-empv.     (line  159)
+* C-e y b:                               emacspeak-bookshare.
+                                                             (line  191)
+* C-e y E:                               emacspeak-epub.     (line  319)
+* C-e y l:                               emacspeak-empv.     (line  191)
+* C-e y r:                               emacspeak-empv.     (line  209)
+* C-e y y:                               emacspeak-empv.     (line  199)
 * C-e z b:                               emacspeak-wizards.  (line 1059)
 * C-e z e:                               emacspeak-wizards.  (line  509)
 * C-e z l:                               emacspeak-m-player. (line  366)
@@ -2824,26 +2827,6 @@ File: emacspeak.info,  Node: Key Index,  Next: Variable Index,  Prev: Concept In
 * s-m:                                   extra-muggles.      (line   53)
 * s-n:                                   emacspeak-muggles.  (line  133)
 * s-o:                                   emacspeak-dbus.     (line   92)
-* s-SPC ,:                               emacspeak-empv.     (line  224)
-* s-SPC ;:                               emacspeak-empv.     (line  213)
-* s-SPC .:                               emacspeak-empv.     (line  232)
-* s-SPC \:                               emacspeak-empv.     (line  205)
-* s-SPC %:                               emacspeak-empv.     (line  130)
-* s-SPC <:                               emacspeak-empv.     (line   42)
-* s-SPC <down>:                          emacspeak-empv.     (line   86)
-* s-SPC <left>:                          emacspeak-empv.     (line   60)
-* s-SPC <next>:                          emacspeak-empv.     (line  104)
-* s-SPC <prior>:                         emacspeak-empv.     (line   52)
-* s-SPC <right>:                         emacspeak-empv.     (line  112)
-* s-SPC <up>:                            emacspeak-empv.     (line   34)
-* s-SPC =:                               emacspeak-empv.     (line  187)
-* s-SPC >:                               emacspeak-empv.     (line   94)
-* s-SPC b:                               emacspeak-empv.     (line  195)
-* s-SPC DEL:                             emacspeak-empv.     (line   78)
-* s-SPC M:                               emacspeak-empv.     (line   68)
-* s-SPC m:                               emacspeak-empv.     (line  120)
-* s-SPC r:                               emacspeak-empv.     (line  177)
-* s-SPC s:                               emacspeak-empv.     (line   17)
 
 
 File: emacspeak.info,  Node: Function Index,  Next: Variable Index,  Prev: Key Index,  Up: Top
@@ -3096,107 +3079,107 @@ File: emacspeak.info,  Node: Function Index,  Next: Variable Index,  Prev: Key I
 * emacspeak-bookshare-eww:               emacspeak-bookshare.
                                                              (line  189)
 * emacspeak-bookshare-eww <1>:           emacspeak-bookshare.
-                                                             (line  190)
+                                                             (line  192)
 * emacspeak-bookshare-expand-at-point:   emacspeak-bookshare.
-                                                             (line  198)
-* emacspeak-bookshare-expand-at-point <1>: emacspeak-bookshare.
                                                              (line  199)
+* emacspeak-bookshare-expand-at-point <1>: emacspeak-bookshare.
+                                                             (line  200)
 * emacspeak-bookshare-extract-and-view:  emacspeak-bookshare.
-                                                             (line  206)
-* emacspeak-bookshare-extract-and-view <1>: emacspeak-bookshare.
                                                              (line  207)
+* emacspeak-bookshare-extract-and-view <1>: emacspeak-bookshare.
+                                                             (line  208)
 * emacspeak-bookshare-extract-xml:       emacspeak-bookshare.
-                                                             (line  215)
-* emacspeak-bookshare-extract-xml <1>:   emacspeak-bookshare.
                                                              (line  216)
+* emacspeak-bookshare-extract-xml <1>:   emacspeak-bookshare.
+                                                             (line  217)
 * emacspeak-bookshare-flush-lines:       emacspeak-bookshare.
-                                                             (line  224)
-* emacspeak-bookshare-flush-lines <1>:   emacspeak-bookshare.
                                                              (line  225)
+* emacspeak-bookshare-flush-lines <1>:   emacspeak-bookshare.
+                                                             (line  226)
 * emacspeak-bookshare-fulltext:          emacspeak-bookshare.
-                                                             (line  233)
-* emacspeak-bookshare-fulltext <1>:      emacspeak-bookshare.
                                                              (line  234)
+* emacspeak-bookshare-fulltext <1>:      emacspeak-bookshare.
+                                                             (line  235)
 * emacspeak-bookshare-fulltext-search:   emacspeak-bookshare.
-                                                             (line  243)
-* emacspeak-bookshare-fulltext-search <1>: emacspeak-bookshare.
                                                              (line  244)
+* emacspeak-bookshare-fulltext-search <1>: emacspeak-bookshare.
+                                                             (line  245)
 * emacspeak-bookshare-get-more-results:  emacspeak-bookshare.
-                                                             (line  252)
-* emacspeak-bookshare-get-more-results <1>: emacspeak-bookshare.
                                                              (line  253)
+* emacspeak-bookshare-get-more-results <1>: emacspeak-bookshare.
+                                                             (line  254)
 * emacspeak-bookshare-id-search:         emacspeak-bookshare.
-                                                             (line  259)
-* emacspeak-bookshare-id-search <1>:     emacspeak-bookshare.
                                                              (line  260)
+* emacspeak-bookshare-id-search <1>:     emacspeak-bookshare.
+                                                             (line  261)
 * emacspeak-bookshare-isbn-search:       emacspeak-bookshare.
-                                                             (line  268)
-* emacspeak-bookshare-isbn-search <1>:   emacspeak-bookshare.
                                                              (line  269)
+* emacspeak-bookshare-isbn-search <1>:   emacspeak-bookshare.
+                                                             (line  270)
 * emacspeak-bookshare-list-preferences:  emacspeak-bookshare.
-                                                             (line  277)
-* emacspeak-bookshare-list-preferences <1>: emacspeak-bookshare.
                                                              (line  278)
+* emacspeak-bookshare-list-preferences <1>: emacspeak-bookshare.
+                                                             (line  279)
 * emacspeak-bookshare-mode:              emacspeak-bookshare.
-                                                             (line  284)
-* emacspeak-bookshare-mode <1>:          emacspeak-bookshare.
                                                              (line  285)
+* emacspeak-bookshare-mode <1>:          emacspeak-bookshare.
+                                                             (line  286)
 * emacspeak-bookshare-next-result:       emacspeak-bookshare.
-                                                             (line  354)
-* emacspeak-bookshare-next-result <1>:   emacspeak-bookshare.
                                                              (line  355)
+* emacspeak-bookshare-next-result <1>:   emacspeak-bookshare.
+                                                             (line  356)
 * emacspeak-bookshare-periodical-list:   emacspeak-bookshare.
-                                                             (line  361)
-* emacspeak-bookshare-periodical-list <1>: emacspeak-bookshare.
                                                              (line  362)
+* emacspeak-bookshare-periodical-list <1>: emacspeak-bookshare.
+                                                             (line  363)
 * emacspeak-bookshare-previous-result:   emacspeak-bookshare.
-                                                             (line  368)
-* emacspeak-bookshare-previous-result <1>: emacspeak-bookshare.
                                                              (line  369)
+* emacspeak-bookshare-previous-result <1>: emacspeak-bookshare.
+                                                             (line  370)
 * emacspeak-bookshare-set-preference:    emacspeak-bookshare.
-                                                             (line  375)
-* emacspeak-bookshare-set-preference <1>: emacspeak-bookshare.
                                                              (line  376)
+* emacspeak-bookshare-set-preference <1>: emacspeak-bookshare.
+                                                             (line  377)
 * emacspeak-bookshare-since-search:      emacspeak-bookshare.
-                                                             (line  384)
-* emacspeak-bookshare-since-search <1>:  emacspeak-bookshare.
                                                              (line  385)
+* emacspeak-bookshare-since-search <1>:  emacspeak-bookshare.
+                                                             (line  386)
 * emacspeak-bookshare-title-search:      emacspeak-bookshare.
-                                                             (line  394)
-* emacspeak-bookshare-title-search <1>:  emacspeak-bookshare.
                                                              (line  395)
+* emacspeak-bookshare-title-search <1>:  emacspeak-bookshare.
+                                                             (line  396)
 * emacspeak-bookshare-toc:               emacspeak-bookshare.
-                                                             (line  404)
-* emacspeak-bookshare-toc <1>:           emacspeak-bookshare.
                                                              (line  405)
+* emacspeak-bookshare-toc <1>:           emacspeak-bookshare.
+                                                             (line  406)
 * emacspeak-bookshare-toc-at-point:      emacspeak-bookshare.
-                                                             (line  413)
-* emacspeak-bookshare-toc-at-point <1>:  emacspeak-bookshare.
                                                              (line  414)
+* emacspeak-bookshare-toc-at-point <1>:  emacspeak-bookshare.
+                                                             (line  415)
 * emacspeak-bookshare-unpack-at-point:   emacspeak-bookshare.
-                                                             (line  421)
-* emacspeak-bookshare-unpack-at-point <1>: emacspeak-bookshare.
                                                              (line  422)
+* emacspeak-bookshare-unpack-at-point <1>: emacspeak-bookshare.
+                                                             (line  423)
 * emacspeak-bookshare-url-executor:      emacspeak-bookshare.
-                                                             (line  428)
-* emacspeak-bookshare-url-executor <1>:  emacspeak-bookshare.
                                                              (line  429)
+* emacspeak-bookshare-url-executor <1>:  emacspeak-bookshare.
+                                                             (line  430)
 * emacspeak-bookshare-version-handler:   emacspeak-bookshare.
-                                                             (line  437)
-* emacspeak-bookshare-version-handler <1>: emacspeak-bookshare.
                                                              (line  438)
+* emacspeak-bookshare-version-handler <1>: emacspeak-bookshare.
+                                                             (line  439)
 * emacspeak-bookshare-view:              emacspeak-bookshare.
-                                                             (line  448)
-* emacspeak-bookshare-view <1>:          emacspeak-bookshare.
                                                              (line  449)
+* emacspeak-bookshare-view <1>:          emacspeak-bookshare.
+                                                             (line  450)
 * emacspeak-bookshare-view-at-point:     emacspeak-bookshare.
-                                                             (line  457)
-* emacspeak-bookshare-view-at-point <1>: emacspeak-bookshare.
                                                              (line  458)
+* emacspeak-bookshare-view-at-point <1>: emacspeak-bookshare.
+                                                             (line  459)
 * emacspeak-bookshare-view-page-range:   emacspeak-bookshare.
-                                                             (line  465)
-* emacspeak-bookshare-view-page-range <1>: emacspeak-bookshare.
                                                              (line  466)
+* emacspeak-bookshare-view-page-range <1>: emacspeak-bookshare.
+                                                             (line  467)
 * emacspeak-brightness-alert-toggle:     emacspeak-wizards.  (line   14)
 * emacspeak-brightness-alert-toggle <1>: emacspeak-wizards.  (line   15)
 * emacspeak-brightness-autoblack-toggle: emacspeak-wizards.  (line   21)
@@ -3440,56 +3423,56 @@ File: emacspeak.info,  Node: Function Index,  Next: Variable Index,  Prev: Key I
                                                              (line   44)
 * emacspeak-emms-speak-current-track:    emacspeak-emms.     (line   17)
 * emacspeak-emms-speak-current-track <1>: emacspeak-emms.    (line   18)
-* emacspeak-empv-absolute-seek:          emacspeak-empv.     (line   15)
-* emacspeak-empv-absolute-seek <1>:      emacspeak-empv.     (line   18)
-* emacspeak-empv-accumulate-to-register: emacspeak-empv.     (line   25)
-* emacspeak-empv-accumulate-to-register <1>: emacspeak-empv. (line   26)
-* emacspeak-empv-backward-10-minutes:    emacspeak-empv.     (line   32)
-* emacspeak-empv-backward-10-minutes <1>: emacspeak-empv.    (line   35)
-* emacspeak-empv-backward-10-seconds:    emacspeak-empv.     (line   40)
-* emacspeak-empv-backward-10-seconds <1>: emacspeak-empv.    (line   43)
-* emacspeak-empv-backward-30-minutes:    emacspeak-empv.     (line   50)
-* emacspeak-empv-backward-30-minutes <1>: emacspeak-empv.    (line   53)
-* emacspeak-empv-backward-5-minutes:     emacspeak-empv.     (line   58)
-* emacspeak-empv-backward-5-minutes <1>: emacspeak-empv.     (line   61)
-* emacspeak-empv-backward-minute:        emacspeak-empv.     (line   66)
-* emacspeak-empv-backward-minute <1>:    emacspeak-empv.     (line   69)
-* emacspeak-empv-clear-filter:           emacspeak-empv.     (line   76)
-* emacspeak-empv-clear-filter <1>:       emacspeak-empv.     (line   79)
-* emacspeak-empv-forward-10-minutes:     emacspeak-empv.     (line   84)
-* emacspeak-empv-forward-10-minutes <1>: emacspeak-empv.     (line   87)
-* emacspeak-empv-forward-10-seconds:     emacspeak-empv.     (line   92)
-* emacspeak-empv-forward-10-seconds <1>: emacspeak-empv.     (line   95)
-* emacspeak-empv-forward-30-minutes:     emacspeak-empv.     (line  102)
-* emacspeak-empv-forward-30-minutes <1>: emacspeak-empv.     (line  105)
-* emacspeak-empv-forward-5-minutes:      emacspeak-empv.     (line  110)
-* emacspeak-empv-forward-5-minutes <1>:  emacspeak-empv.     (line  113)
-* emacspeak-empv-forward-minute:         emacspeak-empv.     (line  118)
-* emacspeak-empv-forward-minute <1>:     emacspeak-empv.     (line  121)
-* emacspeak-empv-percentage-seek:        emacspeak-empv.     (line  128)
-* emacspeak-empv-percentage-seek <1>:    emacspeak-empv.     (line  131)
-* emacspeak-empv-play-file:              emacspeak-empv.     (line  138)
-* emacspeak-empv-play-file <1>:          emacspeak-empv.     (line  141)
-* emacspeak-empv-play-last:              emacspeak-empv.     (line  149)
-* emacspeak-empv-play-last <1>:          emacspeak-empv.     (line  152)
-* emacspeak-empv-play-url:               emacspeak-empv.     (line  157)
-* emacspeak-empv-play-url <1>:           emacspeak-empv.     (line  160)
-* emacspeak-empv-radio:                  emacspeak-empv.     (line  167)
-* emacspeak-empv-radio <1>:              emacspeak-empv.     (line  170)
-* emacspeak-empv-relative-seek:          emacspeak-empv.     (line  175)
-* emacspeak-empv-relative-seek <1>:      emacspeak-empv.     (line  178)
-* emacspeak-empv-time-pos:               emacspeak-empv.     (line  185)
-* emacspeak-empv-time-pos <1>:           emacspeak-empv.     (line  188)
-* emacspeak-empv-toggle-balance:         emacspeak-empv.     (line  193)
-* emacspeak-empv-toggle-balance <1>:     emacspeak-empv.     (line  196)
-* emacspeak-empv-toggle-custom:          emacspeak-empv.     (line  203)
-* emacspeak-empv-toggle-custom <1>:      emacspeak-empv.     (line  206)
-* emacspeak-empv-toggle-filter:          emacspeak-empv.     (line  211)
-* emacspeak-empv-toggle-filter <1>:      emacspeak-empv.     (line  214)
-* emacspeak-empv-toggle-left:            emacspeak-empv.     (line  222)
-* emacspeak-empv-toggle-left <1>:        emacspeak-empv.     (line  225)
-* emacspeak-empv-toggle-right:           emacspeak-empv.     (line  230)
-* emacspeak-empv-toggle-right <1>:       emacspeak-empv.     (line  233)
+* emacspeak-empv-absolute-seek:          emacspeak-empv.     (line   67)
+* emacspeak-empv-absolute-seek <1>:      emacspeak-empv.     (line   68)
+* emacspeak-empv-accumulate-to-register: emacspeak-empv.     (line   76)
+* emacspeak-empv-accumulate-to-register <1>: emacspeak-empv. (line   77)
+* emacspeak-empv-backward-10-minutes:    emacspeak-empv.     (line   83)
+* emacspeak-empv-backward-10-minutes <1>: emacspeak-empv.    (line   84)
+* emacspeak-empv-backward-10-seconds:    emacspeak-empv.     (line   90)
+* emacspeak-empv-backward-10-seconds <1>: emacspeak-empv.    (line   91)
+* emacspeak-empv-backward-30-minutes:    emacspeak-empv.     (line   99)
+* emacspeak-empv-backward-30-minutes <1>: emacspeak-empv.    (line  100)
+* emacspeak-empv-backward-5-minutes:     emacspeak-empv.     (line  106)
+* emacspeak-empv-backward-5-minutes <1>: emacspeak-empv.     (line  107)
+* emacspeak-empv-backward-minute:        emacspeak-empv.     (line  113)
+* emacspeak-empv-backward-minute <1>:    emacspeak-empv.     (line  114)
+* emacspeak-empv-clear-filter:           emacspeak-empv.     (line  122)
+* emacspeak-empv-clear-filter <1>:       emacspeak-empv.     (line  123)
+* emacspeak-empv-forward-10-minutes:     emacspeak-empv.     (line  129)
+* emacspeak-empv-forward-10-minutes <1>: emacspeak-empv.     (line  130)
+* emacspeak-empv-forward-10-seconds:     emacspeak-empv.     (line  136)
+* emacspeak-empv-forward-10-seconds <1>: emacspeak-empv.     (line  137)
+* emacspeak-empv-forward-30-minutes:     emacspeak-empv.     (line  145)
+* emacspeak-empv-forward-30-minutes <1>: emacspeak-empv.     (line  146)
+* emacspeak-empv-forward-5-minutes:      emacspeak-empv.     (line  152)
+* emacspeak-empv-forward-5-minutes <1>:  emacspeak-empv.     (line  153)
+* emacspeak-empv-forward-minute:         emacspeak-empv.     (line  159)
+* emacspeak-empv-forward-minute <1>:     emacspeak-empv.     (line  160)
+* emacspeak-empv-percentage-seek:        emacspeak-empv.     (line  168)
+* emacspeak-empv-percentage-seek <1>:    emacspeak-empv.     (line  169)
+* emacspeak-empv-play-file:              emacspeak-empv.     (line  177)
+* emacspeak-empv-play-file <1>:          emacspeak-empv.     (line  180)
+* emacspeak-empv-play-last:              emacspeak-empv.     (line  189)
+* emacspeak-empv-play-last <1>:          emacspeak-empv.     (line  192)
+* emacspeak-empv-play-url:               emacspeak-empv.     (line  197)
+* emacspeak-empv-play-url <1>:           emacspeak-empv.     (line  200)
+* emacspeak-empv-radio:                  emacspeak-empv.     (line  207)
+* emacspeak-empv-radio <1>:              emacspeak-empv.     (line  210)
+* emacspeak-empv-relative-seek:          emacspeak-empv.     (line  215)
+* emacspeak-empv-relative-seek <1>:      emacspeak-empv.     (line  216)
+* emacspeak-empv-time-pos:               emacspeak-empv.     (line  224)
+* emacspeak-empv-time-pos <1>:           emacspeak-empv.     (line  225)
+* emacspeak-empv-toggle-balance:         emacspeak-empv.     (line  231)
+* emacspeak-empv-toggle-balance <1>:     emacspeak-empv.     (line  232)
+* emacspeak-empv-toggle-custom:          emacspeak-empv.     (line  240)
+* emacspeak-empv-toggle-custom <1>:      emacspeak-empv.     (line  241)
+* emacspeak-empv-toggle-filter:          emacspeak-empv.     (line  247)
+* emacspeak-empv-toggle-filter <1>:      emacspeak-empv.     (line  248)
+* emacspeak-empv-toggle-left:            emacspeak-empv.     (line  257)
+* emacspeak-empv-toggle-left <1>:        emacspeak-empv.     (line  258)
+* emacspeak-empv-toggle-right:           emacspeak-empv.     (line  264)
+* emacspeak-empv-toggle-right <1>:       emacspeak-empv.     (line  265)
 * emacspeak-enriched-voiceify-faces:     emacspeak-enriched. (line   14)
 * emacspeak-enriched-voiceify-faces <1>: emacspeak-enriched. (line   15)
 * emacspeak-eperiodic-goto-property-section: emacspeak-eperiodic.
@@ -3559,27 +3542,27 @@ File: emacspeak.info,  Node: Function Index,  Next: Variable Index,  Prev: Key I
 * emacspeak-epub-delete:                 emacspeak-epub.     (line  310)
 * emacspeak-epub-delete <1>:             emacspeak-epub.     (line  311)
 * emacspeak-epub-eww:                    emacspeak-epub.     (line  317)
-* emacspeak-epub-eww <1>:                emacspeak-epub.     (line  318)
-* emacspeak-epub-google:                 emacspeak-epub.     (line  329)
-* emacspeak-epub-google <1>:             emacspeak-epub.     (line  330)
-* emacspeak-epub-gutenberg-catalog:      emacspeak-epub.     (line  338)
-* emacspeak-epub-gutenberg-catalog <1>:  emacspeak-epub.     (line  339)
-* emacspeak-epub-gutenberg-download:     emacspeak-epub.     (line  348)
-* emacspeak-epub-gutenberg-download <1>: emacspeak-epub.     (line  350)
-* emacspeak-epub-locate-epubs:           emacspeak-epub.     (line  360)
-* emacspeak-epub-locate-epubs <1>:       emacspeak-epub.     (line  361)
-* emacspeak-epub-mode:                   emacspeak-epub.     (line  369)
-* emacspeak-epub-mode <1>:               emacspeak-epub.     (line  370)
-* emacspeak-epub-next:                   emacspeak-epub.     (line  414)
-* emacspeak-epub-next <1>:               emacspeak-epub.     (line  415)
-* emacspeak-epub-open:                   emacspeak-epub.     (line  421)
-* emacspeak-epub-open <1>:               emacspeak-epub.     (line  422)
-* emacspeak-epub-open-with-nov:          emacspeak-epub.     (line  431)
-* emacspeak-epub-open-with-nov <1>:      emacspeak-epub.     (line  432)
-* emacspeak-epub-previous:               emacspeak-epub.     (line  438)
-* emacspeak-epub-previous <1>:           emacspeak-epub.     (line  439)
-* emacspeak-epub-url-executor:           emacspeak-epub.     (line  445)
-* emacspeak-epub-url-executor <1>:       emacspeak-epub.     (line  446)
+* emacspeak-epub-eww <1>:                emacspeak-epub.     (line  320)
+* emacspeak-epub-google:                 emacspeak-epub.     (line  330)
+* emacspeak-epub-google <1>:             emacspeak-epub.     (line  331)
+* emacspeak-epub-gutenberg-catalog:      emacspeak-epub.     (line  339)
+* emacspeak-epub-gutenberg-catalog <1>:  emacspeak-epub.     (line  340)
+* emacspeak-epub-gutenberg-download:     emacspeak-epub.     (line  349)
+* emacspeak-epub-gutenberg-download <1>: emacspeak-epub.     (line  351)
+* emacspeak-epub-locate-epubs:           emacspeak-epub.     (line  361)
+* emacspeak-epub-locate-epubs <1>:       emacspeak-epub.     (line  362)
+* emacspeak-epub-mode:                   emacspeak-epub.     (line  370)
+* emacspeak-epub-mode <1>:               emacspeak-epub.     (line  371)
+* emacspeak-epub-next:                   emacspeak-epub.     (line  415)
+* emacspeak-epub-next <1>:               emacspeak-epub.     (line  416)
+* emacspeak-epub-open:                   emacspeak-epub.     (line  422)
+* emacspeak-epub-open <1>:               emacspeak-epub.     (line  423)
+* emacspeak-epub-open-with-nov:          emacspeak-epub.     (line  432)
+* emacspeak-epub-open-with-nov <1>:      emacspeak-epub.     (line  433)
+* emacspeak-epub-previous:               emacspeak-epub.     (line  439)
+* emacspeak-epub-previous <1>:           emacspeak-epub.     (line  440)
+* emacspeak-epub-url-executor:           emacspeak-epub.     (line  446)
+* emacspeak-epub-url-executor <1>:       emacspeak-epub.     (line  447)
 * emacspeak-erc-add-name-to-monitor:     emacspeak-erc.      (line   16)
 * emacspeak-erc-add-name-to-monitor <1>: emacspeak-erc.      (line   18)
 * emacspeak-erc-delete-name-from-monitor: emacspeak-erc.     (line   28)

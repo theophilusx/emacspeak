@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on April 5, 2024.
+last updated on April 8, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -254,7 +254,7 @@ means that most visually impaired computer users face the additional
 handicap of being DOS-impaired -- a far more serious problem:-)
 
    Emacspeak is an emacs subsystem that provides complete speech access.
-It is _not_ a screen-reader -- rather, it is a complete user environment
+It is *not* a screen-reader -- rather, it is a complete user environment
 with built-in speech feedback.  Emacspeak has a significant advantage;
 since it runs inside Emacs, a structure-sensitive, fully customizable
 environment, Emacspeak has more context-specific information about what
@@ -656,7 +656,7 @@ terminology for the editing cursor).
      buffer to point.  If voice lock mode is on, the paragraphs in the
      buffer are voice annotated first, see command
      ‘emacspeak-speak-voice-annotate-paragraphs’.  This provides the
-     auditory equivalent of _dropped caps_ from visual typography.
+     auditory equivalent of *dropped caps* from visual typography.
 
 ‘C-e n’
      ‘emacspeak-speak-rest-of-buffer’
@@ -788,8 +788,8 @@ is typed -- this is called line echo.
 buffer -- or for all buffers (globally).  To toggle the specific echo
 functionality for all buffers, precede the specific command with ‘C-u’.
 Note that in the documentation below, this use of ‘C-u’ is indicated
-using the common Emacs terminology of _prefix arg_ or _interactive
-prefix arg_.
+using the common Emacs terminology of *prefix arg* or *interactive
+prefix arg*.
 
 ‘C-e d k’
      ‘emacspeak-toggle-character-echo’
@@ -880,8 +880,8 @@ applied to all buffers by preceding these commands with ‘C-u’.
 ‘C-e d c’
 
      Toggle capitalization.  when set, capitalization is indicated by a
-     _cap_ before the word, and upper-case words are indicated with a
-     _acc_ before the word.  Interactive PREFIX arg means toggle the
+     *cap* before the word, and upper-case words are indicated with a
+     *acc* before the word.  Interactive PREFIX arg means toggle the
      global default value, and then set the current local value to the
      result.
 
@@ -1382,7 +1382,7 @@ its associated ‘voice-bolden-settings’.
   2. That list of numbers needs to be translated to appropriate
      device-specific codes to send to the TTS engine.
 
-  3. You do not want to do this translation _each_ time you speak
+  3. You do not want to do this translation *each* time you speak
      something.
 
   4. So when ‘voice-bolden’ is defined, the definition happens in two
@@ -1591,16 +1591,16 @@ documentation.
 
    As the document preparation system of choice, Emacspeak supports a
 fluent speech-enabled interface to editing and formatting LaTeX
-documents.  This interface is provided by speech-enabling _AUCTeX_ mode.
+documents.  This interface is provided by speech-enabling *AUCTeX* mode.
 
-   Mode _AUCTeX_ provides efficient keyboard shortcuts for inserting and
+   Mode *AUCTeX* provides efficient keyboard shortcuts for inserting and
 maintaining LaTeX markup as a document is being authored.  All of these
 editing commands provide succinct auditory feedback when used with
 Emacspeak.  The syntax coloring provided by this mode is extended to
-provide _voice locking_ -- consequently, Emacspeak uses different voices
+provide *voice locking* -- consequently, Emacspeak uses different voices
 to speak the embedded markup to set it apart from the content.
 
-   Mode _AUCTeX_ can be used to create empty document templates and to
+   Mode *AUCTeX* can be used to create empty document templates and to
 insert document content at the appropriate places in the template.  The
 mode also enables structured navigation of the document as it is being
 edited.  Emacspeak speech-enables these template creation and structured
@@ -1632,9 +1632,9 @@ number of ways including specifying a longer (or shorter) search string.
 documented in the online Emacs info manual.  These are speech-enabled by
 Emacspeak to provide spoken prompts as the dialog begins; auditory icons
 indicate a search hit or search miss as the search progresses.  Along
-with auditory icons _search-hit_ and _search-miss_ the user also hears
+with auditory icons *search-hit* and *search-miss* the user also hears
 the current line spoken, and in the case of a search hit, the matching
-text is _aurally_ highlighted by using the standard audio formatting
+text is *aurally* highlighted by using the standard audio formatting
 technique of changing voice characteristic.  This feedback proves
 extremely effective when the search pattern appears several times on a
 single line; the user is unambiguously cued to the current match.
@@ -1643,22 +1643,22 @@ single line; the user is unambiguously cued to the current match.
 conversational gestures of a search dialog.  In addition to specifying a
 search string, the user also specifies a replacement string.  On the
 Emacspeak desktop, this functionality is provided by command
-_query-replace_.  The speech-enabled version of this interaction prompts
+*query-replace*.  The speech-enabled version of this interaction prompts
 the user for the search and replacement texts.  The auditory feedback
 during the interactive search and replacement process parallels that
 described in the case of incremental search.  Audio formatting to
 indicate the occurrence that is about to be replaced proves an effective
 means of avoiding erroneous modifications to the text being edited.  As
-an example, consider using command _query-replace_ to locate and replace
+an example, consider using command *query-replace* to locate and replace
 the second occurrence of foo with bar in the text
 
    ‘Do not change this fool, but change this food.’
 
-   When the search matches the first occurrence of foo in word _fool_,
+   When the search matches the first occurrence of foo in word *fool*,
 the aural highlighting helps the user in answering "no" in response to
 question "should this occurrence be replaced".  In addition to allowing
 the user to supply a simple "yes or no" answer for each match, command
-_query-replace_ also allows the user to specify a number of other valid
+*query-replace* also allows the user to specify a number of other valid
 answers as described in the online Emacs documentation.
 
 Spell Checking
@@ -1711,7 +1711,7 @@ File: emacspeak.info,  Node: Structured Editing,  Next: Browsing Structure,  Pre
 
 Editing documents based on the inherent structure present in the
 electronic encoding can be very efficient when using spoken interaction.
-We described mode _AUCTeX_ -- a specialized interface to authoring LaTeX
+We described mode *AUCTeX* -- a specialized interface to authoring LaTeX
 documents as a special instance of such structured editing in *note
 Document Authoring::.
 
@@ -1750,7 +1750,7 @@ File: emacspeak.info,  Node: Outline Editing,  Next: Template-based Authoring,  
 ----------------------
 
 All of the various outline editing interfaces on the Emacs desktop allow
-the user to _hide_ or _show_ the contents at the different levels of a
+the user to *hide* or *show* the contents at the different levels of a
 possibly nested tree structure.  Components of this tree structure can
 be manipulated as a unit, e.g., entire subtrees can be deleted or
 copied.  Outline editing thus provides an efficient means of obtaining
@@ -1758,9 +1758,9 @@ quick overviews of a document.
 
    The visual interface displays such hidden content as a series of
 ellipses following the visible outline heading.  Emacspeak produces
-auditory icon _ellipses_ when speaking such outline headings.
+auditory icon *ellipses* when speaking such outline headings.
 
-   The basic _outline mode_ allows the user to specify the syntax and
+   The basic *outline mode* allows the user to specify the syntax and
 level of outline header lines as a regular expression.  This simple
 technique can be used to advantage in the structured navigation of large
 electronic texts such as those available on the Internet from online
@@ -1771,34 +1771,34 @@ separate nodes in the logical structure of the document.  The user can
 then hide the document body with a single keystroke, navigate the
 outline headings to find a particular act, and have that portion
 rendered either visually or aurally.  Hiding an outline level produces
-auditory icon _close-object_; exposing a hidden level produces auditory
-icon _open-object_.  For details on using mode ‘outline’, see the
+auditory icon *close-object*; exposing a hidden level produces auditory
+icon *open-object*.  For details on using mode ‘outline’, see the
 relevant section of the online Emacs info manual.
 
    The basic outline facility described above is applicable to all
 content being edited or browsed on the Emacspeak desktop.  In addition,
-Emacspeak has other specialized outline editing modes such as _folding
-mode_ that provide extended outlining facilities.  In mode _folding_,
-the user can create (possibly nested) _folds_ -- logical containers of
-content that are delimited by a special _fold mark_.  The fold mark is
+Emacspeak has other specialized outline editing modes such as *folding
+mode* that provide extended outlining facilities.  In mode *folding*,
+the user can create (possibly nested) *folds* -- logical containers of
+content that are delimited by a special *fold mark*.  The fold mark is
 typically a text string that is chosen based on the type of content that
-is being manipulated.  Thus, when _folding_ a C~program source file,
-fold marks are created from C~comments.  The user can _open_ or _close_
+is being manipulated.  Thus, when *folding* a C~program source file,
+fold marks are created from C~comments.  The user can *open* or *close*
 any or all folds in a document, and these actions are accompanied by
-auditory icons _open-object_ and _close-object_.  By entering a fold,
+auditory icons *open-object* and *close-object*.  By entering a fold,
 all editing actions are restricted to the contents of that fold; this
 proves a simple yet convenient way of constraining editing actions such
 as search and replace to specific portions of large documents.  Folds
 can be manipulated as a unit and can be deleted, copied or moved.
 
-   Mode _folding_ proves especially effective in maintaining large
+   Mode *folding* proves especially effective in maintaining large
 software modules.  The technique can be used to advantage by creating
 folds for different sections in a module and by further placing each
 function appearing in a particular section in a fold of its own.
 Complex functions can themselves be folded into sections where each
 section reflects a different stage in the algorithm implemented by that
 function.  Thus, the technique of folding can be used as an effective
-aid in _literate_ programming.  I typically write software modules by
+aid in *literate* programming.  I typically write software modules by
 first creating an outline structure using folds that reflect the various
 components of that module.  Next, I populate each fold with the function
 signatures and documentation for the functions in each section.  When I
@@ -1813,26 +1813,26 @@ File: emacspeak.info,  Node: Template-based Authoring,  Next: Maintaining Struct
 -------------------------------
 
 Emacspeak supports two powerful template-based authoring subsystems that
-enable the user to quickly create and fill in templates.  _Dmacro_
+enable the user to quickly create and fill in templates.  *Dmacro*
 (short for "dynamic macros") allows the user to define and invoke
 template-based macros that are specialized for creating different types
 of content.  For example, when programming in C, the user can invoke
 dynamic macros that insert skeletons of standard C constructs with a few
 keystrokes.  This form of editing has numerous advantages in creating
 consistently structured code when developing large software modules.
-Emacspeak speech-enables mode _dmacro_ to provide succinct spoken
-feedback as templates are created and filled.  The user invokes _
-dmacro_ via command _insert dmacro_, which is typically bound to a
+Emacspeak speech-enables mode *dmacro* to provide succinct spoken
+feedback as templates are created and filled.  The user invokes *
+dmacro* via command *insert dmacro*, which is typically bound to a
 single key.  This results in a dialog where the user is prompted to pick
 one of the dynamic macros available in the current context.  If the
 users choice can be uniquely completed, that completion is spoken;
 otherwise, the list of possible completions based on the available
-partial input is spoken, accompanied by auditory icon _help_.
+partial input is spoken, accompanied by auditory icon *help*.
 
-   An alternative template-editing facility is provided by mode _tempo_
+   An alternative template-editing facility is provided by mode *tempo*
 This mode is designed to be used in creating template-based editing
 tools for specific markup languages; a good example is mode
-_html-helper_, a mode for creating and updating HTML documents for
+*html-helper*, a mode for creating and updating HTML documents for
 publishing on the WWW (see *note Document Authoring::).
 
 
@@ -1847,10 +1847,10 @@ Consider the following entry from file ‘/etc/passwd’ on my laptop.
 
    File ‘/etc/passwd’ is a simple instance of a text file that stores
 structured data records as a series of fields delimited by a special
-character.  Each item in the file acquires _meaning_ from the _position_
+character.  Each item in the file acquires *meaning* from the *position*
 in which it occurs for example, the fifth field contains the user name,
 Aster Labrador.  More generally, structured data where each field in a
-record has _ meaning_ is found throughout the desktop in applications
+record has * meaning* is found throughout the desktop in applications
 ranging from entries in a rolodex to rows in a spreadsheet.
 
    Typically, users do not directly edit the stored representation of
@@ -1861,7 +1861,7 @@ as a two dimensional table that is automatically updated to reflect
 changes in the underlying data.  The two dimensional table is perhaps
 the most commonly found visual front-end to structured data tables with
 row and column headers prove a succinct way of implicitly displaying the
-_meaning_ along with the _value_ of the fields making up each data
+*meaning* along with the *value* of the fields making up each data
 record.
 
 
@@ -2466,7 +2466,7 @@ to manipulate such data-driven documents ranging from simple cheque
 books and expense reports to complex investment portfolios.  Where the
 traditional visual interface to spreadsheets is typically independent of
 the semantics of the data stored in the spreadsheet, the speech-enabled
-interface is derived from the _meaning_ of the various fields making up
+interface is derived from the *meaning* of the various fields making up
 the data.  When presenting such information on a visual display,
 implicit visual layout can be used to cue the user to the meaning of
 different data fields.
@@ -2478,8 +2478,8 @@ needs to enable an active dialog between user and application where the
 user is able to query the system about the possible meaning of a
 particular item of data.
 
-   Finally, the aural interface needs to enable _multiple_ views of the
-display.  In the visual interface, such _multiple_ views are
+   Finally, the aural interface needs to enable *multiple* views of the
+display.  In the visual interface, such *multiple* views are
 automatically enabled by the two dimensional layout combined with the
 eye's ability to move rapidly around the layout structure.  Thus, while
 viewing any particular row of a portfolio, one can immediately see the
@@ -2490,12 +2490,12 @@ spread-sheet package ‘dismal’ can be retrieved from
 10.10.2 Forms Mode
 ------------------
 
-_Forms_ mode an Emacs mode designed to edit structured data records like
+*Forms* mode an Emacs mode designed to edit structured data records like
 the line shown from file ‘/etc/passwd’ presents a user-friendly visual
 interface that displays the field name along with the field value.  The
 user can edit the field value and save the file, at which point the data
 is written out using the underlying ‘ :’ delimited representation.  Mode
-_forms_ provides a flexible interface to associating meaning to the
+*forms* provides a flexible interface to associating meaning to the
 fields of such structured data files.  For details on it use, see the
 forms-mode section of the online Emacs info documentation.
 
@@ -2710,7 +2710,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-keymap,  Next: E
 ‘c emacspeak-speak-char’
 ‘e move-end-of-line’
 ‘f emacspeak-speak-buffer-filename’
-‘g emacspeak-epub’
+‘g keyboard-quit’
 ‘h emacspeak-speak-help’
 ‘i emacspeak-speak-rest-of-buffer’
 ‘j emacspeak-hide-or-expose-block’
@@ -2935,6 +2935,8 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-y-keymap,  Next:
 11.9 Emacspeak Keybindings On emacspeak-y-keymap
 ================================================
 
+‘E emacspeak-epub-eww’
+‘b emacspeak-bookshare-eww’
 ‘l emacspeak-empv-play-last’
 ‘p empv-youtube-playlist’
 ‘r emacspeak-empv-radio’
@@ -4304,7 +4306,7 @@ bookmarks.  Amarks are stored in a .amarks.am file in the working
 directory.  It also provides a simple AMark Browser to use from a
 directory containing mp3 files where Amarks have been created - see
 ‘emacspeak-amarks-browse’.  ‘emacspeak-amarks-bookshelf’ brings up a
-_AmarksBookshelf_ that can be used to browse available Amark files.
+*AmarksBookshelf* that can be used to browse available Amark files.
 
 12.10.1 Emacspeak-Amark Commands
 --------------------------------
@@ -4585,8 +4587,8 @@ Bookshare client.
 -------------
 
 The main entry point is command ‘emacspeak-bookshare’ bound to ‘C-e
-C-b’.  This creates a special _Bookshare Interaction_ buffer that is
-placed in _emacspeak-bookshare-mode_.  Se the help for that mode on
+C-b’.  This creates a special *Bookshare Interaction* buffer that is
+placed in *emacspeak-bookshare-mode*.  Se the help for that mode on
 detailed usage instructions and key-bindings.
 
 12.18.3 Sample Interaction
@@ -4754,6 +4756,7 @@ Assuming you have correctly setup your API key:
 ..................................
 
  -- Command: emacspeak-bookshare-eww (directory)
+     ‘C-e y b’
 
      Render  book using EWW
 
@@ -5279,7 +5282,7 @@ diagonals.  ‘[’ and ‘]’ move up the respective diagonals.
      bound to ‘w’.  Argument ‘piece’ is similar to the previously listed
      command.
    You can obtain views of the board along the rows and diagonals, as
-well as a _knight's perspective _:
+well as a *knight's perspective *:
    • Viewers: ‘v’ followed by the directional navigation keys speaks the
      squares in that direction from the current square.  ‘vn’ speaks the
      squares from a knight's perspective, i.e.  the squares the Knight
@@ -5290,11 +5293,11 @@ well as a _knight's perspective _:
 12.27.2 Examining Games
 -----------------------
 
-Package _Chess_ allows one to browse through a game using ‘,’ and ‘.’ --
+Package *Chess* allows one to browse through a game using ‘,’ and ‘.’ --
 ‘chess-display-move-backward’ and ‘chess-display-move-forward’.
 Emacspeak speech-enables these commands to speak the move that led to
 the currently displayed state of the game.  Finally, ‘m’ speaks the
-_current move_ being displayed.
+*current move* being displayed.
 
 12.27.3 Emacspeak-Chess Commands
 --------------------------------
@@ -6397,136 +6400,175 @@ File: emacspeak.info,  Node: emacspeak-empv,  Next: emacspeak-enriched,  Prev: e
 12.61 emacspeak-empv
 ====================
 
-EMPV == Emacs Front-End To mpv -- the GNU media player Provides better
-Youtube integration
+‘EMPV’ == Emacs Front-End To ‘mpv’ -- the GNU media player -- Provides
+better Youtube integration.
 
-12.61.1 Emacspeak-Empv Commands
+   This section documents Emacspeak extensions to ‘EMPV’ , the Emacs
+interface of choice to the GNU ‘MPV’ media player.  This section should
+be read alongside the ‘EMPV’ documentation; Install ‘EMPV’ from ELPA.
+
+12.61.1 Interactive Commands
+----------------------------
+
+Emacspeak adds a few convenience commands to the those provided by
+package ‘empv’:
+
+  1. Command ‘emacspeak-empv-play-url to play’ a URL using ‘MPV’ .
+  2. Adds history tracking to our ‘EMPV’ commands.
+  3. Command empv-play-last-url to play from our ‘EMPV’ history.
+  4. Command ‘emacspeak-empv-play-file to play local media and’ Internet
+     streams.
+  5. Command ‘emacspeak-empv-radio to play from Emacspeak's library’ of
+     Internet streams.
+
+12.61.2 Navigating In Time
+--------------------------
+
+Emacspeak defines additional convenience commands to seek in streams at
+different time granularities, the names are self-documenting and bound
+in the empv-map.
+
+   • ‘emacspeak-empv-absolute-seek’
+   • ‘emacspeak-empv-backward-10-minutes’
+   • ‘emacspeak-empv-backward-10-seconds’
+   • ‘emacspeak-empv-backward-30-minutes’
+   • ‘emacspeak-empv-backward-5-minutes’
+   • ‘emacspeak-empv-backward-minute’
+   • ‘emacspeak-empv-forward-10-minutes’
+   • ‘emacspeak-empv-forward-10-seconds’
+   • ‘emacspeak-empv-forward-30-minutes’
+   • ‘emacspeak-empv-forward-5-minutes’
+   • ‘emacspeak-empv-forward-minute’
+   • ‘emacspeak-empv-percentage-seek’
+   • ‘emacspeak-empv-relative-seek’
+
+12.61.3 Toggling Filters
+------------------------
+
+Command ‘mpv’ provides a number of audio filters.  Emacspeak exposes a
+select few for interactive use.
+
+  1. Toggle active filter: ‘emacspeak-empv-toggle-filter’
+  2. Toggle Audio Balance: ‘emacspeak-empv-toggle-balance’
+  3. Clear any active filters: ‘emacspeak-empv-clear-filter’
+  4. Toggle our custom filter: ‘emacspeak-empv-toggle-custom’
+  5. Toggle left output: ‘emacspeak-empv-toggle-left’
+  6. Toggle right output: ‘emacspeak-empv-toggle-right’
+
+12.61.4 Emacspeak-Empv Commands
 -------------------------------
 
-12.61.1.1 emacspeak-empv-absolute-seek
+12.61.4.1 emacspeak-empv-absolute-seek
 ......................................
 
  -- Command: emacspeak-empv-absolute-seek (target)
-     ‘s-SPC s’
 
      Absolute seek in seconds,see ‘empv-seek’
 
      (fn TARGET)
 
-12.61.1.2 emacspeak-empv-accumulate-to-register
+12.61.4.2 emacspeak-empv-accumulate-to-register
 ...............................................
 
  -- Command: emacspeak-empv-accumulate-to-register
 
      Accumulate media links to register u
 
-12.61.1.3 emacspeak-empv-backward-10-minutes
+12.61.4.3 emacspeak-empv-backward-10-minutes
 ............................................
 
  -- Command: emacspeak-empv-backward-10-minutes
-     ‘s-SPC <up>’
 
      Move backward by 10 minutes
 
-12.61.1.4 emacspeak-empv-backward-10-seconds
+12.61.4.4 emacspeak-empv-backward-10-seconds
 ............................................
 
  -- Command: emacspeak-empv-backward-10-seconds (&optional count)
-     ‘s-SPC <’
 
      Move back  count  slices of 10 seconds.
 
      (fn &optional COUNT)
 
-12.61.1.5 emacspeak-empv-backward-30-minutes
+12.61.4.5 emacspeak-empv-backward-30-minutes
 ............................................
 
  -- Command: emacspeak-empv-backward-30-minutes
-     ‘s-SPC <prior>’
 
      Move backward by 30 minutes
 
-12.61.1.6 emacspeak-empv-backward-5-minutes
+12.61.4.6 emacspeak-empv-backward-5-minutes
 ...........................................
 
  -- Command: emacspeak-empv-backward-5-minutes
-     ‘s-SPC <left>’
 
      Move backward by 5 minutes
 
-12.61.1.7 emacspeak-empv-backward-minute
+12.61.4.7 emacspeak-empv-backward-minute
 ........................................
 
  -- Command: emacspeak-empv-backward-minute (&optional count)
-     ‘s-SPC M’
 
      Move back  count  minutes.
 
      (fn &optional COUNT)
 
-12.61.1.8 emacspeak-empv-clear-filter
+12.61.4.8 emacspeak-empv-clear-filter
 .....................................
 
  -- Command: emacspeak-empv-clear-filter
-     ‘s-SPC DEL’
 
      Clear all filters.
 
-12.61.1.9 emacspeak-empv-forward-10-minutes
+12.61.4.9 emacspeak-empv-forward-10-minutes
 ...........................................
 
  -- Command: emacspeak-empv-forward-10-minutes
-     ‘s-SPC <down>’
 
      Move forward by 10 minutes
 
-12.61.1.10 emacspeak-empv-forward-10-seconds
+12.61.4.10 emacspeak-empv-forward-10-seconds
 ............................................
 
  -- Command: emacspeak-empv-forward-10-seconds (&optional count)
-     ‘s-SPC >’
 
      Move forward count  chunks of 10 seconds.
 
      (fn &optional COUNT)
 
-12.61.1.11 emacspeak-empv-forward-30-minutes
+12.61.4.11 emacspeak-empv-forward-30-minutes
 ............................................
 
  -- Command: emacspeak-empv-forward-30-minutes
-     ‘s-SPC <next>’
 
      Move forward by 30 minutes
 
-12.61.1.12 emacspeak-empv-forward-5-minutes
+12.61.4.12 emacspeak-empv-forward-5-minutes
 ...........................................
 
  -- Command: emacspeak-empv-forward-5-minutes
-     ‘s-SPC <right>’
 
      Move forward by 5 minutes
 
-12.61.1.13 emacspeak-empv-forward-minute
+12.61.4.13 emacspeak-empv-forward-minute
 ........................................
 
  -- Command: emacspeak-empv-forward-minute (&optional count)
-     ‘s-SPC m’
 
      Move forward count  minutes.
 
      (fn &optional COUNT)
 
-12.61.1.14 emacspeak-empv-percentage-seek
+12.61.4.14 emacspeak-empv-percentage-seek
 .........................................
 
  -- Command: emacspeak-empv-percentage-seek (target)
-     ‘s-SPC %’
 
      Percentage seek in seconds,see ‘empv-seek’
 
      (fn TARGET)
 
-12.61.1.15 emacspeak-empv-play-file
+12.61.4.15 emacspeak-empv-play-file
 ...................................
 
  -- Command: emacspeak-empv-play-file (file &optional prefix)
@@ -6534,10 +6576,11 @@ Youtube integration
 
      Play file using mpv.
      Interactive prefix arg plays directory.
+     If already playing, then read an empv key and invoke its command.
 
      (fn FILE &optional PREFIX)
 
-12.61.1.16 emacspeak-empv-play-last
+12.61.4.16 emacspeak-empv-play-last
 ...................................
 
  -- Command: emacspeak-empv-play-last
@@ -6545,7 +6588,7 @@ Youtube integration
 
      Play most recently played URL.
 
-12.61.1.17 emacspeak-empv-play-url
+12.61.4.17 emacspeak-empv-play-url
 ..................................
 
  -- Command: emacspeak-empv-play-url (url)
@@ -6555,7 +6598,7 @@ Youtube integration
 
      (fn URL)
 
-12.61.1.18 emacspeak-empv-radio
+12.61.4.18 emacspeak-empv-radio
 ...............................
 
  -- Command: emacspeak-empv-radio
@@ -6563,70 +6606,63 @@ Youtube integration
 
      Play Internet stream
 
-12.61.1.19 emacspeak-empv-relative-seek
+12.61.4.19 emacspeak-empv-relative-seek
 .......................................
 
  -- Command: emacspeak-empv-relative-seek (target)
-     ‘s-SPC r’
 
      Relative seek in seconds,see ‘empv-seek’
 
      (fn TARGET)
 
-12.61.1.20 emacspeak-empv-time-pos
+12.61.4.20 emacspeak-empv-time-pos
 ..................................
 
  -- Command: emacspeak-empv-time-pos
-     ‘s-SPC =’
 
      Speak time and percent position.
 
-12.61.1.21 emacspeak-empv-toggle-balance
+12.61.4.21 emacspeak-empv-toggle-balance
 ........................................
 
  -- Command: emacspeak-empv-toggle-balance (value)
-     ‘s-SPC b’
 
      Set balance to value -- range is -1.0..1.0
 
      (fn VALUE)
 
-12.61.1.22 emacspeak-empv-toggle-custom
+12.61.4.22 emacspeak-empv-toggle-custom
 .......................................
 
  -- Command: emacspeak-empv-toggle-custom
-     ‘s-SPC \’
 
      Toggle our custom filters.
 
-12.61.1.23 emacspeak-empv-toggle-filter
+12.61.4.23 emacspeak-empv-toggle-filter
 .......................................
 
  -- Command: emacspeak-empv-toggle-filter (filter)
-     ‘s-SPC ;’
 
      Toggle Filter.
      Filter is of the  form name=arg-1:arg-2:...
 
      (fn FILTER)
 
-12.61.1.24 emacspeak-empv-toggle-left
+12.61.4.24 emacspeak-empv-toggle-left
 .....................................
 
  -- Command: emacspeak-empv-toggle-left
-     ‘s-SPC ,’
 
      Toggle output to being just on the left.
 
-12.61.1.25 emacspeak-empv-toggle-right
+12.61.4.25 emacspeak-empv-toggle-right
 ......................................
 
  -- Command: emacspeak-empv-toggle-right
-     ‘s-SPC .’
 
      Toggle output to being just on the right.
 
-12.61.2 emacspeak-empv Options
+12.61.5 emacspeak-empv Options
 ------------------------------
 
  -- Variable: User Option emacspeak-empv-custom-filters
@@ -6635,7 +6671,7 @@ Youtube integration
 
      Default Value:
      
-     ("extrastereo" "stereowiden=4.25:.1:735:.8")
+     ("extrastereo" "stereowiden=4.25:.1:735:.8" "haas")
      
 
 
@@ -6767,8 +6803,8 @@ epub2 -- it will support epub3 some time in the future.
 
    The main entry point is command ‘emacspeak-epub’ bound to ‘C-e g’.
 This command opens a new bookshelf buffer unless the user has previously
-opened a specific bookshelf.  A _bookshelf_ is a buffer that lists books
-placed on a given bookshelf -- these are listed by _title_ and _author_.
+opened a specific bookshelf.  A *bookshelf* is a buffer that lists books
+placed on a given bookshelf -- these are listed by *title* and *author*.
 The bookshelf buffer is in a special mode that provides single-key
 commands for adding, removing and finding books, as well as for opening
 the selected book using Emacs' built-in Web browser (‘eww’).
@@ -6835,7 +6871,7 @@ Project Calibre enables the indexing and searching of large EBook
 collections.  Read the Calibre documentation for organizing and indexing
 your EBook library.  See user options named ‘emacspeak-epub-calibre-*’
 for customizing emacspeak to work with Calibre.  Once set up, Calibre
-integration provides the following commands from the _bookshelf_ buffer:
+integration provides the following commands from the *bookshelf* buffer:
 
 ‘/’
      emacspeak-epub-calibre-results
@@ -6892,7 +6928,7 @@ table of contents.
 ........................
 
  -- Command: emacspeak-epub
-     ‘C-e g’
+     ‘C-e M-e’
 
      EPub  Interaction.
      When opened, displays a bookshelf consisting of  epubs found at the
@@ -7066,6 +7102,7 @@ table of contents.
 .............................
 
  -- Command: emacspeak-epub-eww (epub-file &optional use-ncx)
+     ‘C-e y E’
 
      Display entire book  using EWW from EPub.
      Use content listed in toc.ncx  if prefix-arg use-ncx is true.
@@ -7930,7 +7967,7 @@ prompt for a list of filters.  Command ‘emacspeak-eww-restore’ bound to
 --------------------------------------------------
 
 Contrast this with filtering described in the previous section.  There,
-we discussed commands that _filter_ the DOM to render specific types of
+we discussed commands that *filter* the DOM to render specific types of
 elements.  For HTML as spoken on the Web, there is a separate use-case
 that is helpful as a dual to filtering, namely, displaying a specific
 portion of a page, typically the contents of a ‘div’ element.  These
@@ -7940,7 +7977,7 @@ news sites.  Commands ‘emacspeak-eww-dive-into-div’ help in such cases,
 ‘C-d’ renders the ‘div’ containing point in a separate buffer As with
 the filtering commands, ‘l’ returns to the buffer where these commands
 were executed.  Long-term users of Emacspeak who still remember Emacs-W3
-will recognize this as the _focus_ command implemented by Emacspeak for
+will recognize this as the *focus* command implemented by Emacspeak for
 W3.
 
 12.75.4 Updated Commands For Following Links
@@ -7986,7 +8023,7 @@ Summary Of Keyboard Commands:
 respectively.  The latter commands also move to the cell being spoken.
 You can get a sense of the table's size via ‘M-,’ which speaks the
 number of rows and cells in the table.  This works for plain tables, not
-nested tables; for nested tables, first have then _unnested_ using one
+nested tables; for nested tables, first have then *unnested* using one
 of the XSLT transforms like ‘sort-tables’.
 
 12.75.6 Miscellaneous Commands
@@ -8079,8 +8116,8 @@ prefix-key ‘G’.
 ‘e’
      ‘emacspeak-we-url-expand-and-execute’ Follow link under point, but
      pass the result to a custom executor.  Availability of special
-     executors for link under point is indicated by auditory icon _item_
-     instead of _button_ You can then experiment by pressing ‘RET’ or ‘e
+     executors for link under point is indicated by auditory icon *item*
+     instead of *button* You can then experiment by pressing ‘RET’ or ‘e
      e’.  Special executors are available for Reddit Links, Wikipedia
      Links etc.
 ‘f’

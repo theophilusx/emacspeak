@@ -66,7 +66,7 @@
 @item c  emacspeak-speak-char
 @item e  move-end-of-line
 @item f  emacspeak-speak-buffer-filename
-@item g  emacspeak-epub
+@item g  keyboard-quit
 @item h  emacspeak-speak-help
 @item i  emacspeak-speak-rest-of-buffer
 @item j  emacspeak-hide-or-expose-block
@@ -283,6 +283,8 @@
  @section Emacspeak Keybindings On emacspeak-y-keymap
 
 @table @kbd
+@item E  emacspeak-epub-eww
+@item b  emacspeak-bookshare-eww
 @item l  emacspeak-empv-play-last
 @item p  empv-youtube-playlist
 @item r  emacspeak-empv-radio

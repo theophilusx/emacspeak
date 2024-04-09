@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on April 5, 2024.
+last updated on April 8, 2024.
 
 
 File: emacspeak.info,  Node: emacspeak-exwm,  Next: emacspeak-feeds,  Prev: emacspeak-extras,  Up: Emacspeak Commands And Options
@@ -1320,7 +1320,9 @@ found on laptops is denoted <fn>
 
      Default Value:
      
-     (("l" emacspeak-empv-play-last)
+     (("E" emacspeak-epub-eww)
+      ("b" emacspeak-bookshare-eww)
+      ("l" emacspeak-empv-play-last)
       ("p" empv-youtube-playlist)
       ("r" emacspeak-empv-radio)
       ("t" empv-youtube-tabulated)
@@ -4450,7 +4452,7 @@ auditory icons over the years:
   3. Even more important is the nature of the sound and what it sounds
      like in the context of the overall speech output where that sound
      is used.
-  4. This is why the gain of icons _should never be_ normalized in my
+  4. This is why the gain of icons *should never be* normalized in my
      view-- tuning icons is as complex as picking colors from a color
      palette.
   5. The included themes have been optimized over years of use and are
@@ -4893,7 +4895,7 @@ of emacspeak from becoming dependent on the speech server modules
 ..................................
 
  -- Command: emacspeak-speak-extent (beg end &optional no-case)
-     ‘C-e M-e’
+     ‘C-e M-r’
 
      Speak extent delimited by beg and end.
      Match patterns beg and end define the extent; optional arg
@@ -10075,11 +10077,11 @@ stopped based on the current major mode.  Active Soundscape are
 displayed as part of the minor-mode-alist.  Command
 emacspeak-speak-minor-mode-line can be used to have this spoken.
 
-   Thus, SoundScapes can be thought of as reflecting the _mood_ of the
-current _mode_.  This package defines a single SOUNDSCAPE-DEFAULT-THEME
+   Thus, SoundScapes can be thought of as reflecting the *mood* of the
+current *mode*.  This package defines a single SOUNDSCAPE-DEFAULT-THEME
 that is loaded using ‘(soundscape-load soundscape-default-theme)’.
 Emacs modes that provide similar functionality e.g., communication ==
-email, IM, ...  map to the same _mood_.
+email, IM, ...  map to the same *mood*.
 
 12.235.1 Soundscape Commands
 ----------------------------
