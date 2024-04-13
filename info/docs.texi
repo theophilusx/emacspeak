@@ -249,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1177 commands and 128 options.
+This chapter documents a total of 1176 commands and 128 options.
 
 @node amixer
 @section amixer
@@ -8316,7 +8316,6 @@ Default Value:
 @verbatim
 
 (("'" emacspeak-pianobar)
- ("C-'" empv-exit)
  ("d" sdcv-search-input)
  ("f" ffap)
  ("l" locate)
@@ -12207,17 +12206,6 @@ displayed buffers.
 @end format
 @end deffn
 
-@subsubsection emacspeak-execute-repeatedly
-@deffn {Command} emacspeak-execute-repeatedly  (command)
-@findex emacspeak-execute-repeatedly
-
-@format
-Execute COMMAND repeatedly.
-
-(fn COMMAND)
-@end format
-@end deffn
-
 @subsubsection emacspeak-goto-percent
 @deffn {Command} emacspeak-goto-percent  (percent)
 @table @kbd
@@ -12559,7 +12547,8 @@ First prompts using the minibuffer for the kind of action to
 perform after speaking each chunk,   E.G.  speak a line at a time
 etc.  Speaking commences at current buffer position.  Pressing
 C-g breaks out, leaving point on last chunk that
-was spoken.  Any other key continues to speak the buffer.
+was spoken.  Pressing SPC  continues to speak the buffer; any other
+  key quits.
 @end format
 @end deffn
 

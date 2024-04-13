@@ -1951,34 +1951,25 @@ location of the mark is indicated by an aural highlight. "
 
 ;;;   Execute command repeatedly:
 
-(defvar emacspeak-execute-repeatedly-key 32
-  "Key to use to repeat command.")
-
 (defun emacspeak-execute-repeatedly (command)
   "Execute COMMAND repeatedly."
-  (interactive (list (read-command "Command to execute repeatedly:")))
-  (cl-declare (special emacspeak-execute-repeatedly-key))
+  (emacspeak-icon 'repeat-start)
   (let ((key "")
         (pos (point))
         (continue t)
-        (message (format "Press %s to execute %s again"
-                         (if (= 32 emacspeak-execute-repeatedly-key)
-                             "space"
-                           (char-to-string emacspeak-execute-repeatedly-key))
-                         command)))
+        (message "Space Repeats."))
     (while continue
+      (emacspeak-icon 'repeat-active)
       (call-interactively command)
       (cond
        ((= (point) pos) (setq continue nil))
        (t (setq pos (point))
-          (setq key (read-key-sequence message))
-          (when (and (stringp key)
-                     (not
-                      (= emacspeak-execute-repeatedly-key
-                         (string-to-char key))))
+          (setq key (read-key message))
+          (when (not (= 32 key))
             (dtk-stop 'all)
-            (setq continue nil)))))
-    (dtk-speak "Exited continuous mode ")))
+            (setq continue nil))))
+      (emacspeak-icon 'repeat-end)
+      (dtk-speak "Exited continuous mode "))))
 
 (defun emacspeak-speak-continuously ()
   "Speak a buffer continuously.
@@ -1986,7 +1977,8 @@ First prompts using the minibuffer for the kind of action to
 perform after speaking each chunk,   E.G.  speak a line at a time
 etc.  Speaking commences at current buffer position.  Pressing
 \\[keyboard-quit] breaks out, leaving point on last chunk that
-was spoken.  Any other key continues to speak the buffer."
+was spoken.  Pressing SPC  continues to speak the buffer; any other
+  key quits."
   (interactive)
   (let ((command
          (key-binding (read-key-sequence "Press navigation key to repeat: "))))
