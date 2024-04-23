@@ -49,7 +49,9 @@
 ;; DOM. It also provides a set of filters for interactively filtering
 ;; the DOM by various attributes such as id, class and role.
 ;; Finally, this module updates EWW's built-in key-bindings with
-;; Emacspeak conveniences.
+;; Emacspeak conveniences --- for a complete list of key-bindings,
+;;invoke  command @code{describe-bindings} in an @code{EWW} buffer by
+;;pressing @kbd{C-h b}.
 
 ;; @subsection Structured Navigation
 ;;
@@ -613,6 +615,7 @@ Safari/537.36"
    do
    (keymap-unset eww-link-keymap c 'remove))
   (define-key eww-text-map  [C-return] 'emacspeak-eww-fillin-field)
+  (define-key eww-link-keymap  "S" 'emacspeak-eww-rdr-follow)
   (define-key eww-link-keymap  "u" 'emacspeak-eww-url-to-register)
   (define-key eww-link-keymap  "!" 'emacspeak-eww-shell-cmd-on-url-at-point)
   (define-key eww-link-keymap  "k" 'shr-copy-url)
@@ -623,78 +626,79 @@ Safari/537.36"
   (cl-loop
    for binding  in
    '(
-     ("M-o" org-eww-copy-for-org-mode)
-     ("M-;" emacspeak-eww-previous-audio/video)
-     (";" emacspeak-eww-next-audio/video)
-     (":" emacspeak-eww-tags-at-point)
-     ("\"" emacspeak-eww-reading-settings)
-     ("V" eww-view-source)
+
+     ( "0" emacspeak-eww-shr-outline-toggle)
      ("'" emacspeak-speak-rest-of-buffer)
      ("*" eww-add-bookmark)
      ("," emacspeak-eww-previous-h)
      ("." emacspeak-eww-next-h)
+     ("/" dtk-toggle-punctuation-mode)
      ("1" emacspeak-eww-next-h1)
      ("2" emacspeak-eww-next-h2)
      ("3" emacspeak-eww-next-h3)
      ("4" emacspeak-eww-next-h4)
-     ("=" dtk-toggle-punctuation-mode)
+     (":" emacspeak-eww-tags-at-point)
+     (";" emacspeak-eww-next-audio/video)
      ("?" emacspeak-google-similar-to-this-page)
      ("A" eww-view-dom-having-attribute)
      ("C" eww-view-dom-having-class)
      ("C-d" emacspeak-eww-dive-into-div)
-     ("C-t" emacspeak-eww-table-data)
      ("C-e" emacspeak-keymap)
-     ("M" eww-view-dom-element-having-text)
-     ("M-<left>" emacspeak-eww-table-previous-cell)
-     ("M-<up>"  emacspeak-eww-table-previous-row)
-     ("M-<down>"  emacspeak-eww-table-next-row)
-     ("M-<right>"  emacspeak-eww-table-next-cell)
-     ("M-." emacspeak-eww-table-speak-cell)
-     ("M-," emacspeak-eww-table-speak-dimensions)
+     ("C-t" emacspeak-eww-table-data)
+     ("DEL" emacspeak-eww-restore)
      ("E" eww-view-dom-having-elements)
      ("G" emacspeak-google-command)
-     ("c" emacspeak-eww-browse-chrome)
-
      ("I" eww-view-dom-having-id)
      ("J" emacspeak-eww-next-element-like-this)
      ("K" emacspeak-eww-previous-element-like-this)
-     ("M-SPC" emacspeak-eww-speak-this-element)
+     ("L" emacspeak-eww-links-rel)
+     ("M" eww-view-dom-element-having-text)
+     ("M-," emacspeak-eww-table-speak-dimensions)
+     ("M-." emacspeak-eww-table-speak-cell)
      ("M-0" emacspeak-eww-previous-h)
      ("M-1" emacspeak-eww-previous-h1)
      ("M-2" emacspeak-eww-previous-h2)
      ("M-3" emacspeak-eww-previous-h3)
      ("M-4" emacspeak-eww-previous-h4)
+     ("M-;" emacspeak-eww-previous-audio/video)
+     ("M-<down>"  emacspeak-eww-table-next-row)
+     ("M-<left>" emacspeak-eww-table-previous-cell)
+     ("M-<right>"  emacspeak-eww-table-next-cell)
+     ("M-<up>"  emacspeak-eww-table-previous-row)
+     ("M-SPC" emacspeak-eww-speak-this-element)
      ("M-a" eww-view-dom-not-having-attribute)
      ("M-c" eww-view-dom-not-having-class)
      ("M-e" eww-view-dom-not-having-elements)
      ("M-i" eww-view-dom-not-having-id)
+     ("M-o" org-eww-copy-for-org-mode)
      ("M-r" eww-view-dom-not-having-role)
-     ("L" emacspeak-eww-links-rel)
      ("N" emacspeak-eww-next-element-from-history)
      ("O" emacspeak-eww-previous-li)
      ("P" emacspeak-eww-previous-element-from-history)
      ("Q" emacspeak-kill-buffer-quietly)
      ("R" eww-view-dom-having-role)
+     ("S" emacspeak-eww-rdr-reload)
      ("T" emacspeak-eww-previous-table)
+     ("V" eww-view-source)
      ("[" emacspeak-eww-previous-p)
-     ("DEL" emacspeak-eww-restore)
+     ("\"" emacspeak-eww-reading-settings)
      ("]" emacspeak-eww-next-p)
      ("b" shr-previous-link)
+     ("c" emacspeak-eww-browse-chrome)
      ("e" emacspeak-we-xsl-map)
      ("f" shr-next-link)
      ("k" eww-copy-page-url)
+     ("m" emacspeak-eww-add-mark)
      ("n" emacspeak-eww-next-element)
      ("o" emacspeak-eww-next-li)
      ("p" emacspeak-eww-previous-element)
      ("s" eww-readable)
      ("t" emacspeak-eww-next-table)
-     ("m" emacspeak-eww-add-mark)
-     ("/" dtk-toggle-punctuation-mode)
-     ( "0" emacspeak-eww-shr-outline-toggle))
+     )
    do
    (emacspeak-keymap-update eww-mode-map binding))
   (setq shr-external-rendering-functions emacspeak-eww-filter-renderers))
-  (emacspeak-eww-setup)
+(emacspeak-eww-setup)
 
 ;;; play media:
 
@@ -1741,7 +1745,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
     (unless target  (user-error   "No  audio/video elements"))
     (goto-char target)
     (emacspeak-speak-line)
-    (dtk-notify-speak "Press ; to play")
+    (dtk-notify "Press ; to play")
     (emacspeak-icon 'large-movement)))
 
 (defun emacspeak-eww-previous-audio/video ()
@@ -1753,7 +1757,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
     (unless target  (user-error   "No  audio/video elements"))
     (goto-char target)
     (emacspeak-speak-line)
-    (dtk-notify-speak "Press ; to play")
+    (dtk-notify "Press ; to play")
     (emacspeak-icon 'large-movement)))
 
 (defvar emacspeak-eww-el-nav-history nil
@@ -1777,13 +1781,12 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
     (setq el 'shr-continuation-indentation))
   (let* ((start (next-single-property-change (point) el))
          (next (next-single-property-change start el)))
-    (when (or emacspeak-eww-autospeak speak)
-      (setq next (next-single-property-change next el)))
     (cond
      ((and start next)
       (goto-char start)
       (setq emacspeak-eww-el-nav-history  el)
-      (emacspeak-speak-region start next))
+      (when (or emacspeak-eww-autospeak speak)
+        (emacspeak-speak-region start next)))
      (t (message "Did not move.")))))
 
 (defun emacspeak-eww-previous-element (el &optional speak)
@@ -1804,13 +1807,12 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
     (setq el 'shr-continuation-indentation))
   (let* ((start (previous-single-property-change (point) el))
          (previous (previous-single-property-change  start  el)))
-    (when (or emacspeak-eww-autospeak speak)
-      (setq previous  (previous-single-property-change  start  el)))
     (cond
      ((and start previous)
       (goto-char previous)
       (setq  emacspeak-eww-el-nav-history el)
-      (emacspeak-speak-region start previous))
+      (when (or emacspeak-eww-autospeak speak)
+        (emacspeak-speak-region start previous)))
      (t (message "Did not move.")))))
 
 (defun emacspeak-eww-next-element-from-history ()
@@ -2199,7 +2201,6 @@ arg `delete', delete that mark instead."
            'emacspeak-eww-post-process-hook
            #'(lambda ()
                (goto-char point)
-                                        ;(eww-mode)
                (delete-other-windows)
                (emacspeak-speak-windowful)
                (emacspeak-icon 'large-movement))
@@ -2573,8 +2574,8 @@ With interactive prefix arg, move to the start of the table."
 (defun emacspeak-eww-dive-into-div ()
   "Focus on current div by rendering it in a new buffer."
   (interactive)
+  (cl-assert (memq 'div (emacspeak-eww-here-tags) ) t "No div here.")
   (let ((dom (get-text-property (point) 'eww-dom)))
-    (cl-assert (memq 'div (emacspeak-eww-here-tags) ) t "No div here.")
     (emacspeak-eww-view-helper
      (dom-html-from-nodes (list dom) (eww-current-url)))))
 
@@ -2618,6 +2619,34 @@ With interactive prefix arg, move to the start of the table."
       (message "No URL here to play"))))
 
 (put 'emacspeak-eww-play-audio/video 'repeat-map 'empv-map)
+
+;;; RDR View:
+;; inspired by
+;; https://jiewawa.me/2024/04/\
+;; another-way-of-integrating-mozilla-readability-in-emacs-eww/
+
+(defconst emacspeak-eww-rdr (executable-find "rdrview")
+  "Executable: rdrview.")
+
+(defconst emacspeak-eww-rdr-cmd
+  (when emacspeak-eww-rdr
+    (list emacspeak-eww-rdr    "-T"   "title,sitename,body"   "-H"  ))
+  "Command-line to invoke rdrview.")
+
+(defun emacspeak-eww-rdr-reload ()
+  "Reload current Web page using `emacspeak-eww-rdr'."
+  (interactive)
+  (cl-assert (eq major-mode 'eww-mode) t "Not in an EWW buffer.")
+  (let ((eww-retrieve-command   emacspeak-eww-rdr-cmd))
+    (eww-reload)))
+
+(defun emacspeak-eww-rdr-follow ()
+  "Follow link under point, but use rdr to load page."
+  (interactive)
+  (cl-assert (eq major-mode 'eww-mode) t "Not in an EWW buffer.")
+  (let ((eww-retrieve-command   emacspeak-eww-rdr-cmd))
+    (call-interactively #'eww-follow-link)))
+
 (provide 'emacspeak-eww)
 
 ;;;  end of file

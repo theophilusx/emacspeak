@@ -249,7 +249,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1176 commands and 128 options.
+This chapter documents a total of 1177 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -437,7 +437,7 @@ Useful additional functions for dom.el
 @node dtk-speak
 @section dtk-speak
 
-Defines the TTS interface.
+This module defines the TTS interface.
 Here, prefix dtk is synonymous with tts.
 
 @subsection Dtk-Speak Commands
@@ -1147,8 +1147,11 @@ This is the main emacspeak module.
 It actually does very little:
 @itemize
 @item  It sets up Emacs to load package-specific
-Emacspeak modules as each package is loaded.
-@item  It implements function emacspeak which loads the rest of the system.
+Emacspeak modules as and when a  package is loaded.
+@item  It implements function emacspeak which loads the rest of the
+system.
+@item It provides affordances for  setting up consistent behavior in
+programming modes.
 @end itemize
 
 @subsection emacspeak Options
@@ -1162,20 +1165,6 @@ Default Value:
 @verbatim
 
 "/home/raman/.local/bin/piper"
-
-@end verbatim
-
-@end defvar
-
-@defvar {User Option} emacspeak-soundscapes
-@verbatim
-Whether we should turn on soundscapes on startup.
-@end verbatim
-
-Default Value: 
-@verbatim
-
-nil
 
 @end verbatim
 
@@ -3105,6 +3094,24 @@ Speech-enable the debugger by speech-enabling interactive commands.
 @section emacspeak-desktop
 
 advice desktop package
+
+@subsection Emacspeak-Desktop Commands
+
+@subsubsection emacspeak-desktop-preserve
+@deffn {Command} emacspeak-desktop-preserve  (buffer)
+@table @kbd
+@item C-e x k
+@kindex C-e x k
+@end table
+
+@findex emacspeak-desktop-preserve
+
+@format
+Preserve: Dont kill this buffer when clearing desktop.
+
+(fn BUFFER)
+@end format
+@end deffn
 
 @node emacspeak-devdocs
 @section emacspeak-devdocs
@@ -5474,7 +5481,9 @@ It implements additional interactive commands for navigating the
 DOM. It also provides a set of filters for interactively filtering
 the DOM by various attributes such as id, class and role.
 Finally, this module updates EWW's built-in key-bindings with
-Emacspeak conveniences.
+Emacspeak conveniences --- for a complete list of key-bindings,
+invoke  command @code{describe-bindings} in an @code{EWW} buffer by
+pressing @kbd{C-h b}.
 
 @subsection Structured Navigation
 
@@ -6495,6 +6504,24 @@ Optional interactive prefix arg speaks the ul.
 Second interactive prefix toggles this flag.
 See user option ‘emacspeak-eww-autospeak’ on how to reverse this behavior.
 The ul is automatically spoken if there is no user activity.
+@end format
+@end deffn
+
+@subsubsection emacspeak-eww-rdr-follow
+@deffn {Command} emacspeak-eww-rdr-follow   
+@findex emacspeak-eww-rdr-follow
+
+@format
+Follow link under point, but use rdr to load page.
+@end format
+@end deffn
+
+@subsubsection emacspeak-eww-rdr-reload
+@deffn {Command} emacspeak-eww-rdr-reload   
+@findex emacspeak-eww-rdr-reload
+
+@format
+Reload current Web page using ‘emacspeak-eww-rdr’.
 @end format
 @end deffn
 
@@ -8286,7 +8313,6 @@ Default Value:
  ("DEL" emacspeak-wizards-snarf-sexp)
  ("TAB" hippie-expand)
  ("a" emacspeak-amark-browse)
- ("b" emacspeak-wizards-bbc-sounds)
  ("c" browse-url-chrome)
  ("d" magit-dispatch)
  ("f" magit-file-dispatch)
@@ -8421,6 +8447,7 @@ Default Value:
  ("f" emacspeak-wizards-remote-frame)
  ("h" emacspeak-wizards-how-many-matches)
  ("i" ibuffer)
+ ("k" emacspeak-desktop-preserve)
  ("m" mspools-show)
  ("o" emacspeak-wizards-occur-header-lines)
  ("p" paradox-list-packages)
@@ -12722,7 +12749,7 @@ Speak header line if set.
 @end deffn
 
 @subsubsection emacspeak-speak-help
-@deffn {Command} emacspeak-speak-help  (&optional arg)
+@deffn {Command} emacspeak-speak-help   
 @table @kbd
 @item C-e h
 @kindex C-e h
@@ -12731,23 +12758,7 @@ Speak header line if set.
 @findex emacspeak-speak-help
 
 @format
-Speak help buffer if one present.
-With prefix arg, speaks the rest of the buffer from point.
-Negative prefix arg speaks from start of buffer to point.
-
-(fn &optional ARG)
-@end format
-@end deffn
-
-@subsubsection emacspeak-speak-help-interactively
-@deffn {Command} emacspeak-speak-help-interactively   
-@findex emacspeak-speak-help-interactively
-
-@format
-Speak the start of, rest of, or the entire help.
- ‘s’ to speak the start.
- ‘r’ to speak the rest.
-any other key to speak entire help.
+Speak help buffer if one present. 
 @end format
 @end deffn
 
@@ -16994,28 +17005,6 @@ Bug: First run fails to bind keys.   Works on subsequent runs.
 @end format
 @end deffn
 
-@subsubsection emacspeak-wizards-bbc-sounds
-@deffn {Command} emacspeak-wizards-bbc-sounds   
-@table @kbd
-@item C-; b
-@kindex C-; b
-@item C-x @@ h b
-@kindex C-x @@ h b
-@end table
-
-@findex emacspeak-wizards-bbc-sounds
-
-@format
-Search BBC Sounds.
-Result page is filtered down to two sections, Shows and Episodes.
-
-Press [RET] on links in the Show section to open that show page.
-The page for that show contains playable links for Episodes.
-
-Press ‘y’ on Episode links to play them with MPV.
-@end format
-@end deffn
-
 @subsubsection emacspeak-wizards-cleanup-shell-path
 @deffn {Command} emacspeak-wizards-cleanup-shell-path   
 @findex emacspeak-wizards-cleanup-shell-path
@@ -19750,7 +19739,8 @@ to @strong{Sleep}.
 @code{sox-relax} spends equal time in @strong{Dream} and @strong{Sleep}.
 @item @command{sox-binaural}: Provide a completion-based front-end to
 playing any one of the predefined binaural effects (@strong{Delta},
-@strong{Theta}, @strong{Alpha}, @strong{Beta}, or @strong{Gamma}. The previously
+@strong{Theta}, @strong{Alpha}, @strong{Beta}, or @strong{Gamma}.
+The previously
 defined sequences are built up using these effects.
 @item @command{sox-beats-binaural}: Plays a collection of binaural
 beats, prompting for carrier and beat frequencies for each tone. The
@@ -20077,7 +20067,7 @@ Settings for voice-bolden
 Default Value: 
 @verbatim
 
-(nil 3 nil 6)
+(nil 4 nil 6)
 
 @end verbatim
 
@@ -20516,7 +20506,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 64 URL Templates.
+This section documents a total of 63 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20552,9 +20542,15 @@ BBC Radio 4 Extra Schedule@item @b{bbc r4 schedule }
 
 BBC R4 Schedule@item @b{bbc sounds}
 
-Search BBC Sounds@item @b{bbc world service  schedule }
+Search BBC Sounds.
+Result page is filtered down to two sections, Shows and Episodes.
 
-BBC R4 Schedule@item @b{bing news}
+Press [RET] on links in the Show section to open that show page.
+The page for that show contains playable links for Episodes.
+
+Press `y' on Episode links to play them with MPV.@item @b{bbc world service  schedule }
+
+BBC World Service Schedule@item @b{bing news}
 
 Bing News results as RSS feed.@item @b{business headlines from cnn}
 
@@ -20586,15 +20582,15 @@ Display top stocks  from Google Finance.@item @b{freesound}
 
 Search FreeSound.@item @b{gita}
 
-Open specific chapter/verse in the Gita @item @b{google news search}
+Open specific chapter/verse in the Gita @item @b{global weather from google}
+
+World Weather From Google@item @b{google news search}
 
 Search Google news.@item @b{google scholar}
 
 Google Scholar Search@item @b{google trends}
 
-Google Trends@item @b{google weather}
-
-Light-weight Google weather.@item @b{guardian rss feeds directory}
+Google Trends@item @b{guardian rss feeds directory}
 
 Guardian Feeds  Directory@item @b{hacker  news frontpage}
 
@@ -20604,7 +20600,9 @@ Display Hacker News Front Page@item @b{hoogle haskell api search}
 
 Haskell API Search against a local server.@item @b{html google news search}
 
-Search Google news.@item @b{microsoft search}
+Search Google news.@item @b{local weather from google}
+
+Light-weight Google weather. Displays weather for your current US-ZIP Code. @item @b{microsoft search}
 
 Bing results as RSS feed.@item @b{nba  standings}
 
@@ -20651,15 +20649,7 @@ Display tech news from CNET@item @b{tinyurl}
 
 @item @b{tunein radio}
 
-Translate StreamId to playable stream.@item @b{w3c irc logs}
-
-Use this to pull up the
-archived logs from the W3C IRC. You need to know the exact
-name of the channel.@item @b{w3c lists}
-
-Use this to pull up the
-archived mail from the W3C list. You need to know the exact
-name of the list.@item @b{washington post}
+Translate StreamId to playable stream.@item @b{washington post}
 
 Washington Post Contents@item @b{wiki data search}
 

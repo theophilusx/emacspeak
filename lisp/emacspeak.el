@@ -44,8 +44,11 @@
 ;; It actually does very little:
 ;; @itemize
 ;; @item  It sets up Emacs to load package-specific
-;; Emacspeak modules as each package is loaded.
-;; @item  It implements function emacspeak which loads the rest of the system.
+;; Emacspeak modules as and when a  package is loaded.
+;; @item  It implements function emacspeak which loads the rest of the
+;; system.
+;; @item It provides affordances for  setting up consistent behavior in
+;; programming modes.
 ;; @end itemize
 ;;; Code:
 
@@ -84,9 +87,9 @@ the Emacspeak desktop.")
 ;; set up Emacspeak support for a given package.  Argument MODULE (a
 ;; symbol)specifies the emacspeak module that implements the
 ;; speech-enabling extensions for `package' (a string).
-(defsubst emacspeak-do-package-setup (package module)
+(defsubst emacspeak-package-setup (pair)
   "Setup Emacspeak extension for   PACKAGE by loading MODULE."
-  (with-eval-after-load package (require module)))
+  (with-eval-after-load (cl-first pair) (require (cl-second pair))))
 
 ;; DocView
 (declare-function doc-view-open-text "doc-view")
@@ -304,6 +307,9 @@ the Emacspeak desktop.")
     ("yasnippet" emacspeak-yasnippet)
     )
   "Packages to  speech-enable.")
+(defconst emacspeak-soundscapes
+  (executable-find "boodler")
+  "Whether we should turn on soundscapes on startup.")
 
 (defun emacspeak-prepare-emacs ()
   "Prepare Emacs to speech-enable packages when loaded."
@@ -314,12 +320,7 @@ the Emacspeak desktop.")
   (push "emacspeak" Info-file-list-for-emacs)
   (setq-default line-move-visual nil)
   (setq use-dialog-box nil)
-  (when (boundp 'Info-directory-list)
-    (push emacspeak-info-directory Info-directory-list))
-  (mapc
-   #'(lambda (pair)
-       (emacspeak-do-package-setup  (cl-first pair) (cl-second pair)))
-   emacspeak-packages-to-prepare)
+  (mapc #'emacspeak-package-setup emacspeak-packages-to-prepare)
   (when emacspeak-soundscapes (soundscape-toggle))
   (message "emacspeak-prepare-emacs: done"))
 
@@ -332,13 +333,11 @@ the Emacspeak desktop.")
 (defsubst emacspeak-setup-programming-mode ()
   "Setup programming mode."
   (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
-  (ems-with-messages-silenced
-   (dtk-set-punctuations 'all)
-   (or dtk-split-caps (dtk-toggle-split-caps))
-   (or dtk-caps (dtk-toggle-caps))
-   (emacspeak-pronounce-refresh-pronunciations)
-   (or emacspeak-audio-indentation
-       (emacspeak-toggle-audio-indentation))))
+  (dtk-set-punctuations 'all)
+  (or dtk-split-caps (dtk-toggle-split-caps))
+  (or dtk-caps (dtk-toggle-caps))
+  (emacspeak-pronounce-refresh-pronunciations)
+  (or emacspeak-audio-indentation (emacspeak-toggle-audio-indentation)))
 
 (defun emacspeak-setup-programming-modes ()
   "Setup programming modes."
@@ -392,10 +391,7 @@ This cannot be set via custom; set this in your startup file before
      emacspeak-version))
   "Emacspeak startup message.")
 
-(defcustom emacspeak-soundscapes nil
-  "Whether we should turn on soundscapes on startup."
-  :type 'boolean
-  :group 'emacspeak)
+
 
 (defcustom emacspeak-pip-enable
   (executable-find "piper")
@@ -414,29 +410,44 @@ Use Emacs as you normally would, emacspeak provides spoken feedback.
 Emacspeak also provides commands for having parts of the current buffer,
 the mode-line etc to be spoken.
 
-With prefix \\`C-e'
+Commands invoked with prefix \\`C-e' provide the primary Emacspeak interface.
 
 \\{emacspeak-keymap}
 
-With prefix \\`C-e d'
-
+Commands invoked with prefix \\`C-e d' control text-to-speech.
 
 \\{emacspeak-dtk-submap}
 
 Emacspeak provides a set of additional keymaps to give easy access to
-its extensive facilities.
+Emacs' extensive facilities.  All of these bindings can be customized
+via custom.
 
-Press C-; to access keybindings in emacspeak-hyper-keymap:
+Press C-; to access keybindings in `emacspeak-hyper-keymap':
 \\{emacspeak-hyper-keymap}
 
-Press C-' or C-.  to access keybindings in emacspeak-super-keymap:
+Press C-.  to access keybindings in `emacspeak-super-keymap':
 \\{emacspeak-super-keymap}
 
-Press C-, to access keybindings in emacspeak-alt-keymap:
+Press C-, to access keybindings in `emacspeak-alt-keymap':
 \\{emacspeak-alt-keymap}
 
+Press C-' to access keybindings in `emacspeak-multi-keymap':
+\\{emacspeak-multi-keymap}
+
+Press C-v to access keybindings in `emacspeak-v-keymap':
+\\{emacspeak-v-keymap}
+
+Press C-x to access keybindings in `emacspeak-x-keymap':
+\\{emacspeak-x-keymap}
+
+Press C-y to access keybindings in `emacspeak-y-keymap':
+\\{emacspeak-y-keymap}
+
+Press C-z to access keybindings in `emacspeak-z-keymap':
+\\{emacspeak-z-keymap}
+
 See the online documentation \\[emacspeak-open-info] for individual
-commands and options for details."
+commands and options."
   (setenv "EMACSPEAK_DIR" emacspeak-directory)
   (add-hook                           ; silence messages when quitting
    'kill-emacs-hook

@@ -38,10 +38,8 @@
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;  introduction:
-
 ;;; Commentary:
-;; Defines the TTS interface.
+;; This module defines the TTS interface.
 ;; Here, prefix dtk is synonymous with tts.
 ;;; Code:
 ;;
@@ -51,14 +49,13 @@
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (eval-when-compile (require 'subr-x))
-(declare-function ems--fastload "emacspeak-preamble" (file))
 
 ;;;  Forward Declarations:
 
+(declare-function ems--fastload "emacspeak-preamble" (file))
 (declare-function voice-setup-get-voice-for-face "voice-setup" (face))
 (declare-function emacspeak-icon "emacspeak-sounds.el" (icon))
-(declare-function emacspeak-queue-icon "emacspeak-sounds.el"
-                  (icon))
+(declare-function emacspeak-queue-icon "emacspeak-sounds.el" (icon))
 
 (defvar dtk-program
   (or
@@ -73,9 +70,10 @@ outloud     For IBM ViaVoice Outloud
 espeak      For eSpeak (default on Linux)
 mac for MAC TTS (default on Mac)")
 
-;; Importing dtk-interp by inclusion:
+;;; Importing dtk-interp by inclusion:
 
-;;;  macros
+;;;;  macros
+
 (defmacro tts-with-punctuations (setting &rest body)
   "Set punctuation  and exec   body."
   (declare (indent 1) (debug t))
@@ -88,7 +86,7 @@ mac for MAC TTS (default on Mac)")
        (setq dtk-punctuation-mode save-punctuation-mode)
        (dtk-interp-set-punctuations save-punctuation-mode))))
 
-;;;  silence
+;;;;  silence
 
 (defsubst dtk-interp-silence (duration &optional force)
   (cl-declare (special dtk-speaker-process))
@@ -97,16 +95,17 @@ mac for MAC TTS (default on Mac)")
                                duration
                                (if force "\nd" ""))))
 
-;;;   tone
+;;;;   tone
 
 (defsubst dtk-interp-tone (pitch duration &optional force)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "t %d %d%s\n"
-                               pitch duration
-                               (if force "\nd" ""))))
+  (process-send-string
+   dtk-speaker-process
+   (format "t %d %d%s\n"
+           pitch duration
+           (if force "\nd" ""))))
 
-;;;   queue
+;;;;   queue
 
 (defsubst dtk-interp-queue (text)
   (cl-declare (special dtk-speaker-process))
@@ -115,29 +114,29 @@ mac for MAC TTS (default on Mac)")
 
 (defsubst dtk-interp-queue-code (code)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "c {%s }\n" code)))
+  (process-send-string dtk-speaker-process (format "c {%s }\n" code)))
 
-;;;   speak
+;;;;   speak
 
 (defsubst dtk-interp-speak ()
   (cl-declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process "d\n"))
 
-;;;  say
+;;;;  say
 
 (defsubst dtk-interp-say (string)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "tts_say { %s}\n" string)))
+  (process-send-string
+   dtk-speaker-process
+   (format "tts_say { %s}\n" string)))
 
-;;;  stop
+;;;;  stop
 
 (defsubst dtk-interp-stop ()
   (cl-declare (special dtk-speaker-process))
   (process-send-string dtk-speaker-process "s\n"))
 
-;;;  sync
+;;;;  sync
 
 (defsubst dtk-interp-sync ()
   "Synchronize speech state with running server"
@@ -152,37 +151,41 @@ mac for MAC TTS (default on Mac)")
            (if dtk-caps 1 0)
            dtk-speech-rate)))
 
-;;;   letter
+;;;;   letter
 
 (defsubst dtk-interp-letter (letter)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "l {%s}\n" letter)))
+  (process-send-string
+   dtk-speaker-process
+   (format "l {%s}\n" letter)))
 
-;;;   language
+;;;;   language
 
 (defsubst dtk-interp-next-language (&optional say_it)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "set_next_lang %s\n" say_it)))
+  (process-send-string
+   dtk-speaker-process
+   (format "set_next_lang %s\n" say_it)))
 
 (defsubst dtk-interp-previous-language (&optional say_it)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "set_previous_lang %s\n" say_it)))
+  (process-send-string
+   dtk-speaker-process
+   (format "set_previous_lang %s\n" say_it)))
 
 (defsubst dtk-interp-language (language say_it)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "set_lang %s %s \n" language say_it)))
+  (process-send-string
+   dtk-speaker-process
+   (format "set_lang %s %s \n" language say_it)))
 
 (defsubst dtk-interp-preferred-language (alias language)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "set_preferred_lang %s %s \n"
-                               alias language)))
+  (process-send-string
+   dtk-speaker-process
+   (format "set_preferred_lang %s %s \n" alias language)))
 
-;;;   Version, rate
+;;;;   Version, rate
 
 (defsubst dtk-interp-say-version ()
   (cl-declare (special dtk-speaker-process))
@@ -190,11 +193,11 @@ mac for MAC TTS (default on Mac)")
 
 (defsubst dtk-interp-set-rate (rate)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "tts_set_speech_rate %s\n"
-                               rate)))
+  (process-send-string
+   dtk-speaker-process
+   (format "tts_set_speech_rate %s\n" rate)))
 
-;;;  character scale
+;;;;  character scale
 
 (defsubst dtk-interp-set-character-scale (factor)
   (cl-declare (special dtk-speaker-process))
@@ -202,15 +205,15 @@ mac for MAC TTS (default on Mac)")
                        (format "tts_set_character_scale %s\n"
                                factor)))
 
-;;;   split caps
+;;;;   split caps
 
 (defsubst dtk-interp-toggle-split-caps (flag)
   (cl-declare (special dtk-speaker-process))
-  (process-send-string dtk-speaker-process
-                       (format "tts_split_caps %s\n"
-                               (if flag 1 0))))
+  (process-send-string
+   dtk-speaker-process
+   (format "tts_split_caps %s\n" (if flag 1 0))))
 
-;;;  punctuations
+;;;;  punctuations
 
 (defsubst dtk-interp-set-punctuations (mode)
   (cl-declare (special dtk-speaker-process))
@@ -218,7 +221,7 @@ mac for MAC TTS (default on Mac)")
    dtk-speaker-process
    (format "tts_set_punctuations %s\nd\n" mode)))
 
-;;;  reset
+;;;;  reset
 
 (defsubst dtk-interp-reset-state ()
   (cl-declare (special dtk-speaker-process))
@@ -295,7 +298,7 @@ bound to \\[dtk-toggle-caps].")
  Use `dtk-set-rate'
  bound to \\[dtk-set-rate].")
 
-;;; Style Helper:
+;;; Style Helpers:
 
 ;; helper: Identify (a . b).
 (defsubst dtk-plain-cons-p (value)
@@ -723,27 +726,6 @@ Argument COMPLEMENT  is the complement of separator."
         " "))
       (t "")))
     (dtk-interp-queue text)
-    (dtk-interp-queue-code (tts-voice-reset-code))))
-
-(defun dtk-letter-using-voice (voice letter)
-  "Use voice VOICE to speak letter."
-  (cl-declare (special dtk-quiet tts-default-voice))
-  (unless (or (eq 'inaudible voice) dtk-quiet
-              (null letter) (string-equal letter ""))
-    (dtk-interp-queue-code (tts-voice-reset-code))
-    (dtk-interp-queue-code
-     (cond
-      ((symbolp voice)
-       (tts-get-voice-command
-        (if (boundp voice) (symbol-value voice) voice)))
-      ((listp voice)
-       (mapconcat
-        #'(lambda (v)
-            (tts-get-voice-command
-             (if (boundp v) (symbol-value v) v)))
-        voice " "))
-      (t "")))
-    (dtk-interp-letter letter)
     (dtk-interp-queue-code (tts-voice-reset-code))))
 
 ;; Internal function used by dtk-speak to send text out.
@@ -1458,7 +1440,7 @@ Set by \\[dtk-set-punctuations].")
   (dtk-initialize))
 
 (defvar tts-multi-engines
-  '("espeak"  "outloud"   "dtk-soft")
+  '("espeak"  "outloud"   "dtk-soft" "sharpwin" "swiftmac")
   "List of TTS engines that are multi capable.")
 
 (defsubst tts-multistream-p (engine)
@@ -1558,8 +1540,7 @@ For swiftmac, set this to `left' or `right'."
   (unless dtk-program (setq dtk-program "espeak"))
   (let ((new (dtk-make-process "Speaker")))
     ;; success, so nuke old server
-    (when (processp dtk-speaker-process) (delete-process
-                                          dtk-speaker-process))
+    (when (processp dtk-speaker-process) (delete-process dtk-speaker-process))
     (setq dtk-speaker-process new)
     (when (tts-multistream-p dtk-program) (dtk-notify-initialize))
     (when (string-match "cloud" dtk-program) ; we'll serve icons.
@@ -1810,17 +1791,14 @@ grouping"
 ;;;  Notify:
 
 (defun dtk-notify-process ()
-  "Return  Notification TTS handle or nil. "
-  (cl-declare (special dtk-notify-process dtk-speaker-process
-                       dtk-program))
-  (let ((result
-         (cond
-          ((null dtk-notify-process) dtk-speaker-process)
-          ((and (processp dtk-notify-process)
-                (memq (process-status dtk-notify-process) '(open run)))
-           dtk-notify-process)
-          (t dtk-speaker-process))))
-    (when (process-live-p result) result)))
+  "Return  Notification TTS handle or dtk-speaker-process. "
+  (cl-declare (special dtk-notify-process dtk-speaker-process))
+  (cond
+   ((null dtk-notify-process) dtk-speaker-process)
+   ((and (processp dtk-notify-process)
+         (memq (process-status dtk-notify-process) '(open run)))
+    dtk-notify-process)
+   (t dtk-speaker-process)))
 
 (defun dtk-notify-stop ()
   "Stop  speech on notification stream."
@@ -1834,7 +1812,7 @@ grouping"
     (funcall func text)))
 (declare-function emacspeak-log-notification "emacspeak-speak" (text))
 
-(defun dtk-notify-speak (text &optional dont-log)
+(defun dtk-notify (text &optional dont-log)
   "Speak text on notification stream.
 Notification is logged in the notifications buffer unless `dont-log' is T. "
   (cl-declare (special dtk-speaker-process emacspeak-last-message))
@@ -1867,6 +1845,7 @@ Notification is logged in the notifications buffer unless `dont-log' is T. "
       (with-environment-variables
           (("ALSA_DEFAULT" tts-notification-device)
            ("SWIFTMAC_AUDIO_TARGET" tts-notification-device)
+           ("SHARPWIN_AUDIO_TARGET" tts-notification-device)
            ("PULSE_SINK" tts-notification-device))
         (setq  new (dtk-make-process "Notify"))
         (when (process-live-p new)
