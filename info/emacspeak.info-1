@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on April 10, 2024.
+last updated on April 21, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -2795,7 +2795,6 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-hyper-keymap,  N
 ‘C-l emacspeak-librivox’
 ‘C-t emacspeak-wizards-tramp-open-location’
 ‘a emacspeak-amark-browse’
-‘b emacspeak-wizards-bbc-sounds’
 ‘c browse-url-chrome’
 ‘d magit-dispatch’
 ‘f magit-file-dispatch’
@@ -2918,6 +2917,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-x-keymap,  Next:
 ‘f emacspeak-wizards-remote-frame’
 ‘h emacspeak-wizards-how-many-matches’
 ‘i ibuffer’
+‘k emacspeak-desktop-preserve’
 ‘m mspools-show’
 ‘o emacspeak-wizards-occur-header-lines’
 ‘p paradox-list-packages’
@@ -3240,7 +3240,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1176 commands and 128 options.
+   This chapter documents a total of 1177 commands and 127 options.
 
 * Menu:
 
@@ -3631,7 +3631,8 @@ File: emacspeak.info,  Node: dtk-speak,  Next: emacspeak,  Prev: dom-addons,  Up
 12.4 dtk-speak
 ==============
 
-Defines the TTS interface.  Here, prefix dtk is synonymous with tts.
+This module defines the TTS interface.  Here, prefix dtk is synonymous
+with tts.
 
 12.4.1 Dtk-Speak Commands
 -------------------------
@@ -4104,10 +4105,12 @@ File: emacspeak.info,  Node: emacspeak,  Next: emacspeak-2048,  Prev: dtk-speak,
 
 Emacspeak extends Emacs to be a fully functional audio desktop.  This is
 the main emacspeak module.  It actually does very little:
-   • It sets up Emacs to load package-specific Emacspeak modules as each
-     package is loaded.
+   • It sets up Emacs to load package-specific Emacspeak modules as and
+     when a package is loaded.
    • It implements function emacspeak which loads the rest of the
      system.
+   • It provides affordances for setting up consistent behavior in
+     programming modes.
 
 12.5.1 emacspeak Options
 ------------------------
@@ -4118,14 +4121,6 @@ the main emacspeak module.  It actually does very little:
      Default Value:
      
      "/home/raman/.local/bin/piper"
-     
-
- -- Variable: User Option emacspeak-soundscapes
-     Whether we should turn on soundscapes on startup.
-
-     Default Value:
-     
-     nil
      
 
 
@@ -5818,6 +5813,19 @@ File: emacspeak.info,  Node: emacspeak-desktop,  Next: emacspeak-devdocs,  Prev:
 =======================
 
 advice desktop package
+
+12.41.1 Emacspeak-Desktop Commands
+----------------------------------
+
+12.41.1.1 emacspeak-desktop-preserve
+....................................
+
+ -- Command: emacspeak-desktop-preserve (buffer)
+     ‘C-e x k’
+
+     Preserve: Dont kill this buffer when clearing desktop.
+
+     (fn BUFFER)
 
 
 File: emacspeak.info,  Node: emacspeak-devdocs,  Next: emacspeak-dictionary,  Prev: emacspeak-desktop,  Up: Emacspeak Commands And Options
@@ -7847,7 +7855,9 @@ Emacs starting with Emacs-24.4 .  This module speech-enables EWW.
    It implements additional interactive commands for navigating the DOM.
 It also provides a set of filters for interactively filtering the DOM by
 various attributes such as id, class and role.  Finally, this module
-updates EWW's built-in key-bindings with Emacspeak conveniences.
+updates EWW's built-in key-bindings with Emacspeak conveniences -- for a
+complete list of key-bindings, invoke command ‘describe-bindings’ in an
+‘EWW’ buffer by pressing ‘C-h b’.
 
 12.75.1 Structured Navigation
 -----------------------------
@@ -8696,21 +8706,35 @@ prefix arg to delete a previously created eww-mark.
      See user option ‘emacspeak-eww-autospeak’ on how to reverse this behavior.
      The ul is automatically spoken if there is no user activity.
 
-12.75.9.50 emacspeak-eww-reading-settings
+12.75.9.50 emacspeak-eww-rdr-follow
+...................................
+
+ -- Command: emacspeak-eww-rdr-follow
+
+     Follow link under point, but use rdr to load page.
+
+12.75.9.51 emacspeak-eww-rdr-reload
+...................................
+
+ -- Command: emacspeak-eww-rdr-reload
+
+     Reload current Web page using ‘emacspeak-eww-rdr’.
+
+12.75.9.52 emacspeak-eww-reading-settings
 .........................................
 
  -- Command: emacspeak-eww-reading-settings
 
      Setup speech-rate, punctuation and split-caps for reading prose.
 
-12.75.9.51 emacspeak-eww-restore
+12.75.9.53 emacspeak-eww-restore
 ................................
 
  -- Command: emacspeak-eww-restore
 
      Restore buffer to pre-filtered canonical state.
 
-12.75.9.52 emacspeak-eww-shell-cmd-on-url-at-point
+12.75.9.54 emacspeak-eww-shell-cmd-on-url-at-point
 ..................................................
 
  -- Command: emacspeak-eww-shell-cmd-on-url-at-point (&optional prompt)
@@ -8719,14 +8743,14 @@ prefix arg to delete a previously created eww-mark.
 
      (fn &optional PROMPT)
 
-12.75.9.53 emacspeak-eww-shr-outline-toggle
+12.75.9.55 emacspeak-eww-shr-outline-toggle
 ...........................................
 
  -- Command: emacspeak-eww-shr-outline-toggle
 
      Toggle between shr and native outliner.
 
-12.75.9.54 emacspeak-eww-smart-tabs
+12.75.9.56 emacspeak-eww-smart-tabs
 ...................................
 
  -- Command: emacspeak-eww-smart-tabs (char &optional define)
@@ -8739,7 +8763,7 @@ prefix arg to delete a previously created eww-mark.
 
      (fn CHAR &optional DEFINE)
 
-12.75.9.55 emacspeak-eww-smart-tabs-add
+12.75.9.57 emacspeak-eww-smart-tabs-add
 .......................................
 
  -- Command: emacspeak-eww-smart-tabs-add (char url)
@@ -8748,35 +8772,35 @@ prefix arg to delete a previously created eww-mark.
 
      (fn CHAR URL)
 
-12.75.9.56 emacspeak-eww-smart-tabs-load
+12.75.9.58 emacspeak-eww-smart-tabs-load
 ........................................
 
  -- Command: emacspeak-eww-smart-tabs-load
 
      Load our smart tabsfrom a file.
 
-12.75.9.57 emacspeak-eww-smart-tabs-save
+12.75.9.59 emacspeak-eww-smart-tabs-save
 ........................................
 
  -- Command: emacspeak-eww-smart-tabs-save
 
      Save our smart tabs to a file for reloading.
 
-12.75.9.58 emacspeak-eww-speak-this-element
+12.75.9.60 emacspeak-eww-speak-this-element
 ...........................................
 
  -- Command: emacspeak-eww-speak-this-element
 
      Speak current .
 
-12.75.9.59 emacspeak-eww-table-data
+12.75.9.61 emacspeak-eww-table-data
 ...................................
 
  -- Command: emacspeak-eww-table-data
 
      View  table at point as a data table using Emacspeak Table UI.
 
-12.75.9.60 emacspeak-eww-table-next-cell
+12.75.9.62 emacspeak-eww-table-next-cell
 ........................................
 
  -- Command: emacspeak-eww-table-next-cell (&optional prefix)
@@ -8786,7 +8810,7 @@ prefix arg to delete a previously created eww-mark.
 
      (fn &optional PREFIX)
 
-12.75.9.61 emacspeak-eww-table-next-row
+12.75.9.63 emacspeak-eww-table-next-row
 .......................................
 
  -- Command: emacspeak-eww-table-next-row (&optional prefix)
@@ -8796,7 +8820,7 @@ prefix arg to delete a previously created eww-mark.
 
      (fn &optional PREFIX)
 
-12.75.9.62 emacspeak-eww-table-previous-cell
+12.75.9.64 emacspeak-eww-table-previous-cell
 ............................................
 
  -- Command: emacspeak-eww-table-previous-cell (&optional prefix)
@@ -8806,7 +8830,7 @@ prefix arg to delete a previously created eww-mark.
 
      (fn &optional PREFIX)
 
-12.75.9.63 emacspeak-eww-table-previous-row
+12.75.9.65 emacspeak-eww-table-previous-row
 ...........................................
 
  -- Command: emacspeak-eww-table-previous-row (&optional prefix)
@@ -8816,35 +8840,35 @@ prefix arg to delete a previously created eww-mark.
 
      (fn &optional PREFIX)
 
-12.75.9.64 emacspeak-eww-table-speak-cell
+12.75.9.66 emacspeak-eww-table-speak-cell
 .........................................
 
  -- Command: emacspeak-eww-table-speak-cell
 
      Speak current cell.
 
-12.75.9.65 emacspeak-eww-table-speak-dimensions
+12.75.9.67 emacspeak-eww-table-speak-dimensions
 ...............................................
 
  -- Command: emacspeak-eww-table-speak-dimensions
 
      Speak number of rows and cells.
 
-12.75.9.66 emacspeak-eww-tags-at-point
+12.75.9.68 emacspeak-eww-tags-at-point
 ......................................
 
  -- Command: emacspeak-eww-tags-at-point
 
      Display tags at point.
 
-12.75.9.67 emacspeak-eww-url-to-register
+12.75.9.69 emacspeak-eww-url-to-register
 ........................................
 
  -- Command: emacspeak-eww-url-to-register
 
      Accumulate  URL in register ‘u’
 
-12.75.9.68 emacspeak-eww-yt-dl
+12.75.9.70 emacspeak-eww-yt-dl
 ..............................
 
  -- Command: emacspeak-eww-yt-dl (url)
@@ -8872,158 +8896,5 @@ prefix arg to delete a previously created eww-mark.
      Default Value:
      
      nil
-     
-
-
-File: emacspeak.info,  Node: emacspeak-extras,  Next: emacspeak-exwm,  Prev: emacspeak-eww,  Up: Emacspeak Commands And Options
-
-12.76 emacspeak-extras
-======================
-
-Infrequently used wizards archived for posterity.
-
-12.76.1 Emacspeak-Extras Commands
----------------------------------
-
-12.76.1.1 emacspeak-annotate-add-annotation
-...........................................
-
- -- Command: emacspeak-annotate-add-annotation (&optional reset)
-
-     Add annotation to the annotation working buffer.
-     Prompt for annotation buffer if not already set.
-     Interactive prefix arg ‘reset’ prompts for the annotation
-     buffer even if one is already set.
-     Annotation is entered in a temporary buffer and the
-     annotation is inserted into the working buffer when complete.
-
-12.76.1.2 emacspeak-clipfile-copy
-.................................
-
- -- Command: emacspeak-clipfile-copy (start end &optional prompt)
-     ‘C-e C-M-c’
-
-     Use file-based Emacspeak Clipboard --
-     dis a convenient way of sharing information between independent
-     Emacspeak sessions running on  different machines.
-
-12.76.1.3 emacspeak-clipfile-paste
-..................................
-
- -- Command: emacspeak-clipfile-paste (&optional paste-table)
-
-     Yank contents of the Emacspeak clipboard at point.
-
-12.76.1.4 emacspeak-curl
-........................
-
- -- Command: emacspeak-curl (url)
-
-     Grab URL using Curl, and preview it with a browser .
-
-12.76.1.5 emacspeak-wizards-add-autoload-cookies
-................................................
-
- -- Command: emacspeak-wizards-add-autoload-cookies (&optional f)
-
-     Add autoload cookies to file f.
-     Default is to add autoload cookies to current file.
-
-12.76.1.6 emacspeak-wizards-bindings-from-org
-.............................................
-
- -- Command: emacspeak-wizards-bindings-from-org (variable filename)
-
-     Load bindings from a specified file.
-
-12.76.1.7 emacspeak-wizards-bindings-to-org
-...........................................
-
- -- Command: emacspeak-wizards-bindings-to-org (variable filename)
-
-     Persists mapping to org file.
-
-12.76.1.8 emacspeak-wizards-display-pod-as-manpage
-..................................................
-
- -- Command: emacspeak-wizards-display-pod-as-manpage (filename)
-
-     Create a virtual manpage in Emacs from the Perl Online Documentation.
-
-12.76.1.9 emacspeak-wizards-find-grep
-.....................................
-
- -- Command: emacspeak-wizards-find-grep (glob pattern)
-
-     Run compile using find and grep.
-     Interactive  arguments specify filename pattern and search pattern.
-
-12.76.1.10 emacspeak-wizards-fix-read-only-text
-...............................................
-
- -- Command: emacspeak-wizards-fix-read-only-text (start end)
-
-     Nuke read-only property on text range.
-
-12.76.1.11 emacspeak-wizards-generate-voice-sampler
-...................................................
-
- -- Command: emacspeak-wizards-generate-voice-sampler (step)
-
-     Generate a buffer that shows a sample line in all the ACSS settings
-     for the current voice family.
-
-12.76.1.12 emacspeak-wizards-list-voices
-........................................
-
- -- Command: emacspeak-wizards-list-voices (pattern)
-     ‘C-h "’
-     ‘<f1> "’
-     ‘<help> "’
-
-     Show all defined voice-face mappings  in a help buffer.
-     Sample text to use comes from variable
-       ‘ems-wizards-sampler-text
-
-12.76.1.13 emacspeak-wizards-midi-using-m-score
-...............................................
-
- -- Command: emacspeak-wizards-midi-using-m-score (midi-file)
-
-     Play midi file using mscore from musescore package.
-
-12.76.1.14 emacspeak-wizards-show-voices
-........................................
-
- -- Command: emacspeak-wizards-show-voices
-
-     Display a buffer with sample text in the defined voices.
-
-12.76.1.15 emacspeak-wizards-voice-sampler
-..........................................
-
- -- Command: emacspeak-wizards-voice-sampler (personality)
-
-     Read a personality  and apply it to the current line.
-
-12.76.2 emacspeak-extras Options
---------------------------------
-
- -- Variable: User Option emacspeak-clipfile-file
-     File used to save Emacspeak clipboard.
-     The emacspeak clipboard provides a convenient mechanism for exchanging
-     information between different Emacs sessions.
-
-     Default Value:
-     
-     "/home/raman/.emacspeak//clipboard"
-     
-
- -- Variable: User Option emacspeak-curl-cookie-store
-     Cookie store used by Curl.
-
-     Default Value:
-     
-     "/home/raman/.curl-cookies"
      
 

@@ -51,9 +51,9 @@
 
 (defun emacspeak-desktop-preserve (buffer)
   "Preserve: Dont kill this buffer when clearing desktop."
-  (cl-declare (special  desktop-clear-preserve-buffers))
   (interactive
    (list (read-buffer "Preserve Buffer: " (current-buffer) t)))
+  (cl-declare (special  desktop-clear-preserve-buffers))
   (cl-pushnew buffer desktop-clear-preserve-buffers)
   (message "Preserving %s for this session." buffer))
 
@@ -63,7 +63,7 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-speak-mode-line)
-    (dtk-notify-speak "cleared desktop")
+    (dtk-notify "cleared desktop")
     (emacspeak-icon 'delete-object)))
 
 (defadvice desktop-save (after emacspeak pre act comp)

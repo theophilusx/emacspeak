@@ -236,7 +236,7 @@ If already playing, then read an empv key and invoke its command."
    ((null file)                         ; we're already playing
     (call-interactively
      (lookup-key  empv-map  (read-key-sequence "EMpv Key:"))))
-   (t (dtk-notify-speak (file-name-base file))
+   (t (dtk-notify (file-name-base file))
       (empv-play file))))
 
 (defun emacspeak-empv-radio ()
@@ -350,8 +350,10 @@ If already playing, then read an empv key and invoke its command."
  #'(lambda nil
      (emacspeak-icon 'open-object)
      (emacspeak-pronounce-refresh-pronunciations)
-     (dtk-notify-speak
-      (format "%s results" (length empv--last-youtube-candidates)))))
+     (dtk-notify
+      (format "%s: %s results"
+              (cdr  (assoc 'title (cl-first empv--last-youtube-candidates)))
+              (length empv--last-youtube-candidates)))))
 
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
@@ -401,8 +403,7 @@ If already playing, then read an empv key and invoke its command."
    empv-youtube-results-play-current
    empv-set-volume empv-display-current  empv-toggle
    emacspeak-empv-play-last emacspeak-empv-play-url
-   emacspeak-empv-radio emacspeak-empv-play-file
-   emacspeak-empv-play-local
+   emacspeak-empv-radio emacspeak-empv-play-file emacspeak-empv-play-local
    emacspeak-empv-backward-10-seconds emacspeak-empv-forward-10-seconds
    emacspeak-empv-forward-minute emacspeak-empv-backward-minute
    emacspeak-empv-forward-5-minutes emacspeak-empv-backward-5-minutes

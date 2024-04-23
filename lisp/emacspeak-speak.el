@@ -617,9 +617,9 @@ the sense of the filter. "
   (interactive)
   (let ((beg (save-excursion (skip-syntax-backward " ")))
         (end (save-excursion (skip-syntax-forward " "))))
-    (dtk-notify-speak  (format "%s spaces " (+ (- end beg))))))
+    (dtk-notify  (format "%s spaces " (+ (- end beg))))))
 
-(defvar ems--large-text-size 20000
+(defvar ems--large-text-size 40000
   "Upper limit on what we attempt to speak in one shot.")
 
 (defun emacspeak-speak-region (start end)
@@ -637,7 +637,7 @@ the sense of the filter. "
         (emacspeak-speak-voice-annotate-paragraphs)))
     (if (< (abs (- start end )) ems--large-text-size)
         (dtk-speak (buffer-substring start end))
-      (emacspeak-speak-windowful))))
+      (call-interactively #' emacspeak-speak-windowful))))
 
 (defun emacspeak-speak-extent (beg end &optional no-case)
   "Speak extent delimited by beg and end.
@@ -673,7 +673,7 @@ emacspeak will generate a tone
 instead of speaking such lines when punctuation mode is set
 to some.")
 
-(defvar-local ems--speak-max-length 384
+(defvar-local ems--speak-max-length 512
   "Threshold for determining `long' lines.
 Emacspeak will ask for confirmation before speaking lines
 that are longer than this length.  This is to avoid accidentally
@@ -1207,19 +1207,17 @@ Useful to listen to a buffer without switching  contexts."
   (emacspeak-icon 'select-object)
   (emacspeak-speak-buffer 1))
 
-(defun emacspeak-speak-help (&optional arg)
-  "Speak help buffer if one present.
-With prefix arg, speaks the rest of the buffer from point.
-Negative prefix arg speaks from start of buffer to point."
-  (interactive "P")
-  (let ((help-buffer (get-buffer "*Help*")))
-    (cond
-     (help-buffer
-      (emacspeak-icon 'help)
+(defun emacspeak-speak-help ()
+  "Speak help buffer if one present. "
+  (interactive )
+  (emacspeak-icon 'help)
+  (if-let ((help-buffer (get-buffer "*Help*")))
       (with-current-buffer help-buffer
-        (emacspeak-speak-buffer arg)))
-     (t (emacspeak-icon 'button)
-        (dtk-speak "First ask for help")))))
+        (or (window-live-p (get-buffer-window help-buffer))
+            (display-buffer help-buffer))
+        (select-window (get-buffer-window help-buffer))
+        (call-interactively #'emacspeak-speak-windowful))
+    (dtk-speak "First ask for help")))
 
 (defun emacspeak-get-current-completion ()
   "Return the completion under point in the *Completions* buffer."
@@ -1588,9 +1586,9 @@ Displays name of current buffer.")
     (let ((window-count (length (window-list))))
       (emacspeak-icon 'item)
       (when (> window-count 1) (emacspeak--sox-multiwindow))
-      (dtk-notify-speak (format-mode-line header-line-format))))
+      (dtk-notify (format-mode-line header-line-format))))
    (t
-    (dtk-notify-speak
+    (dtk-notify
      (concat
       (propertize (buffer-name) 'personality voice-smoothen)
       (format-time-string emacspeak-speak-time-brief-format))))))
@@ -1712,7 +1710,7 @@ Second interactive prefix sets clock to new timezone."
     (let ((time-string
            (format-time-string emacspeak-speak-time-format
                                (current-time) (getenv "TZ"))))
-      (dtk-notify-speak time-string)))))
+      (dtk-notify time-string)))))
 
 (defsubst ems--seconds-to-duration (sec)
   "Return seconds formatted as time if valid, otherwise return as is."
@@ -2222,15 +2220,6 @@ any other key to speak entire buffer."
   (emacspeak-speak-buffer
    (emacspeak-ask-how-to-speak "buffer" (sit-for 1))))
 
-(defun emacspeak-speak-help-interactively ()
-  "Speak the start of, rest of, or the entire help.
- `s' to speak the start.
- `r' to speak the rest.
-any other key to speak entire help."
-  (interactive)
-  (emacspeak-speak-help
-   (emacspeak-ask-how-to-speak "help" (sit-for 1))))
-
 (defun emacspeak-speak-line-interactively ()
   "Speak the start of, rest of, or the entire line.
  `s' to speak the start.
@@ -2435,7 +2424,7 @@ See documentation for command run-at-time for details on time-spec."
   (run-at-time
    time nil
    #'(lambda (m)
-       (dtk-notify-speak m)
+       (dtk-notify m)
        (when emacspeak-use-auditory-icons (emacspeak-icon 'alarm))
        (sox-tones))
    message)
@@ -2686,7 +2675,7 @@ but quickly switch to a window by name."
    ((= (point) (point-max)) (call-interactively 'beginning-of-buffer))
    (t (call-interactively 'beginning-of-buffer)))
   (when (called-interactively-p 'interactive)
-    (dtk-notify-speak
+    (dtk-notify
      (format "%s%%" (emacspeak-get-current-percentage-into-buffer)))))
 
 ;;; Utility: Accumulate
@@ -2865,7 +2854,7 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
   "Speak text, either using piper or regular notification stream."
   (cond
    ((featurep 'pip) (pip-speak text))
-   (t (dtk-notify-speak text))))
+   (t (dtk-notify text))))
 
 
 ;;; Bug Reporter:

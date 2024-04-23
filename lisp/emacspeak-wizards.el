@@ -626,14 +626,14 @@ If optional arg property is not supplied, read it interactively. "
 (defun emacspeak-skip-space-forwar ()
   "Skip forward across blanks."
   (interactive)
-  (dtk-notify-speak  (skip-syntax-forward " "))
+  (dtk-notify  (skip-syntax-forward " "))
   (emacspeak-speak-char t))
 
 ;;;###autoload
 (defun emacspeak-skip-space-backward ()
   "Skip back across blanks."
   (interactive)
-  (dtk-notify-speak  (skip-syntax-backward " "))
+  (dtk-notify  (skip-syntax-backward " "))
   (emacspeak-speak-preceding-char))
 
 ;;;  ansi term
@@ -2640,17 +2640,6 @@ before brightness is checked.")
     (emacspeak-speak-mode-line)))
 
 ;;; BC Sounds:
-;;;###autoload
-(defun emacspeak-wizards-bbc-sounds ()
-  "Search BBC Sounds.
-Result page is filtered down to two sections, Shows and Episodes.
-
-Press [RET] on links in the Show section to open that show page.
-The page for that show contains playable links for Episodes.
-
-Press `y' on Episode links to play them with MPV."
-  (interactive)
-  (emacspeak-url-template-open (emacspeak-url-template-get "BBC Sounds")))
 
 (defun emacspeak-wizards-bbc-iplayer ()
   "Browse BBC Schedule from get_iplayer radio cache.
