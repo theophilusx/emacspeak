@@ -147,7 +147,7 @@ Value is a string, a fully qualified filename. ")
 (defsubst emacspeak-sounds-cache-get (sound )
   "Return file that is mapped to sound."
   (cl-declare (special emacspeak-sounds-cache))
-  (gethash sound emacspeak-sounds-cache
+  (gethash sound emacspeak-sounds-cache ; or default to button
            (gethash 'button emacspeak-sounds-cache)))
 
 (defun emacspeak-sounds-resource (icon)
@@ -158,8 +158,10 @@ icon-name as string."
     (cond                                 
      ((null emacspeak-play-program) f) 
      ((string= emacspeak-play-program emacspeak-pactl) ; pactl->sample-name
-      (symbol-name icon))
-     (t ; sox-play -> filename
+      (if (gethash icon emacspeak-sounds-cache)        
+          (symbol-name icon)
+        "button"))
+     (t                                 ; sox-play -> filename
       f))))
 
 ;;;Sound themes
@@ -232,7 +234,7 @@ None: For systems that rely on the speech server playing the icon."
   '(choice
     (const  :tag "None" nil)
     (const  :tag "Pulse" "/usr/bin/pactl")
-    (const  :tag "SoX" "/usr/local/bin/play"))
+    (const  :tag "SoX" "/usr/bin/play"))
   :set
   #'(lambda(sym val)
       (set-default sym val)
@@ -240,9 +242,8 @@ None: For systems that rely on the speech server playing the icon."
        ((null val) (setq ems--play-args nil)) ; serve icons
        ((string= emacspeak-pactl val); pactl: play-sample
         (setq ems--play-args "play-sample"))
-       ((or  (string= "/usr/bin/play" val); sox-play: play file
-             (string= "/usr/local/bin/play" val))
-        (setq ems--play-args "-q -v 0.4"))))
+       ((string= sox-play val); sox-play: play file
+        (setq ems--play-args "-q -v 0.1"))))
   :group 'emacspeak)
 
 ;;;  emacspeak-prompts:
