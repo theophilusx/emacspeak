@@ -242,7 +242,7 @@ None: For systems that rely on the speech server playing the icon."
         (setq ems--play-args "play-sample"))
        ((or  (string= "/usr/bin/play" val); sox-play: play file
              (string= "/usr/local/bin/play" val))
-        (setq ems--play-args "-q"))))
+        (setq ems--play-args "-q -v 0.4"))))
   :group 'emacspeak)
 
 ;;;  emacspeak-prompts:
