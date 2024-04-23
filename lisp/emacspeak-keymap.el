@@ -110,14 +110,6 @@
 
 (global-set-key emacspeak-prefix 'emacspeak-keymap)
 
-;;; Special keys:
-(global-set-key (kbd "<XF86WakeUp>")  'dtk-stop)
-(global-set-key (kbd "<XF86AudioPlay>")  'emacspeak-silence)
-(global-set-key (kbd "C-<f1>")  'amixer-volume-down)
-(global-set-key (kbd "C-<f2>")  'amixer-volume-up)
-(global-set-key (kbd "<XF86AudioLowerVolume>")  'amixer-volume-down)
-(global-set-key (kbd "<XF86AudioRaiseVolume>") 'amixer-volume-up)
-
 (define-key emacspeak-keymap "d"  'emacspeak-dtk-submap)
 (define-key emacspeak-keymap (kbd "C-t")  'emacspeak-table-submap-command)
 
@@ -347,19 +339,19 @@
 (global-set-key [(shift right)] 'emacspeak-skip-space-forwar)
 (global-set-key [(shift up)] 'emacspeak-skip-blank-lines-backward)
 (global-set-key [(shift down)] 'emacspeak-skip-blank-lines-forward)
-(global-set-key [27 up]  'emacspeak-owindow-previous-line)
-(global-set-key  [27 down]  'emacspeak-owindow-next-line)
-(global-set-key  [27 prior]  'emacspeak-owindow-scroll-down)
-(global-set-key  [27 next]  'emacspeak-owindow-scroll-up)
-(define-key esc-map "\M-:" 'emacspeak-wizards-show-eval-result)
-
+;; (global-set-key [27 up]  'emacspeak-owindow-previous-line)
+;; (global-set-key  [27 down]  'emacspeak-owindow-next-line)
+;; (global-set-key  [27 prior]  'emacspeak-owindow-scroll-down)
+;; (global-set-key  [27 next]  'emacspeak-owindow-scroll-up)
+;; (define-key esc-map "\M-:" 'emacspeak-wizards-show-eval-result)
+ 
 ;;;  emacspeak under X windows
 
 ;; Get hyper, alt, super, and multi:
-(global-set-key (kbd "C-,") 'emacspeak-alt-keymap)
-(global-set-key  (kbd "C-.") 'emacspeak-super-keymap)
-(global-set-key  (kbd "C-;") 'emacspeak-hyper-keymap)
-(global-set-key  (kbd "C-'") 'emacspeak-multi-keymap)
+(global-set-key (kbd "C-<f1>") 'emacspeak-alt-keymap)
+(global-set-key (kbd "C-<f2>") 'emacspeak-super-keymap)
+(global-set-key (kbd "C-<f3>") 'emacspeak-hyper-keymap)
+(global-set-key (kbd "C-<f4>") 'emacspeak-multi-keymap)
 
 ;; Our very own silence key on the console
 (global-set-key '[silence] 'emacspeak-silence)
@@ -591,7 +583,7 @@
                    (sort
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
-(global-set-key "\C-x@h" 'emacspeak-hyper-keymap)
+;;(global-set-key "\C-x@h" 'emacspeak-hyper-keymap)
 
 ;;;  Create a super keymap that users can put personal commands
 
@@ -636,7 +628,7 @@
                     val
                     #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-(global-set-key "\C-x@s" 'emacspeak-super-keymap)
+;;(global-set-key "\C-x@s" 'emacspeak-super-keymap)
 
 ;;;  Create an  alt keymap that users can put personal commands
 
@@ -681,7 +673,7 @@
                          val
                          #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
-(global-set-key "\C-x@a" 'emacspeak-alt-keymap)
+;;(global-set-key "\C-x@a" 'emacspeak-alt-keymap)
 
 ;;;  Create a multi keymap that users can put personal commands
 
@@ -714,30 +706,30 @@
                          #'(lambda (a b) (string-lessp (car a) (car b)))))))
 
 ;;; Windows Key As One More Map
-(defcustom emacspeak-windows-keys nil
-  "Key bindings on the windows  key. "
-  :group 'emacspeak
-  :type
-  '(repeat
-    :tag "Emacspeak windows Keys"
-    (list
-     :tag "Key Binding"
-     (character :tag "Key")
-     (ems-interactive-command :tag "Command")))
-  :set
-  #'(lambda (sym val)
-      (when val
-        (cl-loop
-         for binding in val do
-         (global-set-key
-          (vector
-           (event-apply-modifier (cl-first binding) 'super 23 "s-"))
-          (cl-second binding))))
-      (set-default
-       sym
-       (sort
-        val
-        #'(lambda (a b) (< (car a) (car b)))))))
+;; (defcustom emacspeak-windows-keys nil
+;;   "Key bindings on the windows  key. "
+;;   :group 'emacspeak
+;;   :type
+;;   '(repeat
+;;     :tag "Emacspeak windows Keys"
+;;     (list
+;;      :tag "Key Binding"
+;;      (character :tag "Key")
+;;      (ems-interactive-command :tag "Command")))
+;;   :set
+;;   #'(lambda (sym val)
+;;       (when val
+;;         (cl-loop
+;;          for binding in val do
+;;          (global-set-key
+;;           (vector
+;;            (event-apply-modifier (cl-first binding) 'super 23 "s-"))
+;;           (cl-second binding))))
+;;       (set-default
+;;        sym
+;;        (sort
+;;         val
+;;         #'(lambda (a b) (< (car a) (car b)))))))
 
 ;;;  Helper: recover end-of-line
 
