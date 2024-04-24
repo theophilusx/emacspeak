@@ -364,21 +364,16 @@ the Emacspeak desktop.")
 This cannot be set via custom; set this in your startup file before
   you load anything else.")
 
-(defsubst emacspeak-play-startup-icon ()
-  "Play startup icon."
-  (cl-declare (special emacspeak-play-startup-icon ))
-  (when   emacspeak-play-startup-icon (emacspeak-icon 'emacspeak)))
-
 (defsubst emacspeak-easter-egg ()
   "Easter Egg"
   (cl-declare (special emacspeak-play))
   (let ((f (expand-file-name "ai/01-gemini.ogg" emacspeak-etc-directory)))
     (when
-        (and  emacspeak-play-startup-icon sox-play
-              (file-exists-p f)
-              (string=                  ; anniversary
-               (format-time-string "%m-%d") (format-time-string "04-25")))
-      (start-process "ogg" nil sox-play f))))
+        (and
+         emacspeak-play-startup-icon sox-play
+         (file-exists-p f)
+         (string= (format-time-string "%m-%d") (format-time-string "04-25")))
+      (run-at-time 3 nil #'(lambda () (start-process "ogg" nil sox-play f))))))
 
 (defvar emacspeak-startup
   (eval-when-compile
@@ -453,7 +448,7 @@ commands and options."
    #'(lambda nil (setq-default emacspeak-speak-messages nil))
    -10)
   (dtk-initialize)
-  (make-thread #'emacspeak-sounds-select-theme)
+  (emacspeak-sounds-select-theme)
   (emacspeak-pronounce-load-dictionaries)
   (make-thread #'(lambda nil  (ems--fastload "emacspeak-advice")))
   (emacspeak-setup-programming-modes)
