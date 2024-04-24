@@ -247,7 +247,7 @@ personalities.")
 
 (cl-loop
  for f in
- '(eshell-forward-argument eshell-backward-argument eshell-bol)
+ '(eshell-forward-argument eshell-backward-argument)
  do
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
@@ -281,7 +281,7 @@ personalities.")
   (when (ems-interactive-p)
     (let ((start
            (save-excursion
-             (eshell-bol)
+             (beginning-of-line)
              (point))))
       (emacspeak-icon 'yank-object)
       (emacspeak-speak-region start (point)))))
@@ -290,7 +290,7 @@ personalities.")
   (when (ems-interactive-p)
     (let ((start
            (save-excursion
-             (eshell-bol)
+             (beginning-of-line)
              (point))))
       (emacspeak-icon 'yank-object)
       (emacspeak-speak-region start (point)))))
