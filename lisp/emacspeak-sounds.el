@@ -243,7 +243,7 @@ None: For systems that rely on the speech server playing the icon."
        ((string= emacspeak-pactl val); pactl: play-sample
         (setq ems--play-args "play-sample"))
        ((string= sox-play val); sox-play: play file
-        (setq ems--play-args "-q -v 0.1"))))
+        (setq ems--play-args "-v 0.3"))))
   :group 'emacspeak)
 
 ;;;  emacspeak-prompts:
