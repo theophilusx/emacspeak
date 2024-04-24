@@ -73,7 +73,7 @@
 ;; Emacspeak 13.0, this module defines a themes architecture for
 ;; auditory icons.  Sound files corresponding to a given theme are
 ;; found in appropriate subdirectories of emacspeak-sounds-dir.
-;; @item There are two supported themes: @code{ogg-chimes} and @code{ogg-3d}.
+;; @item There are two supported themes: @code{chimes} and @code{3d}.
 ;; @item Contrast this with @code{prompts} --- they  dont belong to any theme.
 ;; @end itemize
 ;; @subsection Designing Auditory Icons
@@ -129,6 +129,15 @@ Optional interactive PREFIX arg toggles global value."
     (if   (null emacspeak-play-program) ; serve icon
         (emacspeak-serve-icon icon)
       (emacspeak-play-icon icon))))
+;;;  emacspeak-prompts:
+
+(defvar emacspeak-prompts-dir
+  (expand-file-name "prompts" emacspeak-sounds-dir)
+  "Where pre-defined prompt files are located.")
+
+(defun emacspeak-sounds-cache-prompts ()
+  "Populate sounds cache with prompts"
+  (emacspeak-sounds-cache-rebuild emacspeak-prompts-dir))
 
 ;;; Sounds Cache:
 
@@ -164,17 +173,18 @@ icon-name, as string."
 ;;;Sound themes
 
 (defvar emacspeak-sounds-current-theme
-  (expand-file-name "ogg-chimes/" emacspeak-sounds-dir)
+  (expand-file-name "chimes/" emacspeak-sounds-dir)
   "Current theme for  icons, a fully-qualified directory. ")
 
 (defconst emacspeak-pactl (executable-find "pactl") "PaCtl Executable.")
 
 ;; Called when  selecting themes.
-(defun emacspeak-sounds-cache-rebuild (theme)
-  "Rebuild sound cache for theme, a directory containing sound files."
-  (when (file-exists-p theme)
+(defun emacspeak-sounds-cache-rebuild (dir)
+  "Rebuild sound cache for `dir', a directory containing sound files.
+It is called  to cache sounds in our theme and prompts directories."
+  (when (file-exists-p dir)
     (cl-loop
-     for f in (directory-files theme 'full "\\.ogg$") do
+     for f in (directory-files dir 'full "\\.ogg$") do
      (emacspeak-sounds-cache-put (intern (file-name-base f)) f))))
 
 (defsubst ems--upload-pulse-samples ()
@@ -195,11 +205,11 @@ icon-name, as string."
    (list
     (expand-file-name
      (completing-read
-      "Theme: " '("ogg-3d" "ogg-chimes")
-      nil 'must-match nil nil "ogg-chimes")
+      "Theme: " '("3d" "chimes")
+      nil 'must-match nil nil "chimes")
      emacspeak-sounds-dir)))
   (cl-declare (special emacspeak-play-program emacspeak-sounds-dir))
-  (setq theme (or theme (expand-file-name "ogg-chimes" emacspeak-sounds-dir)))
+  (setq theme (or theme (expand-file-name "chimes" emacspeak-sounds-dir)))
   (emacspeak-sounds-cache-prompts)
   (emacspeak-sounds-cache-rebuild theme)
   (when                                 ; upload samples if needed
@@ -238,17 +248,8 @@ None: For systems that rely on the speech server playing the icon."
        ((string= sox-play val) (setq ems--play-args "-v 0.3"))))
   :group 'emacspeak)
 
-;;;  emacspeak-prompts:
-
-(defvar emacspeak-prompts-dir
-  (expand-file-name "prompts" emacspeak-sounds-dir)
-  "Where pre-defined prompt files are located.")
-
-(defun emacspeak-sounds-cache-prompts ()
-  "Populate sounds cache with prompts"
-  (emacspeak-sounds-cache-rebuild emacspeak-prompts-dir))
-
 ;;; Implementation: emacspeak-icon methods
+
 ;;;;   queue an auditory icon
 (defun emacspeak-queue-icon (icon)
   "Queue auditory icon ICON.
@@ -274,11 +275,13 @@ This is a private function and  might go away."
 ;; ems--play-args is set when emacspeak-play-program is selected.
 
 (defun emacspeak-play-icon(icon)
-  "Produce auditory icon `icon' using a local  player. "
+  "Produce auditory icon ICON using a local player.
+Linux: Pipewire and Pulse: pactl.
+without Pipewire/Pulse: play from sox."
   (cl-declare (special emacspeak-play-program ems--play-args))
   (let ((process-connection-type nil))
     (start-process
-     "Play" nil emacspeak-play-program
-     ems--play-args (emacspeak-sounds-resource icon))))
+     "Play" nil emacspeak-play-program ems--play-args
+     (emacspeak-sounds-resource icon))))
 
 (provide  'emacspeak-sounds)
