@@ -9,7 +9,7 @@
 
 * For Immediate Release:
 
-San Jose, CA, (May 3, 2024)
+San Jose, CA, (May 4, 2024)
 
 ** Emacspeak 60.0 (DreamDog)  Unleashed!  🦮
        --- Making Accessible Computing Effortless!
@@ -18,10 +18,11 @@ Advancing Accessibility In The Age Of User-Aware Interfaces --- Zero
 cost of Ownership makes priceless software Universally affordable!
 
 Emacspeak Inc (NASDOG: ESPK) --- http://github.com/tvraman/emacspeak
-announces immediate world-wide availability of [[https://github.com/tvraman/emacspeak/releases/download/57.0/emacspeak-57.0.tar.bz2][Emacspeak 58.0]]
-(ErgoDog) 🦮 --- a non-LLM powered audio desktop that leverages
-today's evolving Data, Social and Assistant-Oriented Internet cloud to
-enable working efficiently and effectively from anywhere!
+--- announces immediate world-wide availability of [[https://github.com/tvraman/emacspeak/releases/download/60.0/emacspeak-60.0.tar.bz2][Emacspeak 60.0]]
+(DreamDog) 🦮 --- a non-LLM powered (though innately intelligent)
+audio desktop that leverages today's evolving Data, Social and
+Assistant-Oriented Internet cloud to enable working efficiently and
+effectively from anywhere!
 
 * Investors Note:
 
@@ -37,7 +38,7 @@ Emacspeak is a fully functional audio desktop that provides complete
 eyes-free access to all major 32 and 64 bit operating environments. By
 seamlessly blending live access to all aspects of the Internet such as
 ubiquitous assistance, Web-surfing, blogging, remote software
-development, streaming media, social computing and electronic
+development, streaming media, social computing, AI-Bots  and electronic
 messaging into the audio desktop, Emacspeak enables spoken access to
 local and remote information with a consistent and well-integrated
 user interface. A rich suite of task-oriented tools provides efficient
@@ -48,20 +49,20 @@ Internet cloud.
 
   1. Updated Keybindings  ⌨
   2. EMPV: Emacspeak And MPV 📺🔈
-  3. BBC Sounds 📻
+  3. BBC Sounds: Search, Play and Download  📻
   4. Speech-Enable EBuku 🔖
   5. The HTML5 Audio/Video Tag In EWW 🕷🔈
   6. Piper: Neural-Net TTS  🎺
   7. Speech-Enabled LLM Front-End 🧙
   8. Pipewire Support  🔊
-  10. Mac Speech Server:   SwiftMac 🍏
+  10. New Mac Speech Server:   SwiftMac 🍏
   11. Tree-Sitter Support  🎄
   12. Smart Media Selector 🗄
   13. Smart EBook  Selector📚
 
   — And a lot more than will fit this margin. … 🗞
   
-Note: This version 2requires2 emacs-29.1 or later. 
+Note: This version requires emacs-29.1 or later. 
 
 * Establishing Liberty, Equality And Freedom:
 
@@ -128,6 +129,7 @@ The latest development snapshot of Emacspeak is always available at
 
 * History:
 
+- Emacspeak 60 delivers a more idealized auditory environment.
 - Emacspeak 59 delivers better ergonomics by minimizing the need for chording, but sadly, with no  dog to guide its way.
   - Emacspeak 58 delivers better ergonomics by minimizing the need for chording.
   - Emacspeak 57.0 is named in honor of [[https://tvraman.github.io/tilden-face.jpg][Tilden Labrador]].
@@ -305,7 +307,7 @@ HeadDog (DM), LiveDog (DM), GoldenDog (DM), BlackDog (DM) etc., are Registered
 Dogmarks of Aster,  Hubbell  and Tilden Labrador.  All other dogs belong to
 their respective owners.
 
-#+TITLE:     Announcing Emacspeak 59.0—VirtualDog!
+#+TITLE:     Announcing Emacspeak 60.0—DreamDog!
 #+AUTHOR:    T.V Raman
 #+EMAIL:     tv.raman.tv@gmail.com#+DATE:      2009-11-25 Wed
 #+LANGUAGE:  en
