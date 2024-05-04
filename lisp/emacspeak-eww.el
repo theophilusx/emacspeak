@@ -447,7 +447,17 @@
 ;; completion. Use this command with an interactive prefix arg to
 ;; delete a previously created eww-mark.
 ;;
+;; @subsection Extracting Readable Content
+;; By default, EWW includes a  simple @strong{readability} filter,
+;; @code {eww-readable}   bound to @code{s}.
+;; Emacspeak extends this facility with
+;; @code{rdrview[ -- see @url{https://github.com/eafer/rdrview }]},
+;; a command-line tool that extracts page contents using a
+;; @strong{simplified view} filter that mirrors the implementation in Firefox.
 
+;; You can use Emacspeak commands @code{emacspeak-eww-rdr- follow}
+;; and @code{emacspeak-eww-rdr-reload} both bound to @code{S}  with
+;; variable levels of success on various Web sites.
 ;;; Code:
 
 ;;  Required modules:
@@ -874,15 +884,15 @@ Retain previously set punctuations  mode."
   (cl-declare (special  emacspeak-eww-post-process-hook))
   (let ((title (emacspeak-eww-current-title))
         (alt (dom-alternate-links (emacspeak-eww-current-dom))))
-    (when (= 0 (length title)) (setq title "EWW: Untitled"))
+    (when (= 0 (length title)) (setq title "U")
+          (sox-sin .5 "%-2:%-1""fade h .1 .5 .4 gain -8 "))
     (when emacspeak-eww-rename-buffer (rename-buffer title 'unique))
     (when alt
-      (put-text-property 0 2 'auditory-icon 'mark-object  header-line-format))
+      (put-text-property 0 1 'auditory-icon 'mark-object  header-line-format))
     (emacspeak-speak-voice-annotate-paragraphs)
     (cond
-     (emacspeak-eww-post-process-hook
-      (emacspeak-eww-run-post-process-hook)))
-    (emacspeak-speak-header-line)))
+     (emacspeak-eww-post-process-hook (emacspeak-eww-run-post-process-hook))
+     (t (emacspeak-speak-header-line)))))
 
 (add-hook 'eww-after-render-hook 'emacspeak-eww-after-render-hook)
 
@@ -2638,6 +2648,7 @@ With interactive prefix arg, move to the start of the table."
   (interactive)
   (cl-assert (eq major-mode 'eww-mode) t "Not in an EWW buffer.")
   (let ((eww-retrieve-command   emacspeak-eww-rdr-cmd))
+(emacspeak-eww-autospeak)
     (eww-reload)))
 
 (defun emacspeak-eww-rdr-follow ()
@@ -2645,6 +2656,7 @@ With interactive prefix arg, move to the start of the table."
   (interactive)
   (cl-assert (eq major-mode 'eww-mode) t "Not in an EWW buffer.")
   (let ((eww-retrieve-command   emacspeak-eww-rdr-cmd))
+    (emacspeak-eww-autospeak)
     (call-interactively #'eww-follow-link)))
 
 (provide 'emacspeak-eww)

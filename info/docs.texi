@@ -250,7 +250,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1177 commands and 127 options.
+This chapter documents a total of 1178 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -3906,6 +3906,15 @@ Clear all filters.
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-current-title
+@deffn {Command} emacspeak-empv-current-title   
+@findex emacspeak-empv-current-title
+
+@format
+Speak title of currently selected item.
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-forward-10-minutes
 @deffn {Command} emacspeak-empv-forward-10-minutes   
 @findex emacspeak-empv-forward-10-minutes
@@ -5877,6 +5886,18 @@ created eww-mark, use command @code{emacspeak-eww-open-mark} bound
 to @code{C-x r e}. This command reads a eww-mark name with
 completion. Use this command with an interactive prefix arg to
 delete a previously created eww-mark.
+
+@subsection Extracting Readable Content
+By default, EWW includes a  simple @strong{readability} filter,
+@code {eww-readable}   bound to @code{s}.
+Emacspeak extends this facility with
+@code{rdrview[ -- see @url{https://github.com/eafer/rdrview }]},
+a command-line tool that extracts page contents using a
+@strong{simplified view} filter that mirrors the implementation in Firefox.
+
+You can use Emacspeak commands @code{emacspeak-eww-rdr- follow}
+and @code{emacspeak-eww-rdr-reload} both bound to @code{S}  with
+variable levels of success on various Web sites.
 
 @subsection Emacspeak-Eww Commands
 

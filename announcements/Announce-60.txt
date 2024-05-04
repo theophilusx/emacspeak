@@ -12,14 +12,14 @@
 San Jose, CA, (May 4, 2024)
 
 ** Emacspeak 60.0 (DreamDog)  Unleashed!  🦮
-  --- Innate Intelligence™ Makes   Accessible Computing Effortless!
+  --- Innate Intelligence (II)™ Makes   Accessible Computing a dream!
 
 Advancing Accessibility In The Age Of User-Aware Interfaces --- Zero
 cost of Ownership makes priceless software Universally affordable!
 
 Emacspeak Inc (NASDOG: ESPK) — http://github.com/tvraman/emacspeak —
 announces immediate world-wide availability of [[https://github.com/tvraman/emacspeak/releases/download/60.0/emacspeak-60.0.tar.bz2][Emacspeak 60.0]]
-(DreamDog) 🦮 --- a non-LLM powered, and innately intelligent audio
+(DreamDog) 🦮 --- a non-LLM powered and innately intelligent audio
 desktop that leverages today's evolving Data, Social and
 Assistant-Oriented Internet cloud to enable working efficiently and
 effectively from anywhere!
@@ -47,18 +47,19 @@ Internet cloud.
 
 ** Major Enhancements:
 
-  1. Updated Keybindings  ⌨
-  2. EMPV: Emacspeak And MPV 📺🔈
+  1. EMPV: Emacspeak And MPV 📺🔈
+  2. Updated Keybindings  ⌨
   3. BBC Sounds: Search, Play and Download  📻
-  4. Speech-Enable EBuku 🔖
-  5. Supports  HTML5 Audio/Video Tag In EWW 🕷🔈
+  4. Supports  HTML5 Audio/Video Tag In EWW 🕷🔈
+  5. Extract readable views in EWW using [[https://github.com/eafer/rdrview ][RDRView]] if available  🦊
   6. Piper: Neural-Net TTS  🎺
   7. Speech-Enabled LLM Front-Ends, ~ellama~ and ~gptel~ . 🧙
   8. Pipewire Support  🔊
-  10. New Mac Speech Server:   SwiftMac 🍏
-  11. Tree-Sitter Support  🎄
-  12. Smart Media Selector 🗄
-  13. Smart EBook  Selector📚
+  9. New Mac Speech Server:   SwiftMac 🍏
+  10. Tree-Sitter Support  🎄
+  11. Smart Media Selector 🗄
+  12. Smart EBook  Selector📚
+  13. Speech-Enable EBuku 🔖
 
   — And a lot more than will fit this margin. … 🗞
   
@@ -262,7 +263,7 @@ is entirely free of Artificial Ingredients (AI)™.
   - Emacspeak-95 (code named Illinois) was released as OpenSource on
    the Internet in May 1995 as the first complete speech interface
    to UNIX workstations. The subsequent release, Emacspeak-96 (code
-   named Egypt) made available in May 1996 provided significan\'t
+   named Egypt) made available in May 1996 provided significant
    enhancements to the interface. Emacspeak-97 (Tennessee) went
    further in providing a true audio desktop. Emacspeak-98
    integrated Internetworking into all aspects of the audio desktop
