@@ -358,8 +358,14 @@ If already playing, then read an empv key and invoke its command."
   "Speak title of currently selected item."
   (interactive)
   (emacspeak-icon 'select-object)
-  (dtk-speak (cdr (assq 'title (empv-youtube-results--current-item)))
-             ))
+  (dtk-speak (cdr (assq 'title (empv-youtube-results--current-item)))))
+
+(defadvice empv-youtube-results-copy-current (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p)
+    (emacspeak-icon 'yank-object)
+    (message (current-kill 0 'dont-move))))
+
 
 (defadvice empv--youtube-tabulated-entries-append (after emacspeak pre act comp)
   "speak."
