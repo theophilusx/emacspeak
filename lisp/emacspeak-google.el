@@ -69,18 +69,12 @@
   value ; current setting
   type ;tbs/tbm
   )
-(defvar emacspeak-google-use-https t
-  "Specify whether we use secure connections for Google search.")
 
-(defvar emacspeak-google-query nil
-  "Current Google Query.
-This variable is buffer-local.")
-(make-variable-buffer-local 'emacspeak-google-query)
+(defvar-local emacspeak-google-query nil
+  "Current Google Query. ")
 
-(defvar emacspeak-google-toolbelt nil
+(defvar-local emacspeak-google-toolbelt nil
   "List of tools on the toolbelt.")
-
-(make-variable-buffer-local 'emacspeak-google-toolbelt)
 
 (defun emacspeak-google-toolbelt-to-tbm (belt)
   "Return value for use in tbm parameter in search queries."
@@ -120,9 +114,9 @@ This variable is buffer-local.")
     (when settings
       (concat "&tbs="
               (mapconcat #'identity settings ",")))))
-(defvar emacspeak-google-toolbelt-names  nil
+(defvar-local emacspeak-google-toolbelt-names  nil
   "Cache of available toolbelt names.")
-(make-variable-buffer-local 'emacspeak-google-toolbelt-names)
+
 (defun emacspeak-google-toolbelt ()
   "Returns buffer-local toolbelt or a a newly initialized toolbelt."
   (cl-declare (special emacspeak-google-toolbelt))
@@ -138,46 +132,6 @@ This variable is buffer-local.")
          :default 0
          :type 'tbm
          :value 0)
-        ;; Recent
-        (make-ems--g-tool
-         :name "recent"
-         :param "rcnt"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbs)
-        ;; Duration restrict for video
-        (make-ems--g-tool
-         :name "video-duration"
-         :param "dur"
-         :range '("m" "s" "l")
-         :default "m"
-         :value "m"
-         :type 'tbs)
-        ;; Recipes
-        (make-ems--g-tool
-         :name "recipes"
-         :param "rcp"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbm)
-        ;; places/local:
-        (make-ems--g-tool
-         :name "places"
-         :param "plcs"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbm)
-        ;; patents
-        (make-ems--g-tool
-         :name "patents"
-         :param "pts"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbm)
         ;; discussions/forums
         (make-ems--g-tool
          :name "group-discussions"
@@ -195,14 +149,6 @@ This variable is buffer-local.")
          :value 0
          :type 'tbs)
 
-        ;; Blog mode
-        (make-ems--g-tool
-         :name "blog"
-         :param "blg"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbm)
         ;; Books mode
         (make-ems--g-tool
          :name "books"
@@ -283,14 +229,6 @@ This variable is buffer-local.")
          :default 0
          :value 0
          :type 'tbm)
-        ;; Structured Snippets
-        (make-ems--g-tool
-         :name "structured-snippets"
-         :param "sts"
-         :range '(0 1)
-         :default 0
-         :value 0
-         :type 'tbs)
         ;; sort by date
         (make-ems--g-tool
          :name "sort-by-date"
@@ -386,17 +324,12 @@ This variable is buffer-local.")
 
 (defun emacspeak-google-canonicalize-result-url (url)
   "Strip out the actual result URL from the redirect wrapper."
-  (cl-declare (special emacspeak-google-use-https))
   (url-unhex-string
-   (substring url
-              (if emacspeak-google-use-https 29 28)
-              (string-match "&sa=" url))))
+   (substring url 29 (string-match "&sa=" url))))
 
 (defun emacspeak-google-result-url-prefix ()
   "Return prefix of result urls."
-  (cl-declare (special emacspeak-google-use-https))
-  (format "%s://www.google.com/url?q="
-          (if emacspeak-google-use-https "https" "http")))
+  "https://www.google.com/url?q=")
 
 ;;; Cache query, toolbelt
 
@@ -421,6 +354,8 @@ This variable is buffer-local.")
 ;;;   google tools
 
 (declare-function eww-current-url "eww" nil)
+(declare-function
+ emacspeak-websearch-google "emacspeak-websearch" (arg1 &optional arg2))
 
 (defun emacspeak-google-who-links-to-this-page ()
   "Perform a google search to locate documents that link to the
@@ -890,4 +825,3 @@ results, default is 1."
 
 (provide 'emacspeak-google)
 ;;;  end of file
-

@@ -1,19 +1,22 @@
 ! swap escape and backquote
  keycode 49 = Escape asciitilde
-keycode 9=grave asciitilde
+ keycode 9=grave asciitilde
+ ! Get one more Emacs key on Shift-Space (experimental)
+ keycode 65 = space Menu space
+
 ! was <print>
  keycode 107 = Super_L Super_L Super_L Super_L
 
 !  Hyper_R on <Insert>
-add mod3 = Hyper_R
-keycode 118 = Hyper_R
+!add mod5 = Hyper_R
+!keycode 118 = Hyper_R
 
 ! RET as Ctrl_R
 ! Return becomes Control_R
 ! xcape then turns  it back to Return
-! Control_R becomes return
+! Control_R (bottom row)becomes return
 
  remove Control = Control_R
- keycode 0x69 = Return
+ keycode 0x69 = Return Cancel 
  keycode 0x24 = Control_R
  add Control = Control_R
