@@ -66,6 +66,8 @@
 (require 'emacspeak-we)
 (require 'emacspeak-xslt)
 ;;; Appease Emacs-30:
+(declare-function
+ emacspeak-websearch-google "emacspeak-websearch" (arg1 &optional arg2))
 
 (declare-function iimage-recenter "iimage" (&optional arg))
 
@@ -249,14 +251,14 @@ with duplicates removed when saving as a list of string."
  "BBC r4 Schedule "
  "https://www.bbc.co.uk/sounds/schedules/bbc_radio_fourfm "
  nil
- #'emacspeak-eww-next-h3
+ #'emacspeak-eww-next-h1
  "BBC R4 Schedule")
 
 (emacspeak-url-template-define
  "BBC r4 Extra Schedule "
  "https://www.bbc.co.uk/schedules/p00fzl7l"
  nil
- #'emacspeak-eww-next-h3
+ #'emacspeak-eww-next-h1
  "BBC Radio 4 Extra Schedule")
 
 (emacspeak-url-template-define
@@ -310,7 +312,7 @@ Press `y' on Episode links to play them with MPV."
 ;;; Google Emacspeak Site:
 
 (declare-function
- emacspeak-websearch-accessible-google
+ emacspeak-websearch-google-lite
  "emacspeak-websearch" (query &optional options))
 
 (emacspeak-url-template-define
@@ -319,7 +321,7 @@ Press `y' on Episode links to play them with MPV."
  (list "Search Emacspeak Site: ") nil
  "Search Emacspeak Site"
  #'(lambda (q)
-     (emacspeak-websearch-accessible-google
+     (emacspeak-websearch-google-lite
       (format
        "site:tvraman.github.io+%s" q))))
 

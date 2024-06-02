@@ -254,12 +254,12 @@ If already playing, then read an empv key and invoke its command."
 
 ;;; Lyrics:
 ;; Let's use our Google searcher:
-(declare-function emacspeak-websearch-accessible-google "emacspeak-empv" t)
+(declare-function emacspeak-websearch-google-lite "emacspeak-empv" t)
 (with-no-warnings
   (defadvice empv--lyrics-on-not-found (around emacspeak pre act comp)
     "Override to use our own implementation."
     (setq ad-return-value nil)
-    (funcall #'emacspeak-websearch-accessible-google (ad-get-arg 0))))
+    (funcall #'emacspeak-websearch-google-lite (ad-get-arg 0))))
 
 ;;; Seekers:
 (defun emacspeak-empv-time-pos ()
@@ -351,9 +351,12 @@ If already playing, then read an empv key and invoke its command."
      (emacspeak-icon 'open-object)
      (emacspeak-pronounce-refresh-pronunciations)
      (dtk-notify
-      (format "%s: %s results"
-              (cdr  (assoc 'title (cl-first empv--last-youtube-candidates)))
-              (length empv--last-youtube-candidates)))))
+      (format
+       "%s: %s results"
+       (cdr
+        (assoc 'title
+               (cl-first (empv--yt-search-results empv--last-youtube-search ))))
+       (length (empv--yt-search-results empv--last-youtube-search ))))))
 (defun emacspeak-empv-current-title ()
   "Speak title of currently selected item."
   (interactive)
@@ -372,9 +375,12 @@ If already playing, then read an empv key and invoke its command."
   (when (ems-interactive-p)
     (emacspeak-icon 'scroll)
     (dtk-notify
-     (format "%s: %s results"
-             (cdr  (assoc 'title (cl-first empv--last-youtube-candidates)))
-             (length empv--last-youtube-candidates)))))
+     (format
+      "%s: %s results"
+      (cdr
+       (assoc 'title
+              (cl-first (empv--yt-search-results empv--last-youtube-search ))))
+      (length (empv--yt-search-results empv--last-youtube-search ))))))
 
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
