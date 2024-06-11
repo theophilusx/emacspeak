@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on May 23, 2024.
+last updated on June 7, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -2704,7 +2704,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-keymap,  Next: E
 ‘] emacspeak-speak-page’
 ‘^ emacspeak-filtertext’
 ‘` emacspeak-speak-net-id’
-‘a emacspeak-speak-message-again’
+‘a beginning-of-line’
 ‘b emacspeak-speak-buffer’
 ‘c emacspeak-speak-char’
 ‘e move-end-of-line’
@@ -2936,6 +2936,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-y-keymap,  Next:
 
 ‘E emacspeak-epub-eww’
 ‘b emacspeak-bookshare-eww’
+‘d empv-download-youtube’
 ‘l emacspeak-empv-play-last’
 ‘p empv-youtube-playlist’
 ‘r emacspeak-empv-radio’
@@ -3240,7 +3241,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1176 commands and 127 options.
+   This chapter documents a total of 1175 commands and 127 options.
 
 * Menu:
 
@@ -3851,7 +3852,6 @@ with tts.
 ..................
 
  -- Command: dtk-stop (&optional all)
-     ‘<fn>’
      ‘C-e s’
 
      Stop speech.  Optional arg ‘all’ or interactive call silences
