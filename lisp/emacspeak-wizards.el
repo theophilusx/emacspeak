@@ -2234,7 +2234,6 @@ Location is a Lat/Lng pair retrieved from Google Maps API."
          (emacspeak-speak-messages nil)
          (date nil)
          (fmt "%A  %H:%M %h %d")
-         (start (point-min))
          (address
           (if (and ask (= 16 (car ask)))
               (completing-read
@@ -2286,6 +2285,7 @@ Location is a Lat/Lng pair retrieved from Google Maps API."
              .shortForecast
              .temperature .windSpeed .windDirection))))
         (fill-region (point-min) (point-max) 'full))
+      (view-mode 1)
       (setq buffer-read-only t)
       (goto-char (point-min)))
     buffer))

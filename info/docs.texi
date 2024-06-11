@@ -250,7 +250,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1176 commands and 127 options.
+This chapter documents a total of 1175 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -768,8 +768,6 @@ current local  value to the result.
 @subsubsection dtk-stop
 @deffn {Command} dtk-stop  (&optional all)
 @table @kbd
-@item <fn>
-@kindex <fn>
 @item C-e s
 @kindex C-e s
 @end table
@@ -8495,6 +8493,7 @@ Default Value:
 
 (("E" emacspeak-epub-eww)
  ("b" emacspeak-bookshare-eww)
+ ("d" empv-download-youtube)
  ("l" emacspeak-empv-play-last)
  ("p" empv-youtube-playlist)
  ("r" emacspeak-empv-radio)
@@ -12473,6 +12472,8 @@ configure which media players get silenced or paused/resumed.
 @subsubsection emacspeak-speak-brief-time
 @deffn {Command} emacspeak-speak-brief-time   
 @table @kbd
+@item <fn>
+@kindex <fn>
 @item C-e <fn>
 @kindex C-e <fn>
 @end table
@@ -12885,20 +12886,11 @@ Load emacspeak filter settings.
 @end format
 @end deffn
 
-@subsubsection emacspeak-speak-matching-paren
-@deffn {Command} emacspeak-speak-matching-paren   
-@findex emacspeak-speak-matching-paren
-
-@format
-Speak matched paren with context.
-@end format
-@end deffn
-
 @subsubsection emacspeak-speak-message-again
 @deffn {Command} emacspeak-speak-message-again  (&optional from-message-cache)
 @table @kbd
-@item C-e a
-@kindex C-e a
+@item C-e M-a
+@kindex C-e M-a
 @end table
 
 @findex emacspeak-speak-message-again
@@ -15365,11 +15357,11 @@ Provide additional advice to view-mode
 @subsection Emacspeak-View Commands
 
 @subsubsection emacspeak-view-line-to-top
-@deffn {Command} emacspeak-view-line-to-top   
+@deffn {Command} emacspeak-view-line-to-top  [Arg list not available until function definition is loaded.]
 @findex emacspeak-view-line-to-top
 
 @format
-Moves current line to top of window
+Move current line to top of window
 @end format
 @end deffn
 

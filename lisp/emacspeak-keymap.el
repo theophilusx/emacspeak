@@ -111,7 +111,7 @@
 (global-set-key emacspeak-prefix 'emacspeak-keymap)
 
 ;;; Special keys:
-(global-set-key (kbd "<XF86WakeUp>")  'dtk-stop)
+(global-set-key (kbd "<XF86WakeUp>")  'emacspeak-speak-brief-time)
 (global-set-key (kbd "<XF86AudioPlay>")  'emacspeak-silence)
 (global-set-key (kbd "C-<f1>")  'amixer-volume-down)
 (global-set-key (kbd "C-<f2>")  'amixer-volume-up)
@@ -234,6 +234,7 @@
    ("M-;" emacspeak-eww-play-media-at-point)
    ("M-C-SPC" emacspeak-speak-spaces-at-point)
    ("M-SPC" emacspeak-speak-completions-if-available)
+   ("M-a" emacspeak-speak-message-again)
    ("M-b" emacspeak-speak-other-buffer)
    ("M-c" emacspeak-copy-current-file)
    ("M-d" emacspeak-pronounce-dispatch)
@@ -261,7 +262,7 @@
    ("]" emacspeak-speak-page)
    ("^" emacspeak-filtertext)
    ("`"  emacspeak-speak-net-id)
-   ("a" emacspeak-speak-message-again)
+   ("a" beginning-of-line)
    ("b" emacspeak-speak-buffer)
    ("c" emacspeak-speak-char)
    ("e" move-end-of-line)
@@ -474,6 +475,7 @@
   '(
     ("E" emacspeak-epub-eww)
     ("b" emacspeak-bookshare-eww)
+    ("d" empv-download-youtube)
     ("l" emacspeak-empv-play-last)
     ("p" empv-youtube-playlist)
     ("r" emacspeak-empv-radio)

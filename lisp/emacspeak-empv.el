@@ -242,9 +242,11 @@ If already playing, then read an empv key and invoke its command."
 (defun emacspeak-empv-radio ()
   "Play Internet stream"
   (interactive)
-  (emacspeak-empv-play-file
+  (funcall-interactively #'emacspeak-empv-play-file
    (let ((default-directory emacspeak-media-shortcuts))
      (emacspeak-media-read-resource))))
+
+
 (defun emacspeak-empv-accumulate-to-register ()
   "Accumulate media links to register u"
   (interactive)
@@ -290,14 +292,14 @@ If already playing, then read an empv key and invoke its command."
 
 (defun emacspeak-empv-backward-10-seconds (&optional count)
   "Move back  count  slices of 10 seconds."
-  (interactive "n")
+  (interactive (list (read-number "Count: " 1)))
   (or count (setq count 1))
   (empv-seek (* count -10))
   (emacspeak-empv-post-nav))
 
 (defun emacspeak-empv-forward-10-seconds (&optional count)
   "Move forward count  chunks of 10 seconds."
-  (interactive "p")
+  (interactive(list (read-number "Count: " 1)))
   (or count (setq count 1))
   (empv-seek (* count 10))
   (emacspeak-empv-post-nav))
@@ -345,18 +347,16 @@ If already playing, then read an empv key and invoke its command."
     (emacspeak-icon 'button)))
 
 ;;; Setup:
+;; empv-youtube-tabulated-new-entries-hook
 (add-hook
  'empv-youtube-results-mode-hook
  #'(lambda nil
      (emacspeak-icon 'open-object)
-     (emacspeak-pronounce-refresh-pronunciations)
-     (dtk-notify
-      (format
-       "%s: %s results"
-       (cdr
-        (assoc 'title
-               (cl-first (empv--yt-search-results empv--last-youtube-search ))))
-       (length (empv--yt-search-results empv--last-youtube-search ))))))
+     (emacspeak-pronounce-refresh-pronunciations)))
+
+(add-hook
+   'empv-youtube-tabulated-new-entries-hook
+   #'(lambda (e &rest _) (message (alist-get 'title (cl-first e)))))
 (defun emacspeak-empv-current-title ()
   "Speak title of currently selected item."
   (interactive)
