@@ -134,6 +134,7 @@
 * emacspeak-muse::Speech-enable Muse.
 * emacspeak-net-utils::net-utils.
 * emacspeak-newsticker::newsticker.
+* emacspeak-nm::NM using  D-Bus..
 * emacspeak-notmuch::Speech-enable NOTMUCH.
 * emacspeak-nov::Speech-enable NOV.
 * emacspeak-nxml::Speech enable nxml mode.
@@ -250,7 +251,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1175 commands and 127 options.
+This chapter documents a total of 1165 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -3639,6 +3640,8 @@ ELFEED ==  Feed Reader for Emacs.
 Install from elpa
 M-x package-install  elfeed
 
+  Required modules:
+
 @subsection Emacspeak-Elfeed Commands
 
 @subsubsection emacspeak-elfeed-eww-entry-at-point
@@ -3764,9 +3767,6 @@ Command empv-play-last-url to play from our @code{EMPV}  history.
 @item
 Command  @code{emacspeak-empv-play-file  to play  local media and}
 Internet streams.
-@item
-Command  @code{emacspeak-empv-radio to play from Emacspeak's library}
-of Internet streams.
 @end enumerate
 
 @subsection Navigating In Time
@@ -3856,13 +3856,11 @@ Move backward by 10 minutes
 @end deffn
 
 @subsubsection emacspeak-empv-backward-10-seconds
-@deffn {Command} emacspeak-empv-backward-10-seconds  (&optional count)
+@deffn {Command} emacspeak-empv-backward-10-seconds   
 @findex emacspeak-empv-backward-10-seconds
 
 @format
-Move back  count  slices of 10 seconds.
-
-(fn &optional COUNT)
+Move back  10 seconds.
 @end format
 @end deffn
 
@@ -3923,13 +3921,11 @@ Move forward by 10 minutes
 @end deffn
 
 @subsubsection emacspeak-empv-forward-10-seconds
-@deffn {Command} emacspeak-empv-forward-10-seconds  (&optional count)
+@deffn {Command} emacspeak-empv-forward-10-seconds   
 @findex emacspeak-empv-forward-10-seconds
 
 @format
-Move forward count  chunks of 10 seconds.
-
-(fn &optional COUNT)
+Move forward 10 seconds.
 @end format
 @end deffn
 
@@ -4021,20 +4017,6 @@ Play URL using mpv.
 @end format
 @end deffn
 
-@subsubsection emacspeak-empv-radio
-@deffn {Command} emacspeak-empv-radio   
-@table @kbd
-@item C-e y r
-@kindex C-e y r
-@end table
-
-@findex emacspeak-empv-radio
-
-@format
-Play Internet stream
-@end format
-@end deffn
-
 @subsubsection emacspeak-empv-relative-seek
 @deffn {Command} emacspeak-empv-relative-seek  (target)
 @findex emacspeak-empv-relative-seek
@@ -4102,6 +4084,22 @@ Toggle output to being just on the left.
 
 @format
 Toggle output to being just on the right.
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-yt-search
+@deffn {Command} emacspeak-empv-yt-search  (query)
+@table @kbd
+@item C-e y s
+@kindex C-e y s
+@end table
+
+@findex emacspeak-empv-yt-search
+
+@format
+Tabulated results from Youtube search but with completion.
+
+(fn QUERY)
 @end format
 @end deffn
 
@@ -4357,9 +4355,6 @@ emacspeak-epub-browse-files
 @item o
 emacspeak-epub-open
 @end table
-
-Code:
-Required Modules:
 
 @subsection Emacspeak-Epub Commands
 
@@ -6795,6 +6790,8 @@ Interactive prefix arg ‘reset’ prompts for the annotation
 buffer even if one is already set.
 Annotation is entered in a temporary buffer and the
 annotation is inserted into the working buffer when complete.
+
+(fn &optional RESET)
 @end format
 @end deffn
 
@@ -6811,6 +6808,8 @@ annotation is inserted into the working buffer when complete.
 Use file-based Emacspeak Clipboard ---
 dis a convenient way of sharing information between independent
 Emacspeak sessions running on  different machines. 
+
+(fn START END &optional PROMPT)
 @end format
 @end deffn
 
@@ -6820,6 +6819,8 @@ Emacspeak sessions running on  different machines.
 
 @format
 Yank contents of the Emacspeak clipboard at point. 
+
+(fn &optional PASTE-TABLE)
 @end format
 @end deffn
 
@@ -6829,6 +6830,8 @@ Yank contents of the Emacspeak clipboard at point.
 
 @format
 Grab URL using Curl, and preview it with a browser .
+
+(fn URL)
 @end format
 @end deffn
 
@@ -6839,6 +6842,8 @@ Grab URL using Curl, and preview it with a browser .
 @format
 Add autoload cookies to file f.
 Default is to add autoload cookies to current file.
+
+(fn &optional F)
 @end format
 @end deffn
 
@@ -6848,6 +6853,8 @@ Default is to add autoload cookies to current file.
 
 @format
 Load bindings from a specified file.
+
+(fn VARIABLE FILENAME)
 @end format
 @end deffn
 
@@ -6857,6 +6864,8 @@ Load bindings from a specified file.
 
 @format
 Persists mapping to org file.
+
+(fn VARIABLE FILENAME)
 @end format
 @end deffn
 
@@ -6866,6 +6875,8 @@ Persists mapping to org file.
 
 @format
 Create a virtual manpage in Emacs from the Perl Online Documentation.
+
+(fn FILENAME)
 @end format
 @end deffn
 
@@ -6876,6 +6887,8 @@ Create a virtual manpage in Emacs from the Perl Online Documentation.
 @format
 Run compile using find and grep.
 Interactive  arguments specify filename pattern and search pattern.
+
+(fn GLOB PATTERN)
 @end format
 @end deffn
 
@@ -6885,6 +6898,8 @@ Interactive  arguments specify filename pattern and search pattern.
 
 @format
 Nuke read-only property on text range.
+
+(fn START END)
 @end format
 @end deffn
 
@@ -6895,6 +6910,8 @@ Nuke read-only property on text range.
 @format
 Generate a buffer that shows a sample line in all the ACSS settings
 for the current voice family.
+
+(fn STEP)
 @end format
 @end deffn
 
@@ -6915,6 +6932,8 @@ for the current voice family.
 Show all defined voice-face mappings  in a help buffer.
 Sample text to use comes from variable
   ‘ems--wizards-sampler-text 
+
+(fn PATTERN)
 @end format
 @end deffn
 
@@ -6924,6 +6943,8 @@ Sample text to use comes from variable
 
 @format
 Play midi file using mscore from musescore package.
+
+(fn MIDI-FILE)
 @end format
 @end deffn
 
@@ -6942,6 +6963,8 @@ Display a buffer with sample text in the defined voices.
 
 @format
 Read a personality  and apply it to the current line.
+
+(fn PERSONALITY)
 @end format
 @end deffn
 
@@ -8496,7 +8519,7 @@ Default Value:
  ("d" empv-download-youtube)
  ("l" emacspeak-empv-play-last)
  ("p" empv-youtube-playlist)
- ("r" emacspeak-empv-radio)
+ ("s" emacspeak-empv-yt-search)
  ("t" empv-youtube-tabulated)
  ("y" emacspeak-empv-play-url))
 
@@ -9869,6 +9892,8 @@ Move down in current Math expression. (auto-generated)
 @format
 Send a LaTeX expression to Maths server,
  guess  based on context. 
+
+(fn LATEX)
 @end format
 @end deffn
 
@@ -10013,7 +10038,8 @@ metapost is a powerful drawing package
 typically installed as mpost by modern TeX
 installations.
 
-  completion
+;;; Code:
+ required modules
 
 @node emacspeak-midge
 @section emacspeak-midge
@@ -10434,7 +10460,6 @@ Speech enable Muse
 @section emacspeak-net-utils
 
 This module speech enables net-utils
- requires
 
 @node emacspeak-newsticker
 @section emacspeak-newsticker
@@ -10444,6 +10469,21 @@ RSS
 Provides functionality similar to amphetadesk --but in pure elisp
 
  required modules
+
+@node emacspeak-nm
+@section emacspeak-nm
+
+Author: Øyvind Stegard <oyvind.stegard@@ifi.uio.no>
+License: Public domain, use at own risk, no warranties of any kind.
+Requires Emacs23 with D-Bus bindings and preferably a running NetworkManager
+instance.
+
+You will need to call the function `nm-enable' for things to start
+happening.  Functions you would like to run when network is
+connected: (add-hook 'nm-connected-hook 'ping-skynet)
+
+Functions you would like to run when network is disconnected:
+(add-hook 'nm-disconnected-hook (lambda() (message "Darnit, we are down.")))
 
 @node emacspeak-notmuch
 @section emacspeak-notmuch
@@ -12889,6 +12929,10 @@ Load emacspeak filter settings.
 @subsubsection emacspeak-speak-message-again
 @deffn {Command} emacspeak-speak-message-again  (&optional from-message-cache)
 @table @kbd
+@item C-e <backspace>
+@kindex C-e <backspace>
+@item C-e <delete>
+@kindex C-e <delete>
 @item C-e M-a
 @kindex C-e M-a
 @end table
@@ -15558,7 +15602,6 @@ Speak current playing state.
 @section emacspeak-wdired
 
 Speech-enable wdired to permit in-place renaming of groups of files.
- required modules
 
 @node emacspeak-we
 @section emacspeak-we
@@ -16179,6 +16222,8 @@ This module provides utility functions for searching the WWW
 @subsubsection emacspeak-websearch-amazon-search
 @deffn {Command} emacspeak-websearch-amazon-search   
 @table @kbd
+@item C-e ? C-a
+@kindex C-e ? C-a
 @item C-e / C-a
 @kindex C-e / C-a
 @end table
@@ -16193,6 +16238,8 @@ Amazon search.
 @subsubsection emacspeak-websearch-ask-jeeves
 @deffn {Command} emacspeak-websearch-ask-jeeves  (query)
 @table @kbd
+@item C-e ? j
+@kindex C-e ? j
 @item C-e / j
 @kindex C-e / j
 @end table
@@ -16209,6 +16256,8 @@ Ask Jeeves for the answer.
 @subsubsection emacspeak-websearch-foldoc-search
 @deffn {Command} emacspeak-websearch-foldoc-search  (query)
 @table @kbd
+@item C-e ? f
+@kindex C-e ? f
 @item C-e / f
 @kindex C-e / f
 @end table
@@ -16227,6 +16276,8 @@ Perform a FolDoc search.
 @table @kbd
 @item C-e RET
 @kindex C-e RET
+@item C-e ? g
+@kindex C-e ? g
 @item C-e / g
 @kindex C-e / g
 @end table
@@ -16245,6 +16296,8 @@ prefix arg is equivalent to hitting the I’m Feeling Lucky button on Google.
 @subsubsection emacspeak-websearch-google-feeling-lucky
 @deffn {Command} emacspeak-websearch-google-feeling-lucky  (query)
 @table @kbd
+@item C-e ? SPC
+@kindex C-e ? SPC
 @item C-e / SPC
 @kindex C-e / SPC
 @end table
@@ -16261,6 +16314,8 @@ Do a I’m Feeling Lucky Google search.
 @subsubsection emacspeak-websearch-google-lite
 @deffn {Command} emacspeak-websearch-google-lite  (query &optional options)
 @table @kbd
+@item C-e ? a
+@kindex C-e ? a
 @item C-e / a
 @kindex C-e / a
 @end table
@@ -16278,6 +16333,8 @@ Optional prefix arg prompts for toolbelt options.
 @subsubsection emacspeak-websearch-google-news
 @deffn {Command} emacspeak-websearch-google-news   
 @table @kbd
+@item C-e ? n
+@kindex C-e ? n
 @item C-e / n
 @kindex C-e / n
 @end table
@@ -16301,6 +16358,8 @@ Use this from inside the calendar to do Google date-range searches.
 @subsubsection emacspeak-websearch-google-with-toolbelt
 @deffn {Command} emacspeak-websearch-google-with-toolbelt  (query)
 @table @kbd
+@item C-e ? i
+@kindex C-e ? i
 @item C-e / i
 @kindex C-e / i
 @end table
@@ -16317,6 +16376,8 @@ Launch Google search with toolbelt.
 @subsubsection emacspeak-websearch-gutenberg
 @deffn {Command} emacspeak-websearch-gutenberg  (type query)
 @table @kbd
+@item C-e ? G
+@kindex C-e ? G
 @item C-e / G
 @kindex C-e / G
 @end table
@@ -16333,6 +16394,8 @@ Perform an Gutenberg search
 @subsubsection emacspeak-websearch-help
 @deffn {Command} emacspeak-websearch-help   
 @table @kbd
+@item C-e ? ?
+@kindex C-e ? ?
 @item C-e / ?
 @kindex C-e / ?
 @end table
@@ -16347,6 +16410,8 @@ Displays key mapping used by Emacspeak Websearch.
 @subsubsection emacspeak-websearch-web-filter-google
 @deffn {Command} emacspeak-websearch-web-filter-google  (query &optional options)
 @table @kbd
+@item C-e ? u
+@kindex C-e ? u
 @item C-e / u
 @kindex C-e / u
 @end table
@@ -16364,6 +16429,8 @@ Optional prefix arg prompts for toolbelt options.
 @subsubsection emacspeak-websearch-wikipedia-search
 @deffn {Command} emacspeak-websearch-wikipedia-search  (query)
 @table @kbd
+@item C-e ? w
+@kindex C-e ? w
 @item C-e / w
 @kindex C-e / w
 @end table
@@ -16381,6 +16448,8 @@ Use URL Template ‘wikipedia at point’ to advantage in the results buffer.
 @subsubsection emacspeak-websearch-youtube-search
 @deffn {Command} emacspeak-websearch-youtube-search  (query)
 @table @kbd
+@item C-e ? y
+@kindex C-e ? y
 @item C-e / y
 @kindex C-e / y
 @end table
@@ -18602,20 +18671,6 @@ The body can be accessed via ‘emacspeak-muggles-outliner/body’.
 @end format
 @end deffn
 
-@subsubsection emacspeak-muggles-pianobar-key-map-cmd
-@deffn {Command} emacspeak-muggles-pianobar-key-map-cmd   
-@table @kbd
-@item s-'
-@kindex s-'
-@end table
-
-@findex emacspeak-muggles-pianobar-key-map-cmd
-
-@format
-Temporarily use keymap pianobar-key-map
-@end format
-@end deffn
-
 @subsubsection emacspeak-muggles-smartparens/body
 @deffn {Command} emacspeak-muggles-smartparens/body   
 @table @kbd
@@ -20554,7 +20609,7 @@ White screen.
 @node URL Templates 
 @section URL Templates
 
-This section documents a total of 63 URL Templates.
+This section documents a total of 64 URL Templates.
 
 All of these URL templates can be invoked via command
  @kbd{M-x emacspeak-url-template-fetch} normally bound to
@@ -20570,25 +20625,37 @@ Each URL template carries out the following steps:
 @end itemize
 @enumerate 
 
+@item @b{acu weather}
+
+Weather Forecast from ACUWeather
 @item @b{air traffic control}
 
-Find live streams for Air Traffic Control.@item @b{airport conditions}
+Find live streams for Air Traffic Control.
+@item @b{airport conditions}
 
-Display airport conditions from the FAA.@item @b{amazon product details by asin}
+Display airport conditions from the FAA.
+@item @b{amazon product details by asin}
 
-Retrieve product details from Amazon by either ISBN or ASIN.@item @b{aqi from wunderground}
+Retrieve product details from Amazon by either ISBN or ASIN.
+@item @b{aqi from wunderground}
 
-Air quality from Wunderground@item @b{archwiki search}
+Air quality from Wunderground
+@item @b{archwiki search}
 
-Search Linux ArchWiki@item @b{bbc 5-live  schedule }
+Search Linux ArchWiki
+@item @b{bbc 5-live  schedule }
 
-BBC Radio 5 Live  Schedule@item @b{bbc podcast directory}
+BBC Radio 5 Live  Schedule
+@item @b{bbc podcast directory}
 
-BBC PodCast Directory@item @b{bbc r4 extra schedule }
+BBC PodCast Directory
+@item @b{bbc r4 extra schedule }
 
-BBC Radio 4 Extra Schedule@item @b{bbc r4 schedule }
+BBC Radio 4 Extra Schedule
+@item @b{bbc r4 schedule }
 
-BBC R4 Schedule@item @b{bbc sounds}
+BBC R4 Schedule
+@item @b{bbc sounds}
 
 Search BBC Sounds.
 Result page is filtered down to two sections, Shows and Episodes.
@@ -20596,116 +20663,172 @@ Result page is filtered down to two sections, Shows and Episodes.
 Press [RET] on links in the Show section to open that show page.
 The page for that show contains playable links for Episodes.
 
-Press `y' on Episode links to play them with MPV.@item @b{bbc world service  schedule }
+Press `y' on Episode links to play them with MPV.
+@item @b{bbc world service  schedule }
 
-BBC World Service Schedule@item @b{bing news}
+BBC World Service Schedule
+@item @b{bing news}
 
-Bing News results as RSS feed.@item @b{business headlines from cnn}
+Bing News results as RSS feed.
+@item @b{business headlines from cnn}
 
-Money Headlines From CNN@item @b{cbs radio streams from streamtheworld}
+Money Headlines From CNN
+@item @b{cbs radio streams from streamtheworld}
 
 Play radio stream.
 Example: kcbsFM.
-Format is stationid+AM/FM.@item @b{cnbc quotes}
+Format is stationid+AM/FM.
+@item @b{cnbc quotes}
 
-Stock portfolio via CNBC@item @b{cnbc ticker}
+Stock portfolio via CNBC
+@item @b{cnbc ticker}
 
-Stock Quote via CNBC@item @b{cnn headlines}
+Stock Quote via CNBC
+@item @b{cnn headlines}
 
-News Headlines From CNN@item @b{cnn money}
+News Headlines From CNN
+@item @b{cnn money}
 
-CNN Money@item @b{cricinfo print}
+CNN Money
+@item @b{cricinfo print}
 
-Printer friendly   link on Cricinfo@item @b{dictionary lookup}
+Printer friendly   link on Cricinfo
+@item @b{dictionary lookup}
 
-Dictionary Lookup@item @b{emacspeak search via google}
+Dictionary Lookup
+@item @b{emacspeak search via google}
 
-Search Emacspeak Site@item @b{espn cricinfo search}
+Search Emacspeak Site
+@item @b{espn cricinfo search}
 
-Cricinfo Search Using Google@item @b{finance  google}
+Cricinfo Search Using Google
+@item @b{finance  google}
 
-Lookup ticker on Google Finance.@item @b{finance summary from google}
+Lookup ticker on Google Finance.
+@item @b{finance summary from google}
 
-Display top stocks  from Google Finance.@item @b{freesound}
+Display top stocks  from Google Finance.
+@item @b{freesound}
 
-Search FreeSound.@item @b{gita}
+Search FreeSound.
+@item @b{gita}
 
-Open specific chapter/verse in the Gita @item @b{global weather from google}
+Open specific chapter/verse in the Gita 
+@item @b{global weather from google}
 
-World Weather From Google@item @b{google news search}
+World Weather From Google
+@item @b{google news search}
 
-Search Google news.@item @b{google scholar}
+Search Google news.
+@item @b{google scholar}
 
-Google Scholar Search@item @b{google trends}
+Google Scholar Search
+@item @b{google trends}
 
-Google Trends@item @b{guardian rss feeds directory}
+Google Trends
+@item @b{guardian rss feeds directory}
 
-Guardian Feeds  Directory@item @b{hacker  news frontpage}
+Guardian Feeds  Directory
+@item @b{hacker  news frontpage}
 
-Display Hacker News Front Page@item @b{hacker  news search}
+Display Hacker News Front Page
+@item @b{hacker  news search}
 
-Display Hacker News Front Page@item @b{hoogle haskell api search}
+Display Hacker News Front Page
+@item @b{hoogle haskell api search}
 
-Haskell API Search against a local server.@item @b{html google news search}
+Haskell API Search against a local server.
+@item @b{html google news search}
 
-Search Google news.@item @b{local weather from google}
+Search Google news.
+@item @b{local weather from google}
 
-Light-weight Google weather. Displays weather for your current US-ZIP Code. @item @b{microsoft search}
+Light-weight Google weather. Displays weather for your current US-ZIP Code. 
+@item @b{microsoft search}
 
-Bing results as RSS feed.@item @b{nba  standings}
+Bing results as RSS feed.
+@item @b{nba  standings}
 
-Display NBA standings.@item @b{nls bard bookshelf}
+Display NBA standings.
+@item @b{nls bard bookshelf}
 
 NLS Bard Catalog: Most Popular. Login once before using this
-template.@item @b{nls bard popular}
+template.
+@item @b{nls bard popular}
 
 NLS Bard Catalog: Most Popular. Login once before using this
-template.@item @b{nls bard recent}
+template.
+@item @b{nls bard recent}
 
 NLS Bard Catalog: Recently Added. Login once before using this
-template.@item @b{nls bard search}
+template.
+@item @b{nls bard search}
 
-Search NLS Bard Catalog. Login once before using this template.@item @b{npr}
+Search NLS Bard Catalog. Login once before using this template.
+@item @b{npr}
 
-Open NPR home , then display the alternative links to access RSS feeds.@item @b{online radiotime browser}
+Open NPR home , then display the alternative links to access RSS feeds.
+@item @b{online radiotime browser}
 
-RadioTime Entry point.@item @b{online radiotime search}
+RadioTime Entry point.
+@item @b{online radiotime search}
 
-RadioTime Search@item @b{openlibrary}
+RadioTime Search
+@item @b{openlibrary}
 
-Open Library Search@item @b{player fm bbc rss feeds}
+Open Library Search
+@item @b{player fm bbc rss feeds}
 
-Player FM BBC RSS Feeds@item @b{radiotime categories}
+Player FM BBC RSS Feeds
+@item @b{radiotime categories}
 
-RadioTime Categories @item @b{reddit at point}
+RadioTime Categories 
+@item @b{reddit at point}
 
-Open RSS Feed for Reddit URL under point.@item @b{reddit by topic}
+Open RSS Feed for Reddit URL under point.
+@item @b{reddit by topic}
 
-Open RSS Feed for Reddit Topic.@item @b{reddit front page}
+Open RSS Feed for Reddit Topic.
+@item @b{reddit front page}
 
-Open  Feed for Reddit  Front Page.@item @b{reddit search}
+Open  Feed for Reddit  Front Page.
+@item @b{reddit search}
 
-Reddit Search Results Feed.@item @b{sourceforge browse mirrors}
+Reddit Search Results Feed.
+@item @b{sourceforge browse mirrors}
 
-Retrieve download page at Sourceforge for specified project.@item @b{sourceforge download}
+Retrieve download page at Sourceforge for specified project.
+@item @b{sourceforge download}
 
-Download specified file.@item @b{sourceforge project}
+Download specified file.
+@item @b{sourceforge project}
 
-Open specified project page at SourceForge.@item @b{tech news from cnet}
+Open specified project page at SourceForge.
+@item @b{tech news from cnet}
 
-Display tech news from CNET@item @b{tinyurl}
+Display tech news from CNET
+@item @b{tinyurl}
 
+URL Shortener via tinyurl.
+If on a URL, replace it with the shortened version. If on a link
+in EWW, use it. Otherwise prompt for a URL to shorten and insert
+the result at point.
 @item @b{tunein radio}
 
-Translate StreamId to playable stream.@item @b{washington post}
+Translate StreamId to playable stream.
+@item @b{washington post}
 
-Washington Post Contents@item @b{wiki data search}
+Washington Post Contents
+@item @b{wiki data search}
 
-Search WikiData.@item @b{wikipedia at point}
+Search WikiData.
+@item @b{wikipedia at point}
 
-Extract body content from Wikipedia link at point@item @b{wordnet search}
+Extract body content from Wikipedia link at point
+@item @b{wordnet search}
 
-Look up term in WordNet.@item @b{yahoo rssnews}
+Look up term in WordNet.
+@item @b{yahoo rssnews}
 
 News  From Yahoo As RSS.
 

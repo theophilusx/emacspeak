@@ -12,7 +12,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 This manual documents *Emacspeak, The Complete Audio Desktop* and was
-last updated on June 7, 2024.
+last updated on July 3, 2024.
 
 
 File: emacspeak.info,  Node: Top,  Next: Copyright,  Up: (dir)
@@ -56,7 +56,7 @@ File: emacspeak.info,  Node: Copyright,  Next: Announce,  Prev: Top,  Up: Top
 
 This manual documents Emacspeak, a speech extension to Emacs.
 
-   Copyright (C)1994 - 2020 T. V. Raman All Rights Reserved.
+   Copyright (C)1994 - 2024 T. V. Raman All Rights Reserved.
 
    Permission is granted to make and distribute verbatim copies of this
 manual without charge provided the copyright notice and this permission
@@ -358,15 +358,16 @@ that package.
                make
 
         • ViaVoice Outloud (AKA Eloquent).  You need to purchase this
-          engine from the voxin site.  That purchase will give you
-          install-ready packages for installing the speech engine as
-          well as Emacspeak.  See <https://voxin.oralux.net/rss.xml> for
-          the latest packages, and <https://voxin.oralux.net> for the
-          main Voxin Web site.
+          engine from the voxin site -- note that the Vocalizer voices
+          available from that site are not supported.  That purchase
+          will give you install-ready packages for installing the speech
+          engine as well as Emacspeak.  See
+          <https://voxin.oralux.net/rss.xml> for the latest packages,
+          and <https://voxin.oralux.net> for the main Voxin Web site.
 
         • On the Mac, you can use the builtin Mac TTS engine --
           emacspeak comes with a speech server for that TTS engine
-          written in Python.
+          written in ‘swift’.
 
    • Having installed and configured the TTS engine of your choice, and
      having built the associated speech server, set Emacspeak up to use
@@ -409,15 +410,17 @@ Speech servers are located in the ‘emacspeak/servers’ directory.
 
    • Dectalk: ‘servers/dtk-exp’.  This is a TCL script that does not
      depend on any native code.
+   • Software Dectalk: ‘servers/dtk-soft’ See
+     <https://github.com/tvraman/emacspeak/blob/master/servers/software-dtk/Readme.org>.
+   • Outloud: ‘servers/outloud’ This is a TCL script that uses the
+     library built in ‘servers/linux-outloud’.  Note that a checkout
+     from GitHub gives you a prebuilt library -- however you will need
+     to purchase the TTS engine from <http://voxin.oralux.net>.
 
-   • Outloud: ‘servers/outloud’ or ‘servers/32-outloud’ (for 64-bit
-     machines).  This is a TCL script that uses the library built in
-     ‘servers/linux-outloud’.  Note that a checkout from GitHub gives
-     you a prebuilt library -- however you will need to purchase the TTS
-     engine from <http://voxin.oralux.net>.
-
-   • Mac: ‘servers/mac’.  This is a Python script that binds to the
-     native Mac TTS.
+   • Mac: ‘servers/mac-swiftmac’.  This is a server implemented in
+     ‘swift’; the older Python implementation is being deprecated but
+     still available as Python script ‘servers/mac’.  The server binds
+     to the native Mac TTS.
 
 5.3.1.1 Testing The Selected Server.
 ....................................
@@ -2671,26 +2674,6 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-keymap,  Next: E
 ‘C-w emacspeak-speak-window-information’
 ‘C-x emacspeak-speak-header-line’
 ‘SPC emacspeak-speak-windowful’
-‘! emacspeak-speak-run-shell-command’
-‘$ flyspell-mode’
-‘% emacspeak-speak-current-percentage’
-‘& emacspeak-wizards-shell-command-on-current-file’
-‘' emacspeak-empv-play-file’
-‘( amixer’
-‘) emacspeak-sounds-select-theme’
-‘, emacspeak-buffer-select’
-‘. emacspeak-buffer-select’
-‘1 emacspeak-speak-this-window’
-‘2 emacspeak-speak-other-window’
-‘3 amixer-volume-adjust’
-‘4 amixer-volume-adjust’
-‘; emacspeak-multimedia’
-‘= emacspeak-speak-current-column’
-‘? emacspeak-websearch-dispatch’
-‘@ emacspeak-speak-message-at-time’
-‘A emacspeak-appt-repeat-announcement’
-‘B emacspeak-speak-buffer-interactively’
-‘C emacspeak-customize’
 ‘L emacspeak-speak-line-interactively’
 ‘M emacspeak-speak-minor-mode-line’
 ‘N emacspeak-view-emacspeak-news’
@@ -2725,6 +2708,25 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-keymap,  Next: E
 ‘u emacspeak-url-template-fetch’
 ‘w emacspeak-speak-word’
 ‘| emacspeak-speak-line-set-column-filter’
+‘! emacspeak-speak-run-shell-command’
+‘$ flyspell-mode’
+‘% emacspeak-speak-current-percentage’
+‘& emacspeak-wizards-shell-command-on-current-file’
+‘' emacspeak-empv-play-file’
+‘( amixer’
+‘) emacspeak-sounds-select-theme’
+‘, emacspeak-buffer-select’
+‘. emacspeak-buffer-select’
+‘1 emacspeak-speak-this-window’
+‘2 emacspeak-speak-other-window’
+‘3 amixer-volume-adjust’
+‘4 amixer-volume-adjust’
+‘; emacspeak-multimedia’
+‘= emacspeak-speak-current-column’
+‘@ emacspeak-speak-message-at-time’
+‘A emacspeak-appt-repeat-announcement’
+‘B emacspeak-speak-buffer-interactively’
+‘C emacspeak-customize’
 
 
 File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-dtk-submap,  Next: Emacspeak Keybindings On emacspeak-hyper-keymap,  Prev: Emacspeak Keybindings On emacspeak-keymap,  Up: Emacspeak Keymaps
@@ -2939,7 +2941,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-y-keymap,  Next:
 ‘d empv-download-youtube’
 ‘l emacspeak-empv-play-last’
 ‘p empv-youtube-playlist’
-‘r emacspeak-empv-radio’
+‘s emacspeak-empv-yt-search’
 ‘t empv-youtube-tabulated’
 ‘y emacspeak-empv-play-url’
 
@@ -3097,6 +3099,7 @@ File: emacspeak.info,  Node: Emacspeak Keybindings On emacspeak-z-keymap,  Prev:
 * emacspeak-muse::Speech-enable Muse.
 * emacspeak-net-utils::net-utils.
 * emacspeak-newsticker::newsticker.
+* emacspeak-nm::NM using  D-Bus..
 * emacspeak-notmuch::Speech-enable NOTMUCH.
 * emacspeak-nov::Speech-enable NOV.
 * emacspeak-nxml::Speech enable nxml mode.
@@ -3241,7 +3244,7 @@ is useful in understanding how emacspeak works with a given package;
 thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 (emacs)EWW:: documentation, then *Note emacspeak-eww::.
 
-   This chapter documents a total of 1175 commands and 127 options.
+   This chapter documents a total of 1165 commands and 127 options.
 
 * Menu:
 
@@ -3379,6 +3382,7 @@ thus, when learning to use the Emacs Web Browser (EWW), read the *Note
 * emacspeak-muse::
 * emacspeak-net-utils::
 * emacspeak-newsticker::
+* emacspeak-nm::
 * emacspeak-notmuch::
 * emacspeak-nov::
 * emacspeak-nxml::
@@ -6301,6 +6305,8 @@ File: emacspeak.info,  Node: emacspeak-elfeed,  Next: emacspeak-elisp-refs,  Pre
 ELFEED == Feed Reader for Emacs.  Install from elpa M-x package-install
 elfeed
 
+   Required modules:
+
 12.54.1 Emacspeak-Elfeed Commands
 ---------------------------------
 
@@ -6427,8 +6433,6 @@ package ‘empv’:
   3. Command empv-play-last-url to play from our ‘EMPV’ history.
   4. Command ‘emacspeak-empv-play-file to play local media and’ Internet
      streams.
-  5. Command ‘emacspeak-empv-radio to play from Emacspeak's library’ of
-     Internet streams.
 
 12.61.2 Navigating In Time
 --------------------------
@@ -6493,11 +6497,9 @@ select few for interactive use.
 12.61.4.4 emacspeak-empv-backward-10-seconds
 ............................................
 
- -- Command: emacspeak-empv-backward-10-seconds (&optional count)
+ -- Command: emacspeak-empv-backward-10-seconds
 
-     Move back  count  slices of 10 seconds.
-
-     (fn &optional COUNT)
+     Move back  10 seconds.
 
 12.61.4.5 emacspeak-empv-backward-30-minutes
 ............................................
@@ -6546,11 +6548,9 @@ select few for interactive use.
 12.61.4.11 emacspeak-empv-forward-10-seconds
 ............................................
 
- -- Command: emacspeak-empv-forward-10-seconds (&optional count)
+ -- Command: emacspeak-empv-forward-10-seconds
 
-     Move forward count  chunks of 10 seconds.
-
-     (fn &optional COUNT)
+     Move forward 10 seconds.
 
 12.61.4.12 emacspeak-empv-forward-30-minutes
 ............................................
@@ -6614,15 +6614,7 @@ select few for interactive use.
 
      (fn URL)
 
-12.61.4.19 emacspeak-empv-radio
-...............................
-
- -- Command: emacspeak-empv-radio
-     ‘C-e y r’
-
-     Play Internet stream
-
-12.61.4.20 emacspeak-empv-relative-seek
+12.61.4.19 emacspeak-empv-relative-seek
 .......................................
 
  -- Command: emacspeak-empv-relative-seek (target)
@@ -6631,14 +6623,14 @@ select few for interactive use.
 
      (fn TARGET)
 
-12.61.4.21 emacspeak-empv-time-pos
+12.61.4.20 emacspeak-empv-time-pos
 ..................................
 
  -- Command: emacspeak-empv-time-pos
 
      Speak time and percent position.
 
-12.61.4.22 emacspeak-empv-toggle-balance
+12.61.4.21 emacspeak-empv-toggle-balance
 ........................................
 
  -- Command: emacspeak-empv-toggle-balance (value)
@@ -6647,14 +6639,14 @@ select few for interactive use.
 
      (fn VALUE)
 
-12.61.4.23 emacspeak-empv-toggle-custom
+12.61.4.22 emacspeak-empv-toggle-custom
 .......................................
 
  -- Command: emacspeak-empv-toggle-custom
 
      Toggle our custom filters.
 
-12.61.4.24 emacspeak-empv-toggle-filter
+12.61.4.23 emacspeak-empv-toggle-filter
 .......................................
 
  -- Command: emacspeak-empv-toggle-filter (filter)
@@ -6664,19 +6656,29 @@ select few for interactive use.
 
      (fn FILTER)
 
-12.61.4.25 emacspeak-empv-toggle-left
+12.61.4.24 emacspeak-empv-toggle-left
 .....................................
 
  -- Command: emacspeak-empv-toggle-left
 
      Toggle output to being just on the left.
 
-12.61.4.26 emacspeak-empv-toggle-right
+12.61.4.25 emacspeak-empv-toggle-right
 ......................................
 
  -- Command: emacspeak-empv-toggle-right
 
      Toggle output to being just on the right.
+
+12.61.4.26 emacspeak-empv-yt-search
+...................................
+
+ -- Command: emacspeak-empv-yt-search (query)
+     ‘C-e y s’
+
+     Tabulated results from Youtube search but with completion.
+
+     (fn QUERY)
 
 12.61.5 emacspeak-empv Options
 ------------------------------
@@ -6918,8 +6920,6 @@ table of contents.
      emacspeak-epub-browse-files
 ‘o’
      emacspeak-epub-open
-
-   Code: Required Modules:
 
 12.67.6 Emacspeak-Epub Commands
 -------------------------------

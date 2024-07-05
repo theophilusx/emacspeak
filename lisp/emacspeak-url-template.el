@@ -244,7 +244,7 @@ with duplicates removed when saving as a list of string."
  "BBC World Service  Schedule "
 "https://www.bbc.co.uk/sounds/schedules/bbc_world_service " 
  nil
- #'emacspeak-eww-next-h3
+ #'emacspeak-eww-next-h1
  "BBC World Service Schedule")
 
 (emacspeak-url-template-define
@@ -332,6 +332,17 @@ Press `y' on Episode links to play them with MPV."
 c  (cl-declare
    (special emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
   (setq emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
+;;; AcuWeather:
+(emacspeak-url-template-define
+ "ACU Weather"
+ "http://rss.accuweather.com/rss/liveweather_rss.asp?locCode=%s"
+ (list #'(lambda nil
+           (read-from-minibuffer "Location: "
+                             nil nil t nil gmaps-my-zip)))
+ #'emacspeak-speak-buffer
+ "Weather Forecast from ACUWeather"
+ #'emacspeak-feeds-rss-display)
+
 
 ;;; Basic Google:
 
@@ -663,7 +674,11 @@ Format is stationid+AM/FM."
       (or (thing-at-point 'url)
           (shr-url-at-point nil)
           (read-string "URL: "))))
- nil nil
+ nil 
+ "URL Shortener via tinyurl.
+If on a URL, replace it with the shortened version. If on a link
+in EWW, use it. Otherwise prompt for a URL to shorten and insert
+the result at point."
  #'(lambda (u)
      (let ((b (bounds-of-thing-at-point 'url))
            (r (shell-command-to-string (format "curl -s '%s'" u))))
@@ -674,11 +689,7 @@ Format is stationid+AM/FM."
            (when b (kill-region (car b) (cdr b))))
          (insert r)
          (emacspeak-speak-line))
-        (t (dtk-speak "Saved shortened url to kill ring")))))
- "URL Shortener via tinyurl.
-If on a URL, replace it with the shortened version. If on a link
-in EWW, use it. Otherwise prompt for a URL to shorten and insert
-the result at point.")
+        (t (dtk-speak "Saved shortened url to kill ring"))))))
 
 ;;; Hoogle
 (declare-function emacspeak-eww-next-h1 "emacspeak-eww" (&optional speak))
@@ -896,7 +907,7 @@ Each URL template carries out the following steps:
       (cl-loop
        for key in keys do
        (insert
-        (format "@item @b{%s}\n\n" key))
+        (format "\n@item @b{%s}\n\n" key))
        (condition-case nil
            (insert
             (emacspeak-url-template-documentation

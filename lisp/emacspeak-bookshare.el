@@ -91,7 +91,9 @@
 (require 'dom)
 (require 'xml)
 (declare-function auth-source-search "auth-source" (&rest rest))
-(declare-function dired-get-filename "dired" (&optional localp no-error))
+(declare-function dired-get-filename "dired" (&optional localp
+                                                        no-error))
+(unless emacspeak-curl (warn "This module will not work without Curl."))
 ;;;  Customizations
 
 (defgroup emacspeak-bookshare nil

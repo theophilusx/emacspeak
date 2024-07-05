@@ -59,9 +59,6 @@
 ;; @item
 ;; Command  @code{emacspeak-empv-play-file  to play  local media and} 
 ;; Internet streams.
-;; @item
-;; Command  @code{emacspeak-empv-radio to play from Emacspeak's library} 
-;; of Internet streams.
 ;; @end enumerate
 ;; 
 ;; @subsection Navigating In Time 
@@ -128,6 +125,7 @@
 (eval-when-compile (require 'cl-lib))
 (cl-declaim  (optimize  (safety 0) (speed 3)))
 (require 'emacspeak-preamble)
+(require 'gweb)
 (require 'empv nil t)
 (require 'iimage nil t)
 (declare-function emacspeak-google-canonicalize-result-url
@@ -177,7 +175,8 @@
   (repeat-exit)
   (when (ems-interactive-p)
     (dtk-stop 'all)
-    (emacspeak-icon 'close-object)))
+    (emacspeak-icon 'close-object)
+    (emacspeak-speak-mode-line)))
 
 ;;; Additional Commands:
 
@@ -231,7 +230,7 @@ If already playing, then read an empv key and invoke its command."
     (unless (and empv--process (process-live-p empv--process))
       (emacspeak-media-read-resource current-prefix-arg))
     current-prefix-arg))
-  (cl-declare (special  empv--process))
+  (cl-declare (special  empv--process ))
   (cond
    ((null file)                         ; we're already playing
     (call-interactively
@@ -239,13 +238,10 @@ If already playing, then read an empv key and invoke its command."
    (t (dtk-notify (file-name-base file))
       (empv-play file))))
 
-(defun emacspeak-empv-radio ()
-  "Play Internet stream"
-  (interactive)
-  (funcall-interactively #'emacspeak-empv-play-file
-   (let ((default-directory emacspeak-media-shortcuts))
-     (emacspeak-media-read-resource))))
-
+(defun emacspeak-empv-yt-search (query)
+  "Tabulated results from Youtube search but with completion."
+  (interactive (list (gweb-youtube-autocomplete)))
+  (funcall-interactively #'empv-youtube-tabulated query))
 
 (defun emacspeak-empv-accumulate-to-register ()
   "Accumulate media links to register u"
@@ -290,19 +286,15 @@ If already playing, then read an empv key and invoke its command."
   (empv-seek target '("absolute"))
   (emacspeak-empv-post-nav))
 
-(defun emacspeak-empv-backward-10-seconds (&optional count)
-  "Move back  count  slices of 10 seconds."
-  (interactive (list (read-number "Count: " 1)))
-  (or count (setq count 1))
-  (empv-seek (* count -10))
-  (emacspeak-empv-post-nav))
+(defun emacspeak-empv-backward-10-seconds ()
+  "Move back  10 seconds."
+  (interactive )
+  (empv-seek -10))
 
-(defun emacspeak-empv-forward-10-seconds (&optional count)
-  "Move forward count  chunks of 10 seconds."
-  (interactive(list (read-number "Count: " 1)))
-  (or count (setq count 1))
-  (empv-seek (* count 10))
-  (emacspeak-empv-post-nav))
+(defun emacspeak-empv-forward-10-seconds ()
+  "Move forward 10 seconds."
+  (interactive)
+  (empv-seek 10))
 
 ;; Generate other navigators:
 
@@ -416,6 +408,7 @@ If already playing, then read an empv key and invoke its command."
      ("M" emacspeak-empv-backward-minute)
      ("SPC" empv-toggle)
      ("b" emacspeak-empv-toggle-balance)
+     ("k" empv-exit)
      ("l" empv-lyrics-current)
      ("m" emacspeak-empv-forward-minute)
      ("r" emacspeak-empv-relative-seek)
@@ -433,7 +426,7 @@ If already playing, then read an empv key and invoke its command."
    empv-youtube-results-play-current
    empv-set-volume empv-display-current  empv-toggle
    emacspeak-empv-play-last emacspeak-empv-play-url
-   emacspeak-empv-radio emacspeak-empv-play-file emacspeak-empv-play-local
+   emacspeak-empv-play-file emacspeak-empv-play-local
    emacspeak-empv-backward-10-seconds emacspeak-empv-forward-10-seconds
    emacspeak-empv-forward-minute emacspeak-empv-backward-minute
    emacspeak-empv-forward-5-minutes emacspeak-empv-backward-5-minutes
