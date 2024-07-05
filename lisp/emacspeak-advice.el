@@ -747,7 +747,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   :set
   #'(lambda (sym val)
       (set-default sym val ) ; turn list into a pattern to use
-      (setq ems--message-filter-pattern (regexp-opt val)))
+      (setq ems--message-filter (regexp-opt val)))
   :group 'emacspeak-speak)
 
 (defadvice momentary-string-display (around emacspeak pre act comp)
@@ -777,40 +777,30 @@ When on a close delimiter, speak matching delimiter after a small delay. "
     message display-message-or-buffer) do
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
-     "Speak message."
-     (cl-declare (special emacspeak-last-message inhibit-message
-                          ems--message-filter-pattern
-                          emacspeak-speak-messages
-                          ems--lazy-msg-time))
-     (when (process-live-p dtk-speaker-process)
-       (let ((inhibit-read-only t)
-             (m nil))
-         ad-do-it
+     "Speak message. Duplicates will not be spoken."
+     (cl-declare (special
+                  emacspeak-last-message inhibit-message
+                  ems--message-filter emacspeak-speak-messages))
+     (let ((m nil)
+           (o minibuffer-message-overlay))
+       ad-do-it
+       (cond
+        ((or inhibit-message (null emacspeak-speak-messages)) ad-return-value)
+        (t                              ; possibly peak it 
          (setq m
-               (or
-                (current-message)
-                (when (bound-and-true-p minibuffer-message-overlay)
-                  (overlay-get minibuffer-message-overlay 'after-string))))
+               (or (current-message) (and   o (overlay-get o 'after-string))))
+         (when m (setq m (string-trim m)))
          (when
-             (and
-              (null inhibit-message)
-              emacspeak-speak-messages  ; speaking messages
-              m                         ; our message
+             (and                       ;dup throttle
+              m
               (not (zerop (length m)))
               (not (string= m emacspeak-last-message))
-              (not (string-match ems--message-filter-pattern m))
-              (and
-               (not (zerop echo-keystrokes))
-               (>       ; last display  older  than throttle threshold
-                (float-time (time-subtract (current-time) ems--lazy-msg-time))
-                (/ echo-keystrokes 50))))
-           (setq ems--lazy-msg-time (current-time)
-                 emacspeak-last-message m)
+              (not (string-match ems--message-filter m)))
+           (setq emacspeak-last-message  m)
 ;;; so we really need to speak it
            (emacspeak-icon 'key)
-           (and dtk-stop-immediately  (dtk-stop))
-(tts-with-punctuations 'all (dtk-notify m 'dont-log)))
-         ad-return-value)))))
+           (tts-with-punctuations 'all (dtk-notify m 'dont-log)))))
+       ad-return-value))))
 
 (defadvice display-message-or-buffer (after emacspeak pre act comp)
   "Icon"
@@ -856,17 +846,20 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   "Custom error handler"
   (emacspeak-icon 'warn-user)
   (message (propertize (error-message-string data) 'face 'error)))
+(defconst ems--error-limit 1.0
+  "Seconds used to rate-limit error messages.")
 
 (defun emacspeak-fancy-error-handler (data _ caller)
   "Custom error handler."
+  (cl-declare (special ems--error-limit))
   (cl-declare (special ems--last-error-msg
                        ems--lazy-error-time))
   (let ((m (error-message-string data))
         (fn (if caller (symbol-name caller) "")))
-    (when ; speak conditionally
+    (when                               ; speak conditionally
         (and
          (not (string= ems--last-error-msg m)) ; dont repeat
-         (< echo-keystrokes ; rate limit 
+         (< ems--error-limit               ; rate limit 
             (float-time (time-subtract (current-time) ems--lazy-msg-time))))
       (setq ems--last-error-msg m
             ems--lazy-error-time (current-time))
@@ -875,7 +868,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
        (concat
         (propertize
          (if (string-match "^ad-Advice" fn) (substring fn 10) fn)
-                    'personality voice-bolden)
+         'personality voice-bolden)
         m )))))
 
 ;; Silence messages from async handlers:

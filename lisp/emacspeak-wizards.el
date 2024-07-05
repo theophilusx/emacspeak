@@ -2253,7 +2253,7 @@ Location is a Lat/Lng pair retrieved from Google Maps API."
       (let-alist (g-json-from-url url)
         (insert
          (format "* Forecast At %s For %s\n\n"
-                 (ems--noaa-time fmt .properties.updated)
+                 (ems--noaa-time fmt .properties.updateTime)
                  address))
         (cl-loop
          for p across .properties.periods do
@@ -2268,7 +2268,7 @@ Location is a Lat/Lng pair retrieved from Google Maps API."
         (insert
          (format
           "\n* Hourly Forecast:Updated At %s \n"
-          (ems--noaa-time fmt .properties.updated)))
+          (ems--noaa-time fmt .properties.updateTime)))
         (cl-loop
          for p across .properties.periods do
          (let-alist p
@@ -2285,7 +2285,6 @@ Location is a Lat/Lng pair retrieved from Google Maps API."
              .shortForecast
              .temperature .windSpeed .windDirection))))
         (fill-region (point-min) (point-max) 'full))
-      (view-mode 1)
       (setq buffer-read-only t)
       (goto-char (point-min)))
     buffer))
