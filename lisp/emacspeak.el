@@ -139,6 +139,7 @@ the Emacspeak desktop.")
     ("comint"  emacspeak-comint)
     ("company" emacspeak-company)
     ("compile" emacspeak-compile)
+    ("consult" emacspeak-consult)
     ("cperl-mode" emacspeak-cperl)
     ("cus-edit" emacspeak-custom)
     ("deadgrep" emacspeak-deadgrep)
@@ -456,7 +457,9 @@ commands and options."
   (make-thread #'emacspeak-prepare-emacs)
   (setq line-number-mode nil column-number-mode nil)
   (global-visual-line-mode -1)
-  ;;(transient-mark-mode -1)
+  (transient-mark-mode -1)
+  (info-initialize)
+  (cl-pushnew emacspeak-info-directory Info-directory-list)
   (when emacspeak-wpctl
     (add-to-list
      'minor-mode-alist

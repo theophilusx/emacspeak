@@ -66,6 +66,8 @@ type="text/xsl"?>
     <application name="elscreen">
       Speech-enables package ElScreen for managing Emacs window layouts.
     </application>
+    <application name="stumpwm">
+      Speech-enable StumpWM</application>
     <application name="sawfish">
       Speech-enables the Sawfish window-manager.
     </application>
@@ -175,6 +177,10 @@ type="text/xsl"?>
       <application name="google">
         Support for Google search --- including the Google tool-belt for
       refining searches.</application>
+      <application name="ebuku">
+        Ebuku provides a basic interface to the
+[buku](https://github.com/jarun/buku) Web bookmark manager.
+      </application>
   </category>
   <category name="Google Client">
     <application name="gblogger">
@@ -560,6 +566,10 @@ module emacspeak-vdiff.</application>
     Finds files within a project using cached list of files.</application>
     <application name="magit">
     Emacs front-end to GIT</application>
+    <application name="forge">
+      Work with Git forges, such as Github and Gitlab, from the comfort
+of Magit and the rest of Emacs.
+    </application>
     <application name="vc">
     Front-end to version control systems like SVN, GIT, HG, CVS and RCS.</application>
     <application name="pcl-cvs">
@@ -602,6 +612,9 @@ module emacspeak-vdiff.</application>
   <category name=" programming">
     <application name="xref">
       Support for cross-references via package XRef in Emacs-25.
+    </application>
+<application name="consult">
+      Completion with instant preview.
     </application>
     <application name="company">
       Complete anything support.

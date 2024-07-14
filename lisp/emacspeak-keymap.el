@@ -263,7 +263,7 @@
    ("]" emacspeak-speak-page)
    ("^" emacspeak-filtertext)
    ("`"  emacspeak-speak-net-id)
-   ("a" beginning-of-line)
+   ("a" emacspeak-speak-message-again)
    ("b" emacspeak-speak-buffer)
    ("c" emacspeak-speak-char)
    ("e" move-end-of-line)
@@ -474,9 +474,9 @@
 
 (defcustom emacspeak-y-keys
   '(
-    ("E" emacspeak-epub-eww)
     ("b" emacspeak-bookshare-eww)
     ("d" empv-download-youtube)
+    ("e" emacspeak-epub-eww)
     ("l" emacspeak-empv-play-last)
     ("p" empv-youtube-playlist)
     ("s" emacspeak-empv-yt-search)
@@ -570,7 +570,7 @@
     ("h" emacspeak-m-player-from-history)
     ("i" ibuffer)
     ("j" emacspeak-zoxide)
-    ("l" emacspeak-m-player-locate-media)
+    ("l" locate)
     ("m" vm)
     ("o" find-file)
     ("r" emacspeak-wizards-find-file-as-root)
@@ -696,7 +696,7 @@
     ("'" emacspeak-pianobar)
     ("d" sdcv-search-input)
     ("f" ffap)
-    ("l" locate)
+    ("l" emacspeak-m-player-locate-media)
     ("o" org-mode)
     ("m" notmuch-search)
     ("p" emacspeak-wizards-portfolio)

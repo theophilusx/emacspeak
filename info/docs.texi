@@ -35,6 +35,7 @@
 * emacspeak-comint::Speech-enable COMINT.
 * emacspeak-company::Speech-enable COMPANY.
 * emacspeak-compile::Speech enable compile.
+* emacspeak-consult::Speech-enable CONSULT.
 * emacspeak-cperl::Speech enable CPerl.
 * emacspeak-custom::Speech enable custom.
 * emacspeak-dbus::DBus On Emacspeak.
@@ -251,7 +252,7 @@
 
 @include intro-docs.texi
 
-This chapter documents a total of 1165 commands and 127 options.
+This chapter documents a total of 1171 commands and 127 options.
 
 @node amixer
 @section amixer
@@ -2916,6 +2917,19 @@ Speech feedback about the compilation error.
 @end format
 @end deffn
 
+@node emacspeak-consult
+@section emacspeak-consult
+
+CONSULT ==  A modern completing-read
+@section Consult
+@itemize
+@item Setup @code{consult-after-jump-hook} to speak  where we
+land.
+@item Advice needed interactive commands.
+@item Map faces.
+@item Setup: Put consult commands on @code{C-/}
+@end itemize
+
 @node emacspeak-cperl
 @section emacspeak-cperl
 
@@ -4087,6 +4101,24 @@ Toggle output to being just on the right.
 @end format
 @end deffn
 
+@subsubsection emacspeak-empv-yt-after
+@deffn {Command} emacspeak-empv-yt-after   
+@findex emacspeak-empv-yt-after
+
+@format
+Youtube Search  from calendar --- add after:date-at-point..
+@end format
+@end deffn
+
+@subsubsection emacspeak-empv-yt-before
+@deffn {Command} emacspeak-empv-yt-before   
+@findex emacspeak-empv-yt-before
+
+@format
+Youtube Search  from calendar --- add before:date-at-point..
+@end format
+@end deffn
+
 @subsubsection emacspeak-empv-yt-search
 @deffn {Command} emacspeak-empv-yt-search  (query)
 @table @kbd
@@ -4595,8 +4627,8 @@ Delete EPub under point.
 @subsubsection emacspeak-epub-eww
 @deffn {Command} emacspeak-epub-eww  (epub-file &optional use-ncx)
 @table @kbd
-@item C-e y E
-@kindex C-e y E
+@item C-e y e
+@kindex C-e y e
 @end table
 
 @findex emacspeak-epub-eww
@@ -7653,6 +7685,24 @@ Open Google link under point.
 @end format
 @end deffn
 
+@subsubsection emacspeak-google-search-after
+@deffn {Command} emacspeak-google-search-after   
+@findex emacspeak-google-search-after
+
+@format
+Google from calendar --- add after:date-at-point.
+@end format
+@end deffn
+
+@subsubsection emacspeak-google-search-before
+@deffn {Command} emacspeak-google-search-before   
+@findex emacspeak-google-search-before
+
+@format
+Google from calendar --- add before:date-at-point.
+@end format
+@end deffn
+
 @subsubsection emacspeak-google-show-toolbelt
 @deffn {Command} emacspeak-google-show-toolbelt   
 @findex emacspeak-google-show-toolbelt
@@ -8362,7 +8412,7 @@ Default Value:
  ("h" emacspeak-m-player-from-history)
  ("i" ibuffer)
  ("j" emacspeak-zoxide)
- ("l" emacspeak-m-player-locate-media)
+ ("l" locate)
  ("m" vm)
  ("o" find-file)
  ("r" emacspeak-wizards-find-file-as-root)
@@ -8386,7 +8436,7 @@ Default Value:
 (("'" emacspeak-pianobar)
  ("d" sdcv-search-input)
  ("f" ffap)
- ("l" locate)
+ ("l" emacspeak-m-player-locate-media)
  ("m" notmuch-search)
  ("o" org-mode)
  ("p" emacspeak-wizards-portfolio)
@@ -8514,9 +8564,9 @@ Key bindings for use with C-e y.
 Default Value: 
 @verbatim
 
-(("E" emacspeak-epub-eww)
- ("b" emacspeak-bookshare-eww)
+(("b" emacspeak-bookshare-eww)
  ("d" empv-download-youtube)
+ ("e" emacspeak-epub-eww)
  ("l" emacspeak-empv-play-last)
  ("p" empv-youtube-playlist)
  ("s" emacspeak-empv-yt-search)
@@ -9117,12 +9167,10 @@ Play both channels on left.
 @table @kbd
 @item C-z l
 @kindex C-z l
-@item C-; l
-@kindex C-; l
+@item C-' l
+@kindex C-' l
 @item C-e z l
 @kindex C-e z l
-@item C-x @@ h l
-@kindex C-x @@ h l
 @end table
 
 @findex emacspeak-m-player-locate-media
@@ -10410,8 +10458,8 @@ The body can be accessed via ‘emacspeak-muggles-toggle-option/body’.
 @subsubsection emacspeak-muggles-undo-only/undo-redo/body
 @deffn {Command} emacspeak-muggles-undo-only/undo-redo/body   
 @table @kbd
-@item C-/
-@kindex C-/
+@item s-/
+@kindex s-/
 @end table
 
 @findex emacspeak-muggles-undo-only/undo-redo/body
@@ -12294,6 +12342,24 @@ displayed buffers.
 @end format
 @end deffn
 
+@subsubsection emacspeak-filter-after
+@deffn {Command} emacspeak-filter-after   
+@findex emacspeak-filter-after
+
+@format
+Add after:today filter
+@end format
+@end deffn
+
+@subsubsection emacspeak-filter-before
+@deffn {Command} emacspeak-filter-before   
+@findex emacspeak-filter-before
+
+@format
+Add before:today filter
+@end format
+@end deffn
+
 @subsubsection emacspeak-goto-percent
 @deffn {Command} emacspeak-goto-percent  (percent)
 @table @kbd
@@ -12929,6 +12995,8 @@ Load emacspeak filter settings.
 @subsubsection emacspeak-speak-message-again
 @deffn {Command} emacspeak-speak-message-again  (&optional from-message-cache)
 @table @kbd
+@item C-e a
+@kindex C-e a
 @item C-e <backspace>
 @kindex C-e <backspace>
 @item C-e <delete>
@@ -20492,7 +20560,7 @@ mode if ARG is nil, omitted, or is a positive number.  Disable the mode
 if ARG is a negative number.
 
 To check whether the minor mode is enabled in the current buffer,
-evaluate ‘voice-lock-mode’.
+evaluate the variable ‘voice-lock-mode’.
 
 The mode’s hook is called both when the mode is enabled and when it is
 disabled.

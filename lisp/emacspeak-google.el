@@ -253,14 +253,6 @@
          :range '("YYYY" "MM")
          :default ""
          :value "")
-        ;; Date Filter
-        (make-ems--g-tool
-         :name "date-filter"
-         :param "qdr"
-         :range '("d" "h" "n" "m" "w" "y")
-         :default ""
-         :type 'tbs
-         :value "")
         ;; Timeline High
         (make-ems--g-tool
          :name "timeline-high"
@@ -785,6 +777,39 @@ results, default is 1."
       (insert "</body></html>\n")
       (emacspeak-eww-autospeak)
       (browse-url-of-buffer))))
+;;; Google from Calendar:
+(declare-function calendar-cursor-to-date "calendar" (&optional error event))
+
+
+
+;;;###autoload
+(defun emacspeak-google-search-after ()
+  "Google from calendar --- add after:date-at-point."
+  (interactive)
+  (cl-assert (eq major-mode 'calendar-mode) t "Not in calendar.")
+  (let ((date
+         (format " after:%d/%02d/%02d"
+                 (cl-third (calendar-cursor-to-date))
+                 (cl-first (calendar-cursor-to-date))
+                 (cl-second (calendar-cursor-to-date)))))
+    (funcall-interactively
+     'emacspeak-websearch-google
+     (url-encode-url (concat (read-from-minibuffer "Search After") date)))))
+
+;;;###autoload
+(defun emacspeak-google-search-before ()
+  "Google from calendar --- add before:date-at-point."
+  (interactive)
+  (cl-assert (eq major-mode 'calendar-mode) t "Not in calendar.")
+  (let ((date
+         (format " before:%d/%02d/%02d"
+                 (cl-third (calendar-cursor-to-date))
+                 (cl-first (calendar-cursor-to-date))
+                 (cl-second (calendar-cursor-to-date)))))
+    (funcall-interactively
+     'emacspeak-websearch-google
+     (url-encode-url
+      (concat (read-from-minibuffer "Date Search Before: ") date)))))
 
 ;;; youtube to rss:
 

@@ -391,12 +391,16 @@
   (save-current-buffer
     (set-buffer calendar-buffer)
     (local-unset-key emacspeak-prefix)
+    (define-key calendar-mode-map (kbd "gG") 'emacspeak-google-search-before)
+    (define-key calendar-mode-map (kbd "gg") 'emacspeak-google-search-after)
     (define-key calendar-mode-map "v" 'view-diary-entries)
     (define-key calendar-mode-map "\M-s" 'emacspeak-calendar-sunrise-sunset)
     (define-key calendar-mode-map  "\C-e." 'emacspeak-calendar-speak-date)
     (define-key calendar-mode-map  "\C-ee"
                 'calendar-end-of-week)))
 
+(define-key calendar-mode-map (kbd "gy") 'emacspeak-empv-yt-after)
+(define-key calendar-mode-map (kbd "gY") 'emacspeak-empv-yt-before)
 ;;;   Appointments:
 
 ;;;  take over and speak the appointment
