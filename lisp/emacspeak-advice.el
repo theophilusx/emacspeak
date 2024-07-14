@@ -662,9 +662,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (voice-setup-set-voice-for-face 'minibuffer-prompt 'voice-bolden)
 
-(defadvice minibuffer-completion-help (around emacspeak pre act comp)
-  "Silence messages"
-  (ems-with-messages-silenced ad-do-it))
+
 
 (defadvice quoted-insert (after emacspeak pre act comp)
   "Speak inserted  character."
@@ -2227,7 +2225,9 @@ Produce an auditory icon if possible."
   (emacspeak-icon 'close-object))
 
 (add-hook 'minibuffer-exit-hook #'emacspeak-minibuffer-exit-hook)
-
+(cl-declaim (special minibuffer-mode-map))
+(define-key minibuffer-mode-map (kbd "C-c a") 'emacspeak-filter-after)
+(define-key minibuffer-mode-map (kbd "C-c b") 'emacspeak-filter-before)
 ;;;  Advice occur
 
 (cl-loop
