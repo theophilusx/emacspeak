@@ -1,46 +1,72 @@
-* Introduction
+* Key Insights 
+
+  1. Open design is essential  for discovering new interaction
+     paradigms.
+  2. This is not mere idealism.  Openness is a key enabler for
+     creating   user journeys that were not  envisioned by a 
+     system's designers.
+  3. [[https://www.gnu.org/s/emacs/][Emacs]] and  [[https://en.wikipedia.org/wiki/TeX][TeX]]    are good exemplars. They  permit maximal freedom
+      when seen from the viewpoint of user extensibility and
+     creativity. TeX enabled [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings (AsTeR)]]; Emacs enabled [[https://emacspeak.sourceforge.net][Emacspeak]].
+  4. Rapid, reliable task completion is the most important metric and
+     trumps secondary items such as eye-candy --- the latter only
+     leads to bloat as evinced by the HTML Web.
+  5. Having a clearly identified user problem when designing a system
+     is paramount.
+  6. /Usability/ is important, but to  truly matter, the
+     system needs to be /useful/ first.
+  7. /Ease of use/ by   itself is often /marketing/ hype.
+  8. Useful systems are fun to learn and give back more than what you put
+     in with respect to time and effort.
+  9. A steep learning curve in and of itself is not to be feared --- it
+     can be fun to learn and  gets you farther faster.
+  10. A good touchstone: Ensure that the user grows continuously.
+
+
+
+* Emacspeak --- The Complete Audio Desktop 
 
   1. Emacspeak, started in September 1994, was released as Open
    Source in [[https://tvraman.github.io/emacspeak//web/releases/release-3.0.html][April 1995]].
-  2. The goal was to create a system for daily use that also doubled
-     as a research work-bench for developing an auditory interface
-     where speech and auditory output were treated as 
+  2. The goal was to create a system for daily use that  doubled
+     as a research work-bench for developing an auditory interface.
+  3. Speech and auditory output would be  treated as 
      first-class citizens.
-  3. The time felt right with respect to building such a system for
-     enabling equal access to the emerging Web of Internet content.
-  4. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]  was published in September 2014 to trace the
+  4. The time felt right with respect to building a  system 
+     that enabled  eyes-free access to the emerging Web.
+  5. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]  was published in September 2014 and  traced the
      evolution of the project.
-  5. Now, this article gives a birds-eye overview of the last 10 years
-     by following the logical structure of the afore mentioned Turning-Twenty paper.
-  6. In the process, we identify the dreams that have come to pass as
+  6. Now, this article gives a birds-eye overview of the last 10 years
+     by loosely following the logical structure of the  /Turning Twenty/ paper.
+  7. In the process, we identify the dreams that have come to pass as
      well as the expectations that have failed to materialize --- *both*
      attributable  to developments in the larger Internet eco-system.
-  7. But never fear, though  some of the above might
-     seem  superficially
-     disappointing in the short-term, they likely herald the nature of bigger and better
+  8. But never fear, though  some of these
+     may be   superficially
+     disappointing, they likely herald the nature of bigger and better
      things to come!
-  8. As a proof-point, in 1994, I could not have imagined the impact
+  9. As a proof-point, in 1994, I could not have imagined the impact
      that the world of Internet-centered  computing and the accompanying
      information revolution would have  on the state of information
      access.
-  9. Conversely, I boldly  (and incorrectly)predicted  that the arrival of mobile
-     devices and mainstream speech interfaces would herald the move to
-     a Web of information where there would be a clean separation
-     between application back-ends and various client-specific
-     front-ends.
-  10. The above still makes sense from the view of  /scalable/ software architecture; however the rapid growth of the Web economy has also
+  10. Conversely, I boldly  (and incorrectly)predicted  that the arrival of mobile
+      devices and mainstream speech interfaces would herald the move to
+      a Web of information where there would be a clean separation
+      between application back-ends and various client-specific
+      front-ends. See [[http://www.cs.washington.edu/htbin-post/mvis/mvis?ID=636][The Web, The Way You Want.  Distinguished Lecture
+      Series, UW Oct 2008]] and [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]].
+  11. The above still makes sense from the view of  /scalable/ software architecture. However the rapid growth of the Web economy has also
       resulted in an even faster race to the bottom where applications
       continue to be built and re-built every few years for /the next
       best thing/ --- welcome to the /write once, debug everywhere/
       world all over again!
-  11. Case in point; today we have smart phones and smart speakers,
-      but both require targeted front-end services for each device
-      if one wishes to the bring the riches of the Internet to those
-      newer devices.
-  12. So the larger the Web gets, the fewer devices it becomes
+  12. Case in point; today we have smart phones, smart watches  and smart speakers,
+      but each of these  require targeted front-ends  
+      if one wishes to  bring the riches of the Internet to them.
+  13. So the larger the Web gets, the fewer devices it becomes
       available  on --- a classic downward spiral.
       
-Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg ][The Best Is Yet To Come]]!
+Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The Best Is Yet To Come]]!
 
 
 ** How To Read This Document
@@ -56,22 +82,22 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg ][Th
   1. In 2024 /UNIX/ equates mostly to various Linux distributions, and from
     the Emacspeak perspective, they are all made /mostly/ equal.
   2. Variations do exist and  running bleeding-edge distributions can come
-     with issues, e.g., unstable versions of the underlying audio infrastructure.
+     with issues, /e.g./, unstable versions of the underlying audio infrastructure.
   3. Yes, 30 years and counting, Linux Audio is still a work in
      progress though I hope Pipewire will be the last of these tidal shifts.
-  4. Linux is moving to Wayland from X and expect that transition to
+  4. Linux is moving to Wayland  and expect that transition to
      be choppy.
-  5. As with other platforms, native applications are mostly gone bar the
-     shouting; in that context, where the majority of users use most
-     things through a /mainstream/ Web browser, Emacspeak users access
+  5.  Native applications are mostly gone bar
+     the shouting. In this context, where most users access things
+     through a /mainstream/ Web browser, Emacspeak users access
      /everything/ through Emacs.
   6. The above when  done right is hugely empowering; 
-      when done badly, it's extremely debilitating  --- see later
+      when done badly, it's extremely limiting  --- see later
      sections of this paper on  the continuing evolution of the Web.
      
 * Key Enabler — Emacs And Lisp Advice
 
-  1. Advice in Emacs as implemented in ~advice.el~ is rock-solid.
+  1. Advice in Emacs as implemented in ~advice~ is rock-solid.
   2. There is a newer ~nadvice~ that is part of Emacs that Emacspeak
      does not use.
      
@@ -85,84 +111,82 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg ][Th
      
 * Key Component —  Text To Speech (TTS)
 
-  1. Speech output --- especially unencumbered text-to-speech is just
+  1. Speech output --- especially unencumbered text-to-speech --- is just
     as much a challenge as it was 30 years ago.
-  2. In the bigger picture, early instances of using speech
-     output for mainstream solutions has driven the industry toward
-     /natural sounding/ voices.
+  2. In the bigger picture, early instances of using TTS for voice
+     assistants has driven the industry toward /natural sounding/ voices.
   3. The above sounds attractive on the surface, but a price we have
      paid is the  loss of fine-grained control over voice parameters,
      emotion, stress and other supra-linguistic features.
-  4. I continue to believe that the above are essential for delivering
-     good auditory interaction and  continue to remain optimistic that
-     these will indeed arrive in the next iteration of speech
-     interaction on mainstream devices.
+  4. I  believe  these to be essential for delivering
+     good auditory interfaces and   remain optimistic that
+     these will indeed arrive in a future iteration of speech
+     interaction.
   5. Things appear to be coming full circle, Emacspeak started with
      the hardware Dectalk; now, the [[https://github.com/dectalk/dectalk.git][Software Dectalk]] is increasingly
-     becoming the primary choice on Linux --- see [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][for setup instructions]].
-  6. Viavoice Outloud from Voxin is still supported; but
-     you can no longer buy new licenses; if you have already purchased
+     becoming the primary choice on Linux --- see this  [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][Readme for setup instructions]].
+  6. Viavoice Outloud from Voxin is still supported.  However,
+     you can no longer buy new licenses. If you have already purchased
      a license, it'll
      continue to work.
   7. The  Vocalizer voices that Voxin now sells /do not/ work with Emacspeak.
   8. The  other choice on Linux is ESpeak which will hopefully
      continue to be free -- albeit of much lower quality.
   9. The future as ever is unpredictable and new voices may well show
-     up --- especially those powered by on-device LLMs as that
-     technology progresses.
+     up --- especially those powered by on-device Large Language
+     Models (LLMs).
+     
   10. On non-free platforms, there is usable TTS on the Mac, now
       supported by the new SwiftMac server for Emacspeak.
      
 * Emacspeak And Software Development
 
   1. /Magit/  as a Git porcelain is perhaps the biggest leap forward
-   with respect to software development  on Emacs.
+   with respect to software development.
   2. New completion frameworks such as /company/ and /consult/ come a
      close second in enhancing productivity.
-  3. The ability to introspect code via packages like ~eglot~ and
-     ~lsp~ turn Emacs into a powerful and meaningful IDE; I say
+  3. Completion strategies such as  /fuzzy/ and
+   /flex/ provide  enhanced completion.
+  4. The ability to introspect code via  ~eglot~ 
+      turn Emacs into a powerful and meaningful IDE ---  I say
      meaningful because these bring the best features of an integrated
      development environment while leaving behind the eye-candy that
-     has tended to bloat commercial IDEs.
-  4. Packages like /transient/ that enable rapid keyboard access to
+     tends to bloat commercial IDEs.
+  5. Packages like /transient/  enable discoverable, rapid keyboard access to
      complex nested-menu driven interfaces.
-  5. Various  completion strategies such as /prescient/, /fuzzy/ and
-     /flex/ for enhanced completion.
-  6. IPython notebooks and their generalization to /Julia/, /Python/
+  6. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]] under ~X~ using [[https://github.com/alols/xcape][xcape]] to minimize
+     chording has been  a significant win in the last two years.
+  7. Jupyter is the   generalization of IPython notebooks to /Julia/, /Python/
      and /R/. The news here isn't all good; IPython notebooks are
      well-designed with respect to not getting locked into any given
-     implementation. However in practice, all such environments depend
-     on Javascript for interaction from within the browser. Today,
-     many of Emacs' supporting environments for IPython Notebooks
-     e.g., package ~ein~ are no longer maintained for this reason; hopefully there
-     will be a new crop of packages to come in the future.
-  7.  Developing in languages like Python (~elpy~), ~R~,
-     ~Haskell~, ~Clojure~ (~cider~), Go, Rust, ~Scheme~, ~Racket~,
-     ~Ruby~ and numerous other high-level languages continues to be
-     very well supported in Emacspeak.
-  8. The re-emergence of Common Lisp in the last 20 years, thanks to
-     [[https://asdf.common-lisp.dev/asdf.html][asdf]]  as a network-aware package manager and build tool has
-     once again made Lisp development using Emacs ~Slime~ a productive
-     experience; as an example, in 2022, I updated [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical
-     Readings (AsTeR)]]--- my PhD project from 1993 --- to run under ~SBCL~
-     with a freshly implemented Emacs front-end.
-  9. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]] under ~X~ using [[https://github.com/alols/xcape][xcape]] to minimize
-     chording has been  a significant win in the last two years.
+     implementation. However in practice,  front-ends
+     depend on Javascript in the  browser.
+  8. Consequently, many of the Emacs  packages  for IPython
+     Notebooks /e.g./, package ~ein~,  are no longer maintained. 
+  9. Developing in higher-level languages continues to be very well
+     supported in Emacspeak.
+  10. The re-emergence of Common Lisp in the last 20 years, thanks to
+      [[https://asdf.common-lisp.dev/asdf.html][asdf]] and [[https://www.quicklisp.org/][quicklisp]] as a network-aware package manager and build
+      tool has once again made Lisp development using Emacs ~Slime~ a
+      productive experience.
+  11. In 2022, I updated [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical
+      Readings (AsTeR)]]--- my PhD project from 1993 --- to run under ~SBCL~
+      with a freshly implemented Emacs front-end.
+  12. So now I can listen to Math content just as well as I could 30
+      years ago!
      
      
 * Emacspeak And Authoring Documents
 
   1. Package ~org~ is to authoring as ~magit~ is to
-    software development with respect  to productivity gained.
+    software development with respect  to productivity gains.
   2. ~Org~ has existed since circa 2006 in my Emacs setup; but it
      continues to give and give plentifully.
-  3. Where I once authored technical papers in LaTeX using ~auctex~,
+  3. Where I once authored technical papers in /LaTeX/ using ~auctex~,
      used ~nxml~ for
-     XML/HTML,  etc., I now mostly write everything in ~org-mode~ and export
+     HTML,  /etc./, I now mostly write everything in ~org-mode~ and export
      to the relevant target format.
-  4. Integrating various search engines  in Emacs, with ~eww~
-     providing  a consistent Emacs experience, makes authoring content
-      on the Emacspeak desktop extremely productive.
+  4. Integrating various search engines  in Emacs makes authoring content extremely productive.
   5. Integrated access to spell-checking (~flyspell~) dictionaries, translation engines, and other
      language tools combine for a powerful authoring work-bench.
   6. Extending ~org-mode~ with custom link types enables /smart note
@@ -175,93 +199,97 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg ][Th
 
   1. Package ~shr~ and ~eww~ arrived around 2014. But in 2024, they
     can be said to have *truly* landed.
-  2. The explicit take-over of the stewardship of the HTML Web by the
-     browser vendors from the W3C in the last decade --- I say
+  2. 2014 also  marked the explicit take-over of the stewardship of the HTML Web by the
+     browser vendors from the W3C  --- I say
      explicit ---  because the W3C had already thrown in the towel in the
      preceding decade.
   3. This  has led to a Web of content  created using the assembly
-     language of divs, spans and JS --- under the flag of HTML5 ---
+     language of divs, spans and Javascript  under the flag of HTML5 ---
      the result is a tangled web of spaghetti that everyone loves to hate. 
-  4. For better or worse, the investment in XML and display-independent
+  4. In this context, see [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The
+     Web Was Broken]] for  a good overview of  HTML's obesity problem.
+  5. For better or worse, the investment in XML and display-independent
      content is now a complete write-off at least on the surface.
-  5. So what next --- wait for the spaghetti monster to show up for lunch? Humor aside that monster may well be called AI; though
+
+  6. So what next --- wait for the spaghetti monster to show up for
+     lunch? Humor aside that monster may well be called AI ---  though
      whether  today's Web gives that monster life, indigestion,
      constipation,   dysentery or hallucinations  is a story to be
      written in the coming years.
-
-  6. In this context, see [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The
-     Web Was Broken]] for  a good overview of  HTML's obesity problem.
      
-  7. In the meantime  I say /on the surface/ above ---The welcome re-emergence of
+  7.  I say /on the surface/ above  because The welcome re-emergence of
      ~ATOM~ and ~RSS~ feeds is perhaps a silent acknowledgement that
      bloated Web pages are now unusable even for users who can see.
-  8. On the Emacspeak desktop,  package  ~elfeed~
-     has emerged as  a powerful feed-manager for Emacs.
-  9. Emacspeak had already implemented ~RSS~ and ~ATOM~ support using
-     ~XSLT~; but those features now shine brighter  with mainstream
+  8.   Package  ~elfeed~ has emerged as  a powerful feed-manager for Emacs.
+  9. Emacspeak implements  ~RSS~ and ~ATOM~ support using
+     ~XSLT~;  those features now shine brighter  with mainstream
      news  sites reviving their support for content feeds.
   10. Browsers like Mozilla now implement /content filters/ --- a
       euphemism for scraping off  visual eye-candy and related cruft to
-      reveal the underlying content; recently these have now become
-      available as callable plugins, (see [[https://github.com/eafer/rdrview][RDRView]] for an example)  something that Emacspeak now
-      leverages to make the Web more readable.
+      reveal the underlying content.  These are now 
+      available as  plugins, (see [[https://github.com/eafer/rdrview][RDRView]] for an example).  Emacspeak 
+      leverages this to make the Web more readable.
   11. Package ~url-template~ and ~emacspeak-websearch~ continue to give
       in plenty, though they do require continuous updating.
-  12. Web APIs come and go, usually  last for a few years, so in some
-      sense that space is in steady state but constantly changing.
-  13. The state of WebApps is perhaps the most concerning from an
+  12. Web APIs come and go, so 
+       that space is in  a state of constant change.
+  13. The state of web applications is perhaps the most concerning from an
       Emacspeak perspective, and I do not  see that changing in the
-      short-term since there are no incentives for Web providers to
+      short-term.  There are no incentives for Web providers to
       free their applications from the tangled Web of spaghetti they have woven
       around themselves.
   14. But as with everything else in our industry,
-      it is when something feels completely entrenched that users
+      it is precisely when something feels completely entrenched that users
       rebel and innovations emerge  to move us to the next phase --- so
       fingers crossed.
   
 
 * Audio Formatting —  Generalizing Aural CSS
 
-  1. Audio formatting with Aural CSS support is stable, with
-new     enhancements  supporting more TTS engines.
+  1. Audio formatting with Aural CSS support is stable, with new
+     enhancements supporting more TTS engines.
   2. Support for parallel streams of TTS using separate outputs to
      left/right channels is a big win and enables more efficient interaction.
-  3. Support for various DSP filters makes Emacspeak a rich auditory environment.
-  4. Soundscapes implemented via package ~boodler~ makes for  a
+  3. Support for various Digital Signal Processing (DSP)  filters enables   rich auditory effects
+     like  binaural audio and spatial audio.
+  4. [[https://emacspeak.blogspot.com/2015/12/soundscapes-on-emacspeak-audio-desktop.html][Soundscapes]] implemented via package ~boodler~ makes for  a
      pleasant and relaxing auditory environment.
   5. Enabling virtual sound devices via Pipewire for 5.1  and 7.1
-     binaural audio significantly enhances the auditory experience.
+     spatial audio significantly enhances the auditory experience.
 
      
 * Conversational Gestures For The Audio Desktop
 
-  1.  Parallel streams of audio, combined with more ergonomic
-     keybindings are perhaps the only enhancement in this area.
+  1. Parallel streams of audio, combined with more ergonomic
+    keybindings are  the primary  enhancement in this area.
+  2. Parallel streams of speech, /e.g./, a separate notification
+     stream on the left or right ear  help increase the band-width of communication.
+  3. Notifications can thus be delivered without having to stop the
+     primary speech output.
      
 * Accessing Media Streams
 
 
   1. Emacspeak support for rich multimedia is now much  more robust.
-  2. First ~mplayer~ and now ~mpv~ significantly expand the
-   multimedia streaming features of the Emacspeak desktop.
-  3. Emacs package ~empv~ along with module ~emacspeak-empv~ is a
-     powerful combination for locating, organizing  and playing local and remote
+  2. Emacs package   ~empv~  is a
+     powerful tool  for locating, organizing  and playing local and remote
      media streams ranging from music, audio books, radio stations and
-     Podcasts, all with a single unified interface.
-  4. This makes media streams from a large number of providers ranging
+     Podcasts.
+  3. This makes media streams from a large number of providers ranging
      from the BBC to Youtube available via a consistent keyboard interface.
-  5. This experience is augmented by a collection of /smart/ content
-     locators on the Emacspeak desktop, see the relevant blog article
-     [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]] on the Emacspeak Blog.
+  4. This experience is augmented by a collection of /smart/ content
+     locators on the Emacspeak desktop, see the relevant blog
+     article titled 
+     [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]].
      
-* EBooks—   Ubiquitous Access To Books
+* Electronic Books—   Ubiquitous Access To Books
 
-  1. Module ~emacspeak-epub~ for Epub and ~emacspeak-bookshare~ for
-    Bookshare continue to provide good EBook integration.
+  1. Emacspeak modules  for /Epub/ and 
+    /Bookshare/ continue to provide good books  integration.
   2. There are  /smart/ book locators analogous to the locators for
      media content.
-  3. Speech-enabled ~Calibre~ integration for working with  local
-     Ebook libraries.
+  3. Emacspeak speech-enables ~Calibre~  for working with
+     local electronic libraries.
      
      
 * Leveraging Computational Tools —  From SQL And R To IPython Notebooks
@@ -270,86 +298,130 @@ new     enhancements  supporting more TTS engines.
   2. Newer highlights include ~sage~ interaction for symbolic computation.
   3. Integrates with packages like ~gptel~ and ~ellama~ for working
      with local and network LLMs.
-  4. The afore-mentioned decline in IPython Notebooks presently limits
-     the level of interaction possible with ~Colab~ notebooks,
+  4. The decline in IPython Notebooks presently limits
+     the level of interaction possible with [[https://colab.research.google.com/][Colab notebooks]],
      especially when working with remote LLMs that impose some type of
-     proprietary auth-flow.
+     proprietary authorization-flow.
      
-* Social Web  — EMail, Instant Messaging, Blogging  And Tweeting Using Open Protocols
+* Social Web  — Mail, Messaging And Blogging  
 
   1. This is a space that is definitely regressing.
   2. The previous decade was marked by open APIs to many social Web platforms.
   3. Over time these first regressed with respect to privacy.
   4. Then they turned into wall-gardens in their own right.
-  5. Finally, the Web APIs, other than the kind embedded in JS have
+  5. Finally, the Web APIs, other than the kind embedded in Javascript have
      started disappearing.
-  6. Looking back,the only /social/ platform I use if Blogger for
+  6. Looking back, the only /social/ platform I now use is Blogger for
      hosting my Emacspeak Blog, it has a somewhat usable API, albeit
-     guarded by a difficult to use OAuth interface that requires one
-     to sign in via  a /mainstream/ browser.
+     guarded by a difficult to use /OAuth/ interface that requires 
+     signing   in via  a /mainstream/ browser.
   7. IMap continues to survive as an open email protocol, though its
      days may well be numbered.
   8. The dye is already cast with respect to mere mortals being able
-     to setup and  host their email; witness the complexity in setting
+     to setup and  host their email ---  witness the complexity in setting
      up the Emacspeak mailing list in 2023 vs 1993!
-  9. This is an area that is again likely to get worse before it gets
-     better --- more the pity, since Internet Email is perhaps the
+  9. This is an area that is  likely to get worse before it gets
+     better,  thanks to the spammers  --- more the pity, since Internet Email is perhaps the
      single-most impactful technology with respect to leveling the
      communications playing field.
   10. The disappearance of APIs mentioned above also means that today
-      the only usable chat services on an open platform like Emacspeak
+      the only usable chat service on an open platform like Emacspeak
       is the venerable  Internet Relay Chat (IRC).
      
 * The RESTful Web —  Web Wizards And URL Templates For Faster Access
 
   1. This area continues to thrive --- either because of -- or
-    despite -- the best and worst efforts of service providers on the
+    despite -- the best and worst efforts of application providers on the
     Web.
   2. Twenty years on (this feature originally landed in 2000)
-     Emacspeak has a far richer collection of filters, pre-processors
-     and post-processors that enables ever-more powerful Web
+     Emacspeak has a far richer collection of filters, preprocessors
+     and post-processors
+      that enables ever-more powerful Web
      wizards. See the relevant [[https://tvraman.github.io/emacspeak/manual/URL-Templates.html][chapter]] in the Emacspeak manual for the
      automatically updated list of *URL Templates*.
      
 * Mashing It Up —  Leveraging  AI And The Web 
 
-  1.  Developing solutions by combining various
-   API-based services on the Web has  all but shut-down unless one is willing
-   to commit fully to the JS-powered Web hosted in a Web browser,
-   something I hope I never   have to accept.
+  1. Developing solutions by combining various API-based services on
+     the Web has all but disappeared, unless one is willing to commit
+     fully to the Javascript-powered Web hosted in a Web browser,
+     something I hope I never have to accept.
   2. So for now, I'll keep
      well away and count my blessings.
   3. The next chapter of the /mash-up story/ may well be based around
-     LLMs and AI; in effect, LLMs that process Web content essentially
-     define a /platform/ for generating content mash-ups --- the issue
-     at present is that they often produce meaningless /mush/ ---
-     something that will hopefully get better as the field gets a
-     handle on cleaning up data and evaluation metrics.
+      /Generative AI/ using LLMs. In effect, LLMs trained on   Web content 
+     define a /platform/ for generating content mash-ups.  The issue
+     at present is that they are just as  likely  to produce
+     /meaningless mush/ ---
+     something that may  get better as the field gets a
+     handle on cleaning up  Web content.
+  4.  Notice that we are now back to the previously unsolved problem
+     of cleaning up the  HTML Web --- with LLMs, we'll just
+     have an order of magnitude more documents than the /2^W/ postulated
+      by  [[https://research.google/blog/beyond-web-20/?hl=in&m=1][Beyond Web 2.0, Communications
+     Of The ACM, 2008]].
      
-* Conclusion 
+     
+*  The Final Word --- Donald E Knuth (DEK)
+
+  - [[https://www.azquotes.com/author/8177-Donald_Knuth][Computer Programming Is An Art]].
+  - The best theory is inspired by practice. The best practice is
+    inspired by theory. 
+  - The enjoyment of one's tools is an essential ingredient of
+    successful work. 
+  - Easy things are often amusing and relaxing, but their value soon
+    fades. Greater pleasure, deeper satisfaction, and higher wages are
+    associated with genuine accomplishments, with the successful
+    fulfillment of a challenging task. 
+    
+The best example of the above is of course [[https://en.wikipedia.org/wiki/TeX][Knuth's TeX]] --- work that
+    was motivated  by his own dissatisfaction with the tools available
+    to him at the time for carrying out his magnum opus --- [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art
+    Of Computer Programming (TAOCP)]].  It is something I've looked up
+    to ever since my time as a graduate student at Cornell.
+
+    
+The  Emacspeak Speech Odyssey outlined in this paper is, in some
+small measure, my own personal
+experience of the sentiments he expresses.
+
+--T. V. Raman,  San Jose, CA, August 1, 2024.
+    
 * References 
-
-  1. [[https://tvraman.github.io/emacspeak//web/releases/release-3.0.html][Announcing Emacspeak: April 1995]]
-  2. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]
-  3. [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg ][An Ode To Emacspeak: The Best Is Yet To Come]]
-  4. [[https://github.com/dectalk/dectalk.git][Software Dectalk on Github]]
-  5. [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][Dectalk  setup instructions]]
-  6. [[https://asdf.common-lisp.dev/asdf.html][Common Lisp: asdf]]
-  7. [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings]]
-  8. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]]
-  9. [[https://github.com/alols/xcape][Minimize chording with XCape]]
-  10. [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][Learn Smarter By Taking Rich Hypertext Notes]]
-  11. [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The Web Was Broken]]
-  12. [[https://github.com/eafer/rdrview][Readable Web Pages: RDRView]]
-  13. [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]]
-  14. [[https://tvraman.github.io/emacspeak/manual/URL-Templates.html][Emacspeak Manual: URL Templates]]
-
-#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+  1. [[https://www.gnu.org/s/emacs/][GNU Emacs]]
+  2. [[https://en.wikipedia.org/wiki/TeX][Knuth's TeX]]
+  3. [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings]]
+  4. [[https://tvraman.github.io/emacspeak//web/releases/release-3.0.html][Announcing Emacspeak: April 1995]]
+  5. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]
+  6. [[http://www.cs.washington.edu/htbin-post/mvis/mvis?ID=636][The Web, The Way You Want.  Distinguished Lecture Series, UW Oct 2008]]
+  7. [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]]
+  8. [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][An Ode To Emacspeak: The Best Is Yet To Come]]
+  9. [[https://github.com/dectalk/dectalk.git][Software Dectalk on Github]]
+  10. [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][Dectalk  setup instructions]]
+  11. [[https://asdf.common-lisp.dev/asdf.html][Common Lisp: asdf]]
+  12. [[https://www.quicklisp.org/][Common Lisp: Quicklisp]]
+  13. [[https://emacspeak.blogspot.com/2015/12/soundscapes-on-emacspeak-audio-desktop.html][Soundscapes on the Emacspeak Audio Desktop]] 
+  14. [[https://colab.research.google.com/][Colab notebooks]]
+  15. [[https://en.wikipedia.org/wiki/REST][RESTful Web]]
+  16. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]]
+  17. [[https://github.com/alols/xcape][Minimize chording with XCape]]
+  18. [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][Learn Smarter By Taking Rich Hypertext Notes]]
+  19. [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The Web Was Broken]]
+  20. [[https://github.com/eafer/rdrview][Readable Web Pages: RDRView]]
+  21. [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]]
+  22. [[https://research.google/blog/beyond-web-20/?hl=in&m=1][Beyond Web 2.0, Communications
+    Of The ACM, 2008]]
+  23. [[https://tvraman.github.io/emacspeak/manual/URL-Templates.html][Emacspeak Manual: URL Templates]]
+  24. [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art Of Computer Programming (TAOCP)]]
+  
+#+options: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
 #+options: author:t broken-links:nil c:nil creator:nil
 #+options: d:(not "LOGBOOK") date:t e:t email:nil expand-links:t f:t
 #+options: inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
 #+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
-#+title: 30 Years On: Emacspeak --- A Speech Odyssey
+#+title:  Emacspeak:  A Speech Odyssey
+#+KEYWORDS: Emacspeak, Complete Audio Desktop
+#+DESCRIPTION: Emacspeak  --- A Speech Odyssey --- Emacspeak At Thirty
 #+date: <2024-07-10 Wed>
 #+author: T.V Raman
 #+email: raman@google.com
@@ -357,4 +429,5 @@ new     enhancements  supporting more TTS engines.
 #+select_tags: export
 #+exclude_tags: noexport
 #+creator: Emacs 31.0.50 (Org mode 9.7.6)
+#+latex_header: \usepackage[scaled]{helvet} \renewcommand\familydefault{\sfdefault} 
 #+cite_export:
