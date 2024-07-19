@@ -8,28 +8,28 @@
 ;; LCD Archive Entry:
 ;; emacspeak| T. V. Raman |tv.raman.tv@gmail.com
 ;; A speech interface to Emacs |
-;; 
+;;
 ;;  $Revision: 4532 $ |
 ;; Location https://github.com/tvraman/emacspeak
-;; 
+;;
 
 ;;;   Copyright:
 ;; Copyright (C) 1995 -- 2024, T. V. Raman
 ;; Copyright (c) 1994, 1995 by Digital Equipment Corporation.
 ;; All Rights Reserved.
-;; 
+;;
 ;; This file is not part of GNU Emacs, but the same permissions apply.
-;; 
+;;
 ;; GNU Emacs is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; GNU Emacs is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, 51 Franklin Street, Fifth Floor,
@@ -51,7 +51,7 @@
 ;; @end itemize
 ;; See documentation for package flyspell-correct for additional
 ;; details.
-;; 
+;;
 ;; Use Customization emacspeak-flyspell-correct to pick
 ;; between ido, popup and helm.
 
@@ -74,25 +74,32 @@ fly spell checking."
 
 (voice-setup-add-map
  '((flyspell-incorrect voice-bolden)
-   (flyspell-duplicate voice-monotone-extra)))
+   (flyspell-duplicate voice-monotone-extra)
+   (flyspell-correct-highlight-face voice-animate)))
 
 ;;;  advice
 
-(cl-declaim (special flyspell-delayed-commands))
-(when (fboundp 'emacspeak-self-insert-command)
-  (push 'emacspeak-self-insert-command flyspell-delayed-commands))
+(defadvice flyspell-buffer (around emacspeak pre act comp)
+  "Silence icon."
+  (let ((emacspeak-use-icons nil)) ad-do-it))
+
+(defadvice flyspell-region (around emacspeak pre act comp)
+  "Silence icon."
+  (let ((emacspeak-use-icons nil)) ad-do-it))
 
 (defadvice flyspell-auto-correct-word (around emacspeak pre act comp)
   "Speak the correction we inserted."
   (cond
    ((ems-interactive-p)
     (ems-with-messages-silenced
-     ad-do-it
-     (dtk-speak (car (flyspell-get-word nil)))
-     (when (sit-for 1)
-       (dtk-notify (cl-second flyspell-auto-correct-ring)))
-     (when (sit-for 1) (emacspeak-speak-message-again))
-     (emacspeak-icon 'select-object))) (t ad-do-it)) ad-return-value)
+      ad-do-it
+      (dtk-speak (car (flyspell-get-word nil)))
+      (when (sit-for 1)
+        (dtk-notify (cl-second flyspell-auto-correct-ring)))
+      (when (sit-for 1) (emacspeak-speak-message-again))
+      (emacspeak-icon 'select-object)))
+   (t ad-do-it))
+  ad-return-value)
 
 (defadvice flyspell-unhighlight-at (before emacspeak pre act comp)
   "handle highlight/unhighlight."
@@ -125,6 +132,8 @@ fly spell checking."
 (when
     (and (bound-and-true-p flyspell-mode-map)
          (locate-library "flyspell-correct"))
+  (define-key flyspell-mode-map (kbd "s-b") 'flyspell-buffer)
+  (define-key flyspell-mode-map (kbd "s-r") 'flyspell-region)
   (define-key flyspell-mode-map (kbd "C-x .") 'flyspell-correct-at-point)
   (define-key flyspell-mode-map (kbd "C-'") 'flyspell-correct-previous)
   (define-key flyspell-mode-map (kbd "C-;") 'flyspell-correct-wrapper)
@@ -139,6 +148,10 @@ fly spell checking."
      "Speak word."
      (when (ems-interactive-p)
        (dtk-speak (car (flyspell-get-word nil)))))))
+
+(defadvice flyspell-goto-next-error (after emacspeak pre act comp)
+  "speak."
+  (when (ems-interactive-p) (emacspeak-speak-line)))
 
 (provide 'emacspeak-flyspell)
 ;;;  emacs local variables
