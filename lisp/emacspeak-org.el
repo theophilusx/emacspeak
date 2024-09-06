@@ -811,10 +811,6 @@ arg just opens the file"
     (emacspeak-icon 'task-done)
     (emacspeak-speak-mode-line)))
 
-;;; org-mks:
-
-;;; Org should use transient --sigh!
-
 ;;; Amark:
 
 (org-link-set-parameters
@@ -923,6 +919,11 @@ Press `y' to play to next amark."
  #'(lambda (_s _t)
      (emacspeak-icon 'save-object)
      (emacspeak-speak-message-again)))
+
+(defadvice org-export-to-file (after emacspeak pre act comp)
+  "speak."
+  (emacspeak-icon 'save-object)
+  (dtk-notify (format "Wrote %s" (ad-get-arg 1))))
 
 (provide 'emacspeak-org)
 ;;;  end of file
