@@ -183,7 +183,7 @@
 (defvar emacspeak-empv-history nil
   "Youtube history for EMpv.")
 
-(defvar emacspeak-empv-history-max 16
+(defvar emacspeak-empv-history-max 128
   "Max number of history to preserve.")
 
 ;;;###autoload
@@ -353,7 +353,7 @@ If already playing, then read an empv key and invoke its command."
   "Speak title of currently selected item."
   (interactive)
   (emacspeak-icon 'select-object)
-  (dtk-speak (cdr (assq 'title (empv-youtube-results--current-item)))))
+  (message (cdr (assq 'title (empv-youtube-results--current-item)))))
 
 (defadvice empv-youtube-results-copy-current (after emacspeak pre act comp)
   "speak."

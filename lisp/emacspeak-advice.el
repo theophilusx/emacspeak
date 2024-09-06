@@ -430,11 +430,11 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      "Speak next screenful."
      (when (ems-interactive-p)
        (emacspeak-icon 'scroll)
-       (dtk-notify
+       (dtk-speak (emacspeak-get-window-contents))
+         (dtk-notify
           (propertize
            (format "%s " (emacspeak-get-current-percentage-into-buffer))
-           'personality voice-smoothen))
-         (dtk-speak (emacspeak-get-window-contents))))))
+           'personality voice-smoothen))))))
 
 ;;;  Advise modify case commands to speak
 
@@ -2228,6 +2228,11 @@ Produce an auditory icon if possible."
 (cl-declaim (special minibuffer-mode-map))
 (define-key minibuffer-mode-map (kbd "C-c a") 'emacspeak-filter-after)
 (define-key minibuffer-mode-map (kbd "C-c b") 'emacspeak-filter-before)
+(define-key minibuffer-local-completion-map (kbd "C-c a") 'emacspeak-filter-after)
+(define-key minibuffer-local-completion-map (kbd "C-c b")
+            'emacspeak-filter-before)
+(define-key minibuffer-local-ns-map (kbd "C-c a") 'emacspeak-filter-after)
+(define-key minibuffer-local-ns-map (kbd "C-c b") 'emacspeak-filter-before)
 ;;;  Advice occur
 
 (cl-loop

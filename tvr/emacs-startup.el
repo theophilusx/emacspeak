@@ -110,9 +110,9 @@ Use Custom to customize where possible. "
                outline-mode-prefix-map emacspeak-directory))
   (setenv "PULSE_SINK" "effect_input.spatializer") ; for mplayer
   (unless (battery--upower-devices) (display-battery-mode -1)) ; turnoff
-                                        
   (load-theme 'ef-maris-dark t)
   (load-library "aster")
+  (when (featurep 'tex-site) (require 'tex))
   ;; basic look and feel
   (setq frame-title-format '(multiple-frames "%b" ("Emacs")))
   (mapc                                 ; not a novice:
@@ -167,7 +167,7 @@ Use Custom to customize where possible. "
     (mapc
      #'(lambda (m) (diminish m ""))
      '(
-       outline-minor-mode reftex-mode voice-lock-mode company-mode hs-minor-mode
+       outline-minor-mode  voice-lock-mode company-mode hs-minor-mode
        org-cdlatex-mode yas-minor-mode  auto-fill-function
        abbrev-mode auto-correct-mode)))
   (setq  global-mode-string '("" display-time-string battery-mode-line-string))
@@ -185,10 +185,12 @@ Use Custom to customize where possible. "
     (yas-global-mode 1)
     (diminish 'yas-minor-mode ""))
   (tvr-time-load
-   (tvr-customize)
-   (load "emacspeak-muggles"))
-  (emacspeak-wizards-project-shells-initialize))
-(declare-function battery--upower-devices "battery" nil)
+      (tvr-customize)
+    (load "emacspeak-muggles"))
+  (emacspeak-wizards-project-shells-initialize)
+  (when (featurep  'auctex-autoloads) (load-library "tex-site")))
+  
+  (declare-function battery--upower-devices "battery" nil)
 
 (declare-function
  emacspeak-pronounce-toggle-dictionaries

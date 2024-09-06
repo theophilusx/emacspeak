@@ -1,26 +1,48 @@
-* Key Insights 
+* Dedication: To My Guiding Eyes Aster, Hubbell and Tilden
 
-  1. Open design is essential  for discovering new interaction
-     paradigms.
-  2. This is not mere idealism.  Openness is a key enabler for
+#+BEGIN_EXPORT html
+<table>
+        <tr>
+          <td><a href="https://emacspeak.sourceforge.net/raman/aster-labrador/">
+	        <img src="https://emacspeak.sourceforge.net/raman/aster-labrador/aster-geb-graduation.jpg"
+	             alt="Aster Labrador" width="150" height="216" /></a>
+ <br/>(2/15/1987—12/05/1999)</td>
+            <td><a href="https://emacspeak.sourceforge.net/raman/hubbell-labrador/">
+	          <img
+	              src="https://emacspeak.sourceforge.net/raman/hubbell-labrador/hubbell-and-raman.jpg" width="150" height="216"
+	              alt=" Hubbell Labrador" /></a>
+<br/>(12/21/1997—4/11/2011)</td>
+              <td><a href="https://emacspeak.sourceforge.net/raman/tilden-labrador/">
+	            <img src="https://emacspeak.sourceforge.net/raman/tilden-labrador/raman-and-tilden-geb.jpg"
+	                 alt="Tilden Labrador" width="150"
+                         height="216" /></a>
+<br/>(8/4/2009—9/3/2022)</td>
+        </tr>
+      </table>
+#+end_export
+
+* Key Insights 
+  1. [[https://www.drdobbs.com:443/user-interface-a-means-to-an-end/184410453][User interface is a means to an end]].
+  2. Open Source is essential  for discovering new interaction paradigms.
+  3. This is not mere idealism.  Openness is a key enabler for
      creating   user journeys that were not  envisioned by a 
      system's designers.
-  3. [[https://www.gnu.org/s/emacs/][Emacs]] and  [[https://en.wikipedia.org/wiki/TeX][TeX]]    are good exemplars. They  permit maximal freedom
+  4. [[https://www.gnu.org/s/emacs/][Emacs]] and  [[https://en.wikipedia.org/wiki/TeX][TeX]]    are good exemplars. They  permit maximal freedom
       when seen from the viewpoint of user extensibility and
      creativity. TeX enabled [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings (AsTeR)]]; Emacs enabled [[https://emacspeak.sourceforge.net][Emacspeak]].
-  4. Rapid, reliable task completion is the most important metric and
+  5. Rapid, reliable task completion is the most important metric and
      trumps secondary items such as eye-candy --- the latter only
      leads to bloat as evinced by the HTML Web.
-  5. Having a clearly identified user problem when designing a system
+  6. Having a well-identified  problem when designing a system
      is paramount.
-  6. /Usability/ is important, but to  truly matter, the
+  7. /Usability/ is important, but to   matter, the
      system needs to be /useful/ first.
-  7. /Ease of use/ by   itself is often /marketing/ hype.
-  8. Useful systems are fun to learn and give back more than what you put
+  8. /Ease of use/ by   itself is often /marketing/ hype.
+  9. Useful systems are fun to learn and give back more than what you put
      in with respect to time and effort.
-  9. A steep learning curve in and of itself is not to be feared --- it
-     can be fun to learn and  gets you farther faster.
-  10. A good touchstone: Ensure that the user grows continuously.
+  10. A steep learning curve in and of itself is not to be feared --- it
+      can be fun to learn and  gets you farther faster.
+  11. True empowerment: Ensure that the user grows continuously.
 
 
 
@@ -49,12 +71,12 @@
      that the world of Internet-centered  computing and the accompanying
      information revolution would have  on the state of information
      access.
-  10. Conversely, I boldly  (and incorrectly)predicted  that the arrival of mobile
-      devices and mainstream speech interfaces would herald the move to
-      a Web of information where there would be a clean separation
-      between application back-ends and various client-specific
-      front-ends. See [[http://www.cs.washington.edu/htbin-post/mvis/mvis?ID=636][The Web, The Way You Want.  Distinguished Lecture
-      Series, UW Oct 2008]] and [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]].
+  10. Conversely, I boldly (and incorrectly) predicted that the
+      arrival of mobile devices and mainstream speech interfaces would
+      herald the move to a Web of information where there would be a
+      clean separation between application back-ends and various
+      client-specific front-ends. See [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]] and [[https://youtube.com/watch?v=TZKwvBkS5cs][The
+      Web, The Way You Want.  Distinguished Lecture Series, UW Oct 2007]].
   11. The above still makes sense from the view of  /scalable/ software architecture. However the rapid growth of the Web economy has also
       resulted in an even faster race to the bottom where applications
       continue to be built and re-built every few years for /the next
@@ -131,7 +153,7 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
      continue to work.
   7. The  Vocalizer voices that Voxin now sells /do not/ work with Emacspeak.
   8. The  other choice on Linux is ESpeak which will hopefully
-     continue to be free -- albeit of much lower quality.
+     continue to be free --- albeit of much lower quality.
   9. The future as ever is unpredictable and new voices may well show
      up --- especially those powered by on-device Large Language
      Models (LLMs).
@@ -147,32 +169,35 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
      close second in enhancing productivity.
   3. Completion strategies such as  /fuzzy/ and
    /flex/ provide  enhanced completion.
-  4. The ability to introspect code via  ~eglot~ 
-      turn Emacs into a powerful and meaningful IDE ---  I say
-     meaningful because these bring the best features of an integrated
+  4. [[https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html][Effective Suggest And Complete In An Eyes-free Environment]]
+     explains the higher-level concept  involved in defining such strategies.
+  
+  5. The ability to introspect code via  ~eglot~ 
+      turns Emacs into a powerful and meaningful IDE ---  I say
+     meaningful because this brings the best features of an integrated
      development environment while leaving behind the eye-candy that
      tends to bloat commercial IDEs.
-  5. Packages like /transient/  enable discoverable, rapid keyboard access to
+  6. Packages like /transient/  enable discoverable, rapid keyboard access to
      complex nested-menu driven interfaces.
-  6. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]] under ~X~ using [[https://github.com/alols/xcape][xcape]] to minimize
+  7. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]] under ~X~ using [[https://github.com/alols/xcape][xcape]] to minimize
      chording has been  a significant win in the last two years.
-  7. Jupyter is the   generalization of IPython notebooks to /Julia/, /Python/
+  8. Jupyter is the   generalization of IPython notebooks to /Julia/, /Python/
      and /R/. The news here isn't all good; IPython notebooks are
      well-designed with respect to not getting locked into any given
      implementation. However in practice,  front-ends
      depend on Javascript in the  browser.
-  8. Consequently, many of the Emacs  packages  for IPython
+  9. Consequently,  Emacs  packages  for IPython
      Notebooks /e.g./, package ~ein~,  are no longer maintained. 
-  9. Developing in higher-level languages continues to be very well
-     supported in Emacspeak.
-  10. The re-emergence of Common Lisp in the last 20 years, thanks to
+  10. Developing in higher-level languages continues to be very well
+      supported in Emacspeak.
+  11. The re-emergence of Common Lisp in the last 20 years, thanks to
       [[https://asdf.common-lisp.dev/asdf.html][asdf]] and [[https://www.quicklisp.org/][quicklisp]] as a network-aware package manager and build
       tool has once again made Lisp development using Emacs ~Slime~ a
       productive experience.
-  11. In 2022, I updated [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical
+  12. In 2022, I updated [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical
       Readings (AsTeR)]]--- my PhD project from 1993 --- to run under ~SBCL~
       with a freshly implemented Emacs front-end.
-  12. So now I can listen to Math content just as well as I could 30
+  13. So now I can listen to Math content just as well as I could 30
       years ago!
      
      
@@ -296,12 +321,9 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
 
   1. This area continues to provide a rich collection of  packages.
   2. Newer highlights include ~sage~ interaction for symbolic computation.
-  3. Integrates with packages like ~gptel~ and ~ellama~ for working
+  3. Emacspeak speech-enables  packages  ~gptel~ and ~ellama~ for working
      with local and network LLMs.
-  4. The decline in IPython Notebooks presently limits
-     the level of interaction possible with [[https://colab.research.google.com/][Colab notebooks]],
-     especially when working with remote LLMs that impose some type of
-     proprietary authorization-flow.
+
      
 * Social Web  — Mail, Messaging And Blogging  
 
@@ -321,7 +343,7 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
      to setup and  host their email ---  witness the complexity in setting
      up the Emacspeak mailing list in 2023 vs 1993!
   9. This is an area that is  likely to get worse before it gets
-     better,  thanks to the spammers  --- more the pity, since Internet Email is perhaps the
+     better,  thanks to the spammers  --- more's  the pity, since Internet Email is perhaps the
      single-most impactful technology with respect to leveling the
      communications playing field.
   10. The disappearance of APIs mentioned above also means that today
@@ -330,8 +352,8 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
      
 * The RESTful Web —  Web Wizards And URL Templates For Faster Access
 
-  1. This area continues to thrive --- either because of -- or
-    despite -- the best and worst efforts of application providers on the
+  1. This area continues to thrive --- either because of --- or
+    despite --- the best and worst efforts of application providers on the
     Web.
   2. Twenty years on (this feature originally landed in 2000)
      Emacspeak has a far richer collection of filters, preprocessors
@@ -358,13 +380,12 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
   4.  Notice that we are now back to the previously unsolved problem
      of cleaning up the  HTML Web --- with LLMs, we'll just
      have an order of magnitude more documents than the /2^W/ postulated
-      by  [[https://research.google/blog/beyond-web-20/?hl=in&m=1][Beyond Web 2.0, Communications
-     Of The ACM, 2008]].
+      by  [[https://emacspeak.sourceforge.net/raman/publications/beyond-web20-cacm-2009/][Beyond Web 2.0, Communications
+     Of The ACM, 2009]].
      
      
 *  The Final Word --- Donald E Knuth (DEK)
 
-  - [[https://www.azquotes.com/author/8177-Donald_Knuth][Computer Programming Is An Art]].
   - The best theory is inspired by practice. The best practice is
     inspired by theory. 
   - The enjoyment of one's tools is an essential ingredient of
@@ -373,10 +394,11 @@ Share And Enjoy --- [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][The
     fades. Greater pleasure, deeper satisfaction, and higher wages are
     associated with genuine accomplishments, with the successful
     fulfillment of a challenging task. 
+  - [[https://www.azquotes.com/author/8177-Donald_Knuth][Computer Programming Is An Art]].
     
 The best example of the above is of course [[https://en.wikipedia.org/wiki/TeX][Knuth's TeX]] --- work that
     was motivated  by his own dissatisfaction with the tools available
-    to him at the time for carrying out his magnum opus --- [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art
+    to him at the time for typesetting    his magnum opus --- [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art
     Of Computer Programming (TAOCP)]].  It is something I've looked up
     to ever since my time as a graduate student at Cornell.
 
@@ -387,47 +409,50 @@ experience of the sentiments he expresses.
 
 --T. V. Raman,  San Jose, CA, August 1, 2024.
     
-* References 
-  1. [[https://www.gnu.org/s/emacs/][GNU Emacs]]
-  2. [[https://en.wikipedia.org/wiki/TeX][Knuth's TeX]]
-  3. [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings]]
-  4. [[https://tvraman.github.io/emacspeak//web/releases/release-3.0.html][Announcing Emacspeak: April 1995]]
-  5. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]
-  6. [[http://www.cs.washington.edu/htbin-post/mvis/mvis?ID=636][The Web, The Way You Want.  Distinguished Lecture Series, UW Oct 2008]]
-  7. [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]]
-  8. [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][An Ode To Emacspeak: The Best Is Yet To Come]]
-  9. [[https://github.com/dectalk/dectalk.git][Software Dectalk on Github]]
-  10. [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][Dectalk  setup instructions]]
-  11. [[https://asdf.common-lisp.dev/asdf.html][Common Lisp: asdf]]
-  12. [[https://www.quicklisp.org/][Common Lisp: Quicklisp]]
-  13. [[https://emacspeak.blogspot.com/2015/12/soundscapes-on-emacspeak-audio-desktop.html][Soundscapes on the Emacspeak Audio Desktop]] 
-  14. [[https://colab.research.google.com/][Colab notebooks]]
-  15. [[https://en.wikipedia.org/wiki/REST][RESTful Web]]
-  16. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]]
-  17. [[https://github.com/alols/xcape][Minimize chording with XCape]]
-  18. [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][Learn Smarter By Taking Rich Hypertext Notes]]
-  19. [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The Web Was Broken]]
-  20. [[https://github.com/eafer/rdrview][Readable Web Pages: RDRView]]
-  21. [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]]
-  22. [[https://research.google/blog/beyond-web-20/?hl=in&m=1][Beyond Web 2.0, Communications
-    Of The ACM, 2008]]
-  23. [[https://tvraman.github.io/emacspeak/manual/URL-Templates.html][Emacspeak Manual: URL Templates]]
-  24. [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art Of Computer Programming (TAOCP)]]
+* References
+
+  1. [[https://www.drdobbs.com:443/user-interface-a-means-to-an-end/184410453][User Interface is a means to an end, DDJ 1997]].
+  2. [[https://www.gnu.org/s/emacs/][GNU Emacs]]
+  3. [[https://en.wikipedia.org/wiki/TeX][Knuth's TeX]]
+  4. [[https://emacspeak.blogspot.com/2022/12/aster-spoken-math-on-emacspeak-audio_21.html][Audio System For Technical Readings]]
+  5. [[https://tvraman.github.io/emacspeak//web/releases/release-3.0.html][Announcing Emacspeak: April 1995]]
+  6. [[https://emacspeak.sourceforge.net/turning-twenty.html][Emacspeak At Twenty]]
+  7. [[http://www.cs.washington.edu/htbin-post/mvis/mvis?ID=636][The Web, The Way You Want.  Distinguished Lecture Series, UW Oct 2007]]
+  8. [[https://emacspeak.sourceforge.net/raman/publications/specialized-browsers/][Specialized Browsers]]
+  9. [[https://tvraman.github.io/emacspeak/web/01-gemini.ogg][An Ode To Emacspeak: The Best Is Yet To Come]]
+  10. [[https://github.com/dectalk/dectalk.git][Software Dectalk on Github]]
+  11. [[https://raw.githubusercontent.com/tvraman/emacspeak/master/servers/software-dtk/Readme.org][Dectalk  setup instructions]]
+  12. [[https://emacspeak.blogspot.com/2018/06/effective-suggest-and-complete-in-eyes.html][Effective Suggest And Complete In An Eyes-free Environment]]
+  13. [[https://asdf.common-lisp.dev/asdf.html][Common Lisp: asdf]]
+  14. [[https://www.quicklisp.org/][Common Lisp: Quicklisp]]
+  15. [[https://emacspeak.blogspot.com/2015/12/soundscapes-on-emacspeak-audio-desktop.html][Soundscapes on the Emacspeak Audio Desktop]] 
+  16. [[https://en.wikipedia.org/wiki/REST][RESTful Web]]
+  17. [[https://emacspeak.blogspot.com/2023/09/emacs-ergonomics-dont-punish-your.html][Ergonomic keybindings]]
+  18. [[https://github.com/alols/xcape][Minimize chording with XCape]]
+  19. [[https://emacspeak.blogspot.com/2022/10/learn-smarter-by-taking-rich-hypertext.html][Learn Smarter By Taking Rich Hypertext Notes]]
+  20. [[https://idlewords.com/talks/website_obesity.htm][Tag Soup, Scripts And Obfuscation: How The Web Was Broken]]
+  21. [[https://github.com/eafer/rdrview][Readable Web Pages: RDRView]]
+  22. [[https://emacspeak.blogspot.com/2024/03/updated-smart-media-selector-for-audio.html][smart media selectors]]
+  23. [[https://emacspeak.sourceforge.net/raman/publications/beyond-web20-cacm-2009/][Beyond Web 2.0, Communications Of The ACM, 2009]]
+  24. [[https://tvraman.github.io/emacspeak/manual/URL-Templates.html][Emacspeak Manual: URL Templates]]
+  25. [[http://emacspeak.blogspot.com/2007/07/emacspeak-and-beautiful-code.html][Beautiful Code]]   An overview of the Emacspeak architecture, O'Reilly Media, 2007.
+  26. [[https://www-cs-faculty.stanford.edu/~knuth/taocp.html][The Art Of Computer Programming (TAOCP)]]
   
 #+options: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
 #+options: author:t broken-links:nil c:nil creator:nil
 #+options: d:(not "LOGBOOK") date:t e:t email:nil expand-links:t f:t
 #+options: inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
-#+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+options: tasks:t tex:t timestamp:t title:t toc:nil todo:t |:t
 #+title:  Emacspeak:  A Speech Odyssey
 #+KEYWORDS: Emacspeak, Complete Audio Desktop
 #+DESCRIPTION: Emacspeak  --- A Speech Odyssey --- Emacspeak At Thirty
-#+date: <2024-07-10 Wed>
 #+author: T.V Raman
 #+email: raman@google.com
 #+language: en
 #+select_tags: export
 #+exclude_tags: noexport
 #+creator: Emacs 31.0.50 (Org mode 9.7.6)
-#+latex_header: \usepackage[scaled]{helvet} \renewcommand\familydefault{\sfdefault} 
-#+cite_export:
+#+date: Thursday, August 1, 2024
+#+latex_header: \usepackage[scaled]{helvet} \renewcommand\familydefault{\sfdefault}
+#+latex_header: \input{.aster.tex}%
+

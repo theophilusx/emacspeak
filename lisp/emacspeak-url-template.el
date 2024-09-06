@@ -492,6 +492,13 @@ c  (cl-declare
  "News  From Yahoo As RSS."
  #'emacspeak-feeds-rss-display)
 
+(emacspeak-url-template-define
+ "Yahoo Finance"
+ "https://finance.yahoo.com/quote/%s/"
+ (list "Ticker:")
+  'emacspeak-eww-h2
+ "Yahoo Finance Stock News")
+
 ;;; CNBC Quotes
 
 (defun ems--ut-quotes-cleanup ()
@@ -537,6 +544,14 @@ c  (cl-declare
      (emacspeak-we-extract-by-id "MainContentContainer" u )))
 
 (flush-lines "^Price Quote Arrow Quote " (point-min) (point-max))
+;;; Seeking Alpha
+
+(emacspeak-url-template-define
+ "Seeking Alpha"
+ "https://seekingalpha.com/symbol/%s"
+ (list "Ticker: ")
+ #'emacspeak-eww-next-h
+ "Stock profile from Seeking Alpha ")
 
 ;;;  cnn
 

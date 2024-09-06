@@ -679,11 +679,9 @@ Optional interactive prefix arg ask-pwd prompts for password."
    (list
     (let ((completion-ignored-extensions nil))
       (expand-file-name
-       (read-file-name
-        "PDF File: "
-        nil default-directory
-        t nil
-        #'(lambda (f) (string-match "\\.pdf$" f)))))
+       (completing-read
+        "PDF: "
+        (directory-files-recursively default-directory "\\.pdf$" 'dirs))))
     current-prefix-arg))
   (cl-declare (special emacspeak-wizards-pdf-to-text-options
                        emacspeak-wizards-pdf-to-text-program))
@@ -1009,7 +1007,7 @@ Moves to the shortest line when called interactively."
         (goto-char start)
         (while (and (not (eobp))
                     (< (point) end))
-          (forward-sentence)
+          (funcall forward-sentence-function)
           (when (< max (- (point) sen-start))
             (setq max (- (point) sen-start))
             (setq where sen-start))
