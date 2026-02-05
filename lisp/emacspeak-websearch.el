@@ -157,7 +157,7 @@ ARGS specifies additional arguments to SPEAKER if any."
   "Additional options to pass to Google e.g. &xx=yy...")
 
 (defconst ems--google-filter
-  '("main")
+  '("zci" "result")
   "Ids of nodes we keep in Google results page.")
 
 (declare-function emacspeak-eww-next-h "emacspeak-eww" (&optional speak))

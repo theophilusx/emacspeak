@@ -457,7 +457,7 @@ commands and options."
   (make-thread #'emacspeak-prepare-emacs)
   (setq line-number-mode nil column-number-mode nil)
   (global-visual-line-mode -1)
-  (transient-mark-mode -1)
+  ;;(transient-mark-mode -1)
   (unless (fboundp 'Info-initialize)
     (require 'info)
     (info-initialize))
