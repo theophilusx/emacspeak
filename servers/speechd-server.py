@@ -438,10 +438,21 @@ class SpeechDispatcherClient:
         """Set the voice."""
         if self.client and self.connected:
             try:
-                self.client.set_voice(voice)
+                self.client.set_synthesis_voice(voice)
                 self.current_voice = voice
             except Exception as e:
                 print(f"Error setting voice: {e}", file=sys.stderr)
+    
+    def list_voices(self):
+        """List available synthesis voices."""
+        if self.client and self.connected:
+            try:
+                # Get voices from speechd - returns list of voice names
+                voices = self.client.list_synthesis_voices()
+                return list(voices) if voices else []
+            except Exception as e:
+                print(f"Error listing voices: {e}", file=sys.stderr)
+        return []
     
     def set_language(self, language: str) -> None:
         """Set the language."""
@@ -502,6 +513,8 @@ class EmacspeakServer:
             'tts_set_speech_rate': self.cmd_set_speech_rate,
             'tts_set_character_scale': self.cmd_set_character_scale,
             'tts_set_punctuations': self.cmd_set_punctuations,
+            'tts_set_voice': self.cmd_set_voice,
+            'tts_list_voices': self.cmd_list_voices,
             'tts_split_caps': self.cmd_split_caps,
             'tts_caps': self.cmd_caps,
             'tts_sync_state': self.cmd_sync_state,
@@ -640,6 +653,33 @@ class EmacspeakServer:
             self.queue.enqueue_rate(r)
         except ValueError:
             pass
+        return ""
+    
+    def cmd_set_voice(self, voice: str) -> str:
+        """Set synthesizer voice (tts_set_voice).
+        
+        Usage: tts_set_voice <voice_name>
+        Example: tts_set_voice male1
+        """
+        voice = voice.strip()
+        if voice:
+            self.tts.set_voice(voice)
+            self.log(f"Voice set to: {voice}")
+        return ""
+    
+    def cmd_list_voices(self, args: str = "") -> str:
+        """List available synthesizer voices (tts_list_voices).
+        
+        Sends the list of available voices to stderr.
+        """
+        try:
+            voices = self.tts.list_voices()
+            print("Available voices:", file=sys.stderr)
+            for voice in voices:
+                print(f"  {voice}", file=sys.stderr)
+            sys.stderr.flush()
+        except Exception as e:
+            print(f"Error listing voices: {e}", file=sys.stderr)
         return ""
     
     def cmd_set_speech_rate(self, rate: str) -> str:
