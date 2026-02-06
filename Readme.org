@@ -2,3 +2,23 @@
 
   - [[https://emacspeak.blogspot.com][blog]]
   - [[https://tvraman.github.io][T. V. Raman]]
+
+* Special Branch Note
+
+This is a branch off the main emacspeak repository and not part of the core emacspeak
+project. This branch is an experiment where I am using AI (gasp) to help maintain
+emacspeak and keep it current with the latest Emacs version.
+
+Currently, I am using [[https://opencode.ai][OpenCode CLI]] to implement an /agentic/ maintenance structure. Under
+this model, AI agents use the AGENTS.md file as part of the context input used by the LLM
+to direct reasoning and actions. I am using the *Open Agent Control* framework to improve
+context toekn efficiency and provide authorisation gateway functionality. Currently I am
+using the Kimi K2.5 model as it is currently free as part of the OpenCode Zen offering.
+
+I'm not 100% confident that any LLM can fully grasp some of the subtleties associated with
+speech enabling emacs using advice, so I do expect that the agent will introduce bugs,
+possibly subtle and hard to idetnify ones. Therefore, user beware and use at your own
+risk!
+
+See the AGENTS.md file for details of what information is supplied to the agent in
+addition to what information it is able to derive from examining the code base.
