@@ -332,31 +332,31 @@ class SpeechDispatcherClient:
                 pass
         self.connected = False
     
-    def speak(self, text: str) -> None:
+    def speak(self, text: str, use_ssml: bool = False) -> None:
         """Speak text.
         
-        Handles both plain text and SSML. If the text starts with <speak,
-        it's treated as SSML. Otherwise, it's spoken as plain text.
+        Args:
+            text: The text to speak
+            use_ssml: If True, the text is SSML and SSML mode will be enabled
         """
         if self.client and self.connected:
             try:
-                # Check if this is SSML or plain text
-                is_ssml = text.strip().startswith('<speak')
-                
-                if is_ssml:
-                    # Already in SSML mode, speak directly
+                if use_ssml:
+                    # Enable SSML mode for this speech
+                    self.client.set_data_mode(speechd.DataMode.SSML)
                     self.client.speak(text)
+                    # Return to plain text mode for next speech
+                    self.client.set_data_mode(speechd.DataMode.TEXT)
                 else:
-                    # Plain text - temporarily disable SSML if needed
-                    # or just speak directly (speechd handles plain text in SSML mode)
+                    # Plain text
                     self.client.speak(text)
                     
             except Exception as e:
                 print(f"Error speaking: {e}", file=sys.stderr)
 
-    def say(self, text: str) -> None:
+    def say(self, text: str, use_ssml: bool = False) -> None:
         """Alias for speak."""
-        self.speak(text)
+        self.speak(text, use_ssml)
     
     def char(self, char: str) -> None:
         """Speak a character."""
@@ -807,17 +807,17 @@ class EmacspeakServer:
             # Build the text
             text = ' '.join(speech_parts)
             
-            # Only wrap in SSML if there are control codes (voice locking)
+            # Only use SSML if there are control codes (voice locking)
             # Otherwise send as plain text for better compatibility
             if has_control_codes:
-                # Wrap in speak tags for SSML
+                # Wrap in speak tags for SSML and enable SSML mode
                 ssml_text = f'<speak>{text}</speak>'
                 self.log(f"Speaking (SSML): {ssml_text[:100]}...")
-                self.tts.say(ssml_text)
+                self.tts.say(ssml_text, use_ssml=True)
             else:
                 # Plain text - no SSML wrapping
                 self.log(f"Speaking: {text[:100]}...")
-                self.tts.say(text)
+                self.tts.say(text, use_ssml=False)
         
         self.state.is_talking = False
     
