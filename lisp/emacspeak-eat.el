@@ -62,8 +62,10 @@
 
 (defun emacspeak-eat-mode-setup ()
   "Placed on eat-mode-hook to do Emacspeak setup."
-  (cl-declare (special eat-semi-char-mode-map eat-mode-map
-                       eat-line-mode-map  eat-char-mode-map))
+  (defvar eat-semi-char-mode-map)
+(defvar eat-mode-map)
+(defvar eat-line-mode-map)
+(defvar eat-char-mode-map)
   (define-key eat-semi-char-mode-map emacspeak-prefix 'emacspeak-keymap)
   (cl-loop
    for map in

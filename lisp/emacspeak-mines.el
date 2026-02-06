@@ -84,8 +84,8 @@
 (defun emacspeak-mines-speak-uncovered-count ()
   "Speak number of uncovered cells."
   (interactive)
-  (cl-declare (special mines-number-mines))
-  (cl-declare (special mines-state))
+  (defvar mines-number-mines)
+  (defvar mines-state)
   (dtk-speak
    (format "%d mines with %d uncovered cells remaining."
            mines-number-mines (cl-count-if #'null mines-state))))
@@ -111,7 +111,7 @@ to beginning of board before searching."
 (defun emacspeak-mines-speak-mark-count  ()
   "Count and speak number of marks."
   (interactive)
-  (cl-declare (special mines-flagged-cell-char))
+  (defvar mines-flagged-cell-char)
   (let ((count 0) ;;; fix over-counting 
         (m (format "%c" mines-flagged-cell-char)))
     (save-excursion
@@ -121,7 +121,8 @@ to beginning of board before searching."
 (defun emacspeak-mines-speak-board ()
   "Speak the board."
   (interactive)
-  (cl-declare (special  mines-number-cols mines-grid))
+  (defvar mines-number-cols)
+(defvar mines-grid)
   (let ((cells nil))
     (save-excursion
       (setq cells
@@ -142,7 +143,8 @@ to beginning of board before searching."
 
 (defun emacspeak-mines-init ()
   "Setup additional keys for playing minesweeper."
-  (cl-declare (special mines-mode-map mines-flagged-cell-char))
+  (defvar mines-mode-map)
+(defvar mines-flagged-cell-char)
   (setq mines-flagged-cell-char ?M)
   (cl-loop
    for b in
@@ -170,7 +172,8 @@ to beginning of board before searching."
 (defun emacspeak-mines-speak-neighbors ()
   "Speak neighboring cells in sorted order."
   (interactive)
-  (cl-declare (special mines-state mines-grid))
+  (defvar mines-state)
+(defvar mines-grid)
   (let* ((current (mines-current-pos))
          (cells (sort (mines-get-neighbours current) #'<))
          (pos (mines-index-2-matrix current))

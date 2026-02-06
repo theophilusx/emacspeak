@@ -351,7 +351,7 @@ Provide contextual feedback when closing blocks"
 
 (defadvice py-process-filter (around emacspeak pre act comp)
   "Make comint in Python speak its output. "
-  (cl-declare (special emacspeak-comint-autospeak))
+  (defvar emacspeak-comint-autospeak)
   (let ((prior (point))
         (dtk-stop-immediately nil))
     ad-do-it

@@ -153,7 +153,7 @@
     (emacspeak-rmail-summarize-message rmail-current-message)))
 (defadvice rmail-next-labeled-message (around emacspeak pre act comp)
   "speak"
-  (cl-declare (special rmail-current-message))
+  (defvar rmail-current-message)
   (cond
    ((ems-interactive-p)
     (let ((original rmail-current-message))
@@ -217,7 +217,7 @@
 (defun emacspeak-rmail-summarize-current-message ()
   "Summarize current message"
   (interactive)
-  (cl-declare (special rmail-current-message))
+  (defvar rmail-current-message)
   (emacspeak-rmail-summarize-message rmail-current-message))
 (defun  emacspeak-rmail-speak-current-message-labels ()
   "Speak labels of current message"

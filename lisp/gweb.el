@@ -91,7 +91,8 @@ n == News.")
 
 (defun gweb-suggest (input &optional corpus)
   "Get completion list from Google Suggest."
-  (cl-declare (special gweb-completion-corpus gweb-g-suggest-url))
+  (defvar gweb-completion-corpus)
+(defvar gweb-g-suggest-url)
   (unless corpus (setq corpus gweb-completion-corpus))
   (when input
     (let* ((url (format gweb-g-suggest-url corpus (g-url-encode input)))
@@ -112,7 +113,7 @@ n == News.")
 
 (defun gweb-suggest-completer (string predicate action)
   "Generate completions using Google Suggest. "
-  (cl-declare (special gweb-completion-corpus))
+  (defvar gweb-completion-corpus)
   (when (and (sit-for 0.2)(stringp string) (> (length string)  0))
     (save-current-buffer
       (set-buffer
@@ -145,7 +146,7 @@ Uses corpus found in gweb-completion-corpus"
 
 (defun gweb-google-autocomplete (&optional prompt)
   "Autocomplete using Google Search corpus."
-  (cl-declare (special  emacspeak-google-query))
+  (defvar emacspeak-google-query)
   (dtk-stop 'all)
   (let ((gweb-completion-corpus ""))
     (setq

@@ -155,7 +155,7 @@
 
 (defun emacspeak-exwm-mode-hook ()
   "EXWM Setup For Emacspeak"
-  (cl-declare (special emacspeak-prefix ))
+  (defvar emacspeak-prefix)
   (define-key exwm-mode-map emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map  emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map

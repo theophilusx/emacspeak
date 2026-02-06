@@ -173,7 +173,7 @@ Silently drops alerts on the floor --- Google Talk is too chatty otherwise."
 ;; this is what I use as my jabber alert function:
 (defun emacspeak-jabber-message-default-message (from buffer text)
   "Speak the message."
-  (cl-declare (special jabber-message-alert-same-buffer))
+  (defvar jabber-message-alert-same-buffer)
   (when (or jabber-message-alert-same-buffer
             (not (memq (selected-window) (get-buffer-window-list buffer))))
     (emacspeak-icon 'item)
@@ -189,7 +189,8 @@ Silently drops alerts on the floor --- Google Talk is too chatty otherwise."
 (defun emacspeak-jabber-popup-roster ()
   "Pop to Jabber roster."
   (interactive)
-  (cl-declare (special jabber-roster-buffer jabber-connections))
+  (defvar jabber-roster-buffer)
+(defvar jabber-connections)
   (unless jabber-connections  (call-interactively 'jabber-connect))
   (unless (buffer-live-p jabber-roster-buffer)
     (call-interactively 'jabber-display-roster))
@@ -290,7 +291,7 @@ the kill ring as well."
 (defun emacspeak-jabber-speak-recent-message ()
   "Speak most recent message if one exists."
   (interactive)
-  (cl-declare (special jabber-activity-jids))
+  (defvar jabber-activity-jids)
   (cond
    (jabber-activity-jids
     (save-excursion
@@ -303,7 +304,7 @@ the kill ring as well."
 
 (defun emacspeak-jabber-setup ()
   "Initial jabber setup."
-  (cl-declare (special emacspeak-x-keymap))
+  (defvar emacspeak-x-keymap)
   (cl-loop 
    for b in
    '(

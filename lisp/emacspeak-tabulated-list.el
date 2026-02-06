@@ -61,7 +61,7 @@
 (defun emacspeak-tabulated-list-speak-cell ()
   "Speak current cell. "
   (interactive)
-  (cl-declare (tabulated-list-format))
+  (defvar tabulated-list-format)
   (when (bobp) (error "Beginning  of buffer"))
   (when (eobp) (error "End of buffer"))
   (save-excursion
@@ -102,7 +102,7 @@
           :test #'string= :key #'car)))
     (forward-line 1)
     (tabulated-list-next-column  col)
-    (when-let ((goal (next-single-property-change (point)
+    (when-let* ((goal (next-single-property-change (point)
                                                   'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
@@ -117,14 +117,14 @@
           :test #'string= :key #'car)))
     (forward-line -1)
     (tabulated-list-next-column  col)
-    (when-let ((goal (next-single-property-change
+    (when-let* ((goal (next-single-property-change
                       (point) 'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
 
 (defun emacspeak-tabulated-list-setup ()
   "Setup Emacspeak"
-  (cl-declare (special tabulated-list-mode-map))
+  (defvar tabulated-list-mode-map)
   (cl-loop
    for b in
    '(

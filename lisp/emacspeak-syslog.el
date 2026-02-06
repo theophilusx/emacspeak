@@ -108,7 +108,7 @@
 ;;; keymap setup:
 (defun emacspeak-syslog-setup ()
   "Setup keybindings."
-  (cl-declare (special syslog-mode-map))
+  (defvar syslog-mode-map)
   (define-key syslog-mode-map ","  'emacspeak-speak-previous-field)
   (define-key syslog-mode-map "."  'emacspeak-speak-next-field))
 

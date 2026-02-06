@@ -120,7 +120,7 @@
 
 (defadvice transient-toggle-common (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special transient-show-common-commands))
+  (defvar transient-show-common-commands)
   (when (ems-interactive-p)
     (dtk-stop 'all)
     (emacspeak-icon
@@ -170,7 +170,7 @@
 (define-derived-mode emacspeak-transient-mode special-mode
   "Browse current transient choices"
   "emacspeak integration with Transient."
-  (cl-declare (special transient-sticky-map))
+  (defvar transient-sticky-map)
   (use-local-map transient-sticky-map)
   (local-set-key (kbd "M-n") 'emacspeak-transient-next-section)
   (local-set-key (kbd "M-p") 'emacspeak-transient-previous-section)
@@ -193,7 +193,7 @@
   "Pop to *Transient-emacspeak* buffer where the message emitted by
 the transient can be browsed.
 Press `r' to resume the suspended transient."
-  (cl-declare (special emacspeak-transient-cache))
+  (defvar emacspeak-transient-cache)
   (cond
    ((ems-interactive-p)
     (let ((buff (get-buffer-create "*Transient-Emacspeak*"))
@@ -219,7 +219,7 @@ Press `r' to resume the suspended transient."
   (with-selected-window
       (if (window-live-p transient--window)
           transient--window (selected-window))
-    (when-let
+    (when-let*
         ((match
           (text-property-search-forward 'face 'transient-heading t t)))
       (goto-char (prop-match-beginning match))
@@ -231,7 +231,7 @@ Press `r' to resume the suspended transient."
   (with-selected-window
       (if (window-live-p transient--window)
           transient--window (selected-window))
-    (when-let
+    (when-let*
         ((match
           (text-property-search-backward
            'face 'transient-heading t t)))
@@ -242,7 +242,7 @@ Press `r' to resume the suspended transient."
 
 (defun emacspeak-transient-post-hook ()
   "Actions to execute after transient is done."
-  (cl-declare (special transient--stack))
+  (defvar transient--stack)
   (unless transient--stack
     (dtk-stop 'all)
     (emacspeak-icon 'task-done)
@@ -275,9 +275,9 @@ Press `r' to resume the suspended transient."
 
 (defun emacspeak-transient-setup ()
   "Emacspeak Transient Customizations"
-  (cl-declare (special transient-enable-popup-navigation
-                       transient-popup-navigation-map
-                       transient-predicate-map))
+  (defvar transient-enable-popup-navigation)
+(defvar transient-popup-navigation-map)
+(defvar transient-predicate-map)
   (keymap-set  transient-popup-navigation-map "C-j" #'transient-push-button)
   (define-key transient-predicate-map
               [emacspeak-transient-previous-section] 'transient--do-move)

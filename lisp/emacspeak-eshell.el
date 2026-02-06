@@ -56,7 +56,7 @@
 ;; Play an auditory icon as you display the prompt
 (defun emacspeak-eshell-prompt-function ()
   "Play auditory icon for prompt."
-  (cl-declare (special eshell-last-command-status))
+  (defvar eshell-last-command-status)
   (cond
    ((= 0 eshell-last-command-status)
     (emacspeak-icon 'item))
@@ -68,8 +68,9 @@
 
 (defun emacspeak-eshell-speak-output  ()
   "Speak eshell output."
-  (cl-declare (special eshell-last-input-end eshell-last-output-end
-                       eshell-last-output-start))
+  (defvar eshell-last-input-end)
+(defvar eshell-last-output-end)
+(defvar eshell-last-output-start)
   (emacspeak-speak-region eshell-last-input-end eshell-last-output-end))
 
 (add-hook 

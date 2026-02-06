@@ -144,7 +144,8 @@
 
 (defun emacspeak-elfeed-entry-at-point ()
   "Return entry at point."
-  (cl-declare (special  elfeed-search--offset elfeed-search-entries))
+  (defvar elfeed-search--offset)
+(defvar elfeed-search-entries)
   (let ((index  (- (line-number-at-pos (point)) elfeed-search--offset)))
     (cond
      ((>= index 0) (nth index elfeed-search-entries))
@@ -183,7 +184,7 @@
 (defun emacspeak-elfeed-filter-entry-at-point ()
   "Display current article after filtering."
   (interactive)
-  (cl-declare (special emacspeak-we-recent-xpath-filter))
+  (defvar emacspeak-we-recent-xpath-filter)
   (let* ((entry (emacspeak-elfeed-entry-at-point))
          (link(elfeed-entry-link entry)))
     (when (string=  "" emacspeak-we-recent-xpath-filter)
@@ -219,7 +220,8 @@
 
 (defadvice elfeed-search-mode (after emacspeak pre act comp)
   "Set up Emacspeak commands."
-  (cl-declare (special elfeed-search-mode-map goal-column))
+  (defvar elfeed-search-mode-map)
+(defvar goal-column)
   (setq goal-column 11)                 ; place point on entry title
   (define-key elfeed-search-mode-map "n" 'emacspeak-elfeed-next-entry)
   (define-key elfeed-search-mode-map "p" 'emacspeak-elfeed-previous-entry)

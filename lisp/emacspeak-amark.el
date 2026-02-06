@@ -80,13 +80,13 @@
 
 (defsubst emacspeak-amark-names ()
   "Return list of  amark names."
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (cl-loop for a in emacspeak-amark-list collect (emacspeak-amark-name a)))
 
 (defun emacspeak-amark-find (name)
   "Return matching AMark if found in buffer-local AMark list."
   (interactive (list (completing-read "Name: " (emacspeak-amark-names))))
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (cl-find name emacspeak-amark-list
            :test #'string= :key #'emacspeak-amark-name))
 
@@ -95,7 +95,7 @@
 bookmarks in audio content. If there is an existing amark of the
 given name, it is updated with path and position."
   (interactive "fPath\nsName\nnPosition")
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (let ((amark (emacspeak-amark-find name)))
     (when (and path (not (zerop (length path))))
       (cond
@@ -113,7 +113,7 @@ given name, it is updated with path and position."
 (defun emacspeak-amark-save ()
   "Save buffer-local AMarks in  currently playing directory."
   (interactive)
-  (cl-declare (special  emacspeak-amark-file))
+  (defvar emacspeak-amark-file)
   (let ((l  emacspeak-amark-list)
         (print-length nil)
         (buff (find-file-noselect (expand-file-name emacspeak-amark-file))))
@@ -129,8 +129,9 @@ given name, it is updated with path and position."
 
 (defun emacspeak-amark-load ()
   "Load AMarks file from  current  media directory."
-  (cl-declare (special emacspeak-amark-list emacspeak-amark-file
-                       emacspeak-m-player-process))
+  (defvar emacspeak-amark-list)
+(defvar emacspeak-amark-file)
+(defvar emacspeak-m-player-process)
   (let* ((buff nil)
          (find-file-hook nil)
          (def default-directory)
@@ -172,7 +173,7 @@ given name, it is updated with path and position."
 
 (defun emacspeak-amark-delete (amark)
   "Delete Amark and save."
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (setq emacspeak-amark-list (remove amark emacspeak-amark-list))
   (emacspeak-icon 'delete-object)
   (emacspeak-amark-save)
@@ -183,7 +184,7 @@ given name, it is updated with path and position."
 
 (defun emacspeak-amark-play (amark)
   "Play amark using m-player."
-  (cl-declare (special emacspeak-m-player-options))
+  (defvar emacspeak-m-player-options)
   (let ((f (expand-file-name (emacspeak-amark-path  amark) default-directory))
         (emacspeak-m-player-options
          (append
@@ -226,14 +227,14 @@ Maps command \\[emacspeak-m-player] across elements of the amarks
   while media is already playing. Here, attempting to play the next
   item while the current item is playing produces the prompt."
   (interactive)
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (when (and emacspeak-amark-list (listp emacspeak-amark-list))
     (mapc #'emacspeak-amark-play emacspeak-amark-list)))
 
 (defun emacspeak-amark-browse ()
   "Browse   amarks  in current directory using `emacspeak-amark-mode'."
   (interactive)
-  (cl-declare (special emacspeak-amark-list))
+  (defvar emacspeak-amark-list)
   (let ((amarks (or (emacspeak-amark-load) (error "No Amarks here")))
         (buff (get-buffer-create "*Amarks Browser"))
         (inhibit-read-only t))
@@ -266,8 +267,9 @@ used to filter the amarks files to show.  Use
 \\[emacspeak-dired-open-this-file] to open the AMark Browser on
 current file."
   (interactive "P")
-  (cl-declare (special emacspeak-amark-file locate-command
-                       locate-make-command-line))
+  (defvar emacspeak-amark-file)
+(defvar locate-command)
+(defvar locate-make-command-line)
   (when pattern (setq pattern (read-from-minibuffer "Filter Pattern:")))
   (let ((case-fold-search t)
         (locate-make-command-line

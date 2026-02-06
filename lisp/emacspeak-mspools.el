@@ -76,7 +76,7 @@
 
 (defun mspools-size-folder (spool)
   "Return (SPOOL . SIZE ) iff SIZE of spool file is non-zero."
-  (cl-declare (special mspools-folder-directory))
+  (defvar mspools-folder-directory)
   (let ((size (mspools-compute-size
                (expand-file-name  spool mspools-folder-directory))))
     (unless (zerop size) (cons spool size))))

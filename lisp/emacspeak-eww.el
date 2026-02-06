@@ -500,7 +500,7 @@
   `(defun
        ,(intern (format "emacspeak-eww-current-%s" name)) ()
      , (format "Return eww-current-%s." name)
-     (cl-declare (special eww-data))
+     (defvar eww-data)
      (plist-get eww-data
                 ,(intern (format ":%s" name)))))
  (eval
@@ -538,14 +538,17 @@
 (add-hook
  'eww-mode-hook
  #'(lambda ()
-     (cl-declare (special outline- outline-search-function))
+     (defvar outline-)
+(defvar outline-search-function)
      (outline-minor-mode)
      (emacspeak-pronounce-toggle-dictionaries t)))
 
 (defun emacspeak-eww-shr-outline-toggle ()
   "Toggle between shr and native outliner."
   (interactive)
-  (cl-declare (special outline-regexp outline-level outline-search-function))
+  (defvar outline-regexp)
+(defvar outline-level)
+(defvar outline-search-function)
   (cond
    (outline-search-function             ;turn off emacs 30 version:
     (setq-local outline-regexp "^ *[•0-9]+\\.? "
@@ -566,7 +569,7 @@
 (defun emacspeak-eww-masquerade ()
   "Toggle masquerade."
   (interactive)
-  (cl-declare (special emacspeak-eww-masquerade))
+  (defvar emacspeak-eww-masquerade)
   (setq emacspeak-eww-masquerade (not emacspeak-eww-masquerade))
   (message "Turned %s masquerade"
            (if emacspeak-eww-masquerade "on" "off"))
@@ -603,13 +606,16 @@ Safari/537.36"
 
 (defun emacspeak-eww-setup ()
   "Setup keymaps etc."
-  (cl-declare (special
-               eww-header-line-format
-               shr-external-rendering-functions emacspeak-eww-filter-renderers
-               eww-mode-map eww-link-keymap eww-text-map
-               shr-inhibit-images emacspeak-eww-inhibit-images
-               emacspeak-pronounce-xml-ns
-               emacspeak-eww-masquerade))
+  (defvar eww-header-line-format)
+  (defvar shr-external-rendering-functions)
+  (defvar emacspeak-eww-filter-renderers)
+  (defvar eww-mode-map)
+  (defvar eww-link-keymap)
+  (defvar eww-text-map)
+  (defvar shr-inhibit-images)
+  (defvar emacspeak-eww-inhibit-images)
+  (defvar emacspeak-pronounce-xml-ns)
+  (defvar emacspeak-eww-masquerade)
   (setq eww-header-line-format "%t ")
   (emacspeak-pronounce-augment 'eww-mode emacspeak-pronounce-xml-ns)
   (emacspeak-pronounce-add-dictionary-entry
@@ -720,9 +726,8 @@ interactive prefix arg `playlist-p' treats link as a playlist.  A
 second interactive prefix arg adds mplayer option
 -allow-dangerous-playlist-parsing"
   (interactive "P")
-  (cl-declare (special
-               emacspeak-m-player-media-history
-               emacspeak-eww-url-at-point))
+  (defvar emacspeak-m-player-media-history)
+  (defvar emacspeak-eww-url-at-point)
   (let ((url (browse-url-url-at-point)))
     (cl-assert (stringp url) t "No URL under point." )
     (kill-new url)
@@ -736,7 +741,8 @@ second interactive prefix arg adds mplayer option
 
 (defun emacspeak-eww-prepare-eww ()
   "Ensure that we are in an EWW buffer."
-  (cl-declare (special major-mode  emacspeak-eww-cache-updated))
+  (defvar major-mode)
+(defvar emacspeak-eww-cache-updated)
   (unless (eq major-mode 'eww-mode) (error "Not in EWW buffer."))
   (unless (emacspeak-eww-current-dom) (error "No DOM!"))
   (unless emacspeak-eww-cache-updated
@@ -883,7 +889,7 @@ Retain previously set punctuations  mode."
 
 (defun emacspeak-eww-after-render-hook ()
   "Setup Emacspeak for rendered buffer. "
-  (cl-declare (special  emacspeak-eww-post-hook))
+  (defvar emacspeak-eww-post-hook)
   (let ((title (emacspeak-eww-current-title))
         (alt (dom-alternate-links (emacspeak-eww-current-dom))))
     (when (= 0 (length title))
@@ -963,7 +969,7 @@ Retain previously set punctuations  mode."
  (eval
   `(defadvice ,f (after emacspeak pre act comp)
      "speak."
-     (cl-declare (special emacspeak-eww-a-speaker))
+     (defvar emacspeak-eww-a-speaker)
      (when (ems-interactive-p)
        (let ((host
               (condition-case nil
@@ -990,7 +996,7 @@ Retain previously set punctuations  mode."
 
 (defadvice eww-follow-link (around emacspeak pre act comp)
   "Respect emacspeak-we-url-executor if set."
-  (cl-declare (special emacspeak-we-url-executor))
+  (defvar emacspeak-we-url-executor)
   (emacspeak-icon 'button)
   (let ((emacspeak-eww-masquerade t))
     (cond
@@ -1010,7 +1016,7 @@ Retain previously set punctuations  mode."
   (add-hook
    'emacspeak-eww-post-hook
    #'(lambda nil
-       (cl-declare (special emacspeak-we-xpath-filter))
+       (defvar emacspeak-we-xpath-filter)
        (setq emacspeak-we-xpath-filter
              emacspeak-we-paragraphs-xpath-filter)
        (dtk-set-punctuations-to-some)
@@ -1023,7 +1029,7 @@ Retain previously set punctuations  mode."
 
 (defun emacspeak-eww-run-pre-process-hook (&rest _ignore)
   "Run web pre process hook."
-  (cl-declare (special emacspeak-eww-pre-process-hook))
+  (defvar emacspeak-eww-pre-process-hook)
   (when     emacspeak-eww-pre-process-hook
     (condition-case
         nil
@@ -1041,7 +1047,7 @@ Note that the Web browser should reset this hook after using it.")
 
 (defun emacspeak-eww-run-post-process-hook (&rest _ignore)
   "Run web post process hook."
-  (cl-declare (special emacspeak-eww-post-hook))
+  (defvar emacspeak-eww-post-hook)
   (when     emacspeak-eww-post-hook
     (condition-case nil
         (let ((inhibit-read-only t))
@@ -1054,8 +1060,9 @@ Note that the Web browser should reset this hook after using it.")
 
 (defadvice eww-display-html (before emacspeak pre act comp)
   "Apply XSLT transform if requested."
-  (cl-declare (special emacspeak-eww-pre-process-hook
-                       emacspeak-we-xsl-transform emacspeak-we-xsl-p))
+  (defvar emacspeak-eww-pre-process-hook)
+(defvar emacspeak-we-xsl-transform)
+(defvar emacspeak-we-xsl-p)
   (save-excursion
     (cond
      (emacspeak-eww-pre-process-hook (emacspeak-eww-run-pre-process-hook))
@@ -1149,10 +1156,13 @@ Note that the Web browser should reset this hook after using it.")
 
 (defun eww-update-cache (dom)
   "Update element, role, class and id cache."
-  (cl-declare (special
-               emacspeak-eww-el-cache eww-id-cache
-               eww-property-cache eww-itemprop-cache
-               eww-role-cache eww-class-cache emacspeak-eww-cache-updated))
+  (defvar emacspeak-eww-el-cache)
+  (defvar eww-id-cache)
+  (defvar eww-property-cache)
+  (defvar eww-itemprop-cache)
+  (defvar eww-role-cache)
+  (defvar eww-class-cache)
+  (defvar emacspeak-eww-cache-updated)
   (when (listp dom)                     ; build cache
     (let ((id (dom-attr dom 'id))
           (class (dom-attr dom 'class))
@@ -1182,7 +1192,7 @@ Note that the Web browser should reset this hook after using it.")
 
 (defun emacspeak-eww-tag-audio (dom)
   "Tag audio , then render."
-  (cl-declare (special emacspeak-eww-audio-keymap))
+  (defvar emacspeak-eww-audio-keymap)
   (let ((start (point)))
     (shr-tag-audio dom)
     (add-text-properties
@@ -1194,7 +1204,7 @@ Note that the Web browser should reset this hook after using it.")
 
 (defun emacspeak-eww-tag-video (dom)
   "Tag video tag, then render."
-  (cl-declare (special emacspeak-eww-audio-keymap))
+  (defvar emacspeak-eww-audio-keymap)
   (let ((start (point)))
     (shr-tag-video dom)
     (add-text-properties
@@ -1331,8 +1341,8 @@ for use as a DOM filter."
 
 (defun emacspeak-eww-view-helper  (filtered-dom)
   "View helper called by various filtering viewers."
-  (cl-declare (special emacspeak-eww-rename-buffer
-                       emacspeak-eww-filter-renderers))
+  (defvar emacspeak-eww-rename-buffer)
+(defvar emacspeak-eww-filter-renderers)
   (let ((emacspeak-eww-rename-buffer nil)
         (url (eww-current-url))
         (title  (format "%s: Filtered" (emacspeak-eww-current-title)))
@@ -1370,7 +1380,7 @@ for use as a DOM filter."
 
 (defun emacspeak-eww-read-id ()
   "Return id value read from minibuffer."
-  (cl-declare (special eww-id-cache))
+  (defvar eww-id-cache)
   (unless eww-id-cache (error "No id to filter."))
   (let ((value (completing-read "Value: " eww-id-cache nil 'must-match)))
     (unless (zerop (length value)) value)))
@@ -1411,8 +1421,11 @@ Optional interactive arg `multi' prompts for multiple ids."
 
 (defun emacspeak-eww-read-attr-and-value ()
   "Read attr-value pair and return as a list."
-  (cl-declare (special eww-id-cache eww-class-cache eww-role-cache
-                       eww-property-cache eww-itemprop-cache))
+  (defvar eww-id-cache)
+(defvar eww-class-cache)
+(defvar eww-role-cache)
+(defvar eww-property-cache)
+(defvar eww-itemprop-cache)
   (unless (or eww-role-cache eww-id-cache eww-class-cache
               eww-itemprop-cache eww-property-cache)
     (error "No attributes to filter."))
@@ -1471,7 +1484,7 @@ Optional interactive arg `multi' prompts for multiple classes."
 
 (defun emacspeak-eww-read-class ()
   "Return class value read from minibuffer."
-  (cl-declare (special eww-class-cache))
+  (defvar eww-class-cache)
   (unless eww-class-cache (error "No class to filter."))
   (let ((value (completing-read "Value: " eww-class-cache nil 'must-match)))
     (unless (zerop (length value)) value)))
@@ -1512,21 +1525,21 @@ Optional interactive arg `multi' prompts for multiple classes."
 
 (defun emacspeak-eww-read-role ()
   "Return role value read from minibuffer."
-  (cl-declare (special eww-role-cache))
+  (defvar eww-role-cache)
   (unless eww-role-cache (error "No role to filter."))
   (let ((value (completing-read "Value: " eww-role-cache nil 'must-match)))
     (unless (zerop (length value)) value)))
 
 (defun emacspeak-eww-read-prop ()
   "Return property value read from minibuffer."
-  (cl-declare (special eww-property-cache))
+  (defvar eww-property-cache)
   (unless eww-property-cache (error "No property to filter."))
   (let ((value (completing-read "Value: " eww-property-cache nil 'must-match)))
     (unless (zerop (length value)) value)))
 
 (defun emacspeak-eww-read-itemprop ()
   "Return itemprop value read from minibuffer."
-  (cl-declare (special eww-itemprop-cache))
+  (defvar eww-itemprop-cache)
   (unless eww-itemprop-cache (error "No itemprop to filter."))
   (let ((value (completing-read "Value: " eww-itemprop-cache nil 'must-match)))
     (unless (zerop (length value)) value)))
@@ -1550,7 +1563,7 @@ Optional interactive arg `multi' prompts for multiple classes."
   "Display DOM filtered by specified  nodes not passing   role=value test.
 Optional interactive arg `multi' prompts for multiple classes."
   (interactive "P")
-  (cl-declare (special  emacspeak-eww-shr-renderers))
+  (defvar emacspeak-eww-shr-renderers)
   (emacspeak-eww-prepare-eww)
   (let ((dom
          (eww-dom-remove-if
@@ -1586,7 +1599,7 @@ Optional interactive arg `multi' prompts for multiple classes."
   "Display DOM filtered by specified  nodes not passing   property=value test.
 Optional interactive arg `multi' prompts for multiple classes."
   (interactive "P")
-  (cl-declare (special  emacspeak-eww-shr-renderers))
+  (defvar emacspeak-eww-shr-renderers)
   (emacspeak-eww-prepare-eww)
   (let ((dom
          (eww-dom-remove-if
@@ -1622,7 +1635,7 @@ Optional interactive arg `multi' prompts for multiple classes."
   "Display DOM filtered by specified  nodes not passing   itemprop=value test.
 Optional interactive arg `multi' prompts for multiple classes."
   (interactive "P")
-  (cl-declare (special  emacspeak-eww-shr-renderers))
+  (defvar emacspeak-eww-shr-renderers)
   (emacspeak-eww-prepare-eww)
   (let ((dom
          (eww-dom-remove-if
@@ -1640,7 +1653,7 @@ Optional interactive arg `multi' prompts for multiple classes."
         dom (eww-current-url))))))
 (defun emacspeak-eww-read-element ()
   "Return element  value read from minibuffer."
-  (cl-declare (special emacspeak-eww-el-cache))
+  (defvar emacspeak-eww-el-cache)
   (let ((value
          (completing-read "Value: " emacspeak-eww-el-cache nil 'must-match)))
     (unless (zerop (length value)) (intern value))))
@@ -1681,7 +1694,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
       (emacspeak-eww-read-element)
       (read-from-minibuffer "Text:")
       current-prefix-arg)))
-  (cl-declare (special eww-current-url))
+  (defvar eww-current-url)
   (let ((dom (dom-by-tag  (emacspeak-eww-current-dom) element))
         (transform (if reverse 'nreverse 'identity)))
     (cond
@@ -1690,7 +1703,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
             (funcall transform
                      (cl-remove-if-not
                       #'(lambda (node)
-                          (string-match text (dom-texts node " ")))
+                          (string-match text (dom-inner-text node)))
                       dom)))
       (emacspeak-eww-view-helper
        (dom-html-from-nodes dom (eww-current-url)))
@@ -1718,7 +1731,8 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 (defun emacspeak-eww-restore ()
   "Restore buffer to pre-filtered canonical state."
   (interactive)
-  (cl-declare (special eww-history eww-history-position))
+  (defvar eww-history)
+(defvar eww-history-position)
   (eww-restore-history(elt eww-history eww-history-position))
   (emacspeak-speak-header-line)
   (emacspeak-icon 'open-object))
@@ -1808,8 +1822,10 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
         emacspeak-eww-el-cache nil 'must-match
         nil 'emacspeak-eww-el-cache)))
     current-prefix-arg))
-  (cl-declare (special eww- element-cache emacspeak-eww-el-nav-history
-                       emacspeak-eww-autospeak))
+  (defvar eww-)
+(defvar element-cache)
+(defvar emacspeak-eww-el-nav-history)
+(defvar emacspeak-eww-autospeak)
   (when (eq el 'li) ;; if element is li, use shr-indentation
     (setq el 'shr-continuation-indentation))
   (let* ((start (next-single-property-change (point) el))
@@ -1833,9 +1849,9 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
         "Element: " emacspeak-eww-el-cache nil 'must-match
         nil 'emacspeak-eww-ell-cache)))
     current-prefix-arg))
-  (cl-declare (special emacspeak-eww-el-cache
-                       emacspeak-eww-el-nav-history
-                       emacspeak-eww-autospeak))
+  (defvar emacspeak-eww-el-cache)
+(defvar emacspeak-eww-el-nav-history)
+(defvar emacspeak-eww-autospeak)
   (when (eq el 'li) ;; if element is li, use shr-indentation
     (setq el 'shr-continuation-indentation))
   (let* ((start (previous-single-property-change (point) el))
@@ -1851,7 +1867,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 (defun emacspeak-eww-next-element-from-history ()
   "Uses element navigation history to decide where we jump."
   (interactive)
-  (cl-declare (special emacspeak-eww-el-nav-history))
+  (defvar emacspeak-eww-el-nav-history)
   (cond
    (emacspeak-eww-el-nav-history
     (funcall-interactively #'emacspeak-eww-next-element
@@ -1861,7 +1877,7 @@ Optional interactive prefix arg `multi' prompts for multiple elements."
 (defun emacspeak-eww-previous-element-from-history ()
   "Uses element navigation history to decide where we jump."
   (interactive)
-  (cl-declare (special emacspeak-eww-el-nav-history))
+  (defvar emacspeak-eww-el-nav-history)
   (cond
    (emacspeak-eww-el-nav-history
     (funcall-interactively #'emacspeak-eww-previous-element
@@ -1906,7 +1922,7 @@ Prompts if content at point is enclosed by multiple elements."
 (defun emacspeak-eww-speak-this-element ()
   "Speak current ."
   (interactive)
-  (cl-declare (special emacspeak-eww-el-nav-history))
+  (defvar emacspeak-eww-el-nav-history)
   (cl-assert emacspeak-eww-el-nav-history t "No element here")
   (let  ((start
           (next-single-property-change (point) emacspeak-eww-el-nav-history)))
@@ -1938,7 +1954,7 @@ Second interactive prefix arg toggles default value of this flag.
 The %s is automatically spoken if there is no user activity."
        f f f)
      (interactive "P")
-     (cl-declare (special emacspeak-eww-autospeak))
+     (defvar emacspeak-eww-autospeak)
      (let ((s (intern ,(format "%s" f))))
        (when (memq s '(h1 h2 h3 h4 h))
          (emacspeak-icon 'section))
@@ -1958,7 +1974,7 @@ See user option `emacspeak-eww-autospeak' on how to reverse this behavior.
 The %s is automatically spoken if there is no user activity."
               f f f)
      (interactive "P")
-     (cl-declare (special emacspeak-eww-autospeak))
+     (defvar emacspeak-eww-autospeak)
      (let ((s (intern ,(format "%s" f))))
        (when (memq s '(h1 h2 h3 h4 h))
          (emacspeak-icon 'section))
@@ -2097,7 +2113,8 @@ The %s is automatically spoken if there is no user activity."
 (defun emacspeak-eww-marks-load ()
   "Load saved marks."
   (interactive)
-  (cl-declare (special emacspeak-eww-marks emacspeak-eww-marks-file))
+  (defvar emacspeak-eww-marks)
+(defvar emacspeak-eww-marks-file)
   (when (file-exists-p emacspeak-eww-marks-file)
     (ems--fastload emacspeak-eww-marks-file)
     emacspeak-eww-marks))
@@ -2121,10 +2138,11 @@ into `notes'.`m"
      (let ((input (read-from-minibuffer "Mark: " nil nil nil nil "current")))
        (if (zerop (length input))
            "current" input)))))
-  (cl-declare (special
-               emacspeak-bookshare-directory
-               org-stored-links emacspeak-eww-marks
-               emacspeak-epub-this-epub emacspeak-bookshare-this-book))
+  (defvar emacspeak-bookshare-directory)
+  (defvar org-stored-links)
+  (defvar emacspeak-eww-marks)
+  (defvar emacspeak-epub-this-epub)
+  (defvar emacspeak-bookshare-this-book)
   (let ((bm
          (make-emacspeak-eww-mark
           :name name
@@ -2188,7 +2206,7 @@ into `notes'.`m"
 (defun emacspeak-eww-delete-mark (name)
   "Interactively delete a mark with name `name' at current position."
   (interactive "sMark Name: ")
-  (cl-declare (special emacspeak-eww-marks))
+  (defvar emacspeak-eww-marks)
   (remhash name emacspeak-eww-marks)
   (emacspeak-eww-marks-save)
   (emacspeak-icon 'delete-object)
@@ -2207,7 +2225,7 @@ arg `delete', delete that mark instead."
         (error "No Emacspeak EWW Marks found."))
       (completing-read "Mark: " emacspeak-eww-marks))
     current-prefix-arg))
-  (cl-declare (special emacspeak-eww-marks))
+  (defvar emacspeak-eww-marks)
   (cond
    (delete (emacspeak-eww-delete-mark name)
            (emacspeak-icon 'delete-object))
@@ -2247,7 +2265,8 @@ arg `delete', delete that mark instead."
 (defun emacspeak-eww-marks-save ()
   "Save Emacspeak EWW marks."
   (interactive)
-  (cl-declare (special emacspeak-eww-marks-file emacspeak-eww-marks))
+  (defvar emacspeak-eww-marks-file)
+(defvar emacspeak-eww-marks)
   (when (hash-table-p emacspeak-eww-marks)
     (emacspeak--persist-variable 'emacspeak-eww-marks
                                  emacspeak-eww-marks-file)))
@@ -2270,7 +2289,7 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 (defun emacspeak-eww-marks-browse ()
   "List EWW Marks as actionable buttons."
   (interactive)
-  (cl-declare (special emacspeak-eww-marks))
+  (defvar emacspeak-eww-marks)
   (let ((buffer (get-buffer-create "EWW Marks"))
         (inhibit-read-only t))
     (with-current-buffer buffer
@@ -2292,7 +2311,8 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 (defun emacspeak-eww-reading-settings  ()
   "Setup speech-rate, punctuation and split-caps for reading prose."
   (interactive)
-  (cl-declare (special dtk-speech-rate-base dtk-speech-rate-step))
+  (defvar dtk-speech-rate-base)
+(defvar dtk-speech-rate-step)
   (dtk-set-rate (+ dtk-speech-rate-base (* dtk-speech-rate-step  3)))
   (dtk-set-punctuations 'all)
   (when dtk-split-caps(dtk-toggle-split-caps))
@@ -2308,7 +2328,7 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 (defun emacspeak-eww-shell-cmd-on-url-at-point (&optional prompt)
   "Run specified shell command on URL at point. "
   (interactive "P")
-  (cl-declare (special emacspeak-eww-url-shell-commands))
+  (defvar emacspeak-eww-url-shell-commands)
   (let ((url
          (or (shr-url-at-point nil)
              (browse-url-url-at-point)))
@@ -2329,12 +2349,12 @@ via command `org-insert-link' bound to \\[org-insert-link]."
 
 (defsubst emacspeak-eww-smart-tabs-put (key url)
   " Add a  `URL'tou our smart tabs cache. "
-  (cl-declare (special emacspeak-eww-smart-tabs))
+  (defvar emacspeak-eww-smart-tabs)
   (puthash key url emacspeak-eww-smart-tabs))
 
 (defsubst emacspeak-eww-smart-tabs-get (key)
   "Retrieve URL stored in `KEY'"
-  (cl-declare (special emacspeak-eww-smart-tabs))
+  (defvar emacspeak-eww-smart-tabs)
   (gethash key  emacspeak-eww-smart-tabs))
 
 (defun emacspeak-eww-smart-tabs-add (char url )
@@ -2343,7 +2363,7 @@ via command `org-insert-link' bound to \\[org-insert-link]."
    (list
     (read-char-exclusive "Tab:")
     (read-from-minibuffer "URL:")))
-  (cl-declare (special emacspeak-eww-smart-tabs))
+  (defvar emacspeak-eww-smart-tabs)
   (emacspeak-eww-smart-tabs-put char url)
   (emacspeak-icon 'close-object))
 
@@ -2356,7 +2376,7 @@ with an interactive prefix arg. "
    (list
     (read-char-exclusive "EWWTab:")
     current-prefix-arg))
-  (cl-declare (special emacspeak-eww-smart-tabs))
+  (defvar emacspeak-eww-smart-tabs)
   (unless
       (and
        (bound-and-true-p emacspeak-eww-smart-tabs)
@@ -2387,7 +2407,7 @@ with an interactive prefix arg. "
 (defun emacspeak-eww-smart-tabs-load ()
   "Load our smart tabsfrom a file."
   (interactive)
-  (cl-declare (special emacspeak-user-directory))
+  (defvar emacspeak-user-directory)
   (when
       (file-exists-p
        (expand-file-name "smart-eww-tabs" emacspeak-user-directory))
@@ -2490,7 +2510,7 @@ Value is specified as a position in the list of table cells.")
 (defsubst emacspeak-eww-table-speak-cell ()
   "Speak current cell."
   (interactive)
-  (cl-declare (special emacspeak-eww-table-cell))
+  (defvar emacspeak-eww-table-cell)
   (dtk-speak
    (dom-node-as-text
     (elt (emacspeak-eww-table-cells) emacspeak-eww-table-cell))))
@@ -2499,7 +2519,7 @@ Value is specified as a position in the list of table cells.")
   "Speak  cell after moving to previous row.
  Optional interactive prefix arg moves to start of table."
   (interactive "P")
-  (cl-declare (special emacspeak-eww-table-cell))
+  (defvar emacspeak-eww-table-cell)
   (emacspeak-eww-browser-check)
   (cond
    (prefix
@@ -2520,7 +2540,7 @@ Value is specified as a position in the list of table cells.")
   "Speak  cell after moving to next row.
  Optional interactive prefix arg moves to end of table."
   (interactive "P")
-  (cl-declare (special emacspeak-eww-table-cell))
+  (defvar emacspeak-eww-table-cell)
   (emacspeak-eww-browser-check)
   (cond
    (prefix
@@ -2543,7 +2563,7 @@ Value is specified as a position in the list of table cells.")
   "Speak next cell after making it current.
 Interactive prefix arg moves to the last cell in the table."
   (interactive "P")
-  (cl-declare (special emacspeak-eww-table-cell))
+  (defvar emacspeak-eww-table-cell)
   (emacspeak-eww-browser-check)
   (cl-assert
    (< (1+ emacspeak-eww-table-cell) (length (emacspeak-eww-table-cells)))
@@ -2565,7 +2585,7 @@ Interactive prefix arg moves to the last cell in the table."
   "Speak previous cell after making it current.
 With interactive prefix arg, move to the start of the table."
   (interactive "P")
-  (cl-declare (special emacspeak-eww-table-cell))
+  (defvar emacspeak-eww-table-cell)
   (emacspeak-eww-browser-check)
   (when  (zerop emacspeak-eww-table-cell  ) (error  "On first cell."))
   (cond
@@ -2630,7 +2650,7 @@ With interactive prefix arg, move to the start of the table."
   (interactive
    (list (car (browse-url-interactive-arg "Media URL: ")))
    eww-mode)
-  (cl-declare (special emacspeak-ytdl ))
+  (defvar emacspeak-ytdl)
   (cl-assert emacspeak-ytdl t "Install youtube-dl first.")
   (let ((dir (funcall eww-download-directory)))
     (access-file dir "Cannot download here")

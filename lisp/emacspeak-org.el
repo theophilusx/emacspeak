@@ -355,7 +355,7 @@
 
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
-  (cl-declare (special org-ans2))
+  (defvar org-ans2)
   (dtk-speak org-ans2))
 
 ;;;  Agenda:
@@ -411,7 +411,7 @@
 
 (defadvice orgtbl-mode (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special orgtbl-mode))
+  (defvar orgtbl-mode)
   (when (ems-interactive-p)
     (emacspeak-icon (if orgtbl-mode 'on 'off))
     (message "Turned %s org table mode."
@@ -433,7 +433,7 @@
 
 (defun emacspeak-org-update-keys ()
   "Update keys in org mode."
-  (cl-declare (special  org-mode-map))
+  (defvar org-mode-map)
   (cl-loop
    for k in
    '(
@@ -462,7 +462,8 @@
 
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
-  (cl-declare (special org-mode-map org-multi-keymap ))
+  (defvar org-mode-map)
+(defvar org-multi-keymap)
   (emacspeak-org-update-keys)
   (cl-loop
    for b in  
@@ -822,11 +823,11 @@ arg just opens the file"
 (defun org-amark-store-link ()
   "Store a link to a AMark.
 Is enabled in the AMark Browser and M-Player Interaction buffers."
-  (when-let
-      ((m (memq major-mode '(emacspeak-m-player-mode emacspeak-amark-mode)))
+  (when-let*
+       ((m (memq major-mode '(emacspeak-m-player-mode emacspeak-amark-mode)))
        (amark
-        (if  (button-at (point))
-            (button-get (button-at (point)) 'mark)
+        (if-let*  ((button (button-at (point))))
+            (button-get button 'mark)
           (call-interactively #'emacspeak-amark-find)))
        (link
         (concat
@@ -839,7 +840,7 @@ Is enabled in the AMark Browser and M-Player Interaction buffers."
 
 (defun org-amark-follow-link (name)
   "Follow an AMark link."
-  (when-let
+  (when-let*
       ((match (string-match "\\(.*\\)#\\(.*\\)" name))
        (filename (match-string 1 name))
        (position  (match-string 2 name)))
@@ -871,7 +872,7 @@ Press `y' to play to next amark."
 
 (defun org-ebook-store-link ()
   "Store a link to an EWW mark from an EBook. "
-  (when-let
+  (when-let*
       ((m (eq major-mode 'emacspeak-eww-marks-mode))
        (b (button-at (point)))
        (desc  (buffer-substring (button-start b) (button-end b)))

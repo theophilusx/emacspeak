@@ -73,7 +73,7 @@
 ;; Content downloaded by the time this is called.
 (defun emacspeak-xkcd-get-current-transcript ()
   "Cache current transcript."
-  (cl-declare (special xkcd-cur))
+  (defvar xkcd-cur)
   (setq 
    xkcd-transcript 
    (cdr 
@@ -104,7 +104,7 @@
 (defun emacspeak-xkcd-open-explanation-browser ()
   "Open explanation of current xkcd in default browser"
   (interactive)
-  (cl-declare (special xkcd-cur))
+  (defvar xkcd-cur)
   (browse-url (concat "http://www.explainxkcd.com/wiki/index.php/"
                       (number-to-string xkcd-cur))))
 (when (boundp 'xkcd-mode-map)

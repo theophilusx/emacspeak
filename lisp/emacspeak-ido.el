@@ -137,7 +137,7 @@ The default value of 12 is too high for using ido effectively with speech. "
 
 (defadvice ido-toggle-ignore (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special ido-ignore-files))
+  (defvar ido-ignore-files)
   (when (ems-interactive-p)
     (emacspeak-icon (if ido-ignore-files 'on 'off))
     (dtk-speak
@@ -204,7 +204,7 @@ The default value of 12 is too high for using ido effectively with speech. "
 
 (defun emacspeak-ido-keys ()
   "Setup additional  keybindings within ido."
-  (cl-declare (special ido-common-completion-map))
+  (defvar ido-common-completion-map)
   (when (boundp 'ido-common-completion-map)
     (define-key  ido-common-completion-map
                  (kbd "C-z") 'emacspeak-z-keymap)

@@ -62,7 +62,7 @@
 
 (defadvice view-mode (after emacspeak pre act comp)
   "Announce what happened"
-  (cl-declare (special view-mode-map))
+  (defvar view-mode-map)
   (when (ems-interactive-p)
     (emacspeak-icon 'open-object)
     (if view-mode
@@ -163,7 +163,7 @@ View-scroll-page-backward-set-page-size View-scroll-page-forward-set-page-size
 
 (defun emacspeak-view-setup-keys()
   "Setup emacspeak convenience keys"
-  (cl-declare (special view-mode-map))
+  (defvar view-mode-map)
   (cl-loop
    for  b in
    '(

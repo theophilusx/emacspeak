@@ -89,7 +89,7 @@
 
 (defun emacspeak-lispy-setup ()
   "Setup emacspeak for use with lispy"
-  (cl-declare (special lispy-mode-map))
+  (defvar lispy-mode-map)
   (when (bound-and-true-p lispy-mode-map)
     (define-key lispy-mode-map (kbd "C-e") 'emacspeak-keymap)))
 

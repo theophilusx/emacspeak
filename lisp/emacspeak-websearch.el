@@ -102,7 +102,7 @@
 LOCATOR is a string to search for in the results page.
 SPEAKER is a function to call to speak relevant information.
 ARGS specifies additional arguments to SPEAKER if any."
-  (cl-declare (special emacspeak-eww-post-hook))
+  (defvar emacspeak-eww-post-hook)
   (add-hook
    'emacspeak-eww-post-hook
    (eval
@@ -168,9 +168,10 @@ ARGS specifies additional arguments to SPEAKER if any."
 `flag' prompts for additional search options. Second interactive
 prefix arg is equivalent to hitting the I'm Feeling Lucky button on Google. "
   (interactive (list (gweb-google-autocomplete) current-prefix-arg))
-  (cl-declare (special
-               emacspeak-google-query emacspeak-google-toolbelt
-               ems--google-filter emacspeak-websearch-google-options))
+  (defvar emacspeak-google-query)
+  (defvar emacspeak-google-toolbelt)
+  (defvar ems--google-filter)
+  (defvar emacspeak-websearch-google-options)
   (setq emacspeak-google-toolbelt nil)
   (let ((toolbelt (emacspeak-google-toolbelt))
         (search-url nil)
@@ -214,9 +215,10 @@ prefix arg is equivalent to hitting the I'm Feeling Lucky button on Google. "
   "Use Google Lite.
 Optional prefix arg prompts for toolbelt options."
   (interactive (list (gweb-google-autocomplete "Q: ") current-prefix-arg))
-  (cl-declare (special emacspeak-eww-masquerade ems--google-filter
-                         emacspeak-websearch-google-lite
-                         emacspeak-google-toolbelt))
+  (defvar emacspeak-eww-masquerade)
+(defvar ems--google-filter)
+(defvar emacspeak-websearch-google-lite)
+(defvar emacspeak-google-toolbelt)
   (setq emacspeak-google-toolbelt nil)
   (let ((emacspeak-eww-masquerade t)
         (toolbelt (emacspeak-google-toolbelt)))
@@ -247,11 +249,10 @@ Optional prefix arg prompts for toolbelt options."
 Optional prefix arg prompts for toolbelt options."
   (interactive
    (list (gweb-google-autocomplete "WFGoogle: ") current-prefix-arg))
-  (cl-declare (special
-               emacspeak-eww-masquerade
-               ems--google-filter
-               emacspeak-websearch-wf-google
-               emacspeak-google-toolbelt))
+  (defvar emacspeak-eww-masquerade)
+  (defvar ems--google-filter)
+  (defvar emacspeak-websearch-wf-google)
+  (defvar emacspeak-google-toolbelt)
   (setq emacspeak-google-toolbelt nil)
   (let ((emacspeak-eww-masquerade t)
         (toolbelt (emacspeak-google-toolbelt)))
@@ -288,7 +289,7 @@ Optional prefix arg prompts for toolbelt options."
 (defun emacspeak-websearch-google-search-in-date-range ()
   "Use this from inside the calendar to do Google date-range searches."
   (interactive)
-  (cl-declare (special calendar-mark-ring))
+  (defvar calendar-mark-ring)
   (let ((query (emacspeak-websearch-read "Google for: "))
         (from (read (calendar-astro-date-string (calendar-cursor-to-date t))))
         (to

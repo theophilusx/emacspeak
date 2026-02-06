@@ -82,7 +82,8 @@
 Restarts piper pipeline if already running."
   (interactive
    (list (completing-read "Voice Model:" pip-voices nil t)))
-  (cl-declare (special pip-voices pip-model))
+  (defvar pip-voices)
+(defvar pip-model)
   (setq pip-model voice)
   (when (process-live-p pip-piper) (pip-stop))
   (when (called-interactively-p 'interactive)
@@ -103,7 +104,9 @@ Restarts piper pipeline if already running."
 Restarts piper pipeline if already running."
   (interactive
    (list (completing-read "Device" pip-devices nil t)))
-  (cl-declare (special pip-devices pip-device pip-model))
+  (defvar pip-devices)
+(defvar pip-device)
+(defvar pip-model)
   (setq pip-device device )
   (when (process-live-p pip-piper) (pip-stop))
   (when (called-interactively-p 'interactive)
@@ -112,7 +115,9 @@ Restarts piper pipeline if already running."
 (defun pip-start ()
   "Start the Piper process"
   (interactive)
-  (cl-declare (special  pip-piper pip-model pip-device))
+  (defvar pip-piper)
+(defvar pip-model)
+(defvar pip-device)
   (unless (process-live-p pip-piper)
     (let ((process-connection-type nil))
       (setq  pip-piper
@@ -123,13 +128,13 @@ Restarts piper pipeline if already running."
 (defun pip-stop ()
   "Stop Piper TTS"
   (interactive)
-  (cl-declare (special pip-piper))
+  (defvar pip-piper)
   (delete-process pip-piper))
 ;;;###autoload
 (defun pip-speak (text)
   "Speak text"
   (interactive "sText:")
-  (cl-declare (special pip-piper))
+  (defvar pip-piper)
   (unless (process-live-p pip-piper) (pip-start))
   (process-send-string pip-piper  (format "%s\n" text))
   (process-send-eof pip-piper))

@@ -64,7 +64,8 @@
 
 (defun emacspeak-proced-update-fields ()
   "Updates cache of field-name .column-positions alist."
-  (cl-declare (special proced-header-line emacspeak-proced-fields))
+  (defvar proced-header-line)
+(defvar emacspeak-proced-fields)
   (let ((positions nil)
         (next nil)
         (header proced-header-line)
@@ -101,12 +102,12 @@
 
 (defun emacspeak-proced-field-to-position (field)
   "Return column position of this field."
-  (cl-declare (special emacspeak-proced-fields))
+  (defvar emacspeak-proced-fields)
   (cdr (assoc-string field emacspeak-proced-fields)))
 
 (defun emacspeak-proced-position-to-field (pos)
   "Return field  for this position."
-  (cl-declare (special emacspeak-proced-fields))
+  (defvar emacspeak-proced-fields)
   (let ((fields emacspeak-proced-fields)
         (field nil)
         (range nil)
@@ -171,7 +172,7 @@
 (defun emacspeak-proced-next-field ()
   "Navigate to next field."
   (interactive)
-  (cl-declare (special emacspeak-proced-fields))
+  (defvar emacspeak-proced-fields)
   (let ((tabs emacspeak-proced-fields))
     (while
         (and tabs
@@ -190,7 +191,7 @@
 (defun emacspeak-proced-previous-field ()
   "Navigate to previous field."
   (interactive)
-  (cl-declare (special emacspeak-proced-fields))
+  (defvar emacspeak-proced-fields)
   (let ((tabs emacspeak-proced-fields)
         (target nil))
     (forward-char -1)
@@ -222,7 +223,7 @@
          (cdr (assoc (get-text-property (point) 'proced-pid)
                      proced-process-alist)))
         nil t nil)))))
-  (cl-declare (special proced-process-alist))
+  (defvar proced-process-alist)
   (let ((value
          (cdr
           (assoc
@@ -233,7 +234,7 @@
 
 (defun emacspeak-proced-add-keys ()
   "Add additional keybindings for emacspeak."
-  (cl-declare (special proced-mode-map))
+  (defvar proced-mode-map)
   (define-key proced-mode-map "a" 'emacspeak-proced-speak-args)
   (define-key proced-mode-map "n" 'emacspeak-proced-next-line)
   (define-key proced-mode-map "p" 'emacspeak-proced-previous-line)
@@ -251,7 +252,7 @@
 
 (defun emacspeak-proced-update-process-cache ()
   "Updated display cache "
-  (cl-declare (special emacspeak-proced-process-cache))
+  (defvar emacspeak-proced-process-cache)
   (let ((cache nil))
     (save-excursion
       (goto-char (point-min))
@@ -272,7 +273,7 @@
     (completing-read
      "Jump to process: "
      emacspeak-proced-process-cache)))
-  (cl-declare (special emacspeak-proced-process-cache))
+  (defvar emacspeak-proced-process-cache)
   (let ((pos (cl-position name  emacspeak-proced-process-cache
                           :test #'string-equal)))
     (cond

@@ -83,7 +83,8 @@
 
 (defun ladspa-libs (&optional refresh)
   "Return list of installed Ladspa libs."
-  (cl-declare (special ladspa-libs ladspa-plugins))
+  (defvar ladspa-libs)
+(defvar ladspa-plugins)
   (unless (file-exists-p ladspa-home)
     (error "Ladspa not installed or not configured."))
   (unless (getenv "LADSPA_PATH")(setenv "LADSPA_PATH" ladspa-home))
@@ -125,7 +126,7 @@
 
 (defun ladspa-analyse-label (library summary)
   "Analyse Ladspa effect and return a parsed metadata structure."
-  (cl-declare (special ladspa-analyse))
+  (defvar ladspa-analyse)
   (let* ((label  (substring  summary 0 (string-match " " summary)))
          (desc (string-trim (substring  summary (string-match " " summary))))
          (controls nil)
@@ -145,7 +146,7 @@
 (defun ladspa-analyse-library (library)
   "Analyse Ladspa library and return a
 list of parsed ladspa-plugin structures, one per label."
-  (cl-declare (special ladspa-analyse))
+  (defvar ladspa-analyse)
   (let ((result nil)
         (labels
          (split-string
@@ -158,7 +159,7 @@ list of parsed ladspa-plugin structures, one per label."
 
 (defun ladspa-plugins (&optional refresh)
   "Return list of installed Ladspa plugins."
-  (cl-declare (special ladspa-plugins))
+  (defvar ladspa-plugins)
   (cond
    ((and ladspa-plugins (null refresh)) ladspa-plugins)
    (t
@@ -177,7 +178,7 @@ list of parsed ladspa-plugin structures, one per label."
 
 (defun ladspa-table-init ()
   "Populate Ladspa hash-table."
-  (cl-declare (special ladspa-table))
+  (defvar ladspa-table)
   (cl-loop for p in (ladspa-plugins) do
            (puthash (intern (ladspa-plugin-label p)) p ladspa-table)))
 
@@ -188,7 +189,7 @@ list of parsed ladspa-plugin structures, one per label."
 
 (defun ladspa-read (&optional prompt)
   "Return a plugin after reading its label."
-  (cl-declare (special ladspa-table))
+  (defvar ladspa-table)
   (let ((label
          (intern
           (completing-read
@@ -245,7 +246,8 @@ list of parsed ladspa-plugin structures, one per label."
 (defun ladspa (&optional refresh)
   "Ladspa workbench."
   (interactive "P")
-  (cl-declare (special ladspa-libs ladspa-plugins))
+  (defvar ladspa-libs)
+(defvar ladspa-plugins)
   (let ((buffer (get-buffer-create "*Ladspa*")))
     (save-current-buffer
       (set-buffer "*Ladspa*")
@@ -303,7 +305,7 @@ list of parsed ladspa-plugin structures, one per label."
 (defun ladspa-instantiate ()
   "Instantiate plugin at point by prompting for control values."
   (interactive)
-  (cl-declare (special ladspa-edit-help))
+  (defvar ladspa-edit-help)
   (unless (eq major-mode 'ladspa-mode) (error "This is not a Ladspa buffer"))
   (let ((plugin  (get-text-property (point) 'ladspa)))
     (cond
@@ -328,7 +330,7 @@ list of parsed ladspa-plugin structures, one per label."
             (propertize (format "%s:  " i)  'face 'font-lock-comment-face))
            (insert
             (propertize (format "%s:" (ladspa-control-desc c))
-                        'face font-lock-string-face))
+                         'face 'font-lock-string-face))
            (insert
             (propertize
              (format "\t\t%s"  (ladspa-control-value c))

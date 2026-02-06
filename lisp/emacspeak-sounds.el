@@ -113,7 +113,7 @@ Use `emacspeak-toggle-icons' bound to
   "Toggle use of auditory icons.
 Optional interactive PREFIX arg toggles global value."
   (interactive "P")
-  (cl-declare (special emacspeak-use-icons))
+  (defvar emacspeak-use-icons)
   (setq  emacspeak-use-icons (not emacspeak-use-icons))
   (when prefix (setq-default emacspeak-use-icons emacspeak-use-icons))
   (when (called-interactively-p 'interactive)
@@ -124,7 +124,8 @@ Optional interactive PREFIX arg toggles global value."
 
 (defun emacspeak-icon (icon)
   "Produce an auditory ICON."
-  (cl-declare (special emacspeak-use-icons emacspeak-play-program))
+  (defvar emacspeak-use-icons)
+(defvar emacspeak-play-program)
   (when emacspeak-use-icons
     (if   (null emacspeak-play-program) ; serve icon
         (emacspeak-serve-icon icon)
@@ -148,19 +149,19 @@ Value is a string, a fully qualified filename. ")
 
 (defsubst emacspeak-sounds-cache-put (sound file)
   "Map  sound to file."
-  (cl-declare (special emacspeak-sounds-cache))
+  (defvar emacspeak-sounds-cache)
   (puthash sound file emacspeak-sounds-cache))
 
 (defsubst emacspeak-sounds-cache-get (sound )
   "Return file that is mapped to sound."
-  (cl-declare (special emacspeak-sounds-cache))
+  (defvar emacspeak-sounds-cache)
   (gethash sound emacspeak-sounds-cache ; or default to button
            (gethash 'button emacspeak-sounds-cache)))
 
 (defun emacspeak-sounds-resource (icon)
   "Return  resource, either a fully qualified file name or an
 icon-name, as string."
-  (cl-declare (special emacspeak-sounds-cache))
+  (defvar emacspeak-sounds-cache)
   (let ((f (emacspeak-sounds-cache-get icon)))
     (cond
      ((null emacspeak-play-program) f)
@@ -208,7 +209,8 @@ It is called  to cache sounds in our theme and prompts directories."
       "Theme: " '("3d" "chimes")
       nil 'must-match nil nil "chimes")
      emacspeak-sounds-dir)))
-  (cl-declare (special emacspeak-play-program emacspeak-sounds-dir))
+  (defvar emacspeak-play-program)
+(defvar emacspeak-sounds-dir)
   (setq theme (or theme (expand-file-name "chimes" emacspeak-sounds-dir)))
   (emacspeak-sounds-cache-prompts)
   (emacspeak-sounds-cache-rebuild theme)
@@ -256,7 +258,7 @@ None: For systems that rely on the speech server playing the icon."
 Used by TTS layer to play icons that are found as text property
 `auditory-icon' on text being spoken.
 This is a private function and  might go away."
-  (cl-declare (special dtk-speaker-process))
+  (defvar dtk-speaker-process)
   (process-send-string
    dtk-speaker-process
    (format "a %s\n" (emacspeak-sounds-resource icon))))
@@ -264,7 +266,7 @@ This is a private function and  might go away."
 ;;;;   serve an auditory icon
 (defun emacspeak-serve-icon (icon)
   "Serve auditory icon ICON."
-  (cl-declare (special dtk-speaker-process))
+  (defvar dtk-speaker-process)
   (process-send-string
    dtk-speaker-process
    (format "p %s\n" (emacspeak-sounds-cache-get icon))))
@@ -278,7 +280,8 @@ This is a private function and  might go away."
   "Produce auditory icon ICON using a local player.
 Linux: Pipewire and Pulse: pactl.
 without Pipewire/Pulse: play from sox."
-  (cl-declare (special emacspeak-play-program ems--play-args))
+  (defvar emacspeak-play-program)
+(defvar ems--play-args)
   (let ((process-connection-type nil))
     (start-process
      "Play" nil emacspeak-play-program ems--play-args

@@ -188,7 +188,8 @@
 (defun emacspeak-muggles-lispy-or-sp ()
   "Toggle between lispy and smartparens."
   (interactive)
-  (cl-declare (special lispy-mode smartparens-mode))
+  (defvar lispy-mode)
+(defvar smartparens-mode)
   (lispy-mode 'toggle)
   (smartparens-mode 'toggle)
   (emacspeak-icon 'button)

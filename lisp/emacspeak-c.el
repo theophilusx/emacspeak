@@ -303,7 +303,7 @@ and their meanings. ")
 (defun emacspeak-c-speak-semantics ()
   "Speak the C semantics of this line. "
   (interactive)
-  (cl-declare (special emacspeak-c-syntactic-table))
+  (defvar emacspeak-c-syntactic-table)
   (let  ((semantics (mapcar 'car (c-guess-basic-syntax)))
          (description ""))
     (setq description
@@ -428,8 +428,9 @@ and their meanings. ")
 (add-hook
  'c-mode-common-hook
  #'(lambda ()
-     (cl-declare (special c-mode-map c-mode-base-map
-                          outline-regexp))
+     (defvar c-mode-map)
+(defvar c-mode-base-map)
+(defvar outline-regexp)
      (setq outline-regexp "^//< ")
      (define-key c-mode-map "\C-cs" 'emacspeak-c-speak-semantics)
      (define-key c-mode-map "\M-n" 'c-next-statement)

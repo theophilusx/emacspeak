@@ -93,7 +93,10 @@
 
 (defun emacspeak-ivy-speak-selection ()
   "Speak current ivy selection."
-  (cl-declare (special ivy--length ivy--old-cands ivy--index ivy-text))
+  (defvar ivy--length)
+(defvar ivy--old-cands)
+(defvar ivy--index)
+(defvar ivy-text)
   (dtk-speak
    (format
     "%d: %s"

@@ -85,9 +85,9 @@ instead you hear only the first screenful."
 ;; Keybindings 
 (defun emacspeak-gnus-setup-keys ()
   "Setup Emacspeak keys."
-  (cl-declare (special gnus-summary-mode-map
-                       gnus-group-mmode-map
-                       gnus-article-mode-map))
+  (defvar gnus-summary-mode-map)
+(defvar gnus-group-mmode-map)
+(defvar gnus-article-mode-map)
   (define-key gnus-summary-mode-map "\C-t" 'gnus-summary-toggle-header)
   (define-key gnus-summary-mode-map "t" 'gnus-summary-toggle-header)
   (define-key
@@ -113,9 +113,10 @@ instead you hear only the first screenful."
   (dtk-speak (gnus-summary-article-subject)))
 
 (defun emacspeak-gnus-speak-article-body ()
-  (cl-declare (special emacspeak-gnus-large-article
-                       voice-lock-mode dtk-punctuation-mode
-                       gnus-article-buffer))
+  (defvar emacspeak-gnus-large-article)
+(defvar voice-lock-mode)
+(defvar dtk-punctuation-mode)
+(defvar gnus-article-buffer)
   (with-current-buffer gnus-article-buffer
     (goto-char (point-min))
     (search-forward "\n\n")
@@ -471,7 +472,7 @@ the previous group was closed."
   "Speak the subject and speak the first screenful.
 Produce an auditory icon
 indicating the article is being opened."
-  (cl-declare (special gnus-article-buffer))
+  (defvar gnus-article-buffer)
   (when (ems-interactive-p)
     (emacspeak-gnus-summary-speak-subject)
     (sit-for 2)
@@ -565,7 +566,7 @@ Produce an auditory icon if possible."
 
 (defadvice gnus-summary-next-page (after emacspeak pre act comp)
   "Speak the next pageful "
-  (cl-declare (special gnus-article-buffer))
+  (defvar gnus-article-buffer)
   (dtk-stop 'all)
   (emacspeak-icon 'scroll)
   (with-current-buffer
@@ -580,7 +581,7 @@ Produce an auditory icon if possible."
 
 (defadvice gnus-summary-prev-page (after emacspeak pre act comp)
   "Speak the previous  pageful "
-  (cl-declare (special gnus-article-buffer))
+  (defvar gnus-article-buffer)
   (dtk-stop 'all)
   (emacspeak-icon 'scroll)
   (save-current-buffer
@@ -595,14 +596,14 @@ Produce an auditory icon if possible."
 
 (defadvice gnus-summary-beginning-of-article (after emacspeak pre act comp)
   "Speak the first line. "
-  (cl-declare (special gnus-article-buffer))
+  (defvar gnus-article-buffer)
   (save-current-buffer
     (set-buffer gnus-article-buffer)
     (emacspeak-speak-line)))
 
 (defadvice gnus-summary-end-of-article (after emacspeak pre act comp)
   "Speak the first line. "
-  (cl-declare (special gnus-article-buffer))
+  (defvar gnus-article-buffer)
   (save-current-buffer
     (set-buffer gnus-article-buffer)
     (emacspeak-speak-line)))

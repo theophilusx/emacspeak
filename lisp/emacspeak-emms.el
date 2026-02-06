@@ -193,7 +193,7 @@
 (defun emacspeak-emms-pause-or-resume ()
   "Pause/resume if emms is running. For use  in
 emacspeak-silence-hook."
-  (cl-declare (special emms-player-playing-p))
+  (defvar emms-player-playing-p)
   (when (and (boundp 'emms-player-playing-p)
              (not (null emms-player-playing-p)))
     (emms-player-pause)))

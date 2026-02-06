@@ -88,14 +88,14 @@
 (defun emacspeak-hangman-speak-statistics ()
   "Speak statistics."
   (interactive)
-  (cl-declare (special hm-win-statistics))
+  (defvar hm-win-statistics)
   (message "         Games won: %d    Games Lost: %d"
            (aref hm-win-statistics 0)
            (aref hm-win-statistics 1)))
 
 (defun emacspeak-hangman-setup-pronunciations ()
   "Setup pronunciation dictionaries."
-  (cl-declare (special emacspeak-pronounce-table))
+  (defvar emacspeak-pronounce-table)
   (emacspeak-pronounce-add-dictionary-entry 'hm-mode "_" ".")
   (when (or (not (boundp 'emacspeak-pronounce-table))
             (not emacspeak-pronounce-table))
@@ -109,8 +109,8 @@
 (defun emacspeak-hangman-speak-guess ()
   "Speak current guessed string. "
   (interactive)
-  (cl-declare (special hm-current-guess-string
-                       hm-current-word))
+  (defvar hm-current-guess-string)
+(defvar hm-current-word)
   (let ((string (make-string  (length hm-current-word)
                               ?\))))
     (cl-loop for i from 0 to (1- (length hm-current-word))

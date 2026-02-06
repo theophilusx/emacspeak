@@ -233,7 +233,7 @@
 (defun emacspeak-nxml-summarize-outline ()
   "Intelligent spoken display of current outline entry."
   (interactive)
-  (cl-declare (special o-close))
+  (defvar o-close)
   (cond
    ((get-text-property (point) 'nxml-outline-state)
     (let ((o-open nil))

@@ -64,7 +64,7 @@
 ;;;   functions:
 (defun emacspeak-calendar-sort-diary-entries ()
   "Sort entries in diary entries list."
-  (cl-declare (special diary-entries-list))
+  (defvar diary-entries-list)
   (when(and  (boundp 'diary-entries-list)
              diary-entries-list)
     (setq diary-entries-list
@@ -298,7 +298,7 @@
 
 (defadvice calendar-read (around emacspeak pre act comp)
   "Record what was read"
-  (cl-declare (special emacspeak-calendar-user-input))
+  (defvar emacspeak-calendar-user-input)
   ad-do-it
   (setq emacspeak-calendar-user-input ad-return-value)
   ad-return-value)
@@ -365,8 +365,9 @@
    (list
     (read-from-minibuffer "Address: ")
     current-prefix-arg))
-  (cl-declare (special calendar-standard-time-zone-name
-                       calendar-longitude calendar-latitude))
+  (defvar calendar-standard-time-zone-name)
+(defvar calendar-longitude)
+(defvar calendar-latitude)
   (let* ((geo (gmaps-address-geocode address))
          (calendar-latitude (g-json-get 'lat geo))
          (calendar-longitude (g-json-get 'lng geo))
@@ -387,7 +388,9 @@
 
 (defun emacspeak-calendar-setup()
   "Set up appropriate bindings for calendar"
-  (cl-declare (special calendar-buffer calendar-mode-map emacspeak-prefix))
+  (defvar calendar-buffer)
+(defvar calendar-mode-map)
+(defvar emacspeak-prefix)
   (save-current-buffer
     (set-buffer calendar-buffer)
     (local-unset-key emacspeak-prefix)
@@ -419,7 +422,7 @@
 
 (defun emacspeak-appt-delete-display ()
   "Function to delete appointment message"
-  (cl-declare (special appt-buffer-name))
+  (defvar appt-buffer-name)
   (and (get-buffer appt-buffer-name)
        (save-current-buffer
          (set-buffer appt-buffer-name)
@@ -434,7 +437,7 @@
 (defun emacspeak-appt-repeat-announcement ()
   "Speaks the most recently displayed appointment message if any."
   (interactive)
-  (cl-declare (special appt-buffer-name))
+  (defvar appt-buffer-name)
   (let  ((appt-buffer (get-buffer appt-buffer-name)))
     (cond
      (appt-buffer
@@ -459,8 +462,10 @@
   "Set up geo-coordinates using Google Maps reverse geocoding.
 To use, configure variable gmaps-my-address via M-x customize-variable."
   (interactive)
-  (cl-declare (special  gmaps-my-address gmaps-my-location
-                        calendar-latitude calendar-longitude))
+  (defvar gmaps-my-address)
+(defvar gmaps-my-location)
+(defvar calendar-latitude)
+(defvar calendar-longitude)
   (cond
    ((null gmaps-my-location)
     (message "First customize gmaps-my-address."))
@@ -473,7 +478,7 @@ To use, configure variable gmaps-my-address via M-x customize-variable."
 
 (defadvice calendar-sunrise-sunset (around emacspeak pre act comp)
   "Like calendar's sunrise-sunset, but speaks location intelligently."
-  (cl-declare (special gmaps-my-address))
+  (defvar gmaps-my-address)
   (cond
    ((and (boundp 'gmaps-my-address)
          gmaps-my-address

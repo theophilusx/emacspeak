@@ -108,7 +108,7 @@
 (defun emacspeak-vuiet-track-info ()
   "Speak current playing state."
   (interactive)
-  (cl-declare (special mode-line-misc-info))
+  (defvar mode-line-misc-info)
   (cond
    ((null mode-line-misc-info)
     (dtk-notify "Nothing playing on vuiet?") )

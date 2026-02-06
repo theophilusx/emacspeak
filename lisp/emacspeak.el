@@ -98,7 +98,7 @@ the Emacspeak desktop.")
   (add-hook 'doc-view-mode-hook #'doc-view-open-text))
 
 (with-eval-after-load "gptel"
-  (cl-declare (special gptel-post-response-functions))
+  (defvar gptel-post-response-functions)
   (add-hook
    'gptel-post-stream-hook
    #'(lambda nil (emacspeak-icon 'tick-tick)))
@@ -314,9 +314,9 @@ the Emacspeak desktop.")
 
 (defun emacspeak-prepare-emacs ()
   "Prepare Emacs to speech-enable packages when loaded."
-  (cl-declare (special emacspeak-packages-to-prepare
-                       Info-file-list-for-emacs
-                       emacspeak-soundscapes))
+  (defvar emacspeak-packages-to-prepare)
+(defvar Info-file-list-for-emacs)
+(defvar emacspeak-soundscapes)
   (unless (boundp 'Info-file-list-for-emacs) (require 'info))
   (push "emacspeak" Info-file-list-for-emacs)
   (setq-default line-move-visual nil)
@@ -333,7 +333,9 @@ the Emacspeak desktop.")
 ;;;###autoload
 (defsubst emacspeak-setup-programming-mode ()
   "Setup programming mode."
-  (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
+  (defvar dtk-split-caps)
+(defvar emacspeak-audio-indentation)
+(defvar dtk-caps)
   (dtk-set-punctuations 'all)
   (or dtk-split-caps (dtk-toggle-split-caps))
   (or dtk-caps (dtk-toggle-caps))
@@ -344,7 +346,7 @@ the Emacspeak desktop.")
   "Setup programming modes."
   (add-hook 'prog-mode-hook #'emacspeak-setup-programming-mode)
   (with-eval-after-load "generic-x"
-    (cl-declare (special generic-extras-enable-list))
+    (defvar generic-extras-enable-list)
     (mapc
      #'(lambda (hook)
          (add-hook hook #'emacspeak-setup-programming-mode ))
@@ -367,7 +369,7 @@ This cannot be set via custom; set this in your startup file before
 
 (defsubst emacspeak-easter-egg ()
   "Easter Egg"
-  (cl-declare (special emacspeak-play))
+  (defvar emacspeak-play)
   (let ((f (expand-file-name "ai/01-gemini.ogg" emacspeak-etc-directory)))
     (when
         (and

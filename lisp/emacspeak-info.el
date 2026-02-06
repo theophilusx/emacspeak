@@ -89,7 +89,7 @@ node -- speak the entire node."
 
 (defun emacspeak-info-visit-node()
   "Apply requested action upon visiting a node."
-  (cl-declare (special emacspeak-info-select-node-speak-chunk))
+  (defvar emacspeak-info-select-node-speak-chunk)
   (emacspeak-icon 'open-object)
   (cond
    ((eq emacspeak-info-select-node-speak-chunk 'screenfull)
@@ -230,8 +230,8 @@ node-spec."
 (defun emacspeak-info-speak-header ()
   "Speak info header line."
   (interactive)
-  (cl-declare (special Info-use-header-line
-                       Info-header-line))
+  (defvar Info-use-header-line)
+(defvar Info-header-line)
   (cond
    ((and (boundp 'Info-use-header-line)
          (boundp 'Info-header-line)

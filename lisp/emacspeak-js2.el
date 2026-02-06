@@ -174,7 +174,7 @@
 
 (defun emacspeak-js2-hook ()
   "Hook to setup emacspeak."
-  (cl-declare (special js2-mode-map))
+  (defvar js2-mode-map)
   (define-key js2-mode-map "\C-e" 'emacspeak-keymap)
   (define-key js2-mode-map "\C-ee" 'js2-end-of-line)
   (when (locate-library "js2-imenu-extras")

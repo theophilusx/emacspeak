@@ -776,9 +776,10 @@ When on a close delimiter, speak matching delimiter after a small delay. "
  (eval
   `(defadvice ,f (around emacspeak pre act comp)
      "Speak message. Duplicates will not be spoken."
-     (cl-declare (special
-                  emacspeak-last-message inhibit-message
-                  ems--message-filter emacspeak-speak-messages))
+     (defvar emacspeak-last-message)
+     (defvar inhibit-message)
+     (defvar ems--message-filter)
+     (defvar emacspeak-speak-messages)
      (let ((m nil)
            (o minibuffer-message-overlay))
        ad-do-it
@@ -827,7 +828,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (defadvice ange-ftp-process-handle-hash (around emacspeak pre act comp)
   "Jibber intelligently."
-  (cl-declare (special ange-ftp-last-percent))
+  (defvar ange-ftp-last-percent)
   (ems-with-messages-silenced
    ad-do-it
    (emacspeak-icon 'progress)
@@ -849,9 +850,9 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 
 (defun emacspeak-fancy-error-handler (data _ caller)
   "Custom error handler."
-  (cl-declare (special ems--error-limit))
-  (cl-declare (special ems--last-error-msg
-                       ems--lazy-error-time))
+  (defvar ems--error-limit)
+  (defvar ems--last-error-msg)
+(defvar ems--lazy-error-time)
   (let ((m (error-message-string data))
         (fn (if caller (symbol-name caller) "")))
     (when                               ; speak conditionally
@@ -1109,7 +1110,7 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 ;; guess the vc version number from the variable used in minor mode alist
 (defun emacspeak-vc-get-version-id ()
   "Return VC version id."
-  (cl-declare (special vc-mode))
+  (defvar vc-mode)
   (let ((id vc-mode))
     (cond
      ((and vc-mode
@@ -1550,7 +1551,7 @@ Auditory highlight indicates position of point."
      "Speak the previous line if line echo is on.
 See command \\[emacspeak-toggle-line-echo]. Otherwise cue the user to
 the newly created  line."
-     (cl-declare (special emacspeak-line-echo))
+     (defvar emacspeak-line-echo)
      (when (ems-interactive-p)
        (if emacspeak-line-echo
            (emacspeak-read-previous-line)
@@ -1588,7 +1589,7 @@ Provide an auditory icon if possible."
 
 (defadvice call-last-kbd-macro (around emacspeak pre act comp)
   "Speak."
-  (cl-declare (special emacspeak-use-icons))
+  (defvar emacspeak-use-icons)
   (cond
    ((ems-interactive-p)
     (ems-with-messages-silenced
@@ -1775,7 +1776,7 @@ Provide an auditory icon if possible."
 
 (defadvice help-form-show (after emacspeak pre act comp)
   "Speak displayed help form."
-  (cl-declare (special emacspeak--help-char-helpbuf))
+  (defvar emacspeak--help-char-helpbuf)
   (when (buffer-live-p (get-buffer emacspeak--help-char-helpbuf))
     (with-current-buffer emacspeak--help-char-helpbuf
       (goto-char (point-min))
@@ -2742,7 +2743,7 @@ Produce an auditory icon if possible."
 (defadvice ielm (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
-    (cl-declare (special ielm-working-buffer))
+    (defvar ielm-working-buffer)
     (setq
      header-line-format
      '((:eval
@@ -2831,7 +2832,7 @@ Produce an auditory icon if possible."
 
 (defadvice rectangle-mark-mode (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special rectangle-mark-mode))
+  (defvar rectangle-mark-mode)
   (when (ems-interactive-p)
     (dtk-notify
      (format "Turned %s rectangle mark mode"

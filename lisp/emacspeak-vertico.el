@@ -70,8 +70,9 @@
 
 (defadvice vertico--exhibit (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special vertico--allow-prompt
-                       vertico--index vertico--base))
+  (defvar vertico--allow-prompt)
+(defvar vertico--index)
+(defvar vertico--base)
   (let ((new-cand
          (substring (vertico--candidate)
                     (if (>= vertico--index 0)

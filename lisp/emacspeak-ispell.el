@@ -140,7 +140,7 @@ many available corrections."
 
 (defadvice ispell-word (around emacspeak pre act comp)
   "Produce auditory icons for ispell."
-  (cl-declare (special emacspeak-last-message))
+  (defvar emacspeak-last-message)
   (cond
    ((ems-interactive-p)
     (let ((dtk-stop-immediately t))

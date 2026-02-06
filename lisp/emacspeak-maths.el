@@ -133,13 +133,13 @@ install.")
   "Map of handlers for parsing Maths Server output.")
 (defun emacspeak-maths-handler-set (name handler)
   "Set up handler for name `name'."
-  (cl-declare (special emacspeak-maths-handler-table))
+  (defvar emacspeak-maths-handler-table)
   (puthash name handler emacspeak-maths-handler-table))
 
 (defun emacspeak-maths-handler-get (name)
   "Return handler  for name `name'.
 Throw error if no handler defined."
-  (cl-declare (special emacspeak-maths-handler-table))
+  (defvar emacspeak-maths-handler-table)
   (or (gethash name emacspeak-maths-handler-table)
       (error "No handler defined for %s" name)))
 
@@ -154,7 +154,7 @@ Throw error if no handler defined."
 
 (defun emacspeak-maths-handle-string (string)
   "Handle plain, unannotated string."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (with-current-buffer (emacspeak-maths-output emacspeak-maths)
     (let ((start (point)))
       (insert (format "%s\n" string))
@@ -175,7 +175,7 @@ Otherwise, Examine head of sexp, and applies associated handler to the tail."
 
 (defun emacspeak-maths-handle-exp (contents)
   "Handle top-level exp returned from Maths Server."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (with-current-buffer (emacspeak-maths-output emacspeak-maths)
     (goto-char (point-max))
     (let ((inhibit-read-only  t)
@@ -203,7 +203,7 @@ Otherwise, Examine head of sexp, and applies associated handler to the tail."
 
 (defun emacspeak-maths-apply-pause (start)
   "Apply pause."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (let ((pause (emacspeak-maths-pause emacspeak-maths)))
     (when pause
       (save-excursion
@@ -217,7 +217,7 @@ Otherwise, Examine head of sexp, and applies associated handler to the tail."
 (defun emacspeak-maths-handle-text (contents)
   "Handle body of annotated text from Maths Server.
 Expected: ((acss) string)."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (cl-assert (listp contents) t "%s is not a list. " contents)
   (let ((acss (cl-first contents))
         (string (cl-second contents))
@@ -232,7 +232,7 @@ Expected: ((acss) string)."
 
 (defun emacspeak-maths-handle-pause (ms)
   "Handle Pause value."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (cl-assert (numberp ms) t "%s is not a number. " ms)
   (cond
    ((null (emacspeak-maths-pause emacspeak-maths))
@@ -283,7 +283,7 @@ incomplete parse, that is expected to be caught by the caller."
   "Handle process output from Node math-server.
 All complete chunks of output are consumed. Partial output is
 left for next run."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (with-current-buffer (process-buffer proc)
     (let ((moving (= (point) (process-mark proc))))
       (save-excursion
@@ -320,8 +320,9 @@ left for next run."
 (defun emacspeak-maths-start ()
   "Start Maths server bridge."
   (interactive)
-  (cl-declare (special emacspeak-maths-inferior-program
-                       emacspeak-maths emacspeak-maths-server-program))
+  (defvar emacspeak-maths-inferior-program)
+(defvar emacspeak-maths)
+(defvar emacspeak-maths-server-program)
   (cl-assert emacspeak-maths-inferior-program nil "No node executable found.")
   (let ((server
          (make-comint
@@ -345,7 +346,7 @@ left for next run."
 (defun emacspeak-maths-shutdown ()
   "Shutdown client and server processes."
   (interactive)
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (when (process-live-p (emacspeak-maths-client-process emacspeak-maths))
     (delete-process (emacspeak-maths-client-process emacspeak-maths)))
   (when (process-live-p (emacspeak-maths-server-process emacspeak-maths))
@@ -360,7 +361,7 @@ left for next run."
 (defun emacspeak-maths-flush-output ()
   "Flush client buffer if things go out of sync."
   (interactive)
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (when
       (process-live-p (emacspeak-maths-client-process emacspeak-maths))
     (with-current-buffer
@@ -371,7 +372,7 @@ left for next run."
 
 (defun emacspeak-maths-ensure-server ()
   "Start up Maths Server bridge if not already running."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (unless
       (and emacspeak-maths
            (process-live-p (emacspeak-maths-server-process emacspeak-maths))
@@ -392,7 +393,7 @@ left for next run."
 (defun emacspeak-maths-guess-calc ()
   "Guess expression to speak in calc buffers.
 Set calc-language to tex to use this feature."
-  (cl-declare (special calc-last-kill))
+  (defvar calc-last-kill)
   (cl-assert (eq major-mode 'calc-mode) nil "This is not a Calc buffer.")
   (calc-kill 1 'no-delete)
   (substring (car calc-last-kill) 2))
@@ -412,7 +413,7 @@ Set calc-language to tex to use this feature."
 
 (defun emacspeak-maths-guess-tex ()
   "Extract math content around point."
-  (cl-declare (special texmathp-why))
+  (defvar texmathp-why)
   (cl-assert (require 'texmathp) nil "Install package auctex to get texmathp")
   (when (texmathp)
     (let ((delimiter (car texmathp-why))
@@ -457,7 +458,7 @@ Set calc-language to tex to use this feature."
 
 (defun emacspeak-maths-guess-input ()
   "Examine current mode, text around point etc. to guess Math content to read."
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (unless emacspeak-maths (emacspeak-maths-start))
   (setf
    (emacspeak-maths-input emacspeak-maths)
@@ -485,7 +486,7 @@ Set calc-language to tex to use this feature."
 (defun emacspeak-maths-enter-guess ()
   "Send the guessed  LaTeX expression to Maths server. "
   (interactive)
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (emacspeak-maths-ensure-server)        
   (emacspeak-maths-guess-input)         ;guess based on context
   (process-send-string
@@ -497,7 +498,7 @@ Set calc-language to tex to use this feature."
   "Send a LaTeX expression to Maths server,
  guess  based on context. "
   (interactive (list (emacspeak-maths-guess-input)))
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (emacspeak-maths-ensure-server)
   (when (or (null latex) (string= "" latex))
     (setq latex (read-from-minibuffer "Enter expression:")))
@@ -514,7 +515,7 @@ Set calc-language to tex to use this feature."
   `(defun ,(intern (format "emacspeak-maths-%s" move)) ()
      ,(format "Move %s in current Math expression. (auto-generated)" move)
      (interactive)
-     (cl-declare (special emacspeak-maths))
+     (defvar emacspeak-maths)
      (process-send-string
       (emacspeak-maths-client-process emacspeak-maths)
       ,(format "%s:\n" move)))))
@@ -559,7 +560,7 @@ Emacs online help facility to look up help on these commands.
 (defun emacspeak-maths-switch-to-output ()
   "Switch to output buffer."
   (interactive)
-  (cl-declare (special emacspeak-maths))
+  (defvar emacspeak-maths)
   (funcall-interactively
    #'pop-to-buffer (emacspeak-maths-output emacspeak-maths)))
 

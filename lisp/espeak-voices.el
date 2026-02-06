@@ -80,12 +80,12 @@ The string can set any voice parameter.")
   "Define an Espeak  voice named NAME.
 This voice will be set   by sending the string
 COMMAND-STRING to the TTS engine."
-  (cl-declare (special espeak-voice-table))
+  (defvar espeak-voice-table)
   (puthash name command-string espeak-voice-table))
 
 (defun espeak-get-voice-command  (name)
   "Retrieve command string for  voice NAME."
-  (cl-declare (special espeak-voice-table))
+  (defvar espeak-voice-table)
   (cond
    ((listp name)
     (mapconcat #'espeak-get-voice-command name " "))
@@ -94,7 +94,7 @@ COMMAND-STRING to the TTS engine."
 
 (defun espeak-voice-defined-p (name)
   "Check if there is a voice named NAME defined."
-  (cl-declare (special espeak-voice-table))
+  (defvar espeak-voice-table)
   (gethash name espeak-voice-table))
 
 ;;;  voice definitions
@@ -122,13 +122,13 @@ Values are vectors holding the control codes for the 10 settings.")
   "Set up voice FAMILY.
 Argument DIMENSION is the dimension being set,
 and TABLE gives the values along that dimension."
-  (cl-declare (special espeak-css-code-tables))
+  (defvar espeak-css-code-tables)
   (let ((key (intern (format "%s-%s" family dimension))))
     (puthash key table espeak-css-code-tables)))
 
 (defun espeak-css-get-code-table (family dimension)
   "Retrieve table of values for specified FAMILY and DIMENSION."
-  (cl-declare (special espeak-css-code-tables))
+  (defvar espeak-css-code-tables)
   (let ((key (intern (format "%s-%s" family dimension))))
     (gethash key espeak-css-code-tables)))
 
@@ -284,9 +284,9 @@ and TABLE gives the values along that dimension."
 ;;;###autoload
 (defun espeak-configure-tts ()
   "Configure  to use eSpeak."
-  (cl-declare (special tts-default-speech-rate
-                       espeak-default-speech-rate
-                       dtk-speaker-process))
+  (defvar tts-default-speech-rate)
+(defvar espeak-default-speech-rate)
+(defvar dtk-speaker-process)
   (fset 'tts-voice-defined-p 'espeak-voice-defined-p)
   (fset 'tts-get-voice-command 'espeak-get-voice-command)
   (fset

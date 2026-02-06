@@ -73,7 +73,7 @@
 (defun emacspeak-dired-speak-line ()
   "Speak the dired line intelligently.
 If in locate-mode, speak full pathname."
-  (cl-declare (special emacspeak-speak-last-spoken-word-position))
+  (defvar emacspeak-speak-last-spoken-word-position)
   (let ((filename
          (dired-get-filename (if (eq major-mode 'locate-mode) nil 'no-dir) t))
         (personality (dtk-get-style)))
@@ -220,7 +220,7 @@ Assumes that `dired-listing-switches' contains  -l"
 Currently is a no-op  unless
 unless `dired-listing-switches' contains -l"
   (interactive)
-  (cl-declare (special dired-listing-switches))
+  (defvar dired-listing-switches)
   (when
       (save-match-data
         (string-match  "l" dired-listing-switches))
@@ -246,7 +246,7 @@ unless `dired-listing-switches' contains -l"
 Like Emacs' built-in dired-show-file-type but allows user to customize
 options passed to command `file'."
   (interactive (list (dired-get-filename t) current-prefix-arg))
-  (cl-declare (special emacspeak-dired-file-cmd-options))
+  (defvar emacspeak-dired-file-cmd-options)
   (with-temp-buffer
     (if deref-symlinks
         (call-process "file" nil t t  "-l"
@@ -342,7 +342,7 @@ On a directory line, run du -s on the directory to speak its size."
 
 (defun emacspeak-dired-setup-keys ()
   "Add emacspeak keys to dired."
-  (cl-declare (special dired-mode-map))
+  (defvar dired-mode-map)
   (define-key dired-mode-map "F" 'emacspeak-wizards-find-file-as-root)
   (define-key dired-mode-map "E" 'emacspeak-dired-epub-eww)
   (define-key dired-mode-map (kbd "C-j") 'emacspeak-dired-open-this-file)
@@ -399,7 +399,7 @@ On a directory line, run du -s on the directory to speak its size."
 (defun emacspeak-dired-rpm-query-in-dired ()
   "Run rpm -qi on current dired entry."
   (interactive)
-  (cl-declare (special major-mode))
+  (defvar major-mode)
   (unless (eq major-mode 'dired-mode)
     (error "This command should be used in dired mode."))
   (shell-command
@@ -489,7 +489,7 @@ current file in DirEd."
   "Treat locate results as a play-list.
 Optional interactive prefix arg shuffles playlist."
   (interactive "P")
-  (cl-declare (special emacspeak-m-player-options))
+  (defvar emacspeak-m-player-options)
   (cl-assert (eq major-mode 'locate-mode) t "Not in a locate buffer")
   (save-excursion
     (goto-char (point-min))
@@ -523,7 +523,7 @@ If on a file, speak its duration.
 If on a directory, speak the total duration of all sound files under
   that directory."
   (interactive)
-  (cl-declare (special emacspeak-media-extensions))
+  (defvar emacspeak-media-extensions)
   (cl-assert sox-soxi
              t "This command needs soxi installed.")
   (cl-assert (eq major-mode 'dired-mode)
@@ -569,7 +569,7 @@ If on a directory, speak the total duration of all sound files under
 (defun emacspeak-find-dired ()
   "Prompt for find-dired arguments using context and completion."
   (interactive)
-  (cl-declare (special ems--find-switches))
+  (defvar ems--find-switches)
   (let ((directory (read-directory-name "Directory:"))
         (f-args nil)
         (arg (completing-read "Switch:" ems--find-switches nil t)))
