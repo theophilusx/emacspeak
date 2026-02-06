@@ -262,7 +262,7 @@ Press `r' to resume the suspended transient."
       ((ems-interactive-p)
        ad-do-it
        (with-current-buffer (window-buffer transient--window)
-         (when-let ((button (button-at (point)))
+         (when-let* ((button (button-at (point)))
                     (start (button-start button))
                     (end (button-end button)))
            (dtk-speak (buffer-substring start end))

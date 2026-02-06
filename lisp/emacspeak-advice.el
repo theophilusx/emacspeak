@@ -2733,7 +2733,7 @@ Produce an auditory icon if possible."
        (unless ad-return-value
          (emacspeak-icon 'warn-user)
          (emacspeak-speak-line))
-       (when-let ((m ad-return-value))
+       (when-let* ((m ad-return-value))
          (emacspeak-speak-region
           (prop-match-beginning m) (prop-match-end m))
          (emacspeak-icon 'select-object))))))
