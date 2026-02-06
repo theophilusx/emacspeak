@@ -1,0 +1,3 @@
+#!/bin/sh
+LOG=/tmp/speechd-$$.log
+tee -a $LOG | `dirname $0`/speechd-server.py 2>&1 | tee /tmp/speechd-out-$$.log
