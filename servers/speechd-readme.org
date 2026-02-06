@@ -119,11 +119,32 @@ The server implements the standard Emacspeak TTS protocol:
 - `tts_set_speech_rate <rate>` - Set speech rate
 - `tts_set_character_scale <factor>` - Set character scale
 - `tts_set_punctuations <mode>` - Set punctuation mode
+- `tts_set_voice <voice>` - Set synthesizer voice (e.g., male1, female1)
+- `tts_list_voices` - List available synthesizer voices
 - `tts_split_caps <flag>` - Enable/disable split caps
 - `tts_caps <flag>` - Enable/disable caps beep
 - `tts_sync_state <punct> <splitcaps> <caps> <rate>` - Sync all state
 - `tts_reset` - Reset TTS
 - `tts_say <text>` - Direct TTS output
+
+### Voice Selection
+
+To see available voices for your configured output module:
+
+```
+tts_list_voices
+```
+
+To set a voice:
+
+```
+tts_set_voice male1
+```
+
+Common voice names (depending on output module):
+- `male1`, `male2`, `male3` - Male voices
+- `female1`, `female2`, `female3` - Female voices
+- `child_male`, `child_female` - Child voices
 
 ## Troubleshooting
 
