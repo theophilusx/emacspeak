@@ -308,8 +308,9 @@ class SpeechDispatcherClient:
             # Set default output module
             self.client.set_output_module('default')
             
-            # Enable SSML
-            self.client.set_data_mode(speechd.DataMode.SSML)
+            # Note: SSML mode can cause issues with some output modules
+            # We keep it disabled by default and only use SSML for voice locking
+            # self.client.set_data_mode(speechd.DataMode.SSML)
             
             # Set default parameters
             self.client.set_language(self.current_language)
@@ -332,10 +333,24 @@ class SpeechDispatcherClient:
         self.connected = False
     
     def speak(self, text: str) -> None:
-        """Speak text."""
+        """Speak text.
+        
+        Handles both plain text and SSML. If the text starts with <speak,
+        it's treated as SSML. Otherwise, it's spoken as plain text.
+        """
         if self.client and self.connected:
             try:
-                self.client.speak(text)
+                # Check if this is SSML or plain text
+                is_ssml = text.strip().startswith('<speak')
+                
+                if is_ssml:
+                    # Already in SSML mode, speak directly
+                    self.client.speak(text)
+                else:
+                    # Plain text - temporarily disable SSML if needed
+                    # or just speak directly (speechd handles plain text in SSML mode)
+                    self.client.speak(text)
+                    
             except Exception as e:
                 print(f"Error speaking: {e}", file=sys.stderr)
 
@@ -515,10 +530,15 @@ class EmacspeakServer:
         self.tts.set_rate(self.state.speech_rate)
         self.tts.set_punctuation_mode(self.state.punctuations)
         
-        # Announce startup
-        self.tts.say("Speech Dispatcher server ready")
+        # Announce startup - use plain text (no SSML) for initial greeting
+        try:
+            self.tts.say("Speech Dispatcher server ready")
+            print("Startup announcement sent", file=sys.stderr)
+        except Exception as e:
+            print(f"Warning: Could not send startup announcement: {e}", file=sys.stderr)
         
         print("Server initialized successfully", file=sys.stderr)
+        sys.stderr.flush()
         return True
     
     def shutdown(self) -> None:
@@ -572,18 +592,22 @@ class EmacspeakServer:
         # Clean the text
         text = text.strip()
         if text:
-            # Use say-as for character mode
-            ssml_text = self.ssml.say_as(self.ssml.escape(text), 'characters')
-            wrapped = self.ssml.wrap_speak(ssml_text)
-            self.tts.say(wrapped)
+            # Use the char command for single characters
+            if len(text) == 1:
+                self.tts.char(text)
+            else:
+                # For multiple characters, speak as text
+                self.tts.say(text)
         return ""
     
     def cmd_silence(self, duration: str = "50") -> str:
         """Insert silence (sh command)."""
+        # For now, just insert a space - proper silence would need SSML
+        # which we're avoiding for compatibility
         try:
             d = int(duration)
-            silence = self.ssml.break_tag(time_ms=d)
-            self.queue.enqueue_control(silence)
+            # Enqueue a space as a placeholder for silence
+            self.queue.enqueue_speech(" ")
         except ValueError:
             pass
         return ""
@@ -742,9 +766,9 @@ class EmacspeakServer:
         """Process the speech queue."""
         self.state.is_talking = True
         
-        # Build SSML from queue
-        ssml_parts = []
-        current_prosody = {}
+        # Collect all speech and control elements
+        speech_parts = []
+        has_control_codes = False
         
         while not self.queue.is_empty():
             event = self.queue.dequeue()
@@ -756,12 +780,14 @@ class EmacspeakServer:
             if event_type == TTSQueue.SPEECH:
                 text = event[1]
                 cleaned = self.clean_text(text)
-                escaped = self.ssml.escape(cleaned)
-                ssml_parts.append(escaped)
+                # Don't escape here - we'll handle SSML wrapping later
+                speech_parts.append(cleaned)
                 
             elif event_type == TTSQueue.CONTROL:
                 control = event[1]
-                ssml_parts.append(control)
+                # Control codes are SSML tags or other control codes
+                speech_parts.append(control)
+                has_control_codes = True
                 
             elif event_type == TTSQueue.BEEP:
                 # Play beep immediately
@@ -777,12 +803,21 @@ class EmacspeakServer:
                 self.tts.set_rate(rate)
         
         # Speak the accumulated text
-        if ssml_parts:
-            text = ' '.join(ssml_parts)
-            # Wrap in speak tags if not already
-            if not text.startswith('<speak'):
-                text = self.ssml.wrap_speak(text)
-            self.tts.say(text)
+        if speech_parts:
+            # Build the text
+            text = ' '.join(speech_parts)
+            
+            # Only wrap in SSML if there are control codes (voice locking)
+            # Otherwise send as plain text for better compatibility
+            if has_control_codes:
+                # Wrap in speak tags for SSML
+                ssml_text = f'<speak>{text}</speak>'
+                self.log(f"Speaking (SSML): {ssml_text[:100]}...")
+                self.tts.say(ssml_text)
+            else:
+                # Plain text - no SSML wrapping
+                self.log(f"Speaking: {text[:100]}...")
+                self.tts.say(text)
         
         self.state.is_talking = False
     
@@ -796,9 +831,9 @@ class EmacspeakServer:
         if not line:
             return
         
-        self.log(f"Command: {line}")
+        self.log(f"Command: {repr(line)}")
         
-        # Parse command
+        # Parse command - handle both 'q text' and 'q "text"' formats
         parts = line.split(None, 1)
         cmd = parts[0] if parts else ""
         args = parts[1] if len(parts) > 1 else ""
@@ -811,9 +846,14 @@ class EmacspeakServer:
         handler = self.commands.get(cmd)
         if handler:
             try:
-                handler(args)
+                result = handler(args)
+                # Some commands need immediate response
+                if cmd == 'd':
+                    pass  # Dispatch already spoke
             except Exception as e:
                 self.log(f"Error executing {cmd}: {e}")
+                import traceback
+                self.log(traceback.format_exc())
         else:
             self.log(f"Unknown command: {cmd}")
     
@@ -824,26 +864,50 @@ class EmacspeakServer:
         
         self.running = True
         
-        # Set up stdin for line-by-line reading
-        sys.stdin = open(sys.stdin.fileno(), mode='r', encoding='utf-8', buffering=1)
+        # Use binary mode for stdin to avoid buffering issues
+        # This is crucial for proper operation with Emacs
+        stdin_fd = sys.stdin.fileno()
         
         print("Ready for commands", file=sys.stderr)
+        sys.stderr.flush()
+        
+        # Buffer for incomplete lines
+        line_buffer = b''
         
         try:
             while self.running:
-                # Check if input is available (with timeout for responsiveness)
-                if select.select([sys.stdin], [], [], 0.1)[0]:
-                    try:
-                        line = sys.stdin.readline()
-                        if not line:  # EOF
+                try:
+                    # Use select to check for input with timeout
+                    readable, _, _ = select.select([stdin_fd], [], [], 0.05)
+                    
+                    if readable:
+                        # Read available data
+                        chunk = os.read(stdin_fd, 4096)
+                        if not chunk:  # EOF
                             break
-                        self.process_command(line)
-                    except UnicodeDecodeError:
-                        pass  # Skip invalid UTF-8
-                
-                # Small yield to prevent CPU spinning
-                time.sleep(0.001)
-                
+                        
+                        line_buffer += chunk
+                        
+                        # Process complete lines
+                        while b'\n' in line_buffer:
+                            line_end = line_buffer.find(b'\n')
+                            line = line_buffer[:line_end]
+                            line_buffer = line_buffer[line_end + 1:]
+                            
+                            try:
+                                line_str = line.decode('utf-8', errors='replace')
+                                self.process_command(line_str)
+                            except Exception as e:
+                                self.log(f"Error processing line: {e}")
+                    
+                    # Safety: limit buffer size
+                    if len(line_buffer) > 8192:
+                        line_buffer = b''
+                            
+                except (select.error, IOError, OSError):
+                    # Interrupted system call or other IO error
+                    continue
+                    
         except KeyboardInterrupt:
             pass
         finally:
