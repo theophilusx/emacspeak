@@ -340,19 +340,26 @@ class SpeechDispatcherClient:
             use_ssml: If True, the text is SSML and SSML mode will be enabled
         """
         if self.client and self.connected:
+            ssml_enabled = False
             try:
                 if use_ssml:
                     # Enable SSML mode for this speech
                     self.client.set_data_mode(speechd.DataMode.SSML)
+                    ssml_enabled = True
                     self.client.speak(text)
-                    # Return to plain text mode for next speech
-                    self.client.set_data_mode(speechd.DataMode.TEXT)
                 else:
                     # Plain text
                     self.client.speak(text)
                     
             except Exception as e:
                 print(f"Error speaking: {e}", file=sys.stderr)
+            finally:
+                # Always ensure we return to text mode after SSML
+                if ssml_enabled and self.connected:
+                    try:
+                        self.client.set_data_mode(speechd.DataMode.TEXT)
+                    except Exception as e:
+                        print(f"Error resetting SSML mode: {e}", file=sys.stderr)
 
     def say(self, text: str, use_ssml: bool = False) -> None:
         """Alias for speak."""
@@ -770,6 +777,12 @@ class EmacspeakServer:
         self.tts.set_rate(225)
         self.tts.set_pitch(0)
         self.tts.set_volume(100)
+        # Ensure SSML mode is reset to text mode
+        if self.tts.client and self.tts.connected:
+            try:
+                self.tts.client.set_data_mode(speechd.DataMode.TEXT)
+            except Exception as e:
+                self.log(f"Error resetting SSML mode: {e}")
         self.tts.say("Resetting speech dispatcher server")
         return ""
     
@@ -818,8 +831,13 @@ class EmacspeakServer:
         except Exception as e:
             self.log(f"Error generating beep: {e}")
     
-    def clean_text(self, text: str) -> str:
-        """Preprocess text before speaking."""
+    def clean_text(self, text: str, escape_for_ssml: bool = False) -> str:
+        """Preprocess text before speaking.
+        
+        Args:
+            text: The text to clean
+            escape_for_ssml: If True, XML-escape special characters for SSML
+        """
         # Remove Emacspeak's [*] markers
         text = re.sub(r'\[\*\]', ' ', text)
         
@@ -837,66 +855,91 @@ class EmacspeakServer:
             # This is a simplified version
             pass
         
+        # XML escape for SSML if needed
+        if escape_for_ssml:
+            text = SSMLBuilder.escape(text)
+        
         return text
     
     def speech_task(self) -> None:
         """Process the speech queue."""
         self.state.is_talking = True
-        
-        # Collect all speech and control elements
-        speech_parts = []
-        has_control_codes = False
-        
-        while not self.queue.is_empty():
-            event = self.queue.dequeue()
-            if event is None:
-                break
-            
-            event_type = event[0]
-            
-            if event_type == TTSQueue.SPEECH:
-                text = event[1]
-                cleaned = self.clean_text(text)
-                # Don't escape here - we'll handle SSML wrapping later
-                speech_parts.append(cleaned)
-                
-            elif event_type == TTSQueue.CONTROL:
-                control = event[1]
-                # Control codes are SSML tags or other control codes
-                speech_parts.append(control)
-                has_control_codes = True
-                
-            elif event_type == TTSQueue.BEEP:
-                # Play beep immediately
-                pitch, duration = event[1], event[2]
-                self.beep(pitch, duration)
-                
-            elif event_type == TTSQueue.SOUND:
-                sound = event[1]
-                self.play_sound(sound)
-                
-            elif event_type == TTSQueue.RATE:
-                rate = event[1]
-                self.tts.set_rate(rate)
-        
-        # Speak the accumulated text
-        if speech_parts:
-            # Build the text
-            text = ' '.join(speech_parts)
-            
-            # Only use SSML if there are control codes (voice locking)
-            # Otherwise send as plain text for better compatibility
-            if has_control_codes:
-                # Wrap in speak tags for SSML and enable SSML mode
-                ssml_text = f'<speak>{text}</speak>'
-                self.log(f"Speaking (SSML): {ssml_text[:100]}...")
-                self.tts.say(ssml_text, use_ssml=True)
-            else:
-                # Plain text - no SSML wrapping
-                self.log(f"Speaking: {text[:100]}...")
-                self.tts.say(text, use_ssml=False)
-        
-        self.state.is_talking = False
+
+        try:
+            # Collect all speech and control elements
+            speech_parts = []
+            has_control_codes = False
+
+            while not self.queue.is_empty():
+                event = self.queue.dequeue()
+                if event is None:
+                    break
+
+                event_type = event[0]
+
+                if event_type == TTSQueue.SPEECH:
+                    text = event[1]
+                    # We'll determine if we need SSML escaping after we know
+                    # if there are control codes
+                    speech_parts.append(('text', text))
+
+                elif event_type == TTSQueue.CONTROL:
+                    control = event[1]
+                    # Control codes are SSML tags
+                    speech_parts.append(('control', control))
+                    has_control_codes = True
+
+                elif event_type == TTSQueue.BEEP:
+                    # Play beep immediately
+                    pitch, duration = event[1], event[2]
+                    self.beep(pitch, duration)
+
+                elif event_type == TTSQueue.SOUND:
+                    sound = event[1]
+                    self.play_sound(sound)
+
+                elif event_type == TTSQueue.RATE:
+                    rate = event[1]
+                    self.tts.set_rate(rate)
+
+            # Speak the accumulated text
+            if speech_parts:
+                # Build the text, escaping as needed
+                if has_control_codes:
+                    # SSML mode: escape text parts, keep control parts as-is
+                    processed_parts = []
+                    for part_type, part_content in speech_parts:
+                        if part_type == 'text':
+                            # Clean and XML-escape text for SSML
+                            cleaned = self.clean_text(part_content, escape_for_ssml=True)
+                            processed_parts.append(cleaned)
+                        else:
+                            # Control codes (SSML tags) are used as-is
+                            processed_parts.append(part_content)
+
+                    # Wrap in speak tags for SSML
+                    ssml_text = f'<speak>{" ".join(processed_parts)}</speak>'
+                    self.log(f"Speaking (SSML): {ssml_text[:100]}...")
+                    self.tts.say(ssml_text, use_ssml=True)
+                else:
+                    # Plain text mode: no escaping needed
+                    processed_parts = []
+                    for part_type, part_content in speech_parts:
+                        if part_type == 'text':
+                            cleaned = self.clean_text(part_content, escape_for_ssml=False)
+                            processed_parts.append(cleaned)
+                        else:
+                            processed_parts.append(part_content)
+
+                    text = ' '.join(processed_parts)
+                    self.log(f"Speaking: {text[:100]}...")
+                    self.tts.say(text, use_ssml=False)
+
+        except Exception as e:
+            self.log(f"Error in speech_task: {e}")
+
+        finally:
+            self.state.is_talking = False
     
     # -------------------------------------------------------------------------
     # Main Loop
