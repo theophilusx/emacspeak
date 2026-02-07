@@ -61,7 +61,8 @@ emacspeak-loaddefs.elc \
 dtk-speak.elc		dectalk-voices.elc\
 plain-voices.elc espeak-voices.elc \
 outloud-voices.elc  mac-voices.elc \
-swiftmac-voices.elc 
+swiftmac-voices.elc speechd-voices.elc \
+tts-speechd.elc 
 
 SPEAK_OBJECTS =   \
 voice-setup.elc \

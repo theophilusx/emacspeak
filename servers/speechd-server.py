@@ -447,9 +447,12 @@ class SpeechDispatcherClient:
         """List available synthesis voices."""
         if self.client and self.connected:
             try:
-                # Get voices from speechd - returns list of voice names
+                # Get voices from speechd - returns list of tuples (name, lang, variant)
+                # Extract just the voice names (first element of each tuple)
                 voices = self.client.list_synthesis_voices()
-                return list(voices) if voices else []
+                if voices:
+                    return [v[0] if isinstance(v, tuple) else v for v in voices]
+                return []
             except Exception as e:
                 print(f"Error listing voices: {e}", file=sys.stderr)
         return []
@@ -462,6 +465,14 @@ class SpeechDispatcherClient:
                 self.current_language = language
             except Exception as e:
                 print(f"Error setting language: {e}", file=sys.stderr)
+    
+    def set_output_module(self, module: str) -> None:
+        """Set the output module."""
+        if self.client and self.connected:
+            try:
+                self.client.set_output_module(module)
+            except Exception as e:
+                print(f"Error setting output module: {e}", file=sys.stderr)
     
     def set_punctuation_mode(self, mode: str) -> None:
         """Set punctuation mode.
@@ -515,6 +526,8 @@ class EmacspeakServer:
             'tts_set_punctuations': self.cmd_set_punctuations,
             'tts_set_voice': self.cmd_set_voice,
             'tts_list_voices': self.cmd_list_voices,
+            'tts_set_language': self.cmd_set_language,
+            'tts_set_output_module': self.cmd_set_output_module,
             'tts_split_caps': self.cmd_split_caps,
             'tts_caps': self.cmd_caps,
             'tts_sync_state': self.cmd_sync_state,
@@ -680,6 +693,30 @@ class EmacspeakServer:
             sys.stderr.flush()
         except Exception as e:
             print(f"Error listing voices: {e}", file=sys.stderr)
+        return ""
+    
+    def cmd_set_language(self, language: str) -> str:
+        """Set language (tts_set_language).
+        
+        Usage: tts_set_language <language_code>
+        Example: tts_set_language en
+        """
+        language = language.strip()
+        if language:
+            self.tts.set_language(language)
+            self.log(f"Language set to: {language}")
+        return ""
+    
+    def cmd_set_output_module(self, module: str) -> str:
+        """Set output module (tts_set_output_module).
+        
+        Usage: tts_set_output_module <module_name>
+        Example: tts_set_output_module espeak-ng
+        """
+        module = module.strip()
+        if module:
+            self.tts.set_output_module(module)
+            self.log(f"Output module set to: {module}")
         return ""
     
     def cmd_set_speech_rate(self, rate: str) -> str:

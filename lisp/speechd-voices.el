@@ -296,9 +296,9 @@ STYLE is an ACSS (Aural CSS) structure containing voice properties."
                                (* pitch-range 20))))
          (volume-attr (when richness
                         (format " volume=\"%s\""
-                                (aref #["x-soft" "soft" "soft" "medium"
-                                        "medium" "medium" "medium"
-                                        "loud" "loud" "x-loud"]
+                                (aref ["x-soft" "soft" "soft" "medium"
+                                       "medium" "medium" "medium"
+                                       "loud" "loud" "x-loud"]
                                       richness))))
          ;; Check if we need emphasis
          (emphasis (when (and stress (> stress 6))
@@ -338,6 +338,8 @@ STYLE is an ACSS (Aural CSS) structure containing voice properties."
   (defvar tts-default-speech-rate)
   (defvar speechd-default-speech-rate)
   (defvar dtk-speaker-process)
+  ;; Load TTS management commands
+  (require 'tts-speechd)
   ;; Set up function mappings for voice handling
   (fset 'tts-voice-defined-p 'speechd-voice-defined-p)
   (fset 'tts-get-voice-command 'speechd-get-voice-command)
