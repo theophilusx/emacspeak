@@ -33,3 +33,6 @@ aster-math
 /servers/linux-outloud/alsaparams
 /servers/swiftmac
 sounds/pan-chimes
+.claude/
+docs/
+servers/test-speechd-fixes.py
