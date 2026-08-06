@@ -283,10 +283,10 @@ Press `r' to resume the suspended transient."
   (define-key transient-popup-navigation-map
               [right] 'emacspeak-transient-next-section)
 
-  (setq transient-enable-popup-navigation t
+  (setq transient-enable-menu-navigation t
         transient-force-single-column t
         transient-semantic-coloring t
-        transient-show-popup 1))
+        transient-show-menu 1))
 (emacspeak-transient-setup)
 
 (provide 'emacspeak-transient)

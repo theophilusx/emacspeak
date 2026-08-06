@@ -141,7 +141,7 @@ This is used by the various Bookshare view commands to display
   "Extract text from specified tag, and clean up entity references."
   (xml-substitute-special
    (xml-substitute-numeric-entities
-    (dom-text (dom-by-tag dom tag)))))
+    (dom-inner-text (dom-by-tag dom tag)))))
 
 (defsubst emacspeak-bookshare-assert ()
   "Error out if not in Bookshare mode."
@@ -323,7 +323,7 @@ Optional argument `no-auth' says we dont need a user auth."
             'result)))
       (cl-loop
        for r in result collect
-       (url-encode-url (dom-text (dom-by-tag r  'name))))))))
+       (url-encode-url (dom-inner-text (dom-by-tag r  'name))))))))
 
 ;;  Following actions return book metadata:
 
@@ -545,7 +545,7 @@ b Browse
     (goto-char (point-min))
     (insert "Browse And Read Bookshare Materials\n\n")
     (put-text-property start (point)
-                       'face font-lock-doc-face)
+                       'face 'font-lock-doc-face)
     (setq header-line-format "Bookshare Library")
     (cd-absolute emacspeak-bookshare-directory)))
 
@@ -643,7 +643,7 @@ b Browse
 (defun emacspeak-bookshare-messages-handler (messages)
   "Handle messages element."
   (let ((start (point)))
-    (mapc #'insert(dom-text   (dom-child-by-tag messages 'string)))
+    (mapc #'insert(dom-inner-text   (dom-child-by-tag messages 'string)))
     (insert "\t")
     (insert
      (mapconcat
@@ -659,9 +659,9 @@ b Browse
 (defun emacspeak-bookshare-status-code-handler (status-code)
   "Handlestatus-code element."
   (let ((start (point)))
-    (message "Status-Code: %s" (dom-text    status-code))
+    (message "Status-Code: %s" (dom-inner-text    status-code))
     (insert "Status Code: ")
-    (mapc #'insert (dom-text    status-code))
+    (mapc #'insert (dom-inner-text    status-code))
     (insert "\t")
     (insert
      (mapconcat
@@ -676,15 +676,15 @@ b Browse
 
 (defun emacspeak-bookshare-page-handler (page)
   "Handle page element."
-  (insert (format "Page: %s\t" (dom-text page))))
+  (insert (format "Page: %s\t" (dom-inner-text page))))
 
 (defun emacspeak-bookshare-limit-handler (limit)
   "Handle limit element."
-  (insert (format "Limit: %s\t" (dom-text limit))))
+  (insert (format "Limit: %s\t" (dom-inner-text limit))))
 
 (defun emacspeak-bookshare-num-pages-handler (num-pages)
   "Handle num-pages element."
-  (insert (format "Num-Pages: %s\n" (dom-text num-pages))))
+  (insert (format "Num-Pages: %s\n" (dom-inner-text num-pages))))
 
 (defun emacspeak-bookshare-display-setting (result)
   "Display user setting result."
@@ -698,7 +698,7 @@ b Browse
     (emacspeak-bookshare-display-setting result))
    (t ;Book Result
     (let ((start (point))
-          (id (dom-text (dom-child-by-tag result 'id)))
+          (id (dom-inner-text (dom-child-by-tag result 'id)))
           (title (emacspeak-bookshare-dom-clean-text result 'title))
           (author (emacspeak-bookshare-dom-clean-text result 'author))
           (directory nil)
@@ -777,7 +777,7 @@ b Browse
             (format "%s\n"
                     (xml-substitute-special
                      (xml-substitute-numeric-entities
-                      (dom-text child)))))
+                      (dom-inner-text child)))))
            (fill-region-as-paragraph start (point))))
      (sort
       display
@@ -786,7 +786,7 @@ b Browse
                                         ; Show availability:
     (insert
      (format "Available: %s"
-             (mapconcat #'dom-text available " ")))))
+             (mapconcat #'dom-inner-text available " ")))))
 
 
 ;;;  Generate Declarations:

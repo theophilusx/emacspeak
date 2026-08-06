@@ -321,7 +321,7 @@ list of parsed ladspa-plugin structures, one per label."
             (propertize (format "%s:  " i)  'face 'font-lock-comment-face))
            (insert
             (propertize (format "%s:" (ladspa-control-desc c))
-                        'face font-lock-string-face))
+                        'face 'font-lock-string-face))
            (insert
             (propertize
              (format "\t\t%s"  (ladspa-control-value c))
