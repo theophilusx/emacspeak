@@ -308,12 +308,7 @@ extra-muggles: extra-muggles.elc
 maths: emacspeak-maths.elc
 
 config: emacspeak-loaddefs.el   
-lint:
-	echo "." |\
-emacs -batch -q \
--f package-initialize \
--l advice.el -l emacspeak-preamble.el  -l emacspeak-loaddefs.el \
--f elint-directory 
+lint: elint
 
 ### build time target --loaddefs
 
