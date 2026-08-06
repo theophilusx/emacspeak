@@ -228,9 +228,9 @@ with broken NCX files."
 
 ;;; setup:
 
+(defvar calibredb-search-mode-map)
 (defun emacspeak-calibredb-setup ()
   "Setup Emacspeak for Calibredb."
-  (cl-declare (special calibredb-search-mode-map))
   (define-key calibredb-search-mode-map "E" 'emacspeak-calibredb-epub-eww))
 
 (add-hook 'calibredb-search-mode-hook 'emacspeak-calibredb-setup)

@@ -70,9 +70,10 @@
    (company-template-field voice-smoothen)))
 
 ;;;  Helpers:
+(defvar company-selection)
+(defvar company-candidates)
 (defun ems-company-current ()
   "Helper: Return current selection in company."
-  (cl-declare (special  company-selection company-candidates))
   (nth company-selection company-candidates))
 
 (defun emacspeak-company-speak-this ()
@@ -116,7 +117,6 @@
 
 (defun emacspeak-company-setup ()
   "Set front-end to our  front-end action."
-  (cl-declare (special company-frontends))
   (when (boundp 'company-frontends)
     (cl-pushnew 'emacspeak-company-frontend company-frontends))
   (add-hook

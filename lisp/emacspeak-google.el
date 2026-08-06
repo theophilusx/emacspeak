@@ -119,7 +119,6 @@
 
 (defun emacspeak-google-toolbelt ()
   "Returns buffer-local toolbelt or a a newly initialized toolbelt."
-  (cl-declare (special emacspeak-google-toolbelt))
   (or emacspeak-google-toolbelt
       (setq
        emacspeak-google-toolbelt
@@ -327,7 +326,6 @@
 
 (defun emacspeak-google-cache-query(query)
   "Setup post process hook to cache google query when rendered."
-  (cl-declare (special emacspeak-google-query))
   (let ((cache
          (eval
           `#'(lambda nil
@@ -336,7 +334,6 @@
 
 (defun emacspeak-google-cache-toolbelt(belt)
   "Setup post process hook to cache google toolbelt when rendered."
-  (cl-declare (special emacspeak-google-toolbelt))
   (let ((cache
          (eval
           `#'(lambda nil
@@ -382,7 +379,6 @@ current page."
    (list
     (read-from-minibuffer "URL:"
                           (eww-current-url))))
-  (cl-declare (special emacspeak-google-related-uri))
   (emacspeak-we-extract-by-id
    "res"
    (format
@@ -442,7 +438,6 @@ current page."
 
 (defun emacspeak-google-toolbelt-names ()
   "Return memoized cache of names."
-  (cl-declare (special emacspeak-google-toolbelt-names))
   (or emacspeak-google-toolbelt-names
       (setq emacspeak-google-toolbelt-names
             (cl-loop
@@ -469,18 +464,16 @@ current page."
 (defun emacspeak-google-show-toolbelt()
   "Reload search page with toolbelt showing."
   (interactive)
-  (cl-declare (special emacspeak-google-query
-                       emacspeak-websearch-google-options))
   (let ((emacspeak-websearch-google-options "&tbo=1"))
     (emacspeak-websearch-google emacspeak-google-query)))
 
 (declare-function emacspeak-eww-next-h1 "emacspeak-eww" (&optional speak))
 (declare-function shr-url-at-point "shr" (image-url))
 
+(defvar ems--websearch-google-filter)
 (defun emacspeak-google-open-link ()
   "Open Google link under point."
   (interactive)
-  (cl-declare (special ems--websearch-google-filter))
   (let ((url (shr-url-at-point nil)))
     (cl-assert url t "No link under point.")
     (add-hook
@@ -506,13 +499,11 @@ current page."
 (defun emacspeak-google-sign-in ()
   "Sign in to Google."
   (interactive)
-  (cl-declare (special emacspeak-google-sign-in-url))
   (browse-url emacspeak-google-sign-in-url))
 
 (defun emacspeak-google-sign-out ()
   "Sign out to Google."
   (interactive)
-  (cl-declare (special emacspeak-google-sign-out-url))
   (browse-url emacspeak-google-sign-out-url))
 
 ;;;   keymap
@@ -598,10 +589,6 @@ which becomes buffer-local."
    (list
     (read-from-minibuffer "Text: ")
     current-prefix-arg))
-  (cl-declare (special
-               emacspeak-mpv
-               emacspeak-google-tts-default-language
-               emacspeak-google-tts-rest-uri ))
   (when current-prefix-arg
     (unless (stringp lang)
       (setq lang
@@ -701,7 +688,6 @@ Use default voice for buffer."
 
 (defun emacspeak-google-kg-id-uri (id)
   "Return URL for KG Search by id."
-  (cl-declare (special emacspeak-google-kg-rest-end-point))
   (format
    emacspeak-google-kg-rest-end-point
    "ids"
@@ -711,7 +697,6 @@ Use default voice for buffer."
 
 (defun emacspeak-google-kg-query-uri (query &optional limit)
   "Return URL for KG Search."
-  (cl-declare (special emacspeak-google-kg-rest-end-point))
   (or limit (setq limit 5))
   (format
    emacspeak-google-kg-rest-end-point

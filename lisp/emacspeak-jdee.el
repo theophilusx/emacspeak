@@ -107,7 +107,6 @@
 
 (defadvice bsh (after emacspeak pre act comp)
   "speak"
-  (cl-declare (special emacspeak-comint-autospeak))
   (when (ems-interactive-p)
     (emacspeak-icon 'select-object)
     (setq emacspeak-comint-autospeak nil)
@@ -115,7 +114,6 @@
 
 (defadvice jdee-run (after emacspeak pre act comp)
   "speak"
-  (cl-declare (special emacspeak-comint-autospeak))
   (when (ems-interactive-p)
     (emacspeak-icon 'select-object)
     (setq emacspeak-comint-autospeak nil)
@@ -283,7 +281,6 @@
 (defadvice jdee-xref-next-caller(around emacspeak pre act comp)
   "Speak line we jumped to.
 If we are on the last call, do nothing."
-  (cl-declare (special jdee-xref-stack))
   (cond
    ((and (ems-interactive-p)
          (car jdee-xref-stack))

@@ -111,13 +111,11 @@
 
 (defun emacspeak-url-template-set (key ut)
   "Add specified template to key. "
-  (cl-declare (special emacspeak-url-template-table))
   (setf (gethash (downcase key) emacspeak-url-template-table) ut))
 
 ;;;###autoload
 (defun emacspeak-url-template-get (key)
   "Lookup key and return corresponding template. "
-  (cl-declare (special emacspeak-url-template-table))
   (gethash (downcase key) emacspeak-url-template-table))
 
 ;;;  define resources
@@ -141,7 +139,6 @@ fetcher Unless specified, browse-url retrieves URL.
  that is called with the URI to retrieve.
 documentation Documents this template resource.
 dont-url-encode if true then url arguments are not url-encoded "
-  (cl-declare (special emacspeak-url-template-table))
   (emacspeak-url-template-set
    name
    (emacspeak-url-template-constructor
@@ -170,7 +167,6 @@ dont-url-encode if true then url arguments are not url-encoded "
   (interactive
    (list
     (read-file-name "Save URL templates to: " emacspeak-user-directory)))
-  (cl-declare (special emacspeak-user-directory))
   (let ((print-level nil)
         (print-length nil)
         (buffer (find-file-noselect
@@ -212,7 +208,6 @@ with duplicates removed when saving as a list of string."
 
 (defsubst emacspeak-stock-tickers ()
   "Return emacspeak-stock-tickers as a CSV string."
-  (cl-declare (special emacspeak-stock-tickers))
   (mapconcat #'identity emacspeak-stock-tickers ","))
 
 ;;;  amazon
@@ -329,8 +324,6 @@ Press `y' on Episode links to play them with MPV."
 
 (defun emacspeak-url-template-setup-content-filter ()
   "Set up content filter in displayed page."
-c  (cl-declare
-   (special emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
   (setq emacspeak-we-xpath-filter emacspeak-we-paragraphs-xpath-filter))
 ;;; AcuWeather:
 (emacspeak-url-template-define
@@ -448,8 +441,6 @@ c  (cl-declare
 
 (defun emacspeak-url-template-google-atom-news-display (feed-url)
   "View Google Atom news feed pulled using Curl."
-  (cl-declare (special emacspeak-atom-xsl
-                       emacspeak-curl g-curl-options))
   (emacspeak-eww-autospeak)
   (g-display-result
    (format
@@ -503,7 +494,6 @@ c  (cl-declare
 
 (defun ems--ut-quotes-cleanup ()
   "Clean up stock quotes buffer."
-  (cl-declare (special emacspeak-eww-a-speaker))
   (let ((inhibit-read-only t))
     (mapc
      #'(lambda (s) (flush-lines s (point-min) (point-max)))
@@ -577,7 +567,6 @@ c  (cl-declare
  "https://cnn.com/business"
  nil
  #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
      (eww-display-dom-by-element 'h2)
      (setq
       emacspeak-we-url-executor 'emacspeak-url-template-cnn-content))
@@ -812,7 +801,6 @@ the result at point."
 ;;;###autoload
 (defun emacspeak-url-template-open (ut)
   "Fetch resource identified by URL template."
-  (cl-declare (special emacspeak-eww-post-hook))
   (let ((read-process-output-max (* 1024 1024))
         (fetcher (or (emacspeak-url-template-fetcher ut) 'browse-url))
         (url (emacspeak-url-template-url ut))
@@ -841,7 +829,6 @@ the result at point."
 to specified name for use as a callback."
   (eval
    `#'(lambda ()
-        (cl-declare (special emacspeak-eww-url-template))
         (setq emacspeak-eww-url-template ',name))))
 
 ;;;###autoload
@@ -870,7 +857,6 @@ Optional interactive prefix arg displays documentation for specified resource."
 Use Emacs completion to obtain a list of available
 resources."
   (interactive)
-  (cl-declare (special emacspeak-url-template-table))
   (let ((completion-ignore-case t)
         (name nil))
     (setq name
@@ -882,7 +868,6 @@ resources."
 
 (defun emacspeak-url-template-generate-texinfo-documentation (buffer)
   "Generates texinfo section documenting all defined URL templates."
-  (cl-declare (special emacspeak-url-template-table))
   (with-current-buffer buffer
     (insert
      "@node URL Templates \n@section URL Templates\n\n")
@@ -973,7 +958,6 @@ Each URL template carries out the following steps:
           "collection/page/1/sort/s/srch/%s/local/0")
  (list "Search For: ")
  #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
      (setq emacspeak-we-url-executor
            #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
@@ -988,7 +972,6 @@ Each URL template carries out the following steps:
  "https://nlsbard.loc.gov/nlsbardprod/wishlist/collection/page/1/sort/rch"
  nil
  #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
      (setq emacspeak-we-url-executor
            #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
@@ -1006,7 +989,6 @@ template."
   "nlsbardprod/search/most_popular/page/1/sort/s/srch/most_popular/local/0")
  nil
  #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
      (setq emacspeak-we-url-executor
            #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))
@@ -1022,7 +1004,6 @@ template."
  "https://nlsbard.loc.gov/mainpage/srch_recentlyadded"
  nil
  #'(lambda nil
-     (cl-declare (special emacspeak-we-url-executor))
      (setq emacspeak-we-url-executor
            #'emacspeak-url-template-nls-add-to-wishlist)
      (emacspeak-speak-mode-line))

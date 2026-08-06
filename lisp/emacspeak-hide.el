@@ -289,7 +289,6 @@ Returns t if a block was found and hidden."
 ;;;  User interface
 ;; helper to get prefix
 (defun emacspeak-hide-get-block-prefix ()
-  (cl-declare (special emacspeak-hide-prefix-token-table))
   (let ((block-prefix nil))
     (or (emacspeak-hide-parse-prefix)
         (when (and (not (looking-at "^[ \t]*$"))

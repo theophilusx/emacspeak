@@ -74,7 +74,6 @@
 
 (defadvice iedit-mode (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special iedit-mode))
   (when (ems-interactive-p)
     (emacspeak-icon (if iedit-mode 'on 'off))))
 

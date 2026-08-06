@@ -112,10 +112,10 @@
     (when effects (mapc #'sox-draw-effect  effects))
     (goto-char (point))))
 
+(defvar sox-context)
 (defun sox-refresh ()
   "Redraw Audio Workbench."
   (interactive)
-  (cl-declare (special sox-context))
   (sox-redraw sox-context))
 
 (defconst sox-header-line-format
@@ -132,7 +132,6 @@
 (define-derived-mode sox-mode special-mode
   "Interactively manipulate audio files."
   "An audio workbench for the Emacspeak desktop."
-  (cl-declare (special sox-context))
   (setq sox-context (make-sox-context))
   (sox-redraw sox-context)
   (setq buffer-read-only t)
@@ -146,7 +145,6 @@
 (defun sox ()
   "Create a new Audio Workbench or switch to one."
   (interactive)
-  (cl-declare (special sox-buffer))
   (unless (get-buffer sox-buffer)
     (let ((buffer (get-buffer-create sox-buffer)))
       (with-current-buffer buffer
@@ -156,7 +154,6 @@
 
 (defun sox-setup-keys ()
   "Set up sox keymap."
-  (cl-declare (special sox-mode-map))
   (cl-loop
    for k in
    '(
@@ -203,14 +200,12 @@
 
 (defun sox-sound-p (snd-file)
   "Predicate to test if we can edit this file."
-  (cl-declare (special sox-sound-regexp))
   (let ((case-fold-search t))
     (string-match  sox-sound-regexp snd-file)))
 
 (defun sox-open-file (snd-file)
   "Open specified snd-file on the Audio Workbench."
   (interactive "fSound File: ")
-  (cl-declare (special sox-context))
   (unless sox-context (error "Audio Workbench not initialized."))
   (let ((inhibit-read-only t)
         (type (sox-sound-p snd-file)))
@@ -246,7 +241,6 @@
 (defun sox-play ()
   "Play sound ."
   (interactive)
-  (cl-declare (special sox-context sox-play))
   (when (process-live-p (sox-context-play sox-context))
     (error "Already playing stream."))
   (setf (sox-context-start-time sox-context) (current-time))
@@ -256,7 +250,6 @@
 (defun sox-stop ()
   "Stop currently playing  sound from current context."
   (interactive)
-  (cl-declare (special sox-context))
   (unless (process-live-p (sox-context-play sox-context))
     (error "Not playing stream."))
   (setf (sox-context-stop-time sox-context) (current-time))
@@ -273,7 +266,6 @@
   (interactive)
   (unless (process-live-p (sox-context-play sox-context))
     (error "Not playing stream."))
-  (cl-declare (special sox-context))
   (message
    "%.2f"
    (float-time
@@ -282,7 +274,6 @@
 (defun sox-save(save-file)
   "Save context to  file after prompting."
   (interactive "FSave File: ")
-  (cl-declare (special sox-context sox-sox))
   (sox-action sox-context sox-sox save-file))
 (defun sox-edit-effect-at-point ()
   "Edit effect at point."
@@ -307,7 +298,6 @@
 (defun sox-delete-effect-at-point ()
   "Delete effect at point."
   (interactive)
-  (cl-declare (special sox-context))
   (let ((inhibit-read-only  t)
         (e (sox-effect-at-point)))
     (unless e (error "No effect at point."))
@@ -316,11 +306,11 @@
     (message "Deleted effect %s at point. " (sox-effect-name e))
     (sox-redraw sox-context)))
 
+(defvar sox-effects)
 (defun sox-set-effect (name)
   "Set effect."
   (interactive
    (list (completing-read "SoX Effect: " sox-effects nil t)))
-  (cl-declare (special sox-context  sox-effects))
   (setf (sox-context-effects sox-context)
         (list
          (funcall (intern (format  "sox-get-%s-effect"  name)))))
@@ -331,7 +321,6 @@
   "Adds  effect at the end of the effect list"
   (interactive
    (list (completing-read "Add SoX Effect: "  sox-effects nil t)))
-  (cl-declare (special sox-context  sox-effects))
   (setf (sox-context-effects sox-context)
         (append
          (sox-context-effects sox-context)
@@ -419,7 +408,6 @@ and return a suitable effect structure."
      `(defun ,getter ()
         ,(format "Read needed params for effect %s
 and return a suitable effect structure." name)
-        (cl-declare (special ,p-sym))
         (make-sox-effect
          :name ,name
          :params (sox-read-effect-params ,p-sym ,repeat))))))

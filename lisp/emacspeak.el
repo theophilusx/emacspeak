@@ -97,8 +97,8 @@ the Emacspeak desktop.")
 (with-eval-after-load "doc-view"
   (add-hook 'doc-view-mode-hook #'doc-view-open-text))
 
+(defvar gptel-post-response-functions)
 (with-eval-after-load "gptel"
-  (cl-declare (special gptel-post-response-functions))
   (add-hook
    'gptel-post-stream-hook
    #'(lambda nil (emacspeak-icon 'tick-tick)))
@@ -312,11 +312,9 @@ the Emacspeak desktop.")
   (executable-find "boodler")
   "Whether we should turn on soundscapes on startup.")
 
+(defvar Info-file-list-for-emacs)
 (defun emacspeak-prepare-emacs ()
   "Prepare Emacs to speech-enable packages when loaded."
-  (cl-declare (special emacspeak-packages-to-prepare
-                       Info-file-list-for-emacs
-                       emacspeak-soundscapes))
   (unless (boundp 'Info-file-list-for-emacs) (require 'info))
   (push "emacspeak" Info-file-list-for-emacs)
   (setq-default line-move-visual nil)
@@ -333,18 +331,17 @@ the Emacspeak desktop.")
 ;;;###autoload
 (defsubst emacspeak-setup-programming-mode ()
   "Setup programming mode."
-  (cl-declare (special dtk-split-caps emacspeak-audio-indentation dtk-caps))
   (dtk-set-punctuations 'all)
   (or dtk-split-caps (dtk-toggle-split-caps))
   (or dtk-caps (dtk-toggle-caps))
   (emacspeak-pronounce-refresh-pronunciations)
   (or emacspeak-audio-indentation (emacspeak-toggle-audio-indentation)))
 
+(defvar generic-extras-enable-list)
 (defun emacspeak-setup-programming-modes ()
   "Setup programming modes."
   (add-hook 'prog-mode-hook #'emacspeak-setup-programming-mode)
   (with-eval-after-load "generic-x"
-    (cl-declare (special generic-extras-enable-list))
     (mapc
      #'(lambda (hook)
          (add-hook hook #'emacspeak-setup-programming-mode ))
@@ -367,7 +364,6 @@ This cannot be set via custom; set this in your startup file before
 
 (defsubst emacspeak-easter-egg ()
   "Easter Egg"
-  (cl-declare (special emacspeak-play))
   (let ((f (expand-file-name "ai/01-gemini.ogg" emacspeak-etc-directory)))
     (when
         (and
@@ -399,6 +395,7 @@ This cannot be set via custom; set this in your startup file before
   :group 'emacspeak)
 
 
+(defvar Info-directory-list)
 (defun emacspeak()
   "Start the Emacspeak Audio Desktop.
 Use Emacs as you normally would, emacspeak provides spoken feedback.

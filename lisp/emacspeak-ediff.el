@@ -95,54 +95,39 @@
   (setq emacspeak-ediff-control-buffer (ad-get-arg 0)))
 
 (defsubst emacspeak-ediff-control-panel ()
-  (cl-declare (special emacspeak-ediff-control-buffer))
   emacspeak-ediff-control-buffer)
 
 (defun emacspeak-ediff-difference-a-overlay (n)
-  (cl-declare (special ediff-difference-vector-A
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
   (aref (aref ediff-difference-vector-A n) 0))
 
 (defun emacspeak-ediff-difference-b-overlay (n)
-  (cl-declare (special ediff-difference-vector-B
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
   (aref (aref ediff-difference-vector-B n) 0))
 
 (defun emacspeak-ediff-difference-c-overlay (n)
-  (cl-declare (special ediff-difference-vector-B
-                       ediff-difference-vector-C
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
   (aref (aref ediff-difference-vector-C n) 0))
 
 (defun emacspeak-ediff-fine-difference-a-overlays (n)
-  (cl-declare (special ediff-difference-vector-A
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
   (aref (aref ediff-difference-vector-A n) 1))
 
 (defun emacspeak-ediff-fine-difference-b-overlays (n)
-  (cl-declare (special ediff-difference-vector-B
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
   (aref (aref ediff-difference-vector-B n) 1))
 
 (defun emacspeak-ediff-fine-difference-c-overlays (n)
-  (cl-declare (special ediff-difference-vector-B
-                       ediff-difference-vector-C
-                       ediff-number-of-differences))
   (cl-assert (< n ediff-number-of-differences) t
              "There are only %s differences"
              ediff-number-of-differences)
@@ -164,7 +149,6 @@
 (add-hook
  'ediff-startup-hook
  #'(lambda ()
-     (cl-declare (special ediff-mode-map voice-lock-mode))
      (setq voice-lock-mode t
            ediff-window-setup-function 'ediff-setup-windows-plain)
      (define-key
@@ -201,8 +185,6 @@
 (defun emacspeak-ediff-speak-current-difference ()
   "Speak the current difference"
   (interactive)
-  (cl-declare (special ediff-current-difference
-                       ediff-number-of-differences))
   (emacspeak-ediff-speak-difference
    (cond
     ((cl-minusp ediff-current-difference) 0)

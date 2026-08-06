@@ -190,8 +190,6 @@
 (defun emacspeak-empv-play-url (url)
   "Play URL using mpv. "
   (interactive (list (ems--read-url 'emacspeak-empv-history)))
-  (cl-declare (special emacspeak-empv-history-max
-                       emacspeak-empv-history))
   (when
       (and url (stringp url)
            (string-prefix-p (emacspeak-google-result-url-prefix) url))
@@ -201,8 +199,6 @@
 
 (defadvice empv-play (before emacspeak pre act comp)
   "Record history."
-  (cl-declare (special emacspeak-empv-history-max
-                       emacspeak-empv-history))
   (let ((url (ad-get-arg 0)))
     (when
         (and url (stringp url)
@@ -213,7 +209,6 @@
 (defun emacspeak-empv-play-last ()
   "Play most recently played URL."
   (interactive )
-  (cl-declare (special emacspeak-empv-history))
   (emacspeak-empv-play-url (cl-first emacspeak-empv-history)))
 
 (declare-function emacspeak-media-local-resource "emacspeak-empv" t)
@@ -221,6 +216,8 @@
                   "emacspeak-m-player" (&optional prefix))
 
 ;;;###autoload
+(defvar empv--process)
+(defvar empv-map)
 (defun emacspeak-empv-play-file (file &optional _prefix)
   "Play file using mpv.
 Interactive prefix arg plays directory.
@@ -230,7 +227,6 @@ If already playing, then read an empv key and invoke its command."
     (unless (and empv--process (process-live-p empv--process))
       (emacspeak-media-read-resource current-prefix-arg))
     current-prefix-arg))
-  (cl-declare (special  empv--process ))
   (cond
    ((null file)                         ; we're already playing
     (call-interactively
@@ -260,6 +256,8 @@ If already playing, then read an empv key and invoke its command."
     (funcall #'emacspeak-websearch-google-lite (ad-get-arg 0))))
 
 ;;; Seekers:
+(defvar .time-pos)
+(defvar .percent-pos)
 (defun emacspeak-empv-time-pos ()
   "Speak time and percent position."
   (interactive)
@@ -374,10 +372,9 @@ If already playing, then read an empv key and invoke its command."
               (cl-first (empv--yt-search-results empv--last-youtube-search ))))
       (length (empv--yt-search-results empv--last-youtube-search ))))))
 
+(defvar empv-youtube-results-mode-map)
 (defun emacspeak-empv-setup ()
   "Emacspeak setup for empv."
-  (cl-declare (special empv-map
-                       empv-youtube-results-mode-map))
   (define-key empv-youtube-results-mode-map
               (kbd "t") 'emacspeak-empv-current-title)
   (define-key empv-youtube-results-mode-map
@@ -462,7 +459,6 @@ Filter is of the  form name=arg-1:arg-2:..."
     (completing-read   "Filter:"
                        emacspeak-empv-filters nil nil nil
                        'emacspeak-empv-filter-history)))
-  (cl-declare (special emacspeak-empv-filter-history))
   (cl-pushnew filter emacspeak-empv-filter-history :test #'string=)
   (empv--send-command (list "af" "toggle" filter)))
 
@@ -489,7 +485,6 @@ The default value is suitable for classical instrumental music."
 (defun emacspeak-empv-toggle-custom ()
   "Toggle our custom filters."
   (interactive)
-  (cl-declare (special emacspeak-empv-custom-filters))
   (when emacspeak-empv-custom-filters
     (mapc
      #'(lambda (filter) (empv--send-command (list "af" "toggle" filter)))

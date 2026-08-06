@@ -101,7 +101,6 @@ switch to a screen-saver soundscape."
 (defun emacspeak-screen-saver ()
   "Launch Emacspeak screen-saver.
 Initialize screen-saver buffer  if needed, and switch to  it."
-  (cl-declare (special emacspeak-screen-saver-saved-conf))
   (setq emacspeak-screen-saver-saved-conf (current-window-configuration))
   (let ((buffer (get-buffer-create "*Emacspeak Screen Saver*")))
     (with-current-buffer buffer (emacspeak-screen-saver-mode))
@@ -111,10 +110,10 @@ Initialize screen-saver buffer  if needed, and switch to  it."
 ;;;  NM Handlers
 (declare-function ems--get-active-network-interfaces "emacspeak-wizards" nil)
 
+(defvar emacspeak-speak-network-interfaces-list)
 (defun emacspeak-dbus-nm-connected ()
   "Announce  network manager connection.
 Startup  apps that need the network."
-  (cl-declare (special emacspeak-speak-network-interfaces-list))
   (setq emacspeak-speak-network-interfaces-list
         (ems--get-active-network-interfaces))
   (emacspeak-pip (format "%s. Network up. " (ems--get-essid)))
@@ -123,7 +122,6 @@ Startup  apps that need the network."
 (defun emacspeak-dbus-nm-disconnected ()
   "Announce  network manager disconnection.
 Stop apps that use the network."
-  (cl-declare (special emacspeak-speak-network-interfaces-list))
   (setq emacspeak-speak-network-interfaces-list
         (mapcar #'car (network-interface-list)))
   (emacspeak-icon 'network-down)
@@ -193,7 +191,6 @@ signal registration objects."
 (defun emacspeak-dbus-sleep-enable()
   "Enable integration with Login1. Does nothing if already enabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-sleep-registration))
   (unless emacspeak-dbus-sleep-registration
     (setq emacspeak-dbus-sleep-registration (emacspeak-dbus-sleep-register))))
 
@@ -202,7 +199,6 @@ signal registration objects."
   "Disable integration with login1 daemon. Does nothing if
 already disabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-sleep-registration))
   (while emacspeak-dbus-sleep-registration
     (dbus-unregister-object (car emacspeak-dbus-sleep-registration))
     (setq emacspeak-dbus-sleep-registration
@@ -210,7 +206,6 @@ already disabled."
 
 (defun emacspeak-dbus-sleep ()
   "Emacspeak  hook for -sleep signal from Login1."
-  (cl-declare (special dtk-quiet))
   (let ((dtk-quiet t))
     (ems-with-messages-silenced
      (emacspeak-dbus-screensaver-check)
@@ -230,7 +225,6 @@ already disabled."
 (defun emacspeak-orca-toggle ()
   "Toggle state of orca."
   (interactive)
-  (cl-declare (special emacspeak-orca-handle))
   (cond
    (emacspeak-orca-handle
     (delete-process emacspeak-orca-handle)
@@ -239,7 +233,6 @@ already disabled."
 
 (defun emacspeak-dbus-resume ()
   "Emacspeak hook for Login1-resume."
-  (cl-declare (special amixer-alsactl-config-file ))
   (ems-with-messages-silenced
     (tts-restart)
     (emacspeak-icon 'waking-up)
@@ -285,7 +278,6 @@ already disabled."
 (defun emacspeak-dbus-udisks-enable()
   "Enable integration with UDisks2. Does nothing if already enabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-udisks-registration))
   (unless emacspeak-dbus-udisks-registration
     (setq emacspeak-dbus-udisks-registration
           (emacspeak-dbus-udisks-register))))
@@ -295,7 +287,6 @@ already disabled."
   "Disable integration with UDisks2 daemon. Does nothing if
 already disabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-udisks-registration))
   (while emacspeak-dbus-udisks-registration
     (dbus-unregister-object (car emacspeak-dbus-udisks-registration))
     (setq emacspeak-dbus-udisks-registration
@@ -334,7 +325,6 @@ already disabled."
 (defun emacspeak-dbus-upower-enable()
   "Enable integration with UPower. Does nothing if already enabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-upower-registration))
   (unless emacspeak-dbus-upower-registration
     (setq emacspeak-dbus-upower-registration
           (emacspeak-dbus-upower-register))))
@@ -344,7 +334,6 @@ already disabled."
   "Disable integration with UPower daemon. Does nothing if
 already disabled."
   (interactive)
-  (cl-declare (special emacspeak-dbus-upower-registration))
   (while emacspeak-dbus-upower-registration
     (dbus-unregister-object (car emacspeak-dbus-upower-registration))
     (setq emacspeak-dbus-upower-registration
@@ -374,8 +363,6 @@ already disabled."
 
 (defun emacspeak-dbus-watch-screen-lock ()
   "Register a handler to watch screen lock/unlock."
-  (cl-declare (special emacspeak-dbus-screen-lock-handle
-                       emacspeak-screen-saver-saved-conf))
   (setq
    emacspeak-dbus-screen-lock-handle
    (dbus-register-signal
@@ -398,7 +385,6 @@ already disabled."
 
 (defun emacspeak-dbus-unwatch-screen-lock ()
   "De-Register a handler to watch screen lock/unlock."
-  (cl-declare (special emacspeak-dbus-screen-lock-handle))
   (dbus-unregister-object emacspeak-dbus-screen-lock-handle)
   (setq emacspeak-dbus-screen-lock-handle nil))
 

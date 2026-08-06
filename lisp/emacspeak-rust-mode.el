@@ -114,9 +114,9 @@
        (emacspeak-icon 'large-movement)
        (emacspeak-speak-line)))))
 
+(defvar rust-mode-map)
 (defun emacspeak-rust-mode-setup ()
   "Setup additional keys etc."
-  (cl-declare (special rust-mode-map))
   (when (and (bound-and-true-p rust-mode-map)
              (keymapp rust-mode-map))
     (define-key rust-mode-map (kbd "C-c C-c")'rust-compile)

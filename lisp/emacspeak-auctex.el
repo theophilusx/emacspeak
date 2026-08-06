@@ -200,8 +200,6 @@ the opening line of the newly inserted environment. "
 
 (add-hook  'LaTeX-mode-hook
            #'(lambda ()
-               (cl-declare (special imenu-generic-expression
-                                    imenu-create-index-function))
                (require 'imenu)
                (setq imenu-create-index-function
                      'imenu-default-create-index-function)

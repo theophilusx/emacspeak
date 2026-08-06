@@ -60,16 +60,16 @@
    (get-text-property (point) 'cursor-intangible)
    (get-text-property (point) 'intangible)))
 
+(defvar ses--cells)
+(defvar ses--named-cell-hashmap)
 (defun emacspeak-ses-current-cell-value ()
   "Return current cell value."
-  (cl-declare (special ses--named-cell-hashmap ses--cells))
   (ses-cell-value
    (car (ses-sym-rowcol (emacspeak-ses-current-cell-symbol)))
    (cdr (ses-sym-rowcol (emacspeak-ses-current-cell-symbol)))))
 
 (defun emacspeak-ses-get-cell-value-by-name (cell-name)
   "Return current  value of cell specified by name."
-  (cl-declare (special ses--named-cell-hashmap ses--cells))
   (ses-cell-value
    
    (car (ses-sym-rowcol cell-name))
@@ -132,7 +132,6 @@
 
 (defun emacspeak-ses-setup ()
   "Setup SES for use with emacspeak."
-  (cl-declare (special ses-mode-map))
   )
 
 (defadvice ses-forward-or-insert (after emacspeak pre act comp)

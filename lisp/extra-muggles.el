@@ -341,7 +341,6 @@ _d_: subtree
 
 (defun emacspeak-muggles-enumerate ()
   "Enumerate all interactive muggles."
-  (cl-declare (special emacspeak-muggles-pattern))
   (let ((result nil))
     (mapatoms
      #'(lambda (s)

@@ -168,7 +168,6 @@ An automatically updating speedbar consumes resources.")
 (defun emacspeak-speedbar-goto-speedbar ()
   "Switch to the speedbar"
   (interactive)
-  (cl-declare (special emacspeak-speedbar-disable-updates))
   (unless (get-buffer " SPEEDBAR")
     (speedbar-frame-mode))
   (pop-to-buffer (get-buffer " SPEEDBAR"))
@@ -216,8 +215,6 @@ An automatically updating speedbar consumes resources.")
   )
 (defun emacspeak-speedbar-enter-hook ()
   "Actions taken when we enter the Speedbar"
-  (cl-declare (special speedbar-mode-map
-                       speedbar-hide-button-brackets-flag))
   (dtk-set-punctuations 'all)
   (setq speedbar-hide-button-brackets-flag t)
   (define-key speedbar-mode-map "f"

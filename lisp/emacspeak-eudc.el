@@ -96,7 +96,6 @@
 (defadvice eudc-query-form (after emacspeak pre act comp)
   "Attach emacspeak help to all EUDC widgets.
 Summarize the form to welcome the user. "
-  (cl-declare (special eudc-server))
   (emacspeak-eudc-widgets-add-emacspeak-help)
   (emacspeak-icon 'open-object)
   (let((server (propertize "Server " 'personality voice-smoothen))

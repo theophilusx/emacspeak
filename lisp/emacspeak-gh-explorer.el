@@ -93,10 +93,10 @@
   
   (ems--gh-explorer-nav -1))
 
+(defvar github-explorer-mode-map)
 (eval-after-load
     "github-explorer"
   `(progn
-     (cl-declare (special github-explorer-mode-map))
      (define-key github-explorer-mode-map "p" 'emacspeak-gh-explorer-previous)
      (define-key github-explorer-mode-map "n" 'emacspeak-gh-explorer-next))
   )

@@ -138,6 +138,8 @@
 ;;; Additional Interactive Commands:
 ;; I bind this to s-/ via custom:
 
+(defvar exwm-workspace--list)
+(defvar exwm-workspace--current)
 (defun emacspeak-exwm-workspace-cycle ()
   "Cycle to next workspace, with wrap-around"
   (interactive)
@@ -153,9 +155,9 @@
 
 ;;; Configure Hooks:
 
+(defvar exwm-mode-map)
 (defun emacspeak-exwm-mode-hook ()
   "EXWM Setup For Emacspeak"
-  (cl-declare (special emacspeak-prefix ))
   (define-key exwm-mode-map emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map  emacspeak-prefix 'emacspeak-keymap)
   (define-key exwm-mode-map

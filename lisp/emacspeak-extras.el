@@ -99,7 +99,6 @@
 (defun emacspeak-wizards-midi-using-m-score (midi-file)
   "Play midi file using mscore from musescore package."
   (interactive "fMidi File:")
-  (cl-declare (special emacspeak-wizards-media-pipe))
   (cl-assert (executable-find "mscore") t "Install mscore first")
   (or (file-exists-p emacspeak-wizards-media-pipe)
       (shell-command (format "mknod %s p"
@@ -123,7 +122,6 @@
   "Add autoload cookies to file f.
 Default is to add autoload cookies to current file."
   (interactive)
-  (cl-declare (special emacspeak-autoload-cookie-pattern))
   (or f (setq f (buffer-file-name)))
   (let ((buffer (find-file-noselect f))
         (count 0))
@@ -244,14 +242,12 @@ Sample text to use comes from variable
   `ems--wizards-sampler-text "
   (interactive (list (and current-prefix-arg
                           (read-string "List faces matching regexp: "))))
-  (cl-declare (special ems--wizards-sampler-text))
   (let ((list-faces-sample-text ems--wizards-sampler-text))
     (list-faces-display pattern)
     (message "Displayed voice-face mappings in other window.")))
 
 (defun voice-setup-show-rogue-faces ()
   "Return list of voices that map to non-existent faces."
-  (cl-declare (special voice-setup-face-voice-table))
   (cl-loop for f being the hash-keys of voice-setup-face-voice-table
            unless (facep f) collect f))
 
@@ -284,13 +280,13 @@ Interactive  arguments specify filename pattern and search pattern."
 ;;;  pod -- perl online docs
 (declare-function cperl-pod2man-build-command "cperl-mode" nil)
 
+(defvar pod2man-program)
 (defun emacspeak-wizards-display-pod-as-manpage (filename)
   "Create a virtual manpage in Emacs from the Perl Online Documentation."
   (interactive
    (list
     (expand-file-name
      (read-file-name "Enter name of POD file: "))))
-  (cl-declare (special pod2man-program))
   (require 'man)
   (let* ((pod2man-args (concat filename " | nroff -man "))
          (bufname (concat "Man " filename))
@@ -334,7 +330,6 @@ Interactive  arguments specify filename pattern and search pattern."
 
 (defun emacspeak-annotate-get-annotation ()
   "Pop up a temporary buffer and collect the annotation."
-  (cl-declare (special emacspeak-annotate-edit-buffer))
   (let ((annotation nil))
     (pop-to-buffer
      (get-buffer-create emacspeak-annotate-edit-buffer))
@@ -354,7 +349,6 @@ buffer even if one is already set.
 Annotation is entered in a temporary buffer and the
 annotation is inserted into the working buffer when complete."
   (interactive "P")
-  (cl-declare (special emacspeak-annotate-working-buffer))
   (when (or reset
             (null emacspeak-annotate-working-buffer))
     (setq emacspeak-annotate-working-buffer
@@ -387,8 +381,6 @@ annotation is inserted into the working buffer when complete."
 (defun emacspeak-curl (url)
   "Grab URL using Curl, and preview it with a browser ."
   (interactive "sURL: ")
-  (cl-declare (special emacspeak-curl
-                       emacspeak-curl-cookie-store))
   (with-temp-buffer
     (shell-command
      (format
@@ -421,7 +413,6 @@ information between different Emacs sessions."
 dis a convenient way of sharing information between independent
 Emacspeak sessions running on  different machines. "
   (interactive "r\nP")
-  (cl-declare (special emacspeak-user-directory emacspeak-clipfile-file))
   (let ((clip (buffer-substring-no-properties start end))
         (clipboard-file
          (if prompt
@@ -447,7 +438,6 @@ Emacspeak sessions running on  different machines. "
 (defun emacspeak-clipfile-paste (&optional paste-table)
   "Yank contents of the Emacspeak clipboard at point. "
   (interactive "P")
-  (cl-declare (special emacspeak-user-directory emacspeak-clipfile-file))
   (let ((start (point))
         (clipboard-file emacspeak-clipfile-file))
     (cond

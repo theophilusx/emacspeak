@@ -53,7 +53,6 @@
 (defun light-get ()
   "Get  brightness level."
   (interactive)
-  (cl-declare (special light-cmd))
   (when light-cmd
     (let ((value (read (shell-command-to-string (format "%s " light-cmd)))))
       (cond
@@ -66,7 +65,6 @@
 (defun light-set (brightness)
   "Set brightness."
   (interactive "sBrightness: ")
-  (cl-declare (special light-cmd))
   (when light-cmd
     (start-process "Light" nil light-cmd "-S" brightness)
     (when (called-interactively-p 'interactive)

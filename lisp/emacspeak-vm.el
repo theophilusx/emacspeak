@@ -83,7 +83,6 @@ Note that some badly formed mime messages  cause trouble."
 
 (defun emacspeak-vm-mode-setup ()
   "Setup function placed on vm-mode-hook by Emacspeak."
-  (cl-declare (special  dtk-punctuation-mode dtk-caps))
   (setq dtk-punctuation-mode 'all))
 
 ;;;  inline helpers
@@ -129,10 +128,10 @@ Note that some badly formed mime messages  cause trouble."
 
 (defvar emacspeak-vm-user-login-name  (user-login-name)
   "Login name of this user")
+(defvar vm-message-pointer)
 (defun emacspeak-vm-yank-header ()
   "Yank specified header into kill ring."
   (interactive)
-  (cl-declare (special vm-message-pointer))
   (cond
    (vm-message-pointer
     (dtk-stop 'all)
@@ -167,11 +166,9 @@ Note that some badly formed mime messages  cause trouble."
     (error nil))
   (emacspeak-speak-rest-of-buffer))
 
+(defvar vm-presentation-buffer)
 (defun emacspeak-vm-summarize-message ()
   "Summarize the current vm message. "
-  (cl-declare (special
-               vm-message-pointer 
-               vm-presentation-buffer  emacspeak-vm-headers-strip-octals))
   (when vm-message-pointer
     (let*  ((message (car vm-message-pointer))
             (number (emacspeak-vm-number-of  message))
@@ -214,18 +211,20 @@ Note that some badly formed mime messages  cause trouble."
 (defun emacspeak-vm-speak-labels ()
   "Speak a message's labels"
   (interactive)
-  (cl-declare (special vm-message-pointer))
   (when vm-message-pointer
     (message "Labels: %s"
              (vm-labels-of (car vm-message-pointer)))))
 
+(defvar vm-virtual-folder-definition)
+(defvar vm-ml-message-number)
+(defvar vm-ml-highest-message-number)
+(defvar vm-ml-message-new)
+(defvar vm-ml-message-unread)
+(defvar vm-ml-message-read)
+(defvar vm-ml-message-attributes-alist)
 (defun emacspeak-vm-mode-line ()
   "VM mode line information. "
   (interactive)
-  (cl-declare (special vm-ml-message-attributes-alist
-                       vm-ml-message-read vm-ml-message-unread
-                       vm-virtual-folder-definition vm-ml-message-new
-                       vm-ml-message-number vm-ml-highest-message-number))
   (cond
    (vm-virtual-folder-definition
     (dtk-speak
@@ -392,7 +391,6 @@ Then speak the screenful. "
 (defun emacspeak-vm-catch-up-all-messages ()
   "Mark all messages in folder to be deleted. Use with caution."
   (interactive)
-  (cl-declare (special vm-ml-highest-message-number))
   (vm-goto-message 1)
   (vm-delete-message
    (read vm-ml-highest-message-number))
@@ -424,7 +422,6 @@ Then speak the screenful. "
 ;;;  advise searching:
 (defadvice vm-isearch-forward (around emacspeak pre act comp)
   "speak"
-  (cl-declare (special vm-message-pointer))
   (cond
    ((ems-interactive-p)
     (let ((orig (point)))
@@ -439,7 +436,6 @@ Then speak the screenful. "
 
 (defadvice vm-isearch-backward (around emacspeak pre act comp)
   "speak"
-  (cl-declare (special vm-message-pointer))
   (cond
    ((ems-interactive-p)
     (let ((orig (point)))
@@ -608,21 +604,28 @@ Leave point at front of decoded attachment."
     "text/plain" "text/enriched")
   "Setting that prefers  alternatives  html/xhtml over text/plain.")
 
+(defvar vm-mime-text/html-handler)
+(defvar vm-mime-charset-converter-alist)
+(defvar vm-mime-default-face-charsets)
+(defvar vm-frame-per-folder)
+(defvar vm-frame-per-composition)
+(defvar vm-frame-per-edit)
+(defvar vm-frame-per-help)
+(defvar vm-frame-per-summary)
+(defvar vm-primary-inbox)
+(defvar vm-folder-directory)
+(defvar vm-crash-box)
+(defvar vm-forwarding-subject-format)
+(defvar vm-startup-with-summary)
+(defvar vm-inhibit-startup-message)
+(defvar vm-visible-headers)
+(defvar vm-delete-after-saving)
+(defvar vm-url-browser)
+(defvar vm-confirm-new-folders)
+(defvar vm-move-after-deleting)
+(defvar vm-mime-alternative-select-method)
 (defun emacspeak-vm-use-raman-settings ()
   "Customization settings for VM used by the author of Emacspeak."
-  (cl-declare (special
-               emacspeak-vm-demote-html-attachments
-               emacspeak-vm-promote-html-attachments
-               vm-mime-charset-converter-alist vm-mime-default-face-charsets
-               vm-frame-per-folder vm-frame-per-composition
-               vm-frame-per-edit vm-frame-per-help
-               vm-frame-per-summary vm-index-file-suffix
-               vm-crash-box vm-primary-inbox vm-folder-directory
-               vm-forwarding-subject-format vm-startup-with-summary
-               vm-inhibit-startup-message vm-visible-headers
-               vm-delete-after-saving vm-url-browser
-               vm-confirm-new-folders vm-mime-alternative-select-method
-               vm-mime-text/html-handler vm-move-after-deleting))
   (setq vm-mime-text/html-handler'emacs-w3m  )
   (setq vm-mime-alternative-select-method emacspeak-vm-demote-html-attachments)
   (setq vm-mime-charset-converter-alist
@@ -650,9 +653,6 @@ Leave point at front of decoded attachment."
 (defun emacspeak-vm-toggle-html-mime-demotion ()
   "Toggle state of HTML Mime promotion/Demotion."
   (interactive)
-  (cl-declare (special emacspeak-vm-demote-html-attachments
-                       emacspeak-vm-promote-html-attachments
-                       vm-mime-alternative-select-method))
   (cond
    ((eq vm-mime-alternative-select-method emacspeak-vm-demote-html-attachments)
     (setq vm-mime-alternative-select-method
@@ -689,9 +689,9 @@ text using pdftotext."
   :type 'string
   :group 'emacspeak-vm)
 
+(defvar vm-mime-type-converter-alist)
 (defun emacspeak-vm-add-mime-converter (converter)
   "Helper to add a converter specification."
-  (cl-declare (special vm-mime-type-converter-alist))
   (unless
       (cl-find-if
        #'(lambda  (i)
@@ -700,20 +700,16 @@ text using pdftotext."
     (push   converter
             vm-mime-type-converter-alist)))
 
+(defvar vm-preview-lines)
+(defvar vm-infer-mime-types)
+(defvar vm-mime-decode-for-preview)
+(defvar vm-auto-decode-mime-messages)
+(defvar vm-auto-displayed-mime-content-type-exceptions)
+(defvar vm-mime-attachment-save-directory)
+(defvar vm-mime-base64-encoder-program)
+(defvar vm-mime-base64-decoder-program)
 (defun emacspeak-vm-customize-mime-settings ()
   "Customize VM mime settings."
-  (cl-declare (special vm-preview-lines
-                       vm-infer-mime-types
-                       vm-mime-decode-for-preview
-                       vm-auto-decode-mime-messages
-                       vm-auto-displayed-mime-content-type-exceptions
-                       vm-mime-attachment-save-directory
-                       vm-mime-base64-encoder-program
-                       vm-mime-base64-decoder-program
-                       vm-mime-attachment-auto-type-alist
-                       vm-mime-type-converter-alist
-                       emacspeak-vm-pdf2text
-                       emacspeak-vm-cal2text))
   (emacspeak-vm-add-mime-converter
    (list "text/calendar" "text/plain" emacspeak-vm-cal2text))
   (emacspeak-vm-add-mime-converter

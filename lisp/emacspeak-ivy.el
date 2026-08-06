@@ -91,9 +91,11 @@
      (when (ems-interactive-p)
        (emacspeak-icon 'close-object)))))
 
+(defvar ivy--length)
+(defvar ivy--old-cands)
+(defvar ivy--index)
 (defun emacspeak-ivy-speak-selection ()
   "Speak current ivy selection."
-  (cl-declare (special ivy--length ivy--old-cands ivy--index ivy-text))
   (dtk-speak
    (format
     "%d: %s"

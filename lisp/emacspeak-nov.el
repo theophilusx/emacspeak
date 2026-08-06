@@ -90,7 +90,6 @@
 
 (defun emacspeak-nov-mode-hook ()
   "Load directory-specific speech settings."
-  (cl-declare (special emacspeak-speak-directory-settings))
   (emacspeak-speak-load-directory-settings default-directory))
 
 (add-hook 'nov-mode-hook #'emacspeak-nov-mode-hook)

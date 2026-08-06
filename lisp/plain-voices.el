@@ -80,12 +80,10 @@ The string can set any  parameter.")
   "Define a Plain voice named NAME.
 This voice will be set   by sending the string
 COMMAND-STRING to the TTS server."
-  (cl-declare (special plain-voice-table))
   (puthash  name command-string  plain-voice-table))
 
 (defun plain-get-voice-command (name)
   "Retrieve command string for  voice NAME."
-  (cl-declare (special plain-voice-table))
   (cond
    ((listp name)
     (mapconcat #'plain-get-voice-command name " "))
@@ -94,7 +92,6 @@ COMMAND-STRING to the TTS server."
 
 (defun plain-voice-defined-p (name)
   "Check if there is a voice named NAME defined."
-  (cl-declare (special plain-voice-table))
   (gethash name plain-voice-table))
 
 ;;;  voice definitions
@@ -112,7 +109,6 @@ COMMAND-STRING to the TTS server."
 
 (defun plain-set-family-code (name code)
   "Set control code for voice family NAME  to CODE."
-  (cl-declare (special plain-family-table))
   (when (stringp name) (setq name (intern name)))
   (setq plain-family-table
         (cons (list name code)
@@ -120,7 +116,6 @@ COMMAND-STRING to the TTS server."
 
 (defun plain-get-family-code (name)
   "Get control code for voice family NAME."
-  (cl-declare (special plain-family-table))
   (when (stringp name)
     (setq name (intern name)))
   (or (cadr (assq  name plain-family-table))
@@ -139,13 +134,11 @@ Values are vectors holding the control codes for the 10 settings.")
   "Set up voice FAMILY.
 Argument DIMENSION is the dimension being set,
 and TABLE gives the values along that dimension."
-  (cl-declare (special plain-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (puthash  key table plain-css-code-tables)))
 
 (defun plain-css-get-code-table (family dimension)
   "Retrieve table of values for specified FAMILY and DIMENSION."
-  (cl-declare (special plain-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (gethash key plain-css-code-tables)))
 
@@ -325,11 +318,10 @@ and TABLE gives the values along that dimension."
 
 ;;;  configurater
 ;;;###autoload
+(defvar tts-default-voice)
+(defvar tts-default-speech-rate)
 (defun plain-configure-tts ()
   "Configures TTS  to use Plain."
-  (cl-declare (special  plain-default-speech-rate
-                        tts-default-speech-rate
-                        tts-default-voice))
   (setq tts-default-voice 'paul)
   (fset 'tts-voice-defined-p 'plain-voice-defined-p)
   (fset 'tts-get-voice-command 'plain-get-voice-command)

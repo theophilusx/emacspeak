@@ -89,9 +89,9 @@
      (concat
       (propertize name 'personality voice-animate) "  "desc))))
 
+(defvar paradox-menu-mode-map)
 (defun emacspeak-paradox-mode-hook ()
   "Emacspeak setup hook for paradox-mode."
-  (cl-declare (special paradox-menu-mode-map))
   (define-key paradox-menu-mode-map " " 'emacspeak-paradox-summarize-line)
   (emacspeak-pronounce-add-local-entry
    emacspeak-pronounce-date-yyyymmdd-pattern

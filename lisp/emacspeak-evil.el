@@ -256,7 +256,6 @@
 
 (defun emacspeak-evil-fix-emacspeak-prefix (keymap)
   "Move original evil command on C-e to C-e e."
-  (cl-declare (special emacspeak-prefix))
   (when (keymapp keymap)
     (let ((orig (lookup-key keymap emacspeak-prefix)))
       (when orig
@@ -292,9 +291,10 @@
 
 ;;;  State Hooks:
 
+(defvar evil-previous-state)
+(defvar evil-next-state)
 (defun  emacspeak-evil-state-change-hook  ()
   "State change feedback."
-  (cl-declare (special evil-previous-state evil-next-state))
   (when (and evil-previous-state evil-next-state
              (not (eq evil-previous-state evil-next-state)))
     (emacspeak-icon 'select-object)
@@ -320,10 +320,10 @@
 
 (declare-function evil-mode "evil-core" (&optional flag))
 
+(defvar evil-mode)
 (defun emacspeak-evil-toggle-evil ()
   "Interactively toggle evil-mode."
   (interactive)
-  (cl-declare (special evil-mode))
   (cl-assert (locate-library "evil") nil "I see no evil!")
   (require 'evil)
   (evil-mode (if evil-mode -1 1))

@@ -43,7 +43,6 @@ down, t otherwise. "
   "Enable integration with NetworkManager. Does nothing if
 already enabled or service is not available."
   (interactive)
-  (cl-declare (special nm-dbus-registration))
   (cond
    ((not (nm-service-p))
     (message "NetworkManager service not available.") nil)
@@ -60,7 +59,6 @@ already enabled or service is not available."
 (defun nm-disable()
   "Disable integration with NetworkManager. Does nothing if already disabled."
   (interactive)
-  (cl-declare (special nm-dbus-registration))
   (when nm-dbus-registration
     (dbus-unregister-object nm-dbus-registration)
     (setq nm-dbus-registration nil)

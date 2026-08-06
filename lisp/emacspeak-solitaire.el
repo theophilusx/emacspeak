@@ -51,14 +51,12 @@
 ;;;   Communicate state
 
 (defun emacspeak-solitaire-current-row ()
-  (cl-declare (special solitaire-start-y))
   (+ 1 (/ 
         (- (solitaire-current-line)
            solitaire-start-y)
         2)))
 
 (defun emacspeak-solitaire-current-column()
-  (cl-declare (special solitaire-start-x))
   (let ((c (current-column)))
     (+ 1
        (/ (- c solitaire-start-x)
@@ -80,7 +78,6 @@
 (defun emacspeak-solitaire-speak-stones ()
   "Speak number of stones remaining."
   (interactive)
-  (cl-declare (special solitaire-stones))
   (dtk-speak (format "%d stones" solitaire-stones)))
 
 (defun emacspeak-solitaire-stone  () (dtk-tone 400 150))
@@ -220,7 +217,6 @@ emacspeak-solitaire-speak-coordinates"
 
 (defun emacspeak-solitaire-setup-keymap ()
   "Setup emacspeak keybindings for solitaire"
-  (cl-declare (special solitaire-mode-map))
   (define-key solitaire-mode-map "/" 'emacspeak-solitaire-speak-stones)
   (define-key solitaire-mode-map "." 'emacspeak-solitaire-speak-coordinates)
   (define-key solitaire-mode-map "R" 'emacspeak-solitaire-speak-row)

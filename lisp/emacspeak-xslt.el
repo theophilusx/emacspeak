@@ -63,9 +63,9 @@
          (format "\"'%s'\""
                  base))))
 
+(defvar emacspeak-we-xsl-transform)
 (defun emacspeak-xslt-read ()
   "Read XSLT transformation name from minibuffer."
-  (cl-declare (special emacspeak-xslt-directory emacspeak-we-xsl-transform))
   (expand-file-name
    (read-file-name "XSL Transformation: "
                    emacspeak-xslt-directory
@@ -87,12 +87,10 @@ This is useful when handling bad HTML.")
   "Execute body with XSL turned off."
   (declare (indent 1) (debug t))
   `(progn
-     (cl-declare (special emacspeak-we-xsl-p))
      (when emacspeak-we-xsl-p
        (setq emacspeak-we-xsl-p nil)
        (add-hook 'emacspeak-eww-post-hook
                  #'(lambda ()
-                     (cl-declare (special emacspeak-we-xsl-p))
                      (setq emacspeak-we-xsl-p t))
                  'append))
      ,@body))
@@ -130,8 +128,6 @@ pipeline. Argument `specs' is a list of elements of the form `(xsl params)'."
 ;;;###autoload
 (defun emacspeak-xslt-region (xsl start end &optional params no-comment)
   "Apply XSLT transformation to region and replace it with the result.  "
-  (cl-declare (special emacspeak-xslt emacspeak-xslt-options
-                       emacspeak-xslt-keep-errors modification-flag))
   (save-excursion
     (with-silent-modifications
       (let ((command nil)
@@ -173,7 +169,6 @@ pipeline. Argument `specs' is a list of elements of the form `(xsl params)'."
 (defun emacspeak-xslt-run (xsl &optional start end)
   "Run xslt on region, and return output filtered by sort -u.
 Region defaults to entire buffer."
-  (cl-declare (special emacspeak-xslt emacspeak-xslt-options))
   (or start (setq start (point-min)))
   (or end (setq end (point-max)))
   (let ((coding-system-for-read 'utf-8)
@@ -188,11 +183,10 @@ Region defaults to entire buffer."
     (current-buffer)))
 
 ;;;###autoload
+(defvar modification-flag)
 (defun emacspeak-xslt-url (xsl url &optional params no-comment)
   "Apply XSLT transformation to url
 and return the results in a newly created buffer. "
-  (cl-declare (special emacspeak-xslt
-                       emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
         (command nil)
         (parameters (when params
@@ -246,8 +240,6 @@ Argument `specs' is a list of elements of the form
 `(xsl xpath)'.
   This uses XSLT processor xsltproc available as
 part of the libxslt package."
-  (cl-declare (special emacspeak-xslt
-                       emacspeak-xslt-keep-errors))
   (let ((result (url-retrieve-synchronously url))
         (command ""))
     (setq command
@@ -295,8 +287,6 @@ part of the libxslt package."
 (defun emacspeak-xslt-xml-url (xsl url &optional params)
   "Apply XSLT transformation to XML url
 and return the results in a newly created buffer. "
-  (cl-declare (special emacspeak-xslt
-                       emacspeak-xslt-keep-errors))
   (let ((result (get-buffer-create " *xslt result*"))
         (command nil)
         (parameters
@@ -345,7 +335,6 @@ and return the results in a newly created buffer. "
 
 (defun emacspeak-xslt-unescape-charent (start end)
   "Clean up charents in XML."
-  (cl-declare (special emacspeak-xslt-charent-alist))
   (cl-loop for entry in emacspeak-xslt-charent-alist
            do
            (let ((entity (car  entry))
@@ -363,7 +352,6 @@ and return the results in a newly created buffer. "
    (list
     (read-file-name "Style File: " emacspeak-xslt-directory)
     (read-file-name "File:")))
-  (cl-declare (special emacspeak-xslt-directory))
   (with-temp-buffer
     (let ((browse-url-browser-function  'eww-browse-url)
           (coding-system-for-read 'utf-8)
@@ -382,7 +370,6 @@ and return the results in a newly created buffer. "
 (defun emacspeak-xslt-view-rss-file (file)
   "View RSS file."
   (interactive "fRSS File:")
-  (cl-declare (special emacspeak-rss-xsl))
   (funcall-interactively
    'emacspeak-xslt-view-file
    emacspeak-rss-xsl file))
@@ -391,7 +378,6 @@ and return the results in a newly created buffer. "
 (defun emacspeak-xslt-view-atom-file (file)
   "View Atom file."
   (interactive "fAtom File:")
-  (cl-declare (special emacspeak-atom-xsl))
   (funcall-interactively
    'emacspeak-xslt-view-file
    emacspeak-atom-xsl file))
@@ -404,12 +390,12 @@ and return the results in a newly created buffer. "
     (expand-file-name
      (read-file-name "XSL Transformation: "))
     (ems--read-url)))
-  (cl-declare (special emacspeak-xslt-options))
   (add-hook
    'emacspeak-eww-pre-process-hook
    (emacspeak-xslt-make-xsl-transformer style))
   (browse-url url))
 
+(defvar emacspeak-we-xsl-p)
 (defun emacspeak-xslt-view-xml (style url &optional unescape-charent)
   "Browse XML URL with specified XSL style."
   (interactive

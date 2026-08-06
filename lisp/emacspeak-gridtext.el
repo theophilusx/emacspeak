@@ -80,7 +80,6 @@ buffer.")
   "Generates a key for current context.
 The key is used when persisting out the grid setting for
 future  use."
-  (cl-declare (special  major-mode))
   (or (buffer-file-name)
       (format "%s:%s" (buffer-name) major-mode)))
 
@@ -134,12 +133,10 @@ end   as specified by grid."
 
 (defun emacspeak-gridtext-set (key grid)
   "Map grid to key."
-  (cl-declare (special emacspeak-gridtext-table))
   (setf (gethash key emacspeak-gridtext-table) grid))
 
 (defun emacspeak-gridtext-get (key)
   "Lookup key and return corresponding grid. "
-  (cl-declare (special emacspeak-gridtext-table))
   (gethash key emacspeak-gridtext-table))
 
 (defun emacspeak-gridtext-load (file)
@@ -163,7 +160,6 @@ end   as specified by grid."
     (read-file-name "Save gridtext settings  to file: "
                     emacspeak-user-directory
                     ".gridtext")))
-  (cl-declare (special emacspeak-user-directory))
   (let ((print-level nil)
         (print-length nil)
         (buffer (find-file-noselect

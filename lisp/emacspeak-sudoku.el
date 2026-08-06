@@ -87,10 +87,10 @@ s   Sub-square Distribution.
            'emacspeak-sudoku-board-sub-squares-summarize))
       (otherwise (message "Unknown summary type?")))))
 
+(defvar current-board)
 (defun emacspeak-sudoku-board-distribution-summarize ()
   "Shows distribution of filled numbers."
   (interactive)
-  (cl-declare (special current-board))
   (let ((counts (make-vector 9 0)))
     (cl-loop for row in current-board
              do
@@ -105,7 +105,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-board-rows-summarize ()
   "Summarize rows --- speaks number of remaining cells."
   (interactive)
-  (cl-declare (special current-board))
   (dtk-speak-list
    (cl-loop for r in current-board
             collect  (cl-count 0 r))
@@ -114,7 +113,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-board-columns-summarize ()
   "Summarize columns --- speaks number of remaining cells."
   (interactive)
-  (cl-declare (special current-board))
   (dtk-speak-list
    (cl-loop for c from 0 to 8
             collect  (cl-count 0 (sudoku-column current-board c)))
@@ -123,7 +121,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-board-sub-squares-summarize ()
   "Summarize sub-squares --- speaks number of remaining cells."
   (interactive)
-  (cl-declare (special current-board))
   (dtk-speak-list
    (cl-loop for s from 0 to 8
             collect  (cl-count 0 (sudoku-subsquare current-board s)))
@@ -142,7 +139,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-current-row ()
   "Speak current row."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak-list (sudoku-row current-board
                                 (cl-second cell))
@@ -151,7 +147,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-current-column ()
   "Speak current column."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak-list (sudoku-column  current-board
                                     (cl-first cell))
@@ -167,7 +162,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-current-sub-square ()
   "Speak current sub-square."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak-list
      (sudoku-subsquare  current-board
@@ -177,7 +171,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-current-cell-value ()
   "Speak value in current cell."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak
      (sudoku-cell current-board (cl-first cell) (cl-second cell)))))
@@ -185,7 +178,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-hint ()
   "Provide hint for current cell."
   (interactive)
-  (cl-declare (special current-board))
   (let* ((cell (sudoku-get-cell-from-point (point)))
          (possibles (sudoku-cell-possibles
                      current-board
@@ -199,7 +191,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-remaining-in-row ()
   "Speaks number of remaining cells in current row."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak
      (cl-count 0
@@ -208,7 +199,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-remaining-in-column ()
   "Speaks number of remaining cells in current column."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak
      (cl-count 0
@@ -217,7 +207,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-speak-remaining-in-sub-square ()
   "Speaks number of remaining cells in current sub-square."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (dtk-speak
      (cl-count 0
@@ -226,7 +215,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-how-many-remaining ()
   "Speak number of remaining squares to fill."
   (interactive)
-  (cl-declare (special current-board))
   (message
    "%s squares remain"
    (sudoku-remaining-cells current-board)))
@@ -269,10 +257,10 @@ s   Sub-square Distribution.
 
 ;;;  erase rows, columns or sub-squares:
 
+(defvar start-board)
+(defvar sudoku-onscreen-instructions)
 (defun emacspeak-sudoku-erase-these-cells (cell-list)
   "Erase cells in cell-list taking account of original values."
-  (cl-declare (special start-board current-board
-                       sudoku-onscreen-instructions))
   (let ((original (sudoku-get-cell-from-point (point))))
     (cl-loop for cell in cell-list
              do
@@ -291,7 +279,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-erase-current-row ()
   "Erase current row."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (emacspeak-sudoku-erase-these-cells
      (cl-loop for i from 0 to  8
@@ -302,7 +289,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-erase-current-column ()
   "Erase current column."
   (interactive)
-  (cl-declare (special current-board))
   (let ((cell (sudoku-get-cell-from-point (point))))
     (emacspeak-sudoku-erase-these-cells
      (cl-loop for i from 0 to  8
@@ -367,7 +353,6 @@ s   Sub-square Distribution.
 
 (defadvice sudoku-new (after emacspeak pre act comp)
   "Reset history stack."
-  (cl-declare (special emacspeak-sudoku-history-stack))
   (setq emacspeak-sudoku-history-stack nil))
 
 (defadvice sudoku-restart (after emacspeak pre act comp)
@@ -383,8 +368,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-history-push ()
   "Push current state on to history stack."
   (interactive)
-  (cl-declare (special emacspeak-sudoku-history-stack
-                       current-board))
   (push current-board emacspeak-sudoku-history-stack)
   (emacspeak-icon 'mark-object)
   (message "Saved state on history stack."))
@@ -392,10 +375,6 @@ s   Sub-square Distribution.
 (defun emacspeak-sudoku-history-pop ()
   "Pop saved state off stack and redraw board."
   (interactive)
-  (cl-declare (special emacspeak-sudoku-history-stack
-                       sudoku-onscreen-instructions
-                       start-board
-                       current-board))
   (let ((original (sudoku-get-cell-from-point (point))))
     (cond
      ((null emacspeak-sudoku-history-stack) ;start board

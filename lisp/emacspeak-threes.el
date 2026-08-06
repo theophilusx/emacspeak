@@ -99,9 +99,9 @@
 (defvar emacspeak-threes-rows-max '(0 0 0 0)
   "Max for each row.")
 
+(defvar threes-cells)
 (defun emacspeak-threes-get-rows-max ()
   "Return max for each row."
-  (cl-declare (special threes-cells))
   (mapcar #'(lambda (r) (apply #'max   r)) threes-cells))
 
 ;;;  Helpers:
@@ -112,7 +112,6 @@
   `(defun  ,(intern  (format "emacspeak-threes-%s" i)) ()
      "Set next tile."
      (interactive)
-     (cl-declare (special threes-next-number))
      (setq threes-next-number ,i)
      (emacspeak-threes-speak-board))))
 
@@ -126,10 +125,11 @@
 
 ;;;  Advice interactive commands:
 
+(defvar threes-game-over-p)
+(defvar threes-next-number)
 (defun emacspeak-threes-speak-board ()
   "Speak the board."
   (interactive)
-  (cl-declare (special threes-cells threes-next-number threes-game-over-p ))
   (when threes-game-over-p (emacspeak-icon 'alarm))
   (emacspeak-threes-sox-gen threes-next-number)
   (let ((cells (apply #'append (copy-sequence threes-cells)))
@@ -142,7 +142,6 @@
 (defun emacspeak-threes-speak-empty-count ()
   "Speak number of cells that are non-empty."
   (interactive)
-  (cl-declare (special threes-cells))
   (dtk-speak
    (format " %d zeros"
            (apply #'+
@@ -158,13 +157,12 @@
 (defun emacspeak-threes-speak-transposed-board ()
   "Speak the board by columns."
   (interactive)
-  (cl-declare (special threes-cells))
   (dtk-speak-list   (threes-cells-transpose threes-cells) 4)
   (emacspeak-icon 'progress))
 
+(defvar threes-mode-map)
 (defun emacspeak-threes-setup ()
   "Set up additional key-bindings."
-  (cl-declare (special threes-mode-map))
   (define-key threes-mode-map "1" 'emacspeak-threes-1)
   (define-key threes-mode-map "0" 'emacspeak-threes-0)
   (define-key threes-mode-map "2" 'emacspeak-threes-2)
@@ -228,7 +226,6 @@
 (defun emacspeak-threes-push-state ()
   "Push current game state on stack."
   (interactive)
-  (cl-declare (special emacspeak-threes-game-stack threes-cells))
   (push
    (make-emacspeak-threes-game-state
     :board (copy-sequence threes-cells))
@@ -239,8 +236,6 @@
 (defun emacspeak-threes-pop-state ()
   "Reset state from stack."
   (interactive)
-  (cl-declare (special emacspeak-threes-game-stack threes-cells
-                       threes-game-over-p))
   (cond
    ((null emacspeak-threes-game-stack) (error "No saved  states."))
    (t
@@ -261,7 +256,6 @@
          (format "Stack: %s New? "
                  (length emacspeak-threes-game-stack))
          (/ (length emacspeak-threes-game-stack) 2))))))
-  (cl-declare (special emacspeak-threes-game-stack))
   (setq emacspeak-threes-game-stack
         (butlast emacspeak-threes-game-stack
                  (- (length emacspeak-threes-game-stack) drop)))
@@ -281,7 +275,6 @@
 Optional interactive prefix arg prompts for a file.
 Note that the file is overwritten silently."
   (interactive "P")
-  (cl-declare (special emacspeak-threes-game-file emacspeak-threes-game-stack))
   (with-temp-buffer
     (let ((file
            (if prompt

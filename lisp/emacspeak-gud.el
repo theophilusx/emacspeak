@@ -49,7 +49,6 @@
 
 (defadvice gud-display-line (after emacspeak pre act comp)
   "Speak the error line"
-  (cl-declare (special gud-overlay-arrow-position))
   (let ((marker gud-overlay-arrow-position))
     (emacspeak-icon 'large-movement)
     (and marker

@@ -110,10 +110,10 @@
 ;; commands
 ;; need these to get ECB working outside X
 
+(defvar tree-buffer-incr-searchpattern)
 (defun emacspeak-ecb-tree-backspace ()
   "Back up during incremental search in tree buffers."
   (interactive)
-  (cl-declare (special tree-buffer-incr-searchpattern))
   ;; reduce by one from the end
   (setq tree-buffer-incr-searchpattern
         (substring tree-buffer-incr-searchpattern
@@ -126,7 +126,6 @@
 (defun emacspeak-ecb-tree-clear ()
   "Clear search pattern during incremental search in tree buffers."
   (interactive)
-  (cl-declare (special tree-buffer-incr-searchpattern))  
   (setq tree-buffer-incr-searchpattern "")
   (dtk-speak "Cleared search pattern."))
 

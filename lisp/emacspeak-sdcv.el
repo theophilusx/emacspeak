@@ -88,10 +88,10 @@
      (when (ems-interactive-p)
        (emacspeak-icon 'select-object)))))
 
+(defvar sdcv-dictionary-simple-list)
 (defun emacspeak-sdcv-update-dictionary-list ()
   "Update sdcv dictionary lists if necessary by examining
 /usr/share/sdcv/dict"
-  (cl-declare (special sdcv-dictionary-simple-list))
   (let ((installed
          (json-parse-string
           (shell-command-to-string "sdcv -jnl ")
@@ -101,9 +101,9 @@
            for d across installed collect 
            (let-alist d  .name)))))
 
+(defvar sdcv-mode-map)
 (defun emacspeak-sdcv-setup ()
   "Setup Emacspeak for SDCV."
-  (cl-declare (special sdcv-mode-map))
   (emacspeak-sdcv-update-dictionary-list)
   (cl-loop
    for binding in

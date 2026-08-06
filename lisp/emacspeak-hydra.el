@@ -58,10 +58,10 @@
    (hydra-face-teal voice-lighten-medium)))
 
 ;;;  Toggle Talkative:
+(defvar hydra-is-helpful)
 (defun emacspeak-hydra-toggle-talkative ()
   "Toggle hydra-is-helpful"
   (interactive)
-  (cl-declare (special hydra-is-helpful))
   (setq hydra-is-helpful (not hydra-is-helpful))
   (emacspeak-icon (if hydra-is-helpful 'on 'off)))
 
@@ -83,6 +83,8 @@
 
 ;; We use plain messages:
 
+(defvar hydra-head-format)
+(defvar hydra-hint-display-type)
 (when (featurep 'emacspeak)
   (setq
    hydra-head-format "%s "
@@ -101,7 +103,6 @@
 
 (defadvice lv-message (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special ems--lv-cache))
   (emacspeak-icon 'help)
   (with-current-buffer (window-buffer (lv-window))
     (setq ems--lv-cache (buffer-substring (point-min) (point-max)))

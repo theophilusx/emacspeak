@@ -78,7 +78,6 @@
   "FilterText mode"
   "Major mode for FilterText interaction. \n\n
 \\{emacspeak-filtertext-mode-map}")
-(cl-declare (special emacspeak-filtertext-mode-map))
 (define-key emacspeak-filtertext-mode-map "=" 'keep-lines)
 (define-key emacspeak-filtertext-mode-map "^" 'flush-lines)
 (define-key emacspeak-filtertext-mode-map "r"
@@ -89,8 +88,6 @@
 (defun emacspeak-filtertext(start end)
   "Copy over text in region to special filtertext buffer to  filter text. "
   (interactive "r")
-  (cl-declare (special emacspeak-filtertext-info
-                       case-fold-search))
   (let ((this (buffer-substring-no-properties start end))
         (buffer (get-buffer-create
                  (format "filter-%s" (buffer-name)))))
@@ -110,7 +107,6 @@
 (defun emacspeak-filtertext-revert ()
   "Revert to original text."
   (interactive)
-  (cl-declare (special emacspeak-filtertext-info))
   (unless (eq  major-mode 'emacspeak-filtertext-mode)
     (error "Not in filter text mode."))
   (when emacspeak-filtertext-info

@@ -355,7 +355,6 @@
 
 (defadvice org-eval-in-calendar (after emacspeak pre act comp)
   "Speak what is returned."
-  (cl-declare (special org-ans2))
   (dtk-speak org-ans2))
 
 ;;;  Agenda:
@@ -411,7 +410,6 @@
 
 (defadvice orgtbl-mode (after emacspeak pre act comp)
   "speak."
-  (cl-declare (special orgtbl-mode))
   (when (ems-interactive-p)
     (emacspeak-icon (if orgtbl-mode 'on 'off))
     (message "Turned %s org table mode."
@@ -433,7 +431,6 @@
 
 (defun emacspeak-org-update-keys ()
   "Update keys in org mode."
-  (cl-declare (special  org-mode-map))
   (cl-loop
    for k in
    '(
@@ -460,9 +457,9 @@
 
 ;;;  mode hook:
 
+(defvar org-multi-keymap)
 (defun emacspeak-org-mode-setup ()
   "Placed on org-mode-hook to do Emacspeak setup."
-  (cl-declare (special org-mode-map org-multi-keymap ))
   (emacspeak-org-update-keys)
   (cl-loop
    for b in  

@@ -61,7 +61,6 @@
 (defun emacspeak-tabulated-list-speak-cell ()
   "Speak current cell. "
   (interactive)
-  (cl-declare (tabulated-list-format))
   (when (bobp) (error "Beginning  of buffer"))
   (when (eobp) (error "End of buffer"))
   (save-excursion
@@ -124,7 +123,6 @@
 
 (defun emacspeak-tabulated-list-setup ()
   "Setup Emacspeak"
-  (cl-declare (special tabulated-list-mode-map))
   (cl-loop
    for b in
    '(

@@ -149,12 +149,12 @@
   (mapcar #'downcase emacspeak-chess-whites)
   "Black chess pieces.")
 
+(defvar chess-module-game)
+(defvar chess-display-index)
 (defun emacspeak-chess-describe-square (index)
   "Return an audio formatted description of square at given index
   as a list.  Argument index is an integer between 0 and 63 as in
   package chess."
-  (cl-declare (special chess-module-game chess-display-index
-                       emacspeak-chess-whites))
   (cl-assert (eq major-mode 'chess-display-mode) t "Not in a Chess  display.")
   (let ((position (chess-game-pos chess-module-game chess-display-index))
         (piece nil)
@@ -201,10 +201,10 @@
 
 ;;; Board Navigation:
 
+(defvar emacspeak-chess-last-target)
 (defun emacspeak-chess-goto-target ()
   "Jump to the most recent target square."
   (interactive)
-  (cl-declare (special emacspeak-chess-last-target))
   (emacspeak-icon 'large-movement)
   (cl-assert emacspeak-chess-last-target t "No recent target")
   (goto-char
@@ -233,52 +233,52 @@
     (emacspeak-icon 'item)
     (emacspeak-chess-speak-this-square)))
 
+(defvar chess-direction-north)
 (defun emacspeak-chess-north ()
   "Move north one step."
   (interactive)
-  (cl-declare (special chess-direction-north))
   (emacspeak-chess-move chess-direction-north))
 
+(defvar chess-direction-south)
 (defun emacspeak-chess-south ()
   "Move south one step."
   (interactive)
-  (cl-declare (special chess-direction-south))
   (emacspeak-chess-move chess-direction-south))
 
+(defvar chess-direction-west)
 (defun emacspeak-chess-west ()
   "Move west one step."
   (interactive)
-  (cl-declare (special chess-direction-west))
   (emacspeak-chess-move chess-direction-west))
 
+(defvar chess-direction-east)
 (defun emacspeak-chess-east ()
   "Move east one step."
   (interactive)
-  (cl-declare (special chess-direction-east))
   (emacspeak-chess-move chess-direction-east))
 
+(defvar chess-direction-northwest)
 (defun emacspeak-chess-northwest ()
   "Move northwest one step."
   (interactive)
-  (cl-declare (special chess-direction-northwest))
   (emacspeak-chess-move chess-direction-northwest))
 
+(defvar chess-direction-southwest)
 (defun emacspeak-chess-southwest ()
   "Move southwest one step."
   (interactive)
-  (cl-declare (special chess-direction-southwest))
   (emacspeak-chess-move chess-direction-southwest))
 
+(defvar chess-direction-northeast)
 (defun emacspeak-chess-northeast ()
   "Move northeast one step."
   (interactive)
-  (cl-declare (special chess-direction-northeast))
   (emacspeak-chess-move chess-direction-northeast))
 
+(defvar chess-direction-southeast)
 (defun emacspeak-chess-southeast ()
   "Move southeast one step."
   (interactive)
-  (cl-declare (special chess-direction-southeast))
   (emacspeak-chess-move chess-direction-southeast))
 
 ;;; Examining the board:
@@ -325,7 +325,6 @@
 (defun emacspeak-chess-look-north ()
   "Look north "
   (interactive)
-  (cl-declare (special chess-direction-north))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-north)
@@ -334,7 +333,6 @@
 (defun emacspeak-chess-look-south ()
   "Look south "
   (interactive)
-  (cl-declare (special chess-direction-south))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-south)
@@ -343,7 +341,6 @@
 (defun emacspeak-chess-look-west ()
   "Look west "
   (interactive)
-  (cl-declare (special chess-direction-west))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-west)
@@ -352,7 +349,6 @@
 (defun emacspeak-chess-look-east ()
   "Look east "
   (interactive)
-  (cl-declare (special chess-direction-east))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-east)
@@ -361,7 +357,6 @@
 (defun emacspeak-chess-look-northwest ()
   "Look northwest "
   (interactive)
-  (cl-declare (special chess-direction-northwest))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-northwest)
@@ -370,7 +365,6 @@
 (defun emacspeak-chess-look-southwest ()
   "Look southwest "
   (interactive)
-  (cl-declare (special chess-direction-southwest))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-southwest)
@@ -379,7 +373,6 @@
 (defun emacspeak-chess-look-northeast ()
   "Look northeast "
   (interactive)
-  (cl-declare (special chess-direction-northeast))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-northeast)
@@ -388,7 +381,6 @@
 (defun emacspeak-chess-look-southeast ()
   "Look southeast "
   (interactive)
-  (cl-declare (special chess-direction-southeast))
   (emacspeak-icon 'task-done)
   (dtk-speak-list
    (emacspeak-chess-collect-squares chess-direction-southeast)
@@ -427,6 +419,14 @@
   emacspeak-chess-view-map
   (list (format "%c" key) 'emacspeak-chess-view-rank-or-file)))
 
+(defvar chess-direction-north-northeast)
+(defvar chess-direction-east-northeast)
+(defvar chess-direction-east-southeast)
+(defvar chess-direction-south-southeast)
+(defvar chess-direction-south-southwest)
+(defvar chess-direction-west-southwest)
+(defvar chess-direction-west-northwest)
+(defvar chess-direction-north-northwest)
 (defun emacspeak-chess-collect-knight-squares ()
   "List of non-empty squares a knight can reach from current position."
   (let ((index (get-text-property (point) 'chess-coord))
@@ -519,8 +519,6 @@
 
 (defun emacspeak-chess-piece-squares (piece)
   "Return a description of where a given piece is on the board."
-  (cl-declare (special chess-display-index chess-module-game
-                       emacspeak-chess-whites emacspeak-chess-blacks))
   (cl-assert (eq major-mode 'chess-display-mode) t "Not  a Chess display.")
   (cl-assert
    (memq piece
@@ -564,7 +562,6 @@ and `a' for entire board.."
 
 (defun emacspeak-chess-target-squares (piece)
   "Return a description of pieces that target  current square."
-  (cl-declare (special chess-display-index chess-module-game))
   (cl-assert (eq major-mode 'chess-display-mode) t "Not  a Chess display.")
   (cl-assert
    (memq piece
@@ -604,7 +601,6 @@ Argument `piece' specifies  piece-or-color as in command
 (defun emacspeak-chess-view-rank-or-file ()
   "View a complete rank or file from white's perspective."
   (interactive)
-  (cl-declare (special last-input-event))
   (let ((f (and (>= last-input-event ?a) (<= last-input-event ?h)))
         (r (and (>= last-input-event ?1) (<= last-input-event ?8)))
         (start nil))
@@ -626,7 +622,6 @@ Argument `piece' specifies  piece-or-color as in command
 (defun emacspeak-chess-describe-move (game &optional move-index)
   "Speak the move by examining game.  Optional argument `move-index'
 specifies index of move, default is final index."
-  (cl-declare (special emacspeak-chess-whites  emacspeak-chess-last-target))
   (let*
       ((ply
         (chess-game-ply
@@ -684,7 +679,6 @@ specifies index of move, default is final index."
 (defun emacspeak-chess-speak-this-move ()
   "Speak move at current display index."
   (interactive)
-  (cl-declare (special chess-module-game chess-display-index))
   (dtk-speak (emacspeak-chess-describe-move chess-module-game
                                             chess-display-index)))
 
@@ -710,7 +704,6 @@ specifies index of move, default is final index."
 
 (defun emacspeak-chess-state-speaker  ()
   "Helper function that describes game state."
-  (cl-declare (special chess-display-index chess-module-game))
   (let ((msg
          (cond
           ((= chess-display-index (chess-game-index chess-module-game))
@@ -809,9 +802,9 @@ specifies index of move, default is final index."
 ;; Forward Declaration to help documentation builder.
 (defvar chess-default-modules nil)
 
+(defvar chess-display-mode-map)
 (defun emacspeak-chess-setup ()
   "Emacspeak setup for Chess."
-  (cl-declare (special chess-default-modules chess-display-mode-map))
   (cl-pushnew 'chess-emacspeak chess-default-modules)
   (cl-loop
    for binding in

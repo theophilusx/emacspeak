@@ -109,6 +109,7 @@
 
 ;;;  Augment popup keymap:
 
+(defvar popup-menu-keymap)
 (eval-after-load
     "popup"
   `(define-key popup-menu-keymap   emacspeak-prefix 'emacspeak-keymap))

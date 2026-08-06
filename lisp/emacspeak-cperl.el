@@ -68,7 +68,6 @@
   "Speak the previous line if line echo is on. 
   See command \\[emacspeak-toggle-line-echo].
 Otherwise cue user to the line just created. "
-  (cl-declare (special emacspeak-line-echo))
   (cond
    ((ems-interactive-p)
     (cond

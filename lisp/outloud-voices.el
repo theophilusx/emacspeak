@@ -56,7 +56,6 @@
   :group 'tts
   :type 'integer
   :set #'(lambda(sym val)
-           (cl-declare (special dtk-program))
            (set-default sym val)
            (when (string-match "outloud" dtk-program)
              (setq-default dtk-speech-rate val))))
@@ -82,12 +81,10 @@
 
 (defun outloud-define-voice (name command-string)
   "Map  voice `name' to `command-string'. "
-  (cl-declare (special outloud-voice-table))
   (puthash name command-string outloud-voice-table))
 
 (defun outloud-get-voice-command  (name)
   "Retrieve command string for  voice NAME."
-  (cl-declare (special outloud-voice-table))
   (cond
    ((listp name)
     (mapconcat #'outloud-get-voice-command name " "))
@@ -95,7 +92,6 @@
 
 (defun outloud-voice-defined-p (name)
   "Check if voice `name' is  defined."
-  (cl-declare (special outloud-voice-table))
   (gethash name outloud-voice-table))
 
 ;;;  voice definitions
@@ -111,13 +107,11 @@
 
 (defun outloud-css-set-code-table (family dimension table)
   "Set up voice FAMILY. "
-  (cl-declare (special outloud-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (puthash key table outloud-css-code-tables)))
 
 (defun outloud-css-get-code-table (family dimension)
   "Retrieve table of values for  FAMILY and DIMENSION."
-  (cl-declare (special outloud-css-code-tables))
   (let ((key (intern (format "%s-%s" family dimension))))
     (gethash key outloud-css-code-tables)))
 
@@ -279,11 +273,10 @@
 ;;;  Configurater
 
 ;;;###autoload
+(defvar tts-default-voice)
+(defvar tts-default-speech-rate)
 (defun outloud-configure-tts ()
   "Configure TTS  to use Outloud."
-  (cl-declare (special tts-default-speech-rate tts-default-voice
-                       outloud-default-speech-rate dtk-speech-rate
-                       dtk-speech-rate-step dtk-speech-rate-base))
   (fset 'tts-voice-defined-p 'outloud-voice-defined-p)
   (fset 'tts-get-voice-command 'outloud-get-voice-command)
   (fset

@@ -62,11 +62,13 @@
 
 (defvar emacspeak-2048-game-stack nil
   "Stack of saved states.")
+(defvar *2048-board*)
+(defvar *2048-score*)
+(defvar *2048-rows*)
+(defvar *2048-columns*)
 (defun emacspeak-2048-push-state ()
   "Push current game state on stack."
   (interactive)
-  (cl-declare (special emacspeak-2048-game-stack
-                       *2048-board* *2048-score* *2048-rows* *2048-columns*))
   (push
    (make-emacspeak-2048-game-state
     :board (copy-sequence *2048-board*)
@@ -80,8 +82,6 @@
 (defun emacspeak-2048-pop-state ()
   "Reset state from stack."
   (interactive)
-  (cl-declare (special emacspeak-2048-game-stack
-                       *2048-board* *2048-score* *2048-rows* *2048-columns*))
   (cond
    ((null emacspeak-2048-game-stack) (error "No saved  states."))
    (t
@@ -105,7 +105,6 @@
          (format "Stack: %s New? "
                  (length emacspeak-2048-game-stack))
          (/ (length emacspeak-2048-game-stack) 2))))))
-  (cl-declare (special emacspeak-2048-game-stack))
   (setq emacspeak-2048-game-stack
         (butlast emacspeak-2048-game-stack
                  (- (length emacspeak-2048-game-stack) drop)))
@@ -125,7 +124,6 @@
 Optional interactive prefix arg prompts for a file.
 Note that the file is overwritten silently."
   (interactive "P")
-  (cl-declare (special emacspeak-2048-game-file emacspeak-2048-game-stack))
   (with-temp-buffer
     (let ((file
            (if prompt
@@ -161,7 +159,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-add-row ()
   "Add a row  to the current board."
   (interactive)
-  (cl-declare (special *2048-board* *2048-rows*))
   (setq *2048-rows* (cl-incf *2048-rows*))
   (let ((board (copy-sequence *2048-board*)))
     (setq *2048-board* (make-vector (* *2048-columns* *2048-rows*) 0))
@@ -174,7 +171,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-drop-row ()
   "Drop last  row  from  the current board."
   (interactive)
-  (cl-declare (special *2048-board* *2048-rows*))
   (setq *2048-rows* (1- *2048-rows*))
   (let ((board (copy-sequence *2048-board*)))
     (setq *2048-board* (make-vector (* *2048-columns* *2048-rows*) 0))
@@ -188,7 +184,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-add-column ()
   "Add a column  to the current board."
   (interactive)
-  (cl-declare (special *2048-board* *2048-columns*))
   (let ((board (copy-sequence *2048-board*))
         (index 0)
         (cols *2048-columns*))
@@ -207,7 +202,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-drop-column ()
   "Drop last  row  from  the current board."
   (interactive)
-  (cl-declare (special *2048-board* *2048-columns* *2048-columns*))
   (let ((board (copy-sequence *2048-board*))
         (bound 0))
     (setq *2048-columns* (1- *2048-columns*))
@@ -224,7 +218,6 @@ Optional interactive prefix arg prompts for a filename."
   (message "Dropped column."))
 (defun emacspeak-2048-board-reset ()
   "Reset board to default size."
-  (cl-declare (special *2048-rows* *2048-columns* *2048-board*))
   (setq *2048-rows* 4
         *2048-columns* 4))
 
@@ -233,13 +226,11 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-speak-board ()
   "Speak board."
   (interactive)
-  (cl-declare (special *2048-board* *2048-columns*))
   (dtk-speak-list (append *2048-board* nil) *2048-columns*))
 
 (defun emacspeak-2048-speak-transposed-board ()
   "Speak board column-wise."
   (interactive)
-  (cl-declare (special *2048-board*      *2048-columns* *2048-rows*))
   (dtk-speak-list
    (cl-loop for col from 0 to (- *2048-columns*  1)
             collect
@@ -271,7 +262,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-score ()
   "Show total on board."
   (interactive)
-  (cl-declare (special *2048-score*))
   (message (format "Score: %d" *2048-score*)))
 
 ;;;  Setup
@@ -315,7 +305,6 @@ Optional interactive prefix arg prompts for a filename."
 (defun emacspeak-2048-randomize-game (&optional count)
   "Puts game in a randomized new state."
   (interactive "nCount: ")
-  (cl-declare (special *2048-board*))
   (cl-loop
    for i from 0 to 15 do
    (cond

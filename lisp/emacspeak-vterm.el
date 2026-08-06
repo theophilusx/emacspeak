@@ -163,8 +163,6 @@
 
 (defsubst emacspeak-vterm-snapshot ()
   "Snapshot VTerm state."
-  (cl-declare (special ems--vterm-char ems--vterm-opoint
-                       ems--vterm-row ems--vterm-column))
   (setq ems--vterm-row(1+ (count-lines (point-min) (point))) ;;; line number
         ems--vterm-column (current-column) ;;; column number
         ems--vterm-opoint (point)
