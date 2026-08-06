@@ -580,7 +580,7 @@ Shell-Dirtrack mode; turning it off does not re-enable it."
 Shell Utility zoxide --- implemented in Rust --- lets you jump to
 directories that are used often. "
   (interactive "sZoxide:")
-  (if-let
+  (if-let*
       ((z emacspeak-comint-zoxide)
        (target
         (with-temp-buffer; match found here if process returns 0

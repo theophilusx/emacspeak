@@ -822,7 +822,7 @@ arg just opens the file"
 (defun org-amark-store-link ()
   "Store a link to a AMark.
 Is enabled in the AMark Browser and M-Player Interaction buffers."
-  (when-let
+  (when-let*
       ((m (memq major-mode '(emacspeak-m-player-mode emacspeak-amark-mode)))
        (amark
         (if  (button-at (point))
@@ -839,7 +839,7 @@ Is enabled in the AMark Browser and M-Player Interaction buffers."
 
 (defun org-amark-follow-link (name)
   "Follow an AMark link."
-  (when-let
+  (when-let*
       ((match (string-match "\\(.*\\)#\\(.*\\)" name))
        (filename (match-string 1 name))
        (position  (match-string 2 name)))
@@ -871,7 +871,7 @@ Press `y' to play to next amark."
 
 (defun org-ebook-store-link ()
   "Store a link to an EWW mark from an EBook. "
-  (when-let
+  (when-let*
       ((m (eq major-mode 'emacspeak-eww-marks-mode))
        (b (button-at (point)))
        (desc  (buffer-substring (button-start b) (button-end b)))

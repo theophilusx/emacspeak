@@ -782,7 +782,7 @@ Argument COMPLEMENT  is the complement of separator."
              (get-text-property start 'auditory-icon))
     (emacspeak-queue-icon (get-text-property start 'auditory-icon)))
   (dtk-interp-queue-code (tts-voice-reset-code))
-  (when-let ((pause  (get-text-property start 'pause))
+  (when-let* ((pause  (get-text-property start 'pause))
              (dtk-interp-silence pause)))
   (cond
    ((not voice-lock-mode)

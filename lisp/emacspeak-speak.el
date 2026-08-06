@@ -617,7 +617,7 @@ the sense of the filter. "
 ;;; Match Parens:
 (defun emacspeak-speak-matching-paren ()
   "Speak matched paren with context."
-  (when-let ((there (cl-fourth (show-paren--default))))
+  (when-let* ((there (cl-fourth (show-paren--default))))
     (save-excursion
         (goto-char there)
         (dtk-speak
@@ -854,7 +854,7 @@ spoken using command \\[emacspeak-speak-overlay-properties]."
   (interactive)
   (let (
         (disp
-         (if-let
+         (if-let*
              ((disp (get-char-property (point) 'display)))
              (prin1-to-string disp)
            "No display properties here"))
@@ -1226,7 +1226,7 @@ Useful to listen to a buffer without switching  contexts."
   "Speak help buffer if one present. "
   (interactive )
   (emacspeak-icon 'help)
-  (if-let ((help-buffer (get-buffer "*Help*")))
+  (if-let* ((help-buffer (get-buffer "*Help*")))
       (with-current-buffer help-buffer
         (or (window-live-p (get-buffer-window help-buffer))
             (display-buffer help-buffer))
@@ -1936,7 +1936,7 @@ location of the mark is indicated by an aural highlight. "
 (defun emacspeak-speak-face-forward ()
   "Property search for face --- see \\[text-property-search-forward]"
   (interactive)
-  (when-let
+  (when-let*
       ((match
         (funcall-interactively
          #'text-property-search-forward
@@ -1947,7 +1947,7 @@ location of the mark is indicated by an aural highlight. "
 (defun emacspeak-speak-face-backward ()
   "Property search for face at point see \\[text-property-search-backward]"
   (interactive)
-  (when-let
+  (when-let*
       ((match
         (funcall-interactively
          #'text-property-search-backward

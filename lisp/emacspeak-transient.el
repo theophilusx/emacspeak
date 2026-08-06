@@ -219,7 +219,7 @@ Press `r' to resume the suspended transient."
   (with-selected-window
       (if (window-live-p transient--window)
           transient--window (selected-window))
-    (when-let
+    (when-let*
         ((match
           (text-property-search-forward 'face 'transient-heading t t)))
       (goto-char (prop-match-beginning match))
@@ -231,7 +231,7 @@ Press `r' to resume the suspended transient."
   (with-selected-window
       (if (window-live-p transient--window)
           transient--window (selected-window))
-    (when-let
+    (when-let*
         ((match
           (text-property-search-backward
            'face 'transient-heading t t)))
@@ -262,7 +262,7 @@ Press `r' to resume the suspended transient."
       ((ems-interactive-p)
        ad-do-it
        (with-current-buffer (window-buffer transient--window)
-         (when-let ((button (button-at (point)))
+         (when-let* ((button (button-at (point)))
                     (start (button-start button))
                     (end (button-end button)))
            (dtk-speak (buffer-substring start end))

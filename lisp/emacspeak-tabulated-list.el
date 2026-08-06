@@ -102,7 +102,7 @@
           :test #'string= :key #'car)))
     (forward-line 1)
     (tabulated-list-next-column  col)
-    (when-let ((goal (next-single-property-change (point)
+    (when-let* ((goal (next-single-property-change (point)
                                                   'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
@@ -117,7 +117,7 @@
           :test #'string= :key #'car)))
     (forward-line -1)
     (tabulated-list-next-column  col)
-    (when-let ((goal (next-single-property-change
+    (when-let* ((goal (next-single-property-change
                       (point) 'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
