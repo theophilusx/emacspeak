@@ -382,8 +382,6 @@ This cannot be set via custom; set this in your startup file before
      emacspeak-version))
   "Emacspeak startup message.")
 
-
-
 (defcustom emacspeak-pip-enable
   (executable-find "piper")
   "Load pip if Piper-TTS is available."
@@ -393,7 +391,6 @@ This cannot be set via custom; set this in your startup file before
       (set-default sym val )
       (when val (require 'pip)))
   :group 'emacspeak)
-
 
 (defvar Info-directory-list)
 (defun emacspeak()

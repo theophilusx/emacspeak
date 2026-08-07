@@ -73,7 +73,6 @@
     (emacspeak-icon 'close-object)
     (emacspeak-speak-mode-line)))
 
-
 (defadvice reftex-toc-previous (after emacspeak pre act
                                       comp)
   "Speech enable  by speaking toc entry."
@@ -140,16 +139,16 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-toc-follow-mode
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s follow mode. "
              (if reftex-toc-follow-mode 'on 'off))))
 (defadvice reftex-toc-toggle-labels (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-toc-include-labels
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s labels. "
              (if reftex-toc-include-labels 'on 'off))))
 
@@ -157,8 +156,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-toc-include-file-boundaries
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s file boundary markers. "
              (if reftex-toc-include-file-boundaries 'on 'off))))
 
@@ -166,8 +165,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-toc-include-context
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s context markers. "
              (if reftex-toc-include-context 'on 'off))))
 
@@ -214,8 +213,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-index-follow-mode
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s follow mode. "
              (if reftex-index-follow-mode 'on 'off))))
 
@@ -223,8 +222,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-index-include-labels
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s labels. "
              (if reftex-index-include-labels 'on 'off))))
 
@@ -232,8 +231,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-index-include-file-boundaries
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s file boundary markers. "
              (if reftex-index-include-file-boundaries 'on 'off))))
 
@@ -241,8 +240,8 @@
   "speak."
   (when (ems-interactive-p)
     (emacspeak-icon (if reftex-index-include-context
-                                 'on
-                               'off))
+                        'on
+                      'off))
     (message "Turned %s context markers. "
              (if reftex-index-include-context 'on 'off))))
 

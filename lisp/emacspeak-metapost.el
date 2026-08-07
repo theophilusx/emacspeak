@@ -59,7 +59,7 @@
     (when (> (point) prior)
       (setq dtk-stop-immediately nil)
       (tts-with-punctuations 'all
-        (dtk-speak (buffer-substring prior (point)))))
+                             (dtk-speak (buffer-substring prior (point)))))
     ad-return-value))
 
 ;;;  indentation

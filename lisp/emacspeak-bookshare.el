@@ -788,7 +788,6 @@ b Browse
      (format "Available: %s"
              (mapconcat #'dom-inner-text available " ")))))
 
-
 ;;;  Generate Declarations:
 (declare-function emacspeak-bookshare-get-author    "emacspeak-bookshare" nil)
 (declare-function emacspeak-bookshare-get-title    "emacspeak-bookshare" nil)
@@ -1263,18 +1262,18 @@ Useful for fulltext search in a book."
    (list
     (or
      (emacspeak-bookshare-get-directory)
-        (when (eq major-mode 'dired-mode) (dired-get-filename))
-        (let ((completion-ignore-case t)
-              (emacspeak-speak-messages nil)
-              (read-file-name-completion-ignore-case t))
-          (completing-read
-           "Book: "
-           (ems--subdirs-recursively emacspeak-bookshare-directory)
-           #'(lambda (d)
-               (cl-some
-                #'(lambda (f) (string-match "\\.ncx$" f))
-                (directory-files d))
-               ))))))
+     (when (eq major-mode 'dired-mode) (dired-get-filename))
+     (let ((completion-ignore-case t)
+           (emacspeak-speak-messages nil)
+           (read-file-name-completion-ignore-case t))
+       (completing-read
+        "Book: "
+        (ems--subdirs-recursively emacspeak-bookshare-directory)
+        #'(lambda (d)
+            (cl-some
+             #'(lambda (f) (string-match "\\.ncx$" f))
+             (directory-files d))
+            ))))))
   (let ((xsl (emacspeak-bookshare-xslt directory))
         (buffer (get-buffer-create "Full Text"))
         (command nil)

@@ -259,8 +259,8 @@ Press `r' to resume the suspended transient."
        ad-do-it
        (with-current-buffer (window-buffer transient--window)
          (when-let* ((button (button-at (point)))
-                    (start (button-start button))
-                    (end (button-end button)))
+                     (start (button-start button))
+                     (end (button-end button)))
            (dtk-speak (buffer-substring start end))
            (emacspeak-icon 'button))))
       (t ad-do-it))

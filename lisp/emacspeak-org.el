@@ -616,7 +616,6 @@
       " "
       (org-table-get-field)))))
 
-
 (cl-loop
  for f in
  '(org-table-next-field org-table-previous-field
@@ -626,8 +625,6 @@
   `(defadvice ,f  (after emacspeak pre act comp)
      "speak."
      (funcall emacspeak-org-table-after-movement-function))))
-
-
 
 ;;;  Additional table function:
 
@@ -651,7 +648,6 @@ Before doing so, re-align the table if necessary."
         (org-table-goto-column col)
         (skip-chars-backward "^|\n\r")
         (if (looking-at " ") (forward-char 1))))))
-
 
 ;;;  Capture
 

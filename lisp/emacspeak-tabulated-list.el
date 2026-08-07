@@ -102,7 +102,7 @@
     (forward-line 1)
     (tabulated-list-next-column  col)
     (when-let* ((goal (next-single-property-change (point)
-                                                  'tabulated-list-column-name)))
+                                                   'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
 
@@ -117,7 +117,7 @@
     (forward-line -1)
     (tabulated-list-next-column  col)
     (when-let* ((goal (next-single-property-change
-                      (point) 'tabulated-list-column-name)))
+                       (point) 'tabulated-list-column-name)))
       (goto-char goal))
     (emacspeak-tabulated-list-speak-cell)))
 

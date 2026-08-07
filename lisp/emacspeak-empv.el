@@ -154,7 +154,6 @@
     (emacspeak-icon 'open-object)
     (emacspeak-speak-mode-line)))
 
-
 (defadvice empv-youtube-results-play-current (before emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p) (emacspeak-icon 'button)))
@@ -262,9 +261,9 @@ If already playing, then read an empv key and invoke its command."
   "Speak time and percent position."
   (interactive)
   (empv--let-properties '(time-pos percent-pos)
-    (message "%s.  %.2d%%"
-             (ems--format-clock (or .time-pos 0))
-             (or .percent-pos 0))))
+                        (message "%s.  %.2d%%"
+                                 (ems--format-clock (or .time-pos 0))
+                                 (or .percent-pos 0))))
 
 (defsubst emacspeak-empv-post-nav ()
   "Post nav action"
@@ -345,8 +344,8 @@ If already playing, then read an empv key and invoke its command."
      (emacspeak-pronounce-refresh-pronunciations)))
 
 (add-hook
-   'empv-youtube-tabulated-new-entries-hook
-   #'(lambda (e &rest _) (message (alist-get 'title (cl-first e)))))
+ 'empv-youtube-tabulated-new-entries-hook
+ #'(lambda (e &rest _) (message (alist-get 'title (cl-first e)))))
 (defun emacspeak-empv-current-title ()
   "Speak title of currently selected item."
   (interactive)
@@ -358,7 +357,6 @@ If already playing, then read an empv key and invoke its command."
   (when (ems-interactive-p)
     (emacspeak-icon 'yank-object)
     (message (current-kill 0 'dont-move))))
-
 
 (defadvice empv--youtube-tabulated-entries-append (after emacspeak pre act comp)
   "speak."
@@ -436,7 +434,6 @@ If already playing, then read an empv key and invoke its command."
    emacspeak-empv-absolute-seek  emacspeak-empv-percentage-seek
    emacspeak-empv-relative-seek))
 
-
 (defvar emacspeak-empv-filter-history nil
   "History of filters used.")
 (defconst emacspeak-empv-filters
@@ -509,7 +506,6 @@ The default value is suitable for classical instrumental music."
 
 (declare-function calendar-cursor-to-date "calendar" (&optional error event))
 
-
 ;;;###autoload
 (defun emacspeak-empv-yt-after ()
   "Youtube Search  from calendar --- add after:date-at-point.."
@@ -536,7 +532,6 @@ The default value is suitable for classical instrumental music."
     (funcall-interactively
      'empv-youtube-tabulated
      (concat (read-from-minibuffer "YT Search Before") date))))
-
 
 (provide 'emacspeak-empv)
 ;;;  end of file

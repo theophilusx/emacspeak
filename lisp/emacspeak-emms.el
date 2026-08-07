@@ -116,10 +116,10 @@
 ;;; Playlists
 (cl-loop for f in
          '(emms-playlist-mode-go
-                        emms-playlist-mode-next
-                        emms-playlist-mode-previous
-                        emms-playlist-mode-switch-buffer
-                        )
+           emms-playlist-mode-next
+           emms-playlist-mode-previous
+           emms-playlist-mode-switch-buffer
+           )
          do
          (eval
           `(defadvice ,f (after emacspeak pre act comp)

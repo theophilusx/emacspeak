@@ -150,8 +150,6 @@ ARGS specifies additional arguments to SPEAKER if any."
   "https://www.google.com/search?q="
   "Base  URI for Google search")
 
-
-
 (defvar emacspeak-websearch-google-options nil
   "Additional options to pass to Google e.g. &xx=yy...")
 

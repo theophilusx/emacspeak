@@ -50,8 +50,8 @@
 
 (defadvice ellama-chat-done (after emacspeak pre act comp)
   "speak."
-    (emacspeak-icon 'item)
-    (dtk-speak (ad-get-arg 0)))
+  (emacspeak-icon 'item)
+  (dtk-speak (ad-get-arg 0)))
 
 (cl-loop
  for f in 

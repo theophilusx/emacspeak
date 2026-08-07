@@ -117,10 +117,8 @@
 \\{emacspeak-m-player-mode-map}"
   (progn
     (setq-local ems--media-data (make-ems--media-data)
-          buffer-undo-list t
-          buffer-read-only nil)))
-
-
+                buffer-undo-list t
+                buffer-read-only nil)))
 
 (defvar emacspeak-m-player-process nil
   "Process handle to m-player.")
@@ -580,7 +578,6 @@ dynamic playlist. "
           (t
            (file-name-base  resource))))))))
 
-
 (defun emacspeak-m-player-using-openal ()
   "Use openal.  "
   (interactive)
@@ -592,7 +589,6 @@ dynamic playlist. "
 (defvar emacspeak-m-player-hrtf-options
   '("-af" "hrtf=s" "-af" "resample=48000")
   "Additional options to use built-in HRTF.")
-
 
 (defun emacspeak-m-player-using-hrtf ()
   "Add af resample=48000,hrtf to startup options.
@@ -610,7 +606,6 @@ This will work if the soundcard is set to 48000."
   (let ((emacspeak-m-player-options
          (append emacspeak-m-player-options (list "-shuffle"))))
     (call-interactively #'emacspeak-m-player)))
-
 
 (defun emacspeak-m-player-loop (&optional raw)
   "M-Player with repeat indefinitely  turned on.
@@ -1444,7 +1439,6 @@ flat classical club dance full-bass full-bass-and-treble
  for i from 1 to 9 do
  (define-key emacspeak-m-player-mode-map
              (kbd (format "%s" i)) 'emacspeak-m-player-volume-set))
-
 
 (declare-function emacspeak-google-result-url-prefix "emacspeak-google" nil)
 ;; yt player using mplayer is broken  due to xml manifests

@@ -270,7 +270,7 @@ bound to \\[dtk-toggle-caps].")
   "List of  punctuation modes.")
 
 (defvar-local dtk-speech-rate
-    100
+  100
   "Speech rate. Default rate is set via
     this is an internal variable; <tts-name>-default-speech-rate can
     be customized for the engine specific default.
@@ -1513,8 +1513,8 @@ Argument S specifies the syntax class."
 ;;;  speak text
 
 (defvar-local dtk-yank-excluded-properties
-    '(category field follow-link fontified font-lock-face help-echo
-               keymap local-map mouse-face read-only yank-handler)
+  '(category field follow-link fontified font-lock-face help-echo
+             keymap local-map mouse-face read-only yank-handler)
   "Like yank-excluded-properties, but without  invisible
  and intangible in it.
 This is so text marked invisible is silenced.")

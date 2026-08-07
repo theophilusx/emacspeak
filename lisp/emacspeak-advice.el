@@ -431,10 +431,10 @@ When on a close delimiter, speak matching delimiter after a small delay. "
      (when (ems-interactive-p)
        (emacspeak-icon 'scroll)
        (dtk-speak (emacspeak-get-window-contents))
-         (dtk-notify
-          (propertize
-           (format "%s " (emacspeak-get-current-percentage-into-buffer))
-           'personality voice-smoothen))))))
+       (dtk-notify
+        (propertize
+         (format "%s " (emacspeak-get-current-percentage-into-buffer))
+         'personality voice-smoothen))))))
 
 ;;;  Advise modify case commands to speak
 
@@ -661,8 +661,6 @@ When on a close delimiter, speak matching delimiter after a small delay. "
 ;;;  advice minibuffer to speak
 
 (voice-setup-set-voice-for-face 'minibuffer-prompt 'voice-bolden)
-
-
 
 (defadvice quoted-insert (after emacspeak pre act comp)
   "Speak inserted  character."
@@ -910,8 +908,6 @@ When on a close delimiter, speak matching delimiter after a small delay. "
   (when (ems-interactive-p) ; we see old value 
     (emacspeak-icon (if read-passwd--hide-password 'off 'on))))
 
-
-
 (defadvice read-passwd (before emacspeak pre act comp)
   "speak."
   (emacspeak-icon 'open-object)
@@ -929,11 +925,11 @@ When on a close delimiter, speak matching delimiter after a small delay. "
  (eval
   `(defadvice ,f (before emacspeak pre act comp)
      "Speak prompt"
-      (let ((prompt (ad-get-arg 0)))
-        (emacspeak-icon 'char)
-        (setq emacspeak-last-message prompt)
-        (setq emacspeak-read-char-prompt-cache prompt)
-        (tts-with-punctuations 'all (dtk-notify (or prompt "key")))))))
+     (let ((prompt (ad-get-arg 0)))
+       (emacspeak-icon 'char)
+       (setq emacspeak-last-message prompt)
+       (setq emacspeak-read-char-prompt-cache prompt)
+       (tts-with-punctuations 'all (dtk-notify (or prompt "key")))))))
 
 (defadvice read-char-choice (before emacspeak pre act comp)
   "Speak the prompt. "
@@ -946,7 +942,6 @@ When on a close delimiter, speak matching delimiter after a small delay. "
            (mapconcat #'(lambda (c) (format "%c" c)) chars ", "))))
     (ems--log-message m)
     (tts-with-punctuations 'all (dtk-speak m))))
-
 
 ;;;  advice completion functions to speak:
 
@@ -1456,7 +1451,7 @@ Indicate change of selection with an auditory icon
 (defadvice help-do-xref (after emacspeak pre act comp)
   "Speak the ref we moved to."
   (emacspeak-speak-line)
-    (emacspeak-icon 'item))
+  (emacspeak-icon 'item))
 (cl-loop
  for f in 
  '(help-xref-go-back help-xref-go-forward)
@@ -1477,7 +1472,6 @@ Indicate change of selection with an auditory icon
   (when (ems-interactive-p)
     (emacspeak-icon 'open-object)
     (emacspeak-speak-mode-line)))
-
 
 ;; Silence help for help
 (defadvice help-window-display-message (around emacspeak pre act comp)
@@ -1914,7 +1908,6 @@ Produce an auditory icon if possible."
 
 ;;;  customize isearch:
 
-
 ;; Fix key bindings:
 
 (cl-declaim (special isearch-mode-map
@@ -2189,7 +2182,6 @@ Produce an auditory icon if possible."
     table)
   "Dictionary used in minibuffer.")
 
-
 (defun emacspeak-minibuffer-setup-hook ()
   "Actions to take when entering the minibuffer with emacspeak running."
   (dtk-stop 'all)
@@ -2199,11 +2191,11 @@ Produce an auditory icon if possible."
     (emacspeak-icon 'open-object)
     (when minibuffer-default (emacspeak-icon 'help))
     (tts-with-punctuations
-        'all
-      (dtk-notify
-       (concat
-        (buffer-string)
-        (if (stringp minibuffer-default) minibuffer-default ""))))))
+     'all
+     (dtk-notify
+      (concat
+       (buffer-string)
+       (if (stringp minibuffer-default) minibuffer-default ""))))))
 
 (add-hook 'minibuffer-setup-hook 'emacspeak-minibuffer-setup-hook 'at-end)
 
@@ -2600,11 +2592,11 @@ Produce an auditory icon if possible."
 ;;;  Asking Questions:
 
 (defadvice yes-or-no-p (around emacspeak pre act comp)
-   "Play auditory icon."
-   (emacspeak-icon 'ask-question)
-   ad-do-it
-   (emacspeak-icon (if ad-return-value 'yes-answer 'no-answer ))
-   ad-return-value)
+  "Play auditory icon."
+  (emacspeak-icon 'ask-question)
+  ad-do-it
+  (emacspeak-icon (if ad-return-value 'yes-answer 'no-answer ))
+  ad-return-value)
 
 (defadvice y-or-n-p (around emacspeak pre act comp)
   "Play auditory icon."

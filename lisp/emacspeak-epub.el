@@ -827,15 +827,15 @@ in the epub file."
     (or
      (get-text-property (point) 'epub)
      (when (eq major-mode 'dired-mode) (dired-get-filename))
-        (let ((completion-ignore-case t)
-              (emacspeak-speak-messages nil)
-              (read-file-name-completion-ignore-case t))
-          (shell-quote-argument
-           (completing-read
-            "Book: "
-            (directory-files-recursively
-             emacspeak-epub-library-directory
-             "\\.epub\\'" 'include-dirs)))))
+     (let ((completion-ignore-case t)
+           (emacspeak-speak-messages nil)
+           (read-file-name-completion-ignore-case t))
+       (shell-quote-argument
+        (completing-read
+         "Book: "
+         (directory-files-recursively
+          emacspeak-epub-library-directory
+          "\\.epub\\'" 'include-dirs)))))
     current-prefix-arg))
   (let* ((emacspeak-speak-messages nil)
          (directory

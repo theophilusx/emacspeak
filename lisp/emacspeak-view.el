@@ -49,7 +49,7 @@
 
 ;; restore emacspeak keybindings:
 (cl-declaim (special emacspeak-prefix))
-  
+
 (add-hook
  'view-mode-hook
  #'(lambda ()
@@ -115,11 +115,11 @@
  for f in
  '(
    View-scroll-half-page-backward View-scroll-half-page-forward
-View-scroll-line-backward View-scroll-line-forward
-View-scroll-lines-forward-set-scroll-size View-scroll-one-more-line
-View-scroll-page-backward view-scroll-page-forward 
-View-scroll-page-backward-set-page-size View-scroll-page-forward-set-page-size
-) do
+   View-scroll-line-backward View-scroll-line-forward
+   View-scroll-lines-forward-set-scroll-size View-scroll-one-more-line
+   View-scroll-page-backward view-scroll-page-forward 
+   View-scroll-page-backward-set-page-size View-scroll-page-forward-set-page-size
+   ) do
  `(eval
    (defadvice ,f (after emacspeak pre act comp)
      "speak"

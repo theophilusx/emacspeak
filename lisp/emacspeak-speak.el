@@ -79,14 +79,12 @@
   (setq dtk-chunk-separator-syntax ".)$\""))
 ;;; Helper: Read URL
 
-
 (defun ems--read-url (&optional history)
   (or
    (shr-url-at-point nil)
    (read-string "URL:" (browse-url-url-at-point) history)))
 
 ;;; Helpers: subdirs
-
 
 (defconst ems--subdirs-filter
   (eval-when-compile
@@ -599,11 +597,11 @@ the sense of the filter. "
   "Speak matched paren with context."
   (when-let* ((there (cl-fourth (show-paren--default))))
     (save-excursion
-        (goto-char there)
-        (dtk-speak
-         (buffer-substring              ; left or right context
-          (if (eolp) (line-beginning-position) there)
-          (line-end-position))))))
+      (goto-char there)
+      (dtk-speak
+       (buffer-substring              ; left or right context
+        (if (eolp) (line-beginning-position) there)
+        (line-end-position))))))
 
 ;;;   Speak units of text
 
@@ -1150,23 +1148,23 @@ Negative prefix arg speaks from start of buffer to point. "
       (and
        (< (buffer-size) ems--large-text-size)
        (not emacspeak-speak-voice-annotated-paragraphs))
-            (emacspeak-speak-voice-annotate-paragraphs))
-       (when (listp arg) (setq arg (car arg)))
-       (dtk-stop 'all)
-       (let ((start nil)
-             (end nil))
-         (cond
-          ((null arg)
-           (setq start (point-min)
-                 end (point-max)))
-          ((> arg 0)
-           (setq start (point)
-                 end (point-max)))
-          (t (setq start (point-min)
-                   end (point))))
-         (if (< (abs (- start end )) ems--large-text-size)
-             (dtk-speak (buffer-substring start end))
-           (emacspeak-speak-windowful))))
+    (emacspeak-speak-voice-annotate-paragraphs))
+  (when (listp arg) (setq arg (car arg)))
+  (dtk-stop 'all)
+  (let ((start nil)
+        (end nil))
+    (cond
+     ((null arg)
+      (setq start (point-min)
+            end (point-max)))
+     ((> arg 0)
+      (setq start (point)
+            end (point-max)))
+     (t (setq start (point-min)
+              end (point))))
+    (if (< (abs (- start end )) ems--large-text-size)
+        (dtk-speak (buffer-substring start end))
+      (emacspeak-speak-windowful))))
 
 (defun emacspeak-speak-other-buffer (buffer)
   "Speak specified buffer.
@@ -1453,27 +1451,27 @@ Interactive prefix arg speaks buffer info."
             (when buffer-read-only
               (emacspeak-icon 'unmodified-object)))
           (tts-with-punctuations
-              'all
-            (dtk-speak
-             (concat
-              autospeak
-              dir-info
-              (propertize (buffer-name) 'personality
-                          voice-lighten-medium)
-              (emacspeak-get-current-percentage-verbously)
-              (when window-count
-                (propertize window-count 'personality voice-smoothen))
-              (when vc-mode
-                (propertize (downcase vc-mode) 'personality voice-smoothen))
-              (when vc-state (format " %s " vc-state))
-              (when line-number-mode
-                (format "line %d" (emacspeak-get-current-line-number)))
-              (when column-number-mode
-                (format "column %d" (current-column)))
-              (propertize
-               (downcase
-                (format-mode-line mode-name)) 'personality voice-animate)
-              global-info frame-info recursion-info))))))))))
+           'all
+           (dtk-speak
+            (concat
+             autospeak
+             dir-info
+             (propertize (buffer-name) 'personality
+                         voice-lighten-medium)
+             (emacspeak-get-current-percentage-verbously)
+             (when window-count
+               (propertize window-count 'personality voice-smoothen))
+             (when vc-mode
+               (propertize (downcase vc-mode) 'personality voice-smoothen))
+             (when vc-state (format " %s " vc-state))
+             (when line-number-mode
+               (format "line %d" (emacspeak-get-current-line-number)))
+             (when column-number-mode
+               (format "column %d" (current-column)))
+             (propertize
+              (downcase
+               (format-mode-line mode-name)) 'personality voice-animate)
+             global-info frame-info recursion-info))))))))))
 
 (defun emacspeak-return-mode-line ()
   "Debug tool: return visually displayed mode-line as a string."
@@ -1696,8 +1694,6 @@ Second interactive prefix sets clock to new timezone."
         (* 60 (or  (cl-second v) 0))
         (or  (cl-third v) 0)))))
 
-
-
 (defsubst ems--format-clock (s)
   "Seconds -> mm:ss"
   (format "%02d:%02d" (floor (/ s 60)) (% (floor s) 60)))
@@ -1746,7 +1742,7 @@ Seconds value is also placed in the kill-ring."
   (interactive)
   (emacspeak-icon 'emacspeak)
   (message
-     (format "Emacspeak %s " emacspeak-version )))
+   (format "Emacspeak %s " emacspeak-version )))
 
 (defun emacspeak-speak-current-kill (&optional count)
   "Speak the current kill.
@@ -2674,7 +2670,6 @@ Set this to the empty string once you've learnt this command. "
           (const :tag "Silence" :value ""))
   :group 'emacspeak)
 
-
 (defun emacspeak-buffer-select()
   "Select buffer by smart cycling.
 Use option emacspeak-buffer-select-help to customize interactive feedback.
@@ -2791,7 +2786,6 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
    ((featurep 'pip) (pip-speak text))
    (t (dtk-notify text))))
 
-
 ;;; Bug Reporter:
 (defconst emacspeak-bug-address "emacspeak@emacspeak.net" "List address")
 
@@ -2809,7 +2803,7 @@ Use `,' and `.' to continuously decrease/increase `selective-display'.
              dtk-program dtk-speech-rate dtk-character-scale
              dtk-split-caps dtk-punctuation-mode visual-line-mode
              emacspeak-line-echo  emacspeak-word-echo emacspeak-character-echo 
-              emacspeak-audio-indentation )))
+             emacspeak-audio-indentation )))
       (mapc
        #'(lambda (x)
            (if (not (and (boundp x) (symbol-value x)))

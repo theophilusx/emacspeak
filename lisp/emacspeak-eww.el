@@ -524,14 +524,14 @@
 (defvar emacspeak-eww-url-at-point
   #'(lambda ()
       (ems-with-messages-silenced
-        (let ((url (shr-url-at-point nil)))
-          (cond
-           ((and url ;;; google  Result
-                 (stringp url)
-                 (string-prefix-p (emacspeak-google-result-url-prefix) url))
-            (emacspeak-google-canonicalize-result-url url))
-           ((and url (stringp url))url)
-           (t (error "No URL under point."))))))
+       (let ((url (shr-url-at-point nil)))
+         (cond
+          ((and url ;;; google  Result
+                (stringp url)
+                (string-prefix-p (emacspeak-google-result-url-prefix) url))
+           (emacspeak-google-canonicalize-result-url url))
+          ((and url (stringp url))url)
+          (t (error "No URL under point."))))))
   "EWW Url At point that also handle google specialities.")
 
 (add-hook
@@ -1182,7 +1182,6 @@ Note that the Web browser should reset this hook after using it.")
   (let ((start (point)))
     (shr-generic dom)
     (put-text-property start (point) 'article 'shr-tag)))
-
 
 (defun emacspeak-eww-tag-iframe (dom)
   "Iframe containing YT links"
@@ -1937,28 +1936,28 @@ The %s is automatically spoken if there is no user activity."
 (defadvice shr-copy-url (around emacspeak pre act comp)
   "Canonicalize Google URLs"
   (ems-with-messages-silenced
-    ad-do-it
-    (when (ems-interactive-p)
-      (emacspeak-icon 'delete-object)
-      (let ((u (car kill-ring)))
-        (when
-            (and u (stringp u)
-                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
-          (kill-new  (emacspeak-google-canonicalize-result-url u))))
-      (emacspeak-speak-current-kill))))
+   ad-do-it
+   (when (ems-interactive-p)
+     (emacspeak-icon 'delete-object)
+     (let ((u (car kill-ring)))
+       (when
+           (and u (stringp u)
+                (string-prefix-p (emacspeak-google-result-url-prefix) u))
+         (kill-new  (emacspeak-google-canonicalize-result-url u))))
+     (emacspeak-speak-current-kill))))
 
 (defadvice shr-maybe-probe-and-copy-url (around emacspeak pre act comp)
   "Canonicalize Google URLs"
   (ems-with-messages-silenced
-    ad-do-it
-    (when (ems-interactive-p)
-      (emacspeak-icon 'delete-object)
-      (let ((u (car kill-ring)))
-        (when
-            (and u (stringp u)
-                 (string-prefix-p (emacspeak-google-result-url-prefix) u))
-          (kill-new  (emacspeak-google-canonicalize-result-url u))))
-      (emacspeak-speak-current-kill))))
+   ad-do-it
+   (when (ems-interactive-p)
+     (emacspeak-icon 'delete-object)
+     (let ((u (car kill-ring)))
+       (when
+           (and u (stringp u)
+                (string-prefix-p (emacspeak-google-result-url-prefix) u))
+         (kill-new  (emacspeak-google-canonicalize-result-url u))))
+     (emacspeak-speak-current-kill))))
 
 ;;;  Speech-enable EWW buffer list:
 

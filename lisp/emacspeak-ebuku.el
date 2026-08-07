@@ -88,14 +88,11 @@
   (when (ems-interactive-p)
     (dtk-speak "Showing all bookmarks")))
 
-
 (defadvice ebuku-toggle-results-limit (after emacspeak pre act comp)
   "speak."
   (when (ems-interactive-p)
     (message "Results limit: %s" ebuku-results-limit)
     (emacspeak-icon 'button)))
-
-
 
 (cl-loop
  for f in

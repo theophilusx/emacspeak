@@ -237,7 +237,7 @@ with duplicates removed when saving as a list of string."
 
 (emacspeak-url-template-define
  "BBC World Service  Schedule "
-"https://www.bbc.co.uk/sounds/schedules/bbc_world_service " 
+ "https://www.bbc.co.uk/sounds/schedules/bbc_world_service " 
  nil
  #'emacspeak-eww-next-h1
  "BBC World Service Schedule")
@@ -331,11 +331,10 @@ Press `y' on Episode links to play them with MPV."
  "http://rss.accuweather.com/rss/liveweather_rss.asp?locCode=%s"
  (list #'(lambda nil
            (read-from-minibuffer "Location: "
-                             nil nil t nil gmaps-my-zip)))
+                                 nil nil t nil gmaps-my-zip)))
  #'emacspeak-speak-buffer
  "Weather Forecast from ACUWeather"
  #'emacspeak-feeds-rss-display)
-
 
 ;;; Basic Google:
 
@@ -349,9 +348,9 @@ Press `y' on Episode links to play them with MPV."
      (forward-line 2)
      (emacspeak-icon 'open-object)
      (tts-with-punctuations 'some
-       (emacspeak-speak-region
-        (point)
-        (save-excursion (forward-line 1) (line-end-position)))))
+                            (emacspeak-speak-region
+                             (point)
+                             (save-excursion (forward-line 1) (line-end-position)))))
  "Light-weight Google weather. Displays weather for your current US-ZIP Code. ")
 
 (emacspeak-url-template-define
@@ -364,9 +363,9 @@ Press `y' on Episode links to play them with MPV."
      (emacspeak-icon 'open-object)
      (setq header-line-format "Global Weather")
      (tts-with-punctuations 'some
-       (emacspeak-speak-region
-        (save-excursion (forward-line -1) (line-beginning-position))
-        (save-excursion (forward-line 1) (line-end-position)))))
+                            (emacspeak-speak-region
+                             (save-excursion (forward-line -1) (line-beginning-position))
+                             (save-excursion (forward-line 1) (line-end-position)))))
  "World Weather From Google")
 
 ;;;  Calendar Mobile:
@@ -487,7 +486,7 @@ Press `y' on Episode links to play them with MPV."
  "Yahoo Finance"
  "https://finance.yahoo.com/quote/%s/"
  (list "Ticker:")
-  'emacspeak-eww-h2
+ 'emacspeak-eww-h2
  "Yahoo Finance Stock News")
 
 ;;; CNBC Quotes

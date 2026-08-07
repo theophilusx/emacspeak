@@ -140,9 +140,9 @@
   "Browse  Emacspeak productivity tips."
   (interactive)
   (emacspeak-xslt-without-xsl
-      (browse-url
-       (format "file:///%stips.html"
-               emacspeak-etc-directory)))
+   (browse-url
+    (format "file:///%stips.html"
+            emacspeak-etc-directory)))
   (emacspeak-icon 'help)
   (emacspeak-speak-mode-line))
 
@@ -366,14 +366,14 @@ command."
 To leave, press \\[keyboard-quit]."
   (interactive)
   (ems-with-messages-silenced
-    (let ((continue t))
-      (while continue
-        (call-interactively 'describe-key-briefly)
-        (sit-for 4)
-        (when (and (numberp last-input-event)
-                   (= last-input-event 7))
-          (setq continue nil)))
-      (message "Leaving learn mode "))))
+   (let ((continue t))
+     (while continue
+       (call-interactively 'describe-key-briefly)
+       (sit-for 4)
+       (when (and (numberp last-input-event)
+                  (= last-input-event 7))
+         (setq continue nil)))
+     (message "Leaving learn mode "))))
 
 (defun emacspeak-describe-emacspeak ()
   "Give a brief overview of emacspeak."
@@ -837,26 +837,26 @@ Ubuntu and Debian this is group `tty'.")
   "View contents of  virtual console."
   (interactive "nConsole:")
   (ems-with-messages-silenced
-    (let ((command
-           (format emacspeak-wizards-vc-viewer-command
-                   console
-                   (expand-file-name
-                    (format "vc-%s.dump" console)
-                    temporary-file-directory)))
-          (buffer (get-buffer-create
-                   (format "*vc-%s*" console))))
-      (shell-command command buffer)
-      (switch-to-buffer buffer)
-      (kill-all-local-variables)
-      (insert-file-contents
-       (expand-file-name
-        (format "vc-%s.dump" console)
-        temporary-file-directory))
-      (set-buffer-modified-p nil)
-      (emacspeak-wizards-vc-view-mode)
-      (setq emacspeak-wizards-vc-console console)
-      (goto-char (point-min))
-      (when (called-interactively-p 'interactive) (emacspeak-speak-line)))))
+   (let ((command
+          (format emacspeak-wizards-vc-viewer-command
+                  console
+                  (expand-file-name
+                   (format "vc-%s.dump" console)
+                   temporary-file-directory)))
+         (buffer (get-buffer-create
+                  (format "*vc-%s*" console))))
+     (shell-command command buffer)
+     (switch-to-buffer buffer)
+     (kill-all-local-variables)
+     (insert-file-contents
+      (expand-file-name
+       (format "vc-%s.dump" console)
+       temporary-file-directory))
+     (set-buffer-modified-p nil)
+     (emacspeak-wizards-vc-view-mode)
+     (setq emacspeak-wizards-vc-console console)
+     (goto-char (point-min))
+     (when (called-interactively-p 'interactive) (emacspeak-speak-line)))))
 
 (defun emacspeak-wizards-vc-viewer-refresh ()
   "Refresh view of VC we're viewing."
@@ -974,7 +974,6 @@ Moves to the shortest line when called interactively."
         (goto-char (1+ where)))
       max)))
 
-
 (defun emacspeak-wizards-find-longest-sentence-in-region (start end)
   "Find longest sentence in region, and move to it. "
   (interactive "r")
@@ -1041,9 +1040,9 @@ Moves to the shortest line when called interactively."
     (read-from-minibuffer "ISO DateTime:"
                           (word-at-point))))
   (ems-with-messages-silenced
-    (let ((time (emacspeak-pronounce-decode-iso-datetime iso)))
-      (tts-with-punctuations 'some (dtk-speak time))
-      (message time))))
+   (let ((time (emacspeak-pronounce-decode-iso-datetime iso)))
+     (tts-with-punctuations 'some (dtk-speak time))
+     (message time))))
 
 ;;;  date pronouncer wizard
 (defvar emacspeak-wizards-mm-dd-yyyy-date-pronounce nil
@@ -1271,14 +1270,14 @@ of the source buffer."
   (cl-loop
    for entry in (reverse emacspeak-wizards-project-shells) do
    (ems-with-messages-silenced
-     (let* ((dtk-quiet t)
-            (name (cl-first entry))
-            (dir (cl-second entry))
-            (auto (cl-third entry))
-            (default-directory dir))
-       (with-current-buffer (shell name)
-         (setq emacspeak-comint-autospeak auto)
-         (setq emacspeak-wizards--project-shell-directory dir)))))
+    (let* ((dtk-quiet t)
+           (name (cl-first entry))
+           (dir (cl-second entry))
+           (auto (cl-third entry))
+           (default-directory dir))
+      (with-current-buffer (shell name)
+        (setq emacspeak-comint-autospeak auto)
+        (setq emacspeak-wizards--project-shell-directory dir)))))
   (emacspeak-wizards--build-shells-table))
 
 (defun emacspeak-wizards-shell-directory-set ()
@@ -1433,8 +1432,8 @@ interactive prompt."
   "Speak line using espeak polyglot wizard."
   (interactive)
   (ems-with-messages-silenced
-    (emacspeak-wizards-espeak-region
-     (line-beginning-position) (line-end-position))))
+   (emacspeak-wizards-espeak-region
+    (line-beginning-position) (line-end-position))))
 
 ;;;  Emacs Dev utilities
 
@@ -2169,11 +2168,11 @@ updating custom settings for a specific package or group of packages."
     (when (not found) (user-error "No saved user options matching %s"
                                   pattern))
     (ems-with-messages-silenced
-      (emacspeak-icon 'progress)
-      (custom-buffer-create
-       (custom-sort-items found t nil)
-       (format "*Customize %d Saved options Matching %s*" (length
-                                                           found) pattern)))
+     (emacspeak-icon 'progress)
+     (custom-buffer-create
+      (custom-sort-items found t nil)
+      (format "*Customize %d Saved options Matching %s*" (length
+                                                          found) pattern)))
     (emacspeak-icon 'task-done)
     (emacspeak-speak-mode-line)))
 

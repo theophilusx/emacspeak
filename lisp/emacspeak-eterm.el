@@ -917,7 +917,7 @@ activity within the filter window."
     (setq emacspeak-eterm-focus-window 1))
   (dtk-stop)
   (emacspeak-icon (if emacspeak-eterm-focus-window
-                               'on 'off)))
+                      'on 'off)))
 
 (defun emacspeak-eterm-toggle-filter-window ()
   "Toggle active state of filter window."
@@ -927,7 +927,7 @@ activity within the filter window."
     (setq emacspeak-eterm-filter-window 1))
   (dtk-stop)
   (emacspeak-icon (if emacspeak-eterm-filter-window
-                               'on 'off)))
+                      'on 'off)))
 
 (defun emacspeak-eterm-speak-predefined-window ()
   "Speak a predefined eterm window between 1 and 10."

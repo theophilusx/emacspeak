@@ -233,7 +233,6 @@ Define a voice for it if needed, then return the symbol."
 ;;;  new light-weight voice lock
 (declare-function emacspeak-icon "emacspeak-sounds" (icon))
 
-
 (define-minor-mode voice-lock-mode
   "Toggle voice lock mode."
   :init-value t
@@ -276,7 +275,6 @@ Define a voice for it if needed, then return the symbol."
 ;; If personality at point is inaudible, and there is a cached value,
 ;; then the original face->personality mapping is restored from the
 ;; cached value.
-
 
 (defun voice-setup-toggle-silence-personality ()
   "Toggle audibility of personality under point  . "

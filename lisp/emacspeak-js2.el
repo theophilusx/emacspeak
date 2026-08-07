@@ -44,7 +44,6 @@
 ;; This module speech-enables js2.
 ;;; Code:
 
-
 ;;   Required modules:
 
 (eval-when-compile (require 'cl-lib))
