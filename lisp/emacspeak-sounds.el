@@ -179,7 +179,7 @@ icon-name, as string."
 It is called  to cache sounds in our theme and prompts directories."
   (when (file-exists-p dir)
     (cl-loop
-     for f in (directory-files dir 'full "\\.ogg$") do
+     for f in (directory-files dir 'full "\\.ogg\\'") do
      (emacspeak-sounds-cache-put (intern (file-name-base f)) f))))
 
 (defsubst ems--upload-pulse-samples ()

@@ -835,7 +835,7 @@ in the epub file."
             "Book: "
             (directory-files-recursively
              emacspeak-epub-library-directory
-             "\\.epub$" 'include-dirs)))))
+             "\\.epub\\'" 'include-dirs)))))
     current-prefix-arg))
   (let* ((emacspeak-speak-messages nil)
          (directory

@@ -671,7 +671,7 @@ Optional interactive prefix arg ask-pwd prompts for password."
       (expand-file-name
        (completing-read
         "PDF: "
-        (directory-files-recursively default-directory "\\.pdf$" 'dirs))))
+        (directory-files-recursively default-directory "\\.pdf\\'" 'dirs))))
     current-prefix-arg))
   (cl-assert (string-match ".pdf$"filename) t "Not a PDF file.")
   (let ((passwd (when ask-pwd (read-passwd "User Password:")))

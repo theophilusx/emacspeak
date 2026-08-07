@@ -64,7 +64,7 @@
   "Where voice models live.")
 
 (defvar pip-voices
-  (directory-files pip-data-dir 'full "\\.onnx$")
+  (directory-files pip-data-dir 'full "\\.onnx\\'")
   "Available voices.")
 
 (defvar pip-pip
